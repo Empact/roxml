@@ -2,7 +2,7 @@
 # Mixin module that can be used to give ruby objects
 # XML serialization support.
 #
-# $Id: roxml.rb,v 1.1 2004/07/22 14:52:55 andersengstrom Exp $
+# $Id: roxml.rb,v 1.1.1.1 2004/07/22 14:52:55 andersengstrom Exp $
 #
 # == Introduction
 #    

@@ -57,6 +57,7 @@ h3 {
 }
 
 div#cvs_id {
+    border-top: 1px dashed gold;
     text-align: right;
     color: #ccc;
     font-size: 75%;

@@ -1,8 +1,5 @@
 # Introduction
 
-> At the moment there seems to be some problems with the RubyForge account. Due to this the 
-CSS for this page will probably fail to load. The text should be readable non the less.
-
 ROXML is a [Ruby][1] library that is used to describe how ruby classes should
 be represented as XML. This makes it possible to populate an object graph from XML
 and to serialize an object graph to XML.
@@ -99,10 +96,27 @@ To save this information to an XML file:
         lib.to_xml.write(f, 0)
     end
 
+This would put the following XML into _library.xml_:
+
+    <library>
+      <NAME><![CDATA[My Funky Library]]></NAME>
+      <books>
+        <book ISDN='0201710897'>
+          <title>The PickAxe</title>
+          <description><![CDATA[Probably the best ruby book out there]]></description>
+          <author>David Thomas, Andrew Hunt, Dave Thomas</author>
+        </book>
+        <book ISDN='9248710987'>
+          <title>The Wee Free Men</title>
+          <description><![CDATA[Funny book about small, magic, swearing gnomes]]></description>
+          <author>Terry Pratchett</author>
+        </book>
+      </books>
+    </library>
+
 To later populate the library object from the XML file:
 
     lib = Library.parse(File.read("library.xml"))
-
     
-<div id="cvs_id">$Id: INDEX,v 1.4 2004/07/25 23:21:13 andersengstrom Exp $</div>
+<div id="cvs_id">$Id: INDEX,v 1.5 2004/07/27 08:14:45 andersengstrom Exp $</div>
 

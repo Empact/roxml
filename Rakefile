@@ -36,12 +36,13 @@ task :website do |task|
         FileUtils::Verbose.cp(css, WEBSITE_DIR)
     end
     
+    # Set acceptable file permissions for a website.
+    files = Dir.entries(WEBSITE_DIR).inject([]) do |m, f|
+        m << File.join(WEBSITE_DIR, f) if File.file?(File.join(WEBSITE_DIR, f))
+        m
+    end
+    FileUtils::Verbose.chmod(0664, files) if files && files.length > 0
 end 
-
-task :publish_website => :website do |task|
-    raise "No rubyforge username specified!" unless config[:rubyforge_username]    
-    sh "scp -r #{WEBSITE_DIR} #{config[:rubyforge_username]}@roxml.rubyforge.org:/var/www/gforge-projects/roxml/" 
-end
 
 desc "Clean generated files"
 task :clean do |task|

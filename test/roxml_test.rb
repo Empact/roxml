@@ -1,3 +1,5 @@
+$: << "#{File.dirname($0)}/../lib"
+
 require 'roxml'
 require 'test/unit'
 

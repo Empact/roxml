@@ -1,0 +1,2 @@
+# Rakefile for roxml        -*- ruby -*-
+

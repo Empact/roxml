@@ -1,0 +1,6 @@
+#
+# Properties for the build.
+#
+
+# Provide the username used to upload website etc.
+rubyforge_username = login-name on rubyforge.org

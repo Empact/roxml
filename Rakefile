@@ -21,20 +21,27 @@ end
 
 BUILD_DIR = "build"
 DOC_SRC_DIR = "doc-src"
+RDOC_DIR = "#{BUILD_DIR}/api"
 WEBSITE_DIR = "#{BUILD_DIR}/website"
+ETC_WEBSITE_DIR = "etc/website/"
 
+task :default => :rdoc
+task :website => :rdoc
 
-task :default => :website
+desc "Generate RDoc for the module"
+task :rdoc do |task|
+    require 'rdoc/rdoc'
+
+    RDoc::RDoc.new.document(['--all', '--inline-source', '--op', "#{RDOC_DIR}", 'lib'])
+end
+
 
 desc "Generate the website from BlueCloth"
 task :website do |task|
     
     ruby %{-I tools/bluecloth tools/docgen/docgen.rb #{DOC_SRC_DIR} #{WEBSITE_DIR}}
-    # Copy CSS
-    css = File.join(DOC_SRC_DIR, "css", "style.css")
-    if File.exist?(css)
-        FileUtils::Verbose.cp(css, WEBSITE_DIR)
-    end
+    # Copy Extra Stuff
+    sh "cp -R #{ETC_WEBSITE_DIR}/* #{WEBSITE_DIR}/"
     
     # Set acceptable file permissions for a website.
     files = Dir.entries(WEBSITE_DIR).inject([]) do |m, f|

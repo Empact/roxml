@@ -55,5 +55,6 @@ struct.each do |input, output, name|
     File.open(output, "w") do |f|
         f.puts HTML_DOC % [PAGE_TITLE_PREFIX + name, BlueCloth.new(content).to_html]
     end
+
 end
 

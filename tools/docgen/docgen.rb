@@ -37,7 +37,10 @@ end
 # Declare a HTML template
 HTML_DOC = %{
 <html>
-    <head><title>%s</title></head>
+    <head>
+        <link rel="stylesheet" type="text/css" media="screen" href="style.css"/>
+        <title>%s</title>
+    </head>
     <body>
         %s
     </body>
@@ -46,10 +49,9 @@ HTML_DOC = %{
 
 # Create the output
 struct.each do |input, output, name|
+    # read file and remove comments
     content = File.read(input)
-    
-    # TODO: Preprocess
-    
+   
     File.open(output, "w") do |f|
         f.puts HTML_DOC % [PAGE_TITLE_PREFIX + name, BlueCloth.new(content).to_html]
     end

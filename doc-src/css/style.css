@@ -1,0 +1,63 @@
+/*
+    CSS for ROXML documentation.
+*/
+body {
+    font-size: 13px;
+    color: #fff;
+    background-color: #665;
+    margin: 10px;
+    font-family: arial, sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: #ff0;
+    border-bottom: 1px dashed #ff0;
+}
+
+a:hover {
+    border-top: 1px solid #ff0;
+    border-bottom: 1px solid #ff0;
+}
+
+/*
+blockquote {
+    font-style: italic;
+}
+*/
+
+code {
+    font-size: 11px;
+    font-family: monospace;
+}
+
+pre {
+    overflow: auto;
+    width: 70%;
+    border: 1px solid #222;
+    background-color: #ddd;
+    color: #000;
+    padding: 1em;
+}
+
+h1 {
+    color: gold;
+    font-size: 200%;
+    border-bottom: 1px solid gold;
+}
+
+h2 {
+    color: gold;
+    font-size: 150%;
+}
+
+h3 {
+    color: gold;
+    font-size: 120%;
+}
+
+div#cvs_id {
+    text-align: right;
+    color: #ccc;
+    font-size: 75%;
+}

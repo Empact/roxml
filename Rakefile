@@ -30,6 +30,11 @@ desc "Generate the website from BlueCloth"
 task :website do |task|
     
     ruby %{-I tools/bluecloth tools/docgen/docgen.rb #{DOC_SRC_DIR} #{WEBSITE_DIR}}
+    # Copy CSS
+    css = File.join(DOC_SRC_DIR, "css", "style.css")
+    if File.exist?(css)
+        FileUtils::Verbose.cp(css, WEBSITE_DIR)
+    end
     
 end 
 

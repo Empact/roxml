@@ -2,63 +2,89 @@
 # Mixin module that can be used to give ruby objects
 # XML serialization support.
 #
-# $Id: roxml.rb,v 1.1 2004/07/22 14:52:55 andersengstrom Exp $
+# $Id: roxml.rb,v 1.2 2004/07/22 19:59:03 andersengstrom Exp $
 #
-# == Introduction
-#    
-# alksdfj lasdhf laiusdhf layugsd flyag sdg 
-# asdf uiahsgiuha sldifuha lusyglasifasdf as a
-# 
-# === Purpose
-# * skdfjhaksfdasd
-# * sakfjshflkajhsf
-# * asdkfjhasdjhfa
+# =USAGE
 #
-# == Usage
-# sdlgh sldiufh sldiufh sldfugs d
-# f gsödoifg ösuhdf shdf uhs dsd g
+# This is a short usage example. See the docs at roxml.rubyforge.org for further
+# examples.
 #
-# === Creating a bound class
+# Consider a <em>Library</em> containing a number of books. To describe that library and
+# its books the following classes are defined:
 #
-#   class Test
+#   class Book
 #       include ROXML
 #
-#       xml_name "test"
-#       xml_attribute :id, "ID"
+#       xml_attribute :isdn, "ISDN"
 #       xml_text :title
-#       xml_text :entries, "entry", ROXML::TAG_CDATA|ROXML::TAG_ARRAY, "entries"
+#       xml_text :description, nil, ROXML::TAG_CDATA
+#       xml_text :author
 #
 #       def initialize
 #           yield self if block_given?
 #       end
 #   end
 #
-#   Test.new do |t|
-#       t.id = 10
-#       t.title = "A Title"
-#       t.entries << "entry_1"
-#       t.entryies << "entry_2"
-#   end.to_xml.write(STDOUT, 0)
+#   class Library
+#       include ROXML
 #
-# would yield:
+#       xml_text :name, "NAME", ROXML::TAG_CDATA
+#       xml_object :books, Book, ROXML::TAG_ARRAY, "books"
+#   end
 #
-#   <test ID="10">
-#       <title>A Title</title>
-#       <entries>
-#           <entry><![CDATA[entry_1]]></entry>
-#           <entry><![CDATA[entry_2]]></entry>
-#       </entries>
-#   </test>
+# To create a library and put a number of books in it we could run the following code:
 #
+#   lib = Library.new
+#   lib.name = "My Funky Library"
 #   
+#   lib.books << Book.new do |book|
+#       book.isdn = "0201710897"
+#       book.title = "The PickAxe"
+#       book.description = "Probably the best ruby book out there"
+#       book.author = "David Thomas, Andrew Hunt, Dave Thomas"
+#   end
+#
+#   lib.books << Book.new do |book|
+#       book.isdn = "9248710987"
+#       book.title = "The Wee Free Men"
+#       book.author = "Terry Pratchett"
+#       book.description = "Funny book about small, magic, swearing gnomes"
+#   end
+#
+# To save this information to an XML file:
+#
+#   File.open("library.xml", "w") do |f|
+#       lib.to_xml.write(f, 0)
+#   end
+#
+# To later populate the library object from the XML file:
+#
+#   lib = Library.parse(File.read("library.xml"))
+#
+# =TODO
+# * Introduce a "xml_hash" macro for specifying hash-like xml.
+# * Consider better semantics for the macro methods.
+# * Define life-cycle callbacks that can be implemented by the mixee class to
+#   get notified of parsing/xml-generation.
 module ROXML
 
     require 'rexml/document'
 
+    # Option that may be used to declare that 
+    # a variable accessor should be read-only (no "accessor=(val)" is generated).
     TAG_READONLY = 1
+
+    # Option that declares that a xml text element should be
+    # wrapped in a CDATA section.
     TAG_CDATA = 2
+
+    # Option that declares an accessor as an array (referencing "many"
+    # items).
     TAG_ARRAY = 4
 
+    #
+    # Internal base class that represents a XML - Class binding.
+    # 
     class XMLRef 
         attr_accessor :accessor, :name, :array
 
@@ -72,12 +98,15 @@ module ROXML
         # Converts this XML reference to XML and updates the
         # passed in element (xml) with data.
         #
-        # === Returns
-        # The updated XML node.
+        # <b>Returns</b>: The updated XML node.
         def update_xml(xml, value)
             xml
         end
 
+        # Reads data from the xml element and populates the object
+        # instance accordingly.
+        #
+        # <b>Returns</b>: The updated instance.
         def populate(xml, instance)
             instance
         end
@@ -175,6 +204,9 @@ module ROXML
     
         #
         # Creates a new object using an XML input tree.
+        # 
+        # The input data is either a REXML::Element or a String representing
+        # the XML document.
         #
         def parse(data)
 
@@ -191,16 +223,33 @@ module ROXML
     
         #
         # States the name of the XML element that represents this class.
+        # The default name of the XML element is otherwise the self.name.downcase.
         #
         def xml_name(name)
             @tag_name = name
         end
 
+        #
+        # Declare an accessor for the included class that should be 
+        # represented as a XML attribute.
+        #
+        # [sym]     Symbol. The name of the accessor
+        # [name]    String. An optional name that should be used for the attribute in XML.
+        #           Default is sym.id2name.
+        # [options] Valid options are TAG_READONLY. 
+        # 
         def xml_attribute(sym, name = nil, options = 0)
             add_ref(XMLAttributeRef.new(sym, name))
             add_accessor(sym, (TAG_READONLY & options != TAG_READONLY))
         end
 
+        #
+        # Declares an accessor that represents one or more xml children.
+        #
+        # [sym]     Symbol. The name of the accessor.
+        # [name]    String. See description in xml_attribute.
+        # [options] Valid options are TAG_CDATA, TAG_ARRAY and TAG_READONLY.
+        # [wrapper] An optional name of a wrapping tag for this xml accessor.
         def xml_text(sym, name = nil, options = 0, wrapper = nil)
             ref = XMLTextRef.new(sym, name) do |r|
                 r.cdata = (TAG_CDATA & options == TAG_CDATA)
@@ -210,7 +259,14 @@ module ROXML
             add_ref(ref)
             add_accessor(sym, (TAG_READONLY & options != TAG_READONLY), ref.array)
         end
-
+        
+        #
+        # Declares an accessor that represents another ROXML class.
+        #
+        # [sym]     Symbol. The name of the accessor.
+        # [klass]   The referenced ROXML class.
+        # [options] Valid options are TAG_ARRAY and TAG_READONLY.
+        # [wrapper] See description in xml_text
         def xml_object(sym, klass, options = 0, wrapper = nil)
             ref = XMLObjectRef.new(sym, nil) do |r|
                 r.array = (TAG_ARRAY & options == TAG_ARRAY)
@@ -265,9 +321,6 @@ module ROXML
         
     end ## End ROXML_Class module ##############
 
-    #
-    # Hook on to the inclusion of this module.
-    #
     class << self
         #
         # Extends the klass with the ROXML_Class module methods.
@@ -298,6 +351,9 @@ module ROXML
     # doesn't match an instance method are forwarded to the
     # class's singleton instance. Only methods starting with 'tag_' are delegated.
     #
+    # TODO: There's not that many methods that need to be captured this way. Better
+    # to bite the bullet and implement them properly in the instance mixin to boost
+    # performance a bit.
     def method_missing(name, *args)
         if name.id2name =~ /^tag_/
             self.class.__send__(name, *args)
@@ -306,6 +362,8 @@ module ROXML
         end
     end
 
+    # Extension of String class to handle conversion from/to
+    # UTF-8/ISO-8869-1
     class ::String
         require 'iconv'
     

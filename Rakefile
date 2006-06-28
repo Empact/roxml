@@ -3,6 +3,7 @@
 
 require 'fileutils'
 require 'rake/contrib/sshpublisher'
+require 'rake/runtest'
 
 config = {
     :rubyforge_username => nil
@@ -49,6 +50,26 @@ task :website do |task|
         m
     end
     FileUtils::Verbose.chmod(0664, files) if files && files.length > 0
+end 
+
+desc "Publish site on RubyForge"
+task :publish=>:website do |task|
+    remote_user = config['rubyforge_username']
+    destination = "#{remote_user}@rubyforge.org:/var/www/gforge-projects/roxml"
+    ["index.html", "style.css"].each do |file|
+      sh "scp build/website/#{file} #{destination}"
+    end
+end 
+
+desc "Run all the tests"
+task :tests do |task|
+  Rake::run_tests("test/*tests.rb")
+end 
+
+
+desc "Create a release"
+task :release=>[:tests,:website,:rdoc] do |task|
+  FileUtils::Verbose.mkdir(BUILD_DIR + "/release")
 end 
 
 desc "Clean generated files"

@@ -1,10 +1,9 @@
 #
-# Mixin module that can be used to give ruby objects
-# XML serialization support.
+# ROXML: Ruby Object to XML Mapping Library
+# 
+# $Id: roxml.rb,v 1.4 2006/06/28 04:43:54 zakmandhro Exp $
 #
-# $Id: roxml.rb,v 1.3 2006/06/28 03:52:36 zakmandhro Exp $
-#
-# =USAGE
+# =Quick Start Guide
 #
 # This is a short usage example. See the docs at roxml.rubyforge.org for further
 # examples.
@@ -40,7 +39,7 @@
 #   lib.books << Book.new do |book|
 #       book.isdn = "0201710897"
 #       book.title = "The PickAxe"
-#       book.description = "Probably the best ruby book out there"
+#       book.description = "Probably the best Ruby book out there"
 #       book.author = "David Thomas, Andrew Hunt, Dave Thomas"
 #   end
 #
@@ -61,11 +60,29 @@
 #
 #   lib = Library.parse(File.read("library.xml"))
 #
-# =TODO
-# * Introduce a "xml_hash" macro for specifying hash-like xml.
-# * Consider better semantics for the macro methods.
-# * Define life-cycle callbacks that can be implemented by the mixee class to
-#   get notified of parsing/xml-generation.
+# To do a one-to-one mapping between XML objects, such as book and publisher,
+# you would use the *xml_object* annotation. For example:
+# 
+# 	<book isbn="0974514055">
+# 	  <title>Programming Ruby - 2nd Edition</title>
+# 	  <description>Second edition of the great book</description>
+# 	  <publisher>
+# 	  	<name>Pragmatic Bookshelf</name>
+# 	  </publisher>
+# 	</book>
+# 
+# Can be mapped using the following code:
+# 
+# 	class BookWithPublisher
+#   		include ROXML
+# 
+# 	    xml_name :book
+# 	    xml_object :publisher, Publisher
+# 	end
+# 
+# Note: In the above example, *xml_name* annotation tells ROXML to set the element
+# name to "book" for mapping to XML. The default is XML element name is the class name in lowercase; "bookwithpublisher"
+# in this case.
 module ROXML
 
     require 'rexml/document'
@@ -291,7 +308,7 @@ module ROXML
             add_accessor(sym, (TAG_READONLY & options != TAG_READONLY), ref.array)
         end
 
-        # Returns the tag name (also known as xml_name) of the class
+        # Returns the tag name (also known as xml_name) of the class.
         # If no tag name set with xml_name method, returns default class name
         # in lowercase.
         def tag_name

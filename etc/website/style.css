@@ -3,21 +3,28 @@
 */
 body {
     font-size: 13px;
-    color: #fff;
-    background-color: #665;
     margin: 10px;
     font-family: arial, sans-serif;
 }
 
+.quickLinks {
+  text-align: center;
+}
+
+.quickLinks A {
+  padding-left: 5px;
+  padding-right: 5px;
+  text-decoration: underline;
+}
+
 a {
     text-decoration: none;
-    color: #ff0;
-    border-bottom: 1px dashed #ff0;
+    border-bottom: 1px dashed ##222;
 }
 
 a:hover {
-    border-top: 1px solid #ff0;
-    border-bottom: 1px solid #ff0;
+    border-top: 1px solid ##222;
+    border-bottom: 1px solid ##222;
 }
 
 /*
@@ -27,7 +34,7 @@ blockquote {
 */
 
 code {
-    font-size: 11px;
+    font-size: 12px;
     font-family: monospace;
 }
 
@@ -41,23 +48,26 @@ pre {
 }
 
 h1 {
-    color: gold;
     font-size: 200%;
-    border-bottom: 1px solid gold;
+    text-align: center;
+    padding: 20px;
 }
 
 h2 {
-    color: gold;
     font-size: 150%;
+    border-bottom: 1px solid #ddd;    
 }
 
 h3 {
-    color: gold;
     font-size: 120%;
 }
 
+#footer
+{
+    border-top: 1px dashed gray;
+}
+
 div#cvs_id {
-    border-top: 1px dashed gold;
     text-align: right;
     color: #ccc;
     font-size: 75%;

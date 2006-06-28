@@ -2,7 +2,7 @@
 # Mixin module that can be used to give ruby objects
 # XML serialization support.
 #
-# $Id: roxml.rb,v 1.2 2004/07/22 19:59:03 andersengstrom Exp $
+# $Id: roxml.rb,v 1.3 2006/06/28 03:52:36 zakmandhro Exp $
 #
 # =USAGE
 #
@@ -112,18 +112,32 @@ module ROXML
         end
     end
 
+    # Interal class representing an XML attribute binding
+    # 
+    # In context:
+    #   <element attribute="XMLAttributeRef">
+    #     XMLTextRef
+    #   </element>
     class XMLAttributeRef < XMLRef
         def update_xml(xml, value)
             xml.attributes[name] = value.to_s.to_utf
             xml
         end
 
+        # Reads data from the xml element and populates the object
+        # instance accordingly.
         def populate(xml, instance)
             instance.instance_variable_set("@#{accessor}", xml.attributes[name])
             instance
         end
     end
 
+    # Interal class representing XML content text binding
+    # 
+    # In context:
+    #   <element attribute="XMLAttributeRef">
+    #     XMLTextRef
+    #   </element>
     class XMLTextRef < XMLAttributeRef
         attr_accessor :cdata, :wrapper
 
@@ -139,6 +153,8 @@ module ROXML
             xml
         end
 
+        # Reads data from the XML element and populates the text
+        # accordingly.
         def populate(xml, instance)
             data = nil
             unless array
@@ -200,8 +216,6 @@ module ROXML
     # This module should never be directly included or extended.
     #
     module ROXML_Class
-
-    
         #
         # Creates a new object using an XML input tree.
         # 
@@ -277,10 +291,15 @@ module ROXML
             add_accessor(sym, (TAG_READONLY & options != TAG_READONLY), ref.array)
         end
 
+        # Returns the tag name (also known as xml_name) of the class
+        # If no tag name set with xml_name method, returns default class name
+        # in lowercase.
         def tag_name
             @tag_name || self.name.downcase
         end
 
+        # Returns array of internal reference objects, such as attributes
+        # and composed XML objects
         def tag_refs
             @xml_refs || []
         end
@@ -350,10 +369,6 @@ module ROXML
     # attributes all method calls to the instance that
     # doesn't match an instance method are forwarded to the
     # class's singleton instance. Only methods starting with 'tag_' are delegated.
-    #
-    # TODO: There's not that many methods that need to be captured this way. Better
-    # to bite the bullet and implement them properly in the instance mixin to boost
-    # performance a bit.
     def method_missing(name, *args)
         if name.id2name =~ /^tag_/
             self.class.__send__(name, *args)

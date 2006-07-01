@@ -2,24 +2,30 @@
 <html>
 <head>
 
+
+  
   <link rel="stylesheet" type="text/css" media="screen" href="style.css">
+
+  
   <title>ROXML - Ruby Object to XML Mapping Library</title>
-
-
 </head>
 
 
 <body>
 
+
 <div id="header" class="contentBlock">
 <h1>ROXML - Ruby Object to XML Mapping Library</h1>
 
+
 </div>
+
 
 <div class="quickLinks"> <a href="#download">Download</a>
 <a href="#quickstart">Quick Start Guide</a> <a href="http://rubyforge.org/projects/roxml">RubyForge Project
 Site</a>
 </div>
+
 
 <div class="contentBlock">
 <p>ROXML is a <a href="http://ruby-lang.org/" title="Main Ruby Website">Ruby</a>&nbsp;library
@@ -33,85 +39,117 @@ development of <a href="http://en.wikipedia.org/wiki/Representational_State_Tran
 <a href="http://en.wikipedia.org/wiki/Web_Services">Web
 Services</a>, and <a href="http://en.wikipedia.org/wiki/XML-RPC">XML-RPC</a>.</span></p>
 
+
 <p>ROXML leverages the <a href="http://www.germane-software.com/software/rexml/">REXML</a>
 Ruby XML processor. ROXML powers the <a href="http://rubyforge.org/projects/uddi4r">uddi4r -
 UDDI&nbsp;for Ruby</a> project.</p>
 
+
 <h2>ROXML 1.0 Features</h2>
 
-ROXML 1.0 beta provides the following capabilities:<br>
+
+ROXML 1.0 provides the following capabilities:<br>
+
 
 <ul>
 
+
   <li>Read Ruby objects from XML (marshal)</li>
+
 
   <li>Write Ruby objects to XML (unmarshal)</li>
 
+
   <li>Smart defaults for XML mapping</li>
+
 
   <li>Annotation-style methods (also known as macros) for XML
 mapping</li>
 
+
   <li>One-to-one (composition) Ruby to XML</li>
+
 
   <li>One-to-many (aggregation) Ruby with array to XML</li>
 
+
   <li>UTF-8 support for multi-lingual documents</li>
+
 
 </ul>
 
+
 <p>See Quick Start Guide below for examples.</p>
+
 
 <p> <a name="download"></a> </p>
 
+
 <h2>Download</h2>
+
 
 <p>You can download source and library releases on the <a href="http://rubyforge.org/frs/?group_id=305">RubyForge
 downloads</a> page. Alternatively, you can checkout the latest
 source&nbsp;from <a href="http://rubyforge.org/scm/?group_id=305">CVS</a>.</p>
 
+
 <p> <a name="quickstart"></a> </p>
+
 
 <h2>Quick Start Guide</h2>
 
-<p>This section includes examples for getting started with ROXML.
-See test cases and API
-documentation for details.</p>
 
-<p>Consider a <em>library</em> containing a number
-of <span style="font-style: italic;">books</span>.
-To describe that library and
-its books the following classes are defined:</p>
+<p>
+This is a short usage example. See <a href="../doc/classes/ROXML/ROXML_Class.html">ROXML::ROXML_Class</a> and
+packaged test cases for more information.</p>
 
-<pre><code><span style="font-weight: bold;">class</span> Book<br> <span style="font-weight: bold;">include</span> ROXML<br><br> xml_attribute :isbn, "ISBN"<br> xml_text :title<br> xml_text :description, <span style="font-weight: bold;">nil</span>, ROXML::TAG_CDATA<br> xml_text :author<br><br> <span style="font-weight: bold;">def</span> initialize<br> <span style="font-weight: bold;">yield</span> self <span style="font-weight: bold;">if</span> block_given?<br> <span style="font-weight: bold;">end</span><br><span style="font-weight: bold;">end</span><br><br><span style="font-weight: bold;">class</span> Library<br> <span style="font-weight: bold;">include</span> ROXML<br><br> xml_text :name, "NAME", ROXML::TAG_CDATA<br> xml_object :books, Book, ROXML::TAG_ARRAY, "books"<br><span style="font-weight: bold;">end</span><br></code><br></pre>
+
+
+<p>
+Consider an XML document representing a Library containing a number of
+Books. You can map this structure to Ruby classes that provide addition
+useful behavior. With ROXML, you can
+annotate the Ruby classes as follows:</p>
+
+
+<pre><code><span style="font-weight: bold;">class</span> Book<br> <span style="font-weight: bold;">include</span> ROXML<br><br> xml_attribute :isbn, "ISBN"<br> xml_text :title<br> xml_text :description, <span style="font-weight: bold;">nil</span>, ROXML::TAG_CDATA<br> xml_text :author<span style="font-weight: bold;"></span><br><span style="font-weight: bold;">end</span><br><br><span style="font-weight: bold;">class</span> Library<br> <span style="font-weight: bold;">include</span> ROXML<br><br> xml_text :name, "NAME", ROXML::TAG_CDATA<br> xml_object :books, Book, ROXML::TAG_ARRAY, "books"<br><span style="font-weight: bold;">end</span><br></code><br></pre>
+
 
 <p>To create a library and put a number of books in it, we could
 run the following code:</p>
-
-<pre><code>lib = Library.<span style="font-weight: bold;">new</span><br>lib.name = "My Funky Library"<br><br>lib.books &lt;&lt; Book.new do |book|<br> book.isbn = "0201710897"<br> book.title = "The PickAxe"<br> book.description = "Probably the best ruby book out there"<br> book.author = "David Thomas, Andrew Hunt, Dave Thomas"<br><span style="font-weight: bold;">end</span><br><br>lib.books &lt;&lt; Book.<span style="font-weight: bold;">new</span> <span style="font-weight: bold;">do</span> |book|<br> book.isbn = "9248710987"<br> book.title = "The Wee Free Men"<br> book.author = "Terry Pratchett"<br> book.description = "Funny book about small, magic, swearing gnomes"<br><span style="font-weight: bold;">end</span><br></code><br></pre>
-
+<pre>  book = Book.<span style="font-weight: bold;">new</span>()<br>  book.isbn = "0201710897"<br>  book.title = "The PickAxe"<br>  book.description = "Best Ruby book out there!"<br>  book.author = "David Thomas, Andrew Hunt, Dave Thomas"<br><br>  lib = Library.<span style="font-weight: bold;">new</span>()<br>  lib.name = "Favorite Books"<br>  lib &lt;&lt; book</pre>
 <p>To save this information to an XML file:</p>
+
 
 <pre><code>File.open("library.xml", "w") <span style="font-weight: bold;">do</span> |f|<br> lib.to_xml.write(f, 0)<br><span style="font-weight: bold;">end</span><br></code><br></pre>
 
+
 <p>This would put the following XML into <em>library.xml</em>:</p>
 
-<pre><code>&lt;library&gt;<br> &lt;NAME&gt;&lt;![CDATA[My Funky Library]]&gt;&lt;/NAME&gt;<br> &lt;books&gt;<br> &lt;book ISBN='0201710897'&gt;<br> &lt;title&gt;The PickAxe&lt;/title&gt;<br> &lt;description&gt;&lt;![CDATA[Probably the best ruby book out there]]&gt;&lt;/description&gt;<br> &lt;author&gt;David Thomas, Andrew Hunt, Dave Thomas&lt;/author&gt;<br> &lt;/book&gt;<br> &lt;book ISBN='9248710987'&gt;<br> &lt;title&gt;The Wee Free Men&lt;/title&gt;<br> &lt;description&gt;&lt;![CDATA[Funny book about small, magic, swearing gnomes]]&gt;&lt;/description&gt;<br> &lt;author&gt;Terry Pratchett&lt;/author&gt;<br> &lt;/book&gt;<br> &lt;/books&gt;<br>&lt;/library&gt;<br></code><br></pre>
+
+<pre><code>&lt;library&gt;<br> &lt;NAME&gt;&lt;![CDATA[Favorite Books]]&gt;&lt;/NAME&gt;<br> &lt;books&gt;<br>   &lt;book ISBN='0201710897'&gt;<br>   &lt;title&gt;The PickAxe&lt;/title&gt;<br>   &lt;description&gt;&lt;![CDATA[Best Ruby book out there!]]&gt;&lt;/description&gt;<br>   &lt;author&gt;David Thomas, Andrew Hunt, Dave Thomas&lt;/author&gt;<br>   &lt;/book&gt;<br> &lt;/books&gt;<br>&lt;/library&gt;</code><br></pre>
+
 
 <p>To later populate the library object from the XML file:</p>
 
+
 <pre> <code>lib = Library.parse(File.read("library.xml"))<br></code><br></pre>
+
 
 <p>To do a one-to-one mapping between XML objects, such as book
 and publisher,
 you would use the <em>xml_object</em> annotation. For
 example:</p>
 
+
 <pre><code>&lt;book isbn="0974514055"&gt;<br> &lt;title&gt;Programming Ruby - 2nd Edition&lt;/title&gt;<br> &lt;description&gt;Second edition of the great book&lt;/description&gt;<br> &lt;publisher&gt;<br> &lt;name&gt;Pragmatic Bookshelf&lt;/name&gt;<br> &lt;/publisher&gt;<br>&lt;/book&gt;<br></code><br></pre>
+
 
 <p>Can be mapped using the following code:</p>
 
+
 <pre><code><span style="font-weight: bold;">class</span> BookWithPublisher<br> <span style="font-weight: bold;">include</span> ROXML<br><br> xml_name :book<br> xml_object :publisher, Publisher<br><span style="font-weight: bold;">end</span><br></code><br></pre>
+
 
 <p>Note: In the above example, <em>xml_name</em>
 annotation tells ROXML to set the element
@@ -119,7 +157,9 @@ name to "book" for mapping to XML. The default is XML element name is
 the class name in lowercase; "bookwithpublisher"
 in this case.</p>
 
+
 </div>
+
 
 <div id="footer" class="contentBlock">
 <p>ROXML&nbsp;is licensed under the MIT License. See
@@ -129,10 +169,13 @@ project tracking, downloads, and other information, visit
 the <a href="http://rubyforge.org/projects/roxml">ROXML
 RubyForge Project</a> page.</p>
 
+
 </div>
+
 
 <div id="cvs_id">$Id: INDEX,v 1.6 2006/06/28 03:52:38
 zakmandhro Exp $</div>
+
 
 </body>
 </html>

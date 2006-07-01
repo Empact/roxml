@@ -2,8 +2,8 @@
 require "rubygems"
 require "rake/runtest"
 require "rake/rdoctask"
-require "rake/packagetask"
 require "rake/contrib/rubyforgepublisher"
+require 'rake/gempackagetask'
 
 # load settings
 require "rakeconfig.rb"
@@ -33,10 +33,14 @@ Rake::PackageTask.new(ProjectInfo[:name], ProjectInfo[:version]) do |p|
   p.package_files = ReleaseFiles
 end
 
-desc "Create a release"
-task :release=>[:clean,:test,:doc,:package]
+task :package=>:rdoc
+task :rdoc=>:test
+
+desc "Create a RubyGem project"
+Rake::GemPackageTask.new(ProjectGemSpec) do |pkg|
+end
 
 desc "Clean generated files"
-task :clean do |task|
-  FileUtils::Verbose.rmtree("pkg")
+task :clobber=>[:clobber_package, :clobber_rdoc] do |task|
+  #
 end

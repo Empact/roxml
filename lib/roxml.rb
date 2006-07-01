@@ -1,27 +1,29 @@
+# ROXML Ruby Object to XML mapping library. For more information
+# visit http://roxml.rubyforge.org
 #
-# ROXML: Ruby Object to XML Mapping Library
+# Copyright (c) 2004-2006 Zak Mandhro and Anders Engstrom
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # 
-# $Id: roxml.rb,v 1.4 2006/06/28 04:43:54 zakmandhro Exp $
-#
 # =Quick Start Guide
 #
-# This is a short usage example. See the docs at roxml.rubyforge.org for further
-# examples.
+# This is a short usage example. See ROXML::ROXML_Class and packaged test cases for more information.
 #
-# Consider a <em>Library</em> containing a number of books. To describe that library and
-# its books the following classes are defined:
+# Consider an XML document representing a Library containing a number of Books. You
+# can map this structure to Ruby classes that provide addition useful behavior. With
+# ROXML, you can annotate the Ruby classes as follows:
 #
 #   class Book
 #       include ROXML
 #
-#       xml_attribute :isdn, "ISDN"
+#       xml_attribute :isbn, "ISBN"
 #       xml_text :title
 #       xml_text :description, nil, ROXML::TAG_CDATA
 #       xml_text :author
-#
-#       def initialize
-#           yield self if block_given?
-#       end
 #   end
 #
 #   class Library
@@ -33,22 +35,15 @@
 #
 # To create a library and put a number of books in it we could run the following code:
 #
-#   lib = Library.new
-#   lib.name = "My Funky Library"
-#   
-#   lib.books << Book.new do |book|
-#       book.isdn = "0201710897"
-#       book.title = "The PickAxe"
-#       book.description = "Probably the best Ruby book out there"
-#       book.author = "David Thomas, Andrew Hunt, Dave Thomas"
-#   end
+#   book = Book.new()
+#   book.isbn = "0201710897"
+#   book.title = "The PickAxe"
+#   book.description = "Best Ruby book out there!"
+#   book.author = "David Thomas, Andrew Hunt, Dave Thomas"
 #
-#   lib.books << Book.new do |book|
-#       book.isdn = "9248710987"
-#       book.title = "The Wee Free Men"
-#       book.author = "Terry Pratchett"
-#       book.description = "Funny book about small, magic, swearing gnomes"
-#   end
+#   lib = Library.new()
+#   lib.name = "Favorite Books"
+#   lib << book
 #
 # To save this information to an XML file:
 #
@@ -60,29 +55,31 @@
 #
 #   lib = Library.parse(File.read("library.xml"))
 #
-# To do a one-to-one mapping between XML objects, such as book and publisher,
+# Similarly, to do a one-to-one mapping between XML objects, such as book and publisher,
 # you would use the *xml_object* annotation. For example:
 # 
 # 	<book isbn="0974514055">
 # 	  <title>Programming Ruby - 2nd Edition</title>
-# 	  <description>Second edition of the great book</description>
+# 	  <description>Second edition of the great book.</description>
 # 	  <publisher>
 # 	  	<name>Pragmatic Bookshelf</name>
 # 	  </publisher>
 # 	</book>
 # 
-# Can be mapped using the following code:
+# can be mapped using the following code:
 # 
 # 	class BookWithPublisher
-#   		include ROXML
+#   	include ROXML
 # 
 # 	    xml_name :book
 # 	    xml_object :publisher, Publisher
 # 	end
 # 
-# Note: In the above example, *xml_name* annotation tells ROXML to set the element
+# Note: In the above example, _xml_name_ annotation tells ROXML to set the element
 # name to "book" for mapping to XML. The default is XML element name is the class name in lowercase; "bookwithpublisher"
 # in this case.
+# 
+# For more information on available annotations, see ROXML::ROXML_Class
 module ROXML
 
     require 'rexml/document'
@@ -91,7 +88,7 @@ module ROXML
     # a variable accessor should be read-only (no "accessor=(val)" is generated).
     TAG_READONLY = 1
 
-    # Option that declares that a xml text element should be
+    # Option that declares that an XML text element should be
     # wrapped in a CDATA section.
     TAG_CDATA = 2
 
@@ -100,7 +97,7 @@ module ROXML
     TAG_ARRAY = 4
 
     #
-    # Internal base class that represents a XML - Class binding.
+    # Internal base class that represents an XML - Class binding.
     # 
     class XMLRef 
         attr_accessor :accessor, :name, :array
@@ -113,14 +110,14 @@ module ROXML
         end
         
         # Converts this XML reference to XML and updates the
-        # passed in element (xml) with data.
+        # passed in element (XML) with data.
         #
         # <b>Returns</b>: The updated XML node.
         def update_xml(xml, value)
             xml
         end
 
-        # Reads data from the xml element and populates the object
+        # Reads data from the XML element and populates the object
         # instance accordingly.
         #
         # <b>Returns</b>: The updated instance.
@@ -136,12 +133,14 @@ module ROXML
     #     XMLTextRef
     #   </element>
     class XMLAttributeRef < XMLRef
+        # Updates the attribute in the given XML block to
+        # the value provided.
         def update_xml(xml, value)
             xml.attributes[name] = value.to_s.to_utf
             xml
         end
 
-        # Reads data from the xml element and populates the object
+        # Reads data from the XML element and populates the object
         # instance accordingly.
         def populate(xml, instance)
             instance.instance_variable_set("@#{accessor}", xml.attributes[name])
@@ -158,6 +157,8 @@ module ROXML
     class XMLTextRef < XMLAttributeRef
         attr_accessor :cdata, :wrapper
 
+        # Updates the text in the given _xml_ block to
+        # the _value_ provided.
         def update_xml(xml, value)
             parent = (wrapper ? xml.add_element(wrapper) : xml)
             if array
@@ -195,6 +196,8 @@ module ROXML
     class XMLObjectRef < XMLTextRef
         attr_accessor :klass
 
+        # Updates the composed XML object in the given XML block to
+        # the value provided.
         def update_xml(xml, value)
             parent = (wrapper ? xml.add_element(wrapper) : xml)
             unless array
@@ -207,6 +210,8 @@ module ROXML
             xml
         end
 
+        # Reads data from the XML element and populates the references XML
+        # object accordingly.
         def populate(xml, instance)
             data = nil
             unless array
@@ -227,17 +232,24 @@ module ROXML
     end
 
 
-    #
-    # Internal module that is used to extend the target class
-    # with macro-like functions for declaring xml settings.
-    # This module should never be directly included or extended.
+    # This class defines the annotation methods that are mixed into your
+    # Ruby classes for XML mapping information and behavior.
+    # 
+    # See xml_name, xml_text, xml_attribute and xml_object for available
+    # annotations.
     #
     module ROXML_Class
         #
-        # Creates a new object using an XML input tree.
+        # Creates a new Ruby object from XML using mapping information
+        # annotated in the class.
         # 
         # The input data is either a REXML::Element or a String representing
         # the XML document.
+        #
+        # Example
+        #   book = Book.parse(File.read("book.xml"))
+        # or
+        #   book = Book.parse("<book><name>Beyond Java</name></book>")
         #
         def parse(data)
 
@@ -252,9 +264,15 @@ module ROXML
             return inst
         end
     
-        #
-        # States the name of the XML element that represents this class.
-        # The default name of the XML element is otherwise the self.name.downcase.
+        # Sets the name of the XML element that represents this class. Use this
+        # to override the default lowercase class name.
+        # 
+        # Example:
+        #   class BookWithPublisher
+        #     xml_name :book
+        #   end
+        # 
+        # Without the xml_name annotation, the XML mapped tag would have been "bookwithpublisher".
         #
         def xml_name(name)
             @tag_name = name
@@ -262,25 +280,45 @@ module ROXML
 
         #
         # Declare an accessor for the included class that should be 
-        # represented as a XML attribute.
+        # represented as an XML attribute.
         #
-        # [sym]     Symbol. The name of the accessor
-        # [name]    String. An optional name that should be used for the attribute in XML.
+        # [sym]     Symbol representing the name of the accessor
+        # [name]    An optional name that should be used for the attribute in XML.
         #           Default is sym.id2name.
-        # [options] Valid options are TAG_READONLY. 
+        # [options] Valid options are TAG_READONLY to attribute as read-only
         # 
+        # Example:
+        #   class Book
+        #     xml_attribute :isbn, "ISBN"
+        #   end
+        # 
+        # To map:
+        #   <book ISBN="0974514055"></book>
+        #   
         def xml_attribute(sym, name = nil, options = 0)
             add_ref(XMLAttributeRef.new(sym, name))
             add_accessor(sym, (TAG_READONLY & options != TAG_READONLY))
         end
 
         #
-        # Declares an accessor that represents one or more xml children.
+        # Declares an accessor that represents one or more XML text elements.
         #
-        # [sym]     Symbol. The name of the accessor.
-        # [name]    String. See description in xml_attribute.
-        # [options] Valid options are TAG_CDATA, TAG_ARRAY and TAG_READONLY.
-        # [wrapper] An optional name of a wrapping tag for this xml accessor.
+        # [sym]     Symbol representing the name of the accessor.
+        # [name]    An optional name that should be used for the attribute in XML.
+        #           Default is sym.id2name.
+        # [options] TAG_CDATA for character data, TAG_ARRAY for one-to-many, and
+        #           TAG_READONLY for read-only access.
+        # [wrapper] An optional name of a wrapping tag for this XML accessor.
+        #
+        # Example:
+        #   class Book
+        #     xml_text :description, nil, ROXML::TAG_CDATA
+        #   end
+        # 
+        # To map:
+        #   <book>
+        #     <description><![CDATA[Probably the best Ruby book out there]]></description>
+        #   </book>
         def xml_text(sym, name = nil, options = 0, wrapper = nil)
             ref = XMLTextRef.new(sym, name) do |r|
                 r.cdata = (TAG_CDATA & options == TAG_CDATA)
@@ -292,12 +330,53 @@ module ROXML
         end
         
         #
-        # Declares an accessor that represents another ROXML class.
+        # Declares an accessor that represents another ROXML class as child XML element
+        # (one-to-one or composition) or array of child elements (one-to-many or
+        # aggregation). Default is one-to-one. Use TAG_ARRAY option for one-to-many.
         #
-        # [sym]     Symbol. The name of the accessor.
-        # [klass]   The referenced ROXML class.
-        # [options] Valid options are TAG_ARRAY and TAG_READONLY.
-        # [wrapper] See description in xml_text
+        # [sym]     Symbol representing the name of the accessor.
+        # [name]    An optional name that should be used for the attribute in XML.
+        #           Default is sym.id2name.
+        # [options] TAG_ARRAY for one-to-many, and TAG_READONLY for read-only access.
+        # [wrapper] An optional name of a wrapping tag for this XML accessor.
+        # 
+        # Composition example:
+        # 	<book>
+        # 	  <publisher>
+        # 	  	<name>Pragmatic Bookshelf</name>
+        # 	  </publisher>
+        # 	</book>
+        # 
+        # Can be mapped using the following code:
+        # 	class Book
+        # 	    xml_object :publisher, Publisher
+        # 	end
+        # 
+        # Aggregation example:
+        #   <library>
+        #     <name>Ruby books</name>
+        #     <books>
+        #       <book/>
+        #       <book/>
+        #     </books>
+        #   </library>
+        #
+        # Can be mapped using the following code:
+        #   class Library
+        #       xml_text :name, nil, ROXML::TAG_CDATA
+        #       xml_object :books, Book, ROXML::TAG_ARRAY, "books"
+        #   end
+        # 
+        # If you don't have the <books> tag to wrap around the list of <book> tags:
+        #   <library>
+        #     <name>Ruby books</name>
+        #     <book/>
+        #     <book/>
+        #   </library>
+        # 
+        # You can skip the wrapper argument:
+        #       xml_object :books, Book, ROXML::TAG_ARRAY
+        #       
         def xml_object(sym, klass, options = 0, wrapper = nil)
             ref = XMLObjectRef.new(sym, nil) do |r|
                 r.array = (TAG_ARRAY & options == TAG_ARRAY)
@@ -309,7 +388,7 @@ module ROXML
         end
 
         # Returns the tag name (also known as xml_name) of the class.
-        # If no tag name set with xml_name method, returns default class name
+        # If no tag name is set with xml_name method, returns default class name
         # in lowercase.
         def tag_name
             @tag_name || self.name.downcase
@@ -330,7 +409,7 @@ module ROXML
 
         def assert_accessor(name)
             @tag_accessors = [] unless @tag_accessors
-            raise "Accessor #{name} is already defined as xml accessor in class #{self}" if @tag_accessors.include?(name)
+            raise "Accessor #{name} is already defined as XML accessor in class #{self}" if @tag_accessors.include?(name)
             @tag_accessors << name
         end
 

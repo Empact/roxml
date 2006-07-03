@@ -11,14 +11,21 @@ ProjectInfo = {
   :name=>"roxml",
   :description=>"Ruby Object to XML mapping library",
   :homepage=>"http://roxml.rubyforge.org",
-  :version=>"1.0"
+  :version=>"1.0",
+  :author_link=>"http://rubyforge.org/users/zakmandhro/",
+  :author_name=>"Zak Mandhro"
 }
 
 ReleaseFiles = FileList[
-  "lib/**/*.rb", "**/*.txt", "**/Rakefile", "**/rakeconfig.rb",
-  "test/**/*.rb", "test/**/*.xml", "doc/**/*", "html/**/*"
+  "lib/**/*.rb", "**/*.txt", "**/README", "**/Rakefile", "**/rakeconfig.rb",
+  "rake/**/*","test/**/*.rb", "test/**/*.xml", "doc/**/*", "html/**/*"
 ].exclude(/\bCVS\b|~$/)
 
+PluginPackageFiles = FileList[
+  "lib/**/*.rb", "**/*.txt", "**/README", "**/Rakefile", "**/rakeconfig.rb",
+  "rake/**/*","test/**/*.rb", "test/**/*.xml"
+].exclude(/\bCVS\b|~$/)
+ 
 GemFiles = FileList[
   "lib/**/*.rb", "**/*.txt", "test/**/*", "test/**/*.xml", "doc/**/*"
 ].exclude(/\bCVS\b|~$/)

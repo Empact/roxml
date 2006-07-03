@@ -128,7 +128,7 @@ module Rake
     end
 
     def add_folder(folder_name)
-      dir = File.dirname(folder_name).gsub("#{@dest}",".")
+      dir = File.dirname(folder_name).gsub("#{@dest}",".").gsub("./","")
       fn = File.basename(folder_name) + "/"
       folder = @folders[dir] || @folders[dir]=[]
       folder << fn
@@ -145,6 +145,7 @@ module Rake
         end
         
         @package_files.each do |fn|
+          puts ". #{fn}" if verbose
           f = File.join(@dest, fn)
           fdir = File.dirname(f)
           unless File.exist?(fdir)
@@ -153,6 +154,7 @@ module Rake
           end
           if File.directory?(fn)
             mkdir_p(f,:verbose=>false)
+            add_folder("#{fn}/")
           else
             cp(fn, f, :verbose=>false)
             add_file(fn)
@@ -165,7 +167,7 @@ module Rake
 
     def generate_index_files
       @folders.each do |folder, files|
-        puts " + Publishing #{@dest}/#{folder}/index.html" if @verbose
+        puts " + Creating #{@dest}/#{folder}/index.html" if @verbose
         File.open("#{@dest}/#{folder}/index.html", "w") do |index|
           title = "Rails Plug-in for #@name #@version"
           index.write("<html><head><title>#{title}</title></head>\n")

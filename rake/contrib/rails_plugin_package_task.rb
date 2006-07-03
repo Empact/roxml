@@ -16,13 +16,79 @@
 # EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 # USE OR OTHER DEALINGS IN THE SOFTWARE.
+# 
+# = Rails Plug-in Package Task
+# 
+# RailsPluginPackageTask is a rake task designed to automate the publishing of
+# Ruby on Rails plug-ins. The Rails plug-in installer _RecursiveHTTPFetcher_ makes
+# certain assumptions about the web servers that does not hold through from
+# server to server, for example:
+# 
+# * Server generates an index page with links
+# * All links to plug-in files are relative links
+# * Folder links end with a forward slash (used to recurse)
+#  
+# RubyForge web server is an example of where these assupmtions don't hold
+# true. As a result, you can not simply copy your files to a web server
+# and expect Rails HTTP plugin installer to just work.
+# 
+# This Rake task helps fill the gap by complying to the plug-in scripts assumptions.
+# Following the Rake package task conventions, it defines the "rails_plugin" task
+# that recurses through your _package_files_, generates compliant index.html for
+# each folder (that contains a file), and creates a directory structure that you
+# can publish as a set for your plugin.
+# 
+# = Example
+# 
+# The following example uses the Rake::RailsPluginPackageTask to create
+# the package. It then uses the Rake::SshDirPublisher to publish the plugin
+# directory to RubyForge.
+# # 
+#    Rake::RailsPluginPackageTask.new(ProjectInfo[:name], ProjectInfo[:version]) do |p|
+#      p.package_files = PluginPackageFiles
+#      p.plugin_files = FileList["rails_plugin/**/*"]
+#      p.extra_links = {"Project page"=>ProjectInfo[:homepage],
+#        "Author: #{ProjectInfo[:author_name]}"=>ProjectInfo[:author_link]}
+#      p.verbose = true
+#    end
+#    task :rails_plugin=>:clobber
+#    
+#    desc "Publish Ruby on Rails plug-in on RubyForge"
+#    task :release_plugin=>:rails_plugin do |task|
+#      pub = Rake::SshDirPublisher.new("#{RubyForgeConfig[:user_name]}@rubyforge.org",
+#    	"/var/www/gforge-projects/#{RubyForgeConfig[:unix_name]}",
+#    	"pkg/rails_plugin")
+#      pub.upload()
+#    end
+
 
 require 'rake'
 require 'rake/tasklib'
 
 module Rake
+  # RailsPluginPackageTask defines the "rails_plugin" task
+  # that recurses through your _package_files_, generates compliant index.html for
+  # each folder (that contains a file), and creates a directory structure that you
+  # can publish as a set for your plugin.
+  # 
+  # Some attributes that can be set:
+  # 
+  #   [package_dir]  Directory to store the package. Default 'pkg/rails_plugin'
+  #   
+  #   [package_dir]  Files to include in the plugin.
+  #   
+  #   [extra_links]  Links to put on every generated index page. Can be a hash, e.g.
+  #                  {"Home"=>"http://roxml.rubyforge.org"}, an array of strings or
+  #                  a single string.
+  #                  
+  #   [plugin_files]  Files to be placed in the root folder of the plug-in, e.g.
+  #                   init.rb. All files that are in the root of _package_dir_
+  #                   will also be placed in the root of the plug-in.
+  #                   
   class RailsPluginPackageTask < TaskLib
+    # Name of plug-in or application
     attr_accessor :name
+    # Version of plugin - distribution folder will be name_version
     attr_accessor :version
     # Directory used to store the package files (default is 'pkg/rails_plugin').
     attr_accessor :package_dir
@@ -71,7 +137,7 @@ module Rake
     def define
       desc "Create Ruby on Rails plug-in package"
       task :rails_plugin do
-        @dest = "#@package_dir/#@name"
+        @dest = "#@package_dir/#{@name}_#{@version}"
         makedirs(@dest,:verbose=>false)
         @plugin_files.each do |fn|
           cp(fn, @dest,:verbose=>false)

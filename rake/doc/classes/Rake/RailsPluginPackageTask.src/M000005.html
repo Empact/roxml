@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>define (Rake::RailsPluginPackageTask)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File contrib/rails_plugin_package_task.rb, line 137</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">define</span>
+      <span class="ruby-identifier">desc</span> <span class="ruby-value str">&quot;Create Ruby on Rails plug-in package&quot;</span>
+      <span class="ruby-identifier">task</span> <span class="ruby-identifier">:rails_plugin</span> <span class="ruby-keyword kw">do</span>
+        <span class="ruby-ivar">@dest</span> = <span class="ruby-node">&quot;#@package_dir/#{@name}_#{@version}&quot;</span>
+        <span class="ruby-identifier">makedirs</span>(<span class="ruby-ivar">@dest</span>,<span class="ruby-identifier">:verbose=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword kw">false</span>)
+        <span class="ruby-ivar">@plugin_files</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">cp</span>(<span class="ruby-identifier">fn</span>, <span class="ruby-ivar">@dest</span>,<span class="ruby-identifier">:verbose=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword kw">false</span>)
+          <span class="ruby-identifier">add_file</span>(<span class="ruby-constant">File</span>.<span class="ruby-identifier">basename</span>(<span class="ruby-identifier">fn</span>))
+        <span class="ruby-keyword kw">end</span>
+        
+        <span class="ruby-ivar">@package_files</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;. #{fn}&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">verbose</span>
+          <span class="ruby-identifier">f</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">join</span>(<span class="ruby-ivar">@dest</span>, <span class="ruby-identifier">fn</span>)
+          <span class="ruby-identifier">fdir</span> = <span class="ruby-constant">File</span>.<span class="ruby-identifier">dirname</span>(<span class="ruby-identifier">f</span>)
+          <span class="ruby-keyword kw">unless</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">exist?</span>(<span class="ruby-identifier">fdir</span>)
+            <span class="ruby-identifier">mkdir_p</span>(<span class="ruby-identifier">fdir</span>,<span class="ruby-identifier">:verbose=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword kw">false</span>)
+            <span class="ruby-identifier">add_folder</span>(<span class="ruby-node">&quot;#{fdir}/&quot;</span>)
+          <span class="ruby-keyword kw">end</span>
+          <span class="ruby-keyword kw">if</span> <span class="ruby-constant">File</span>.<span class="ruby-identifier">directory?</span>(<span class="ruby-identifier">fn</span>)
+            <span class="ruby-identifier">mkdir_p</span>(<span class="ruby-identifier">f</span>,<span class="ruby-identifier">:verbose=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword kw">false</span>)
+            <span class="ruby-identifier">add_folder</span>(<span class="ruby-node">&quot;#{fn}/&quot;</span>)
+          <span class="ruby-keyword kw">else</span>
+            <span class="ruby-identifier">cp</span>(<span class="ruby-identifier">fn</span>, <span class="ruby-identifier">f</span>, <span class="ruby-identifier">:verbose=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword kw">false</span>)
+            <span class="ruby-identifier">add_file</span>(<span class="ruby-identifier">fn</span>)
+          <span class="ruby-keyword kw">end</span>
+        <span class="ruby-keyword kw">end</span>
+        
+        <span class="ruby-identifier">generate_index_files</span>()
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

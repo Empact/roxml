@@ -1,0 +1,8 @@
+<book isbn="0974514055">
+  <title>Programming Ruby - 2nd Edition</title>
+  <description>Second edition of the great book out there</description>
+	<book isbn="0974514055">
+	  <title>Agile Web Development with Rails</title>
+	  <description>Jolt winning original Ruby on Rails book</description>
+	</book>
+</book>

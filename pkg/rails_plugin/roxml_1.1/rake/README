@@ -1,0 +1,3 @@
+This folder the Rails Plugin Package task for Rake, designed to automate
+the publishing of Rail plug-ins. It will eventually move out of this project
+into either a seperate project or part of Rake contrib folder.

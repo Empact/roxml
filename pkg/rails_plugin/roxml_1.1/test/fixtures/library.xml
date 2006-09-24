@@ -1,0 +1,30 @@
+<library>
+  <name>Ruby library</name>
+  <book isbn="0974514055">
+    <title>Programming Ruby - 2nd Edition</title>
+    <description>Second edition of the great book out there></description>
+    <contributions>
+      <contributor role="author">
+        <name>David Thomas</name>
+      </contributor>
+      <contributor role="supporting author">
+        <name>Andrew Hunt</name>
+      </contributor>
+      <contributor role="supporting author">
+        <name>Chad Fowler</name>
+      </contributor>
+    </contributions>
+  </book>
+  <book isbn="0974514055">
+    <title>Agile Web Development with Rails</title>
+    <description>Jolt winning original Ruby on Rails book</description>
+    <contributions>
+      <contributor role="author">
+        <name>David Thomas</name>
+      </contributor>
+      <contributor role="author">
+        <name>David Heinemeier Hansson</name>
+      </contributor>
+    </contributions>
+  </book>
+</library>

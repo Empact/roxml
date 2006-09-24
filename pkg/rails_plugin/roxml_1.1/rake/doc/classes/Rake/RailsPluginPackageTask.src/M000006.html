@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+  <title>generate_index_files (Rake::RailsPluginPackageTask)</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <link rel="stylesheet" href="../../.././rdoc-style.css" type="text/css" media="screen" />
+</head>
+<body class="standalone-code">
+  <pre><span class="ruby-comment cmt"># File contrib/rails_plugin_package_task.rb, line 168</span>
+    <span class="ruby-keyword kw">def</span> <span class="ruby-identifier">generate_index_files</span>
+      <span class="ruby-ivar">@folders</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">folder</span>, <span class="ruby-identifier">files</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot; + Creating #{@dest}/#{folder}/index.html&quot;</span> <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@verbose</span>
+        <span class="ruby-constant">File</span>.<span class="ruby-identifier">open</span>(<span class="ruby-node">&quot;#{@dest}/#{folder}/index.html&quot;</span>, <span class="ruby-value str">&quot;w&quot;</span>) <span class="ruby-keyword kw">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">index</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">title</span> = <span class="ruby-value str">&quot;Rails Plug-in for #@name #@version&quot;</span>
+          <span class="ruby-identifier">index</span>.<span class="ruby-identifier">write</span>(<span class="ruby-node">&quot;&lt;html&gt;&lt;head&gt;&lt;title&gt;#{title}&lt;/title&gt;&lt;/head&gt;\n&quot;</span>)
+          <span class="ruby-identifier">index</span>.<span class="ruby-identifier">write</span>(<span class="ruby-value str">&quot;&lt;body&gt;\n&quot;</span>)
+          <span class="ruby-identifier">index</span>.<span class="ruby-identifier">write</span>(<span class="ruby-node">&quot;&lt;h2&gt;#{title}&lt;/h2&gt;\n&quot;</span>)
+          <span class="ruby-identifier">extra_links</span> = <span class="ruby-identifier">create_extra_links</span>()
+          <span class="ruby-identifier">index</span>.<span class="ruby-identifier">write</span>(<span class="ruby-node">&quot;&lt;p&gt;#{extra_links}&lt;/p&gt;\n&quot;</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-identifier">extra_links</span>          
+          <span class="ruby-identifier">files</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">fn</span><span class="ruby-operator">|</span>
+            <span class="ruby-identifier">puts</span>(<span class="ruby-node">&quot;  - Adding #{fn}&quot;</span>) <span class="ruby-keyword kw">if</span> <span class="ruby-ivar">@verbose</span>
+            <span class="ruby-identifier">index</span>.<span class="ruby-identifier">write</span>(<span class="ruby-node">&quot;&amp;nbsp;&amp;nbsp;&lt;a href=\&quot;#{fn}\&quot;&gt;#{fn}&lt;/a&gt;&lt;br/&gt;\n&quot;</span>)
+          }
+          <span class="ruby-identifier">index</span>.<span class="ruby-identifier">write</span>(<span class="ruby-value str">&quot;&lt;hr size=\&quot;1\&quot;/&gt;&lt;p style=\&quot;font-size: x-small\&quot;&gt;Generated with RailsPluginPackageTask&lt;p&gt;&quot;</span>)
+          <span class="ruby-identifier">index</span>.<span class="ruby-identifier">write</span>(<span class="ruby-value str">&quot;&lt;/body&gt;\n&quot;</span>)
+          <span class="ruby-identifier">index</span>.<span class="ruby-identifier">write</span>(<span class="ruby-value str">&quot;&lt;/html&gt;\n&quot;</span>)
+        <span class="ruby-keyword kw">end</span>
+      <span class="ruby-keyword kw">end</span>
+    <span class="ruby-keyword kw">end</span></pre>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html 
+     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>File: rails_plugin_package_task.rb</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+  <meta http-equiv="Content-Script-Type" content="text/javascript" />
+  <link rel="stylesheet" href="../.././rdoc-style.css" type="text/css" media="screen" />
+  <script type="text/javascript">
+  // <![CDATA[
+
+  function popupCode( url ) {
+    window.open(url, "Code", "resizable=yes,scrollbars=yes,toolbar=no,status=no,height=150,width=400")
+  }
+
+  function toggleCode( id ) {
+    if ( document.getElementById )
+      elem = document.getElementById( id );
+    else if ( document.all )
+      elem = eval( "document.all." + id );
+    else
+      return false;
+
+    elemStyle = elem.style;
+    
+    if ( elemStyle.display != "block" ) {
+      elemStyle.display = "block"
+    } else {
+      elemStyle.display = "none"
+    }
+
+    return true;
+  }
+  
+  // Make codeblocks hidden by default
+  document.writeln( "<style type=\"text/css\">div.method-source-code { display: none }</style>" )
+  
+  // ]]>
+  </script>
+
+</head>
+<body>
+
+
+
+  <div id="fileHeader">
+    <h1>rails_plugin_package_task.rb</h1>
+    <table class="header-table">
+    <tr class="top-aligned-row">
+      <td><strong>Path:</strong></td>
+      <td>contrib/rails_plugin_package_task.rb
+      </td>
+    </tr>
+    <tr class="top-aligned-row">
+      <td><strong>Last Update:</strong></td>
+      <td>Mon Jul 03 11:46:22 EDT 2006</td>
+    </tr>
+    </table>
+  </div>
+  <!-- banner header -->
+
+  <div id="bodyContent">
+
+
+
+  <div id="contextContent">
+
+    <div id="description">
+      <p>
+Copyright &#169; 2006 by Zak Mandhro
+</p>
+<p>
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the
+&quot;Software&quot;), to deal in the Software without restriction,
+including without limitation the rights to use, copy, modify, merge,
+publish, distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to the
+following conditions:
+</p>
+<p>
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+</p>
+<p>
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.
+</p>
+<h1>Rails Plug-in Package Task</h1>
+<p>
+RailsPluginPackageTask is a rake task designed to automate the publishing
+of Ruby on Rails plug-ins. The Rails plug-in installer
+<em>RecursiveHTTPFetcher</em> makes certain assumptions about the web
+servers that does not hold through from server to server, for example:
+</p>
+<ul>
+<li>Server generates an index page with links
+
+</li>
+<li>All links to plug-in files are relative links
+
+</li>
+<li>Folder links end with a forward slash (used to recurse)
+
+</li>
+</ul>
+<p>
+RubyForge web server is an example of where these assupmtions don&#8217;t
+hold true. As a result, you can not simply copy your files to a web server
+and expect Rails HTTP plugin installer to just work.
+</p>
+<p>
+This <a href="../../classes/Rake.html">Rake</a> task helps fill the gap by
+complying to the plug-in scripts assumptions. Following the <a
+href="../../classes/Rake.html">Rake</a> package task conventions, it
+defines the &quot;rails_plugin&quot; task that recurses through your
+<em>package_files</em>, generates compliant index.html for each folder
+(that contains a file), and creates a directory structure that you can
+publish as a set for your plugin.
+</p>
+<h1>Example</h1>
+<p>
+The following example uses the <a
+href="../../classes/Rake/RailsPluginPackageTask.html">Rake::RailsPluginPackageTask</a>
+to create the package. It then uses the Rake::SshDirPublisher to publish
+the plugin directory to RubyForge. #
+</p>
+<pre>
+   Rake::RailsPluginPackageTask.new(ProjectInfo[:name], ProjectInfo[:version]) do |p|
+     p.package_files = PluginPackageFiles
+     p.plugin_files = FileList[&quot;rails_plugin/**/*&quot;]
+     p.extra_links = {&quot;Project page&quot;=&gt;ProjectInfo[:homepage],
+       &quot;Author: #{ProjectInfo[:author_name]}&quot;=&gt;ProjectInfo[:author_link]}
+     p.verbose = true
+   end
+   task :rails_plugin=&gt;:clobber
+
+   desc &quot;Publish Ruby on Rails plug-in on RubyForge&quot;
+   task :release_plugin=&gt;:rails_plugin do |task|
+     pub = Rake::SshDirPublisher.new(&quot;#{RubyForgeConfig[:user_name]}@rubyforge.org&quot;,
+      &quot;/var/www/gforge-projects/#{RubyForgeConfig[:unix_name]}&quot;,
+      &quot;pkg/rails_plugin&quot;)
+     pub.upload()
+   end
+</pre>
+
+    </div>
+
+    <div id="requires-list">
+      <h3 class="section-bar">Required files</h3>
+
+      <div class="name-list">
+      rake&nbsp;&nbsp;
+      rake/tasklib&nbsp;&nbsp;
+      </div>
+    </div>
+
+   </div>
+
+
+  </div>
+
+
+    <!-- if includes -->
+
+    <div id="section">
+
+
+
+
+
+      
+
+
+    <!-- if method_list -->
+
+
+  </div>
+
+
+<div id="validator-badges">
+  <p><small><a href="http://validator.w3.org/check/referer">[Validate]</a></small></p>
+</div>
+
+</body>
+</html>

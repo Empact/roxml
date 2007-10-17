@@ -79,6 +79,14 @@ class TestROXML < Test::Unit::TestCase
     end
   end
 
+  def test_text_modificatoin
+    person = Person.parse(fixture(:person))
+    assert_equal("Ben Franklin", person.name)
+    person.name = "Fred"
+    xml=person.to_xml.to_s
+    assert(/Fred/=~xml)
+  end
+
   # Verify that an exception is thrown when two accessors have the same
   # name in a ROXML class.
   def test_duplicate_accessor

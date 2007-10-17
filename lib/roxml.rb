@@ -101,7 +101,7 @@ module ROXML
     
     # Option that declares an xml_text annotation to define the text
     # content of the container tag
-    TEXT_CONTENT = 5
+    TEXT_CONTENT = 8
 
     #
     # Internal base class that represents an XML - Class binding.

@@ -69,3 +69,7 @@ class Library < RoxmlMockObject
   xml_object :books, BookWithContributions, ROXML::TAG_ARRAY
 end
 
+class Person < RoxmlMockObject
+  xml_text :name, nil, ROXML::TEXT_CONTENT
+end
+

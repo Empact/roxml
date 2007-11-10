@@ -11,7 +11,7 @@ ProjectInfo = {
   :name=>"roxml",
   :description=>"Ruby Object to XML mapping library",
   :homepage=>"http://roxml.rubyforge.org",
-  :version=>"1.1",
+  :version=>"1.2",
   :author_link=>"http://rubyforge.org/users/zakmandhro/",
   :author_name=>"Zak Mandhro"
 }

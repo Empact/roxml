@@ -14,7 +14,7 @@ task :default => :test
 
 Rake::RDocTask.new do |rd|
   rd.rdoc_dir = "doc"
-  rd.rdoc_files.include("lib/**/*.rb")
+  rd.rdoc_files.include('MIT-LICENSE', 'README', "lib/**/*.rb")
 end
 
 Rake::RailsPluginPackageTask.new(ProjectInfo[:name], ProjectInfo[:version]) do |p|

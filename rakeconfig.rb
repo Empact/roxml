@@ -37,6 +37,8 @@ ProjectGemSpec = Gem::Specification.new do |s|
  s.homepage = ProjectInfo[:homepage]
  s.platform = Gem::Platform::RUBY
  s.author = "Zak Mandhro"
+ s.email = "mandhro@yahoo.com"
+ s.rubyforge_project = 'roxml'
  s.files = GemFiles
  s.requirements << 'none'
  s.require_path = 'lib'

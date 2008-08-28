@@ -9,6 +9,7 @@ require 'rake/gempackagetask'
 
 # load settings
 require "rakeconfig.rb"
+spec = eval(IO.read("roxml.gemspec"))
 
 task :default => :test
 
@@ -18,11 +19,11 @@ Rake::RDocTask.new do |rd|
   rd.options << '--main' << 'README.rdoc'
 end
 
-Rake::RailsPluginPackageTask.new(ProjectInfo[:name], ProjectInfo[:version]) do |p|
+Rake::RailsPluginPackageTask.new(spec.name, spec.version) do |p|
   p.package_files = PluginPackageFiles
   p.plugin_files = FileList["rails_plugin/**/*"]
-  p.extra_links = {"Project page"=>ProjectInfo[:homepage],
-    "Author: #{ProjectInfo[:author_name]}"=>ProjectInfo[:author_link]}
+  p.extra_links = {"Project page" => spec.homepage,
+                   "Author: Zak Mandhro" => 'http://rubyforge.org/users/zakmandhro/'}
   p.verbose = true
 end
 task :rails_plugin=>:clobber
@@ -47,7 +48,7 @@ task :test do |task|
 end 
 
 desc "Create the ZIP package"
-Rake::PackageTask.new(ProjectInfo[:name], ProjectInfo[:version]) do |p|
+Rake::PackageTask.new(spec.name, spec.version) do |p|
   p.need_zip = true
   p.package_files = ReleaseFiles
 end
@@ -58,7 +59,7 @@ task :package=>:rdoc
 task :rdoc=>:test
 
 desc "Create a RubyGem project"
-Rake::GemPackageTask.new(ProjectGemSpec) do |pkg|
+Rake::GemPackageTask.new(spec) do |pkg|
 end
 
 desc "Clobber generated files"

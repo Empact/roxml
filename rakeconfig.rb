@@ -18,7 +18,7 @@ ProjectInfo = {
 
 ReleaseFiles = FileList[
   "lib/**/*.rb", "*.txt", "README.rdoc", "Rakefile", "rakeconfig.rb",
-  "rake/**/*","test/**/*.rb", "test/**/*.xml", "doc/**/*", "html/**/*"
+  "rake/**/*","test/**/*.rb", "test/**/*.xml", "html/**/*"
 ].exclude(/\bCVS\b|~$/)
 
 PluginPackageFiles = FileList[
@@ -27,7 +27,7 @@ PluginPackageFiles = FileList[
 ].exclude(/\bCVS\b|~$/)
  
 GemFiles = FileList[
-  "lib/**/*.rb", "*.txt", "README.rdoc", "test/**/*", "test/**/*.xml", "doc/**/*"
+  "lib/**/*.rb", "*.txt", "README.rdoc", 'MIT-LICENSE', "test/**/*", "test/**/*.xml"
 ].exclude(/\bCVS\b|~$/)
 
 ProjectGemSpec = Gem::Specification.new do |s|
@@ -42,7 +42,7 @@ ProjectGemSpec = Gem::Specification.new do |s|
  s.files = GemFiles
  s.requirements << 'none'
  s.require_path = 'lib'
- s.test_file = "test/test_roxml.rb"
+ s.test_files = ["test/test_roxml.rb", 'test/test_string.rb']
  s.has_rdoc = true
  s.description = <<EOF
 ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML.

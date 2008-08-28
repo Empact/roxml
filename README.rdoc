@@ -1,0 +1,74 @@
+ROXML Ruby Object to XML mapping library. For more information
+visit http://roxml.rubyforge.org
+
+=Quick Start Guide
+
+This is a short usage example. See ROXML::ROXML_Class and packaged test cases for more information.
+
+Consider an XML document representing a Library containing a number of Books. You
+can map this structure to Ruby classes that provide addition useful behavior. With
+ROXML, you can annotate the Ruby classes as follows:
+
+  class Book
+      include ROXML
+
+      xml_attribute :isbn, "ISBN"
+      xml_text :title
+      xml_text :description, nil, ROXML::TAG_CDATA
+      xml_text :author
+  end
+
+  class Library
+      include ROXML
+
+      xml_text :name, "NAME", ROXML::TAG_CDATA
+      xml_object :books, Book, ROXML::TAG_ARRAY, "books"
+  end
+
+To create a library and put a number of books in it we could run the following code:
+
+  book = Book.new()
+  book.isbn = "0201710897"
+  book.title = "The PickAxe"
+  book.description = "Best Ruby book out there!"
+  book.author = "David Thomas, Andrew Hunt, Dave Thomas"
+
+  lib = Library.new()
+  lib.name = "Favorite Books"
+  lib << book
+
+To save this information to an XML file:
+
+  File.open("library.xml", "w") do |f|
+      lib.to_xml.write(f, 0)
+  end
+
+To later populate the library object from the XML file:
+
+  lib = Library.parse(File.read("library.xml"))
+
+Similarly, to do a one-to-one mapping between XML objects, such as book and publisher,
+you would use the *xml_object* annotation. For example:
+
+  <book isbn="0974514055">
+    <title>Programming Ruby - 2nd Edition</title>
+    <description>Second edition of the great book.</description>
+    <publisher>
+      <name>Pragmatic Bookshelf</name>
+    </publisher>
+  </book>
+
+can be mapped using the following code:
+
+  class BookWithPublisher
+      include ROXML
+
+      xml_name :book
+      xml_object :publisher, Publisher
+  end
+
+Note: In the above example, _xml_name_ annotation tells ROXML to set the element
+name to "book" for mapping to XML. The default is XML element name is the class name in lowercase; "bookwithpublisher"
+in this case.
+
+For more information on available annotations, see ROXML::ROXML_Class

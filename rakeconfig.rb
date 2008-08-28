@@ -17,17 +17,17 @@ ProjectInfo = {
 }
 
 ReleaseFiles = FileList[
-  "lib/**/*.rb", "*.txt", "README", "Rakefile", "rakeconfig.rb",
+  "lib/**/*.rb", "*.txt", "README.rdoc", "Rakefile", "rakeconfig.rb",
   "rake/**/*","test/**/*.rb", "test/**/*.xml", "doc/**/*", "html/**/*"
 ].exclude(/\bCVS\b|~$/)
 
 PluginPackageFiles = FileList[
-  "lib/**/*.rb", "*.txt", "README", "Rakefile", "rakeconfig.rb",
+  "lib/**/*.rb", "*.txt", "README.rdoc", "Rakefile", "rakeconfig.rb",
   "rake/**/*", "test/**/*.rb", "test/**/*.xml"
 ].exclude(/\bCVS\b|~$/)
  
 GemFiles = FileList[
-  "lib/**/*.rb", "*.txt", "README", "test/**/*", "test/**/*.xml", "doc/**/*"
+  "lib/**/*.rb", "*.txt", "README.rdoc", "test/**/*", "test/**/*.xml", "doc/**/*"
 ].exclude(/\bCVS\b|~$/)
 
 ProjectGemSpec = Gem::Specification.new do |s|

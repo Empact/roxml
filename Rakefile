@@ -1,11 +1,11 @@
 # Rake libraries used
 require "rubygems"
+require "rails_plugin_package_task"
 require "rake/runtest"
 require "rake/rdoctask"
 require "rake/contrib/rubyforgepublisher"
 require "rake/contrib/publisher"
 require 'rake/gempackagetask'
-require "rake/contrib/rails_plugin_package_task"
 
 # load settings
 require "rakeconfig.rb"

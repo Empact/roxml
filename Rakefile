@@ -68,10 +68,7 @@ task :package=>:rdoc
 task :rdoc=>:test
 
 desc "Create a RubyGem project"
-Rake::GemPackageTask.new(spec) do |pkg|
-end
+Rake::GemPackageTask.new(spec).define
 
 desc "Clobber generated files"
-task :clobber=>[:clobber_package, :clobber_rdoc] do |task|
-  #
-end
+task :clobber=>[:clobber_package, :clobber_rdoc]

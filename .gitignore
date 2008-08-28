@@ -1,3 +1,4 @@
 build
 Rake.config
 pkg
+.project

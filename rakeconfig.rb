@@ -44,7 +44,6 @@ ProjectGemSpec = Gem::Specification.new do |s|
  s.require_path = 'lib'
  s.test_file = "test/test_roxml.rb"
  s.has_rdoc = true
- s.autorequire = 'roxml'
  s.description = <<EOF
 ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML.
 Using simple annotations, it enables Ruby classes to be mapped to XML. ROXML takes care

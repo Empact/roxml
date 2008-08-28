@@ -27,8 +27,7 @@ end
 Rake::RailsPluginPackageTask.new(spec.name, spec.version) do |p|
   p.package_files = FileList[
     "lib/**/*.rb", "*.txt", "README.rdoc", "Rakefile",
-    "rake/**/*", "test/**/*.rb", "test/**/*.xml"
-    ].exclude(/\bCVS\b|~$/)
+    "rake/**/*", "test/**/*.rb", "test/**/*.xml"]
   p.plugin_files = FileList["rails_plugin/**/*"]
   p.extra_links = {"Project page" => spec.homepage,
                    "Author: Zak Mandhro" => 'http://rubyforge.org/users/zakmandhro/'}
@@ -60,8 +59,7 @@ Rake::PackageTask.new(spec.name, spec.version) do |p|
   p.need_zip = true
   p.package_files = FileList[
     "lib/**/*.rb", "*.txt", "README.rdoc", "Rakefile",
-    "rake/**/*","test/**/*.rb", "test/**/*.xml", "html/**/*"
-    ].exclude(/\bCVS\b|~$/)
+    "rake/**/*","test/**/*.rb", "test/**/*.xml", "html/**/*"]
 end
 
 desc "Create the plugin package"

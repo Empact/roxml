@@ -8,8 +8,13 @@ require "rake/contrib/publisher"
 require 'rake/gempackagetask'
 
 # load settings
-require "rakeconfig.rb"
 spec = eval(IO.read("roxml.gemspec"))
+
+# Provide the username used to upload website etc.
+RubyForgeConfig = {
+  :unix_name=>"roxml", 
+  :user_name=>"zakmandhro"
+}
 
 task :default => :test
 
@@ -20,7 +25,10 @@ Rake::RDocTask.new do |rd|
 end
 
 Rake::RailsPluginPackageTask.new(spec.name, spec.version) do |p|
-  p.package_files = PluginPackageFiles
+  p.package_files = FileList[
+    "lib/**/*.rb", "*.txt", "README.rdoc", "Rakefile",
+    "rake/**/*", "test/**/*.rb", "test/**/*.xml"
+    ].exclude(/\bCVS\b|~$/)
   p.plugin_files = FileList["rails_plugin/**/*"]
   p.extra_links = {"Project page" => spec.homepage,
                    "Author: Zak Mandhro" => 'http://rubyforge.org/users/zakmandhro/'}
@@ -50,7 +58,10 @@ end
 desc "Create the ZIP package"
 Rake::PackageTask.new(spec.name, spec.version) do |p|
   p.need_zip = true
-  p.package_files = ReleaseFiles
+  p.package_files = FileList[
+    "lib/**/*.rb", "*.txt", "README.rdoc", "Rakefile",
+    "rake/**/*","test/**/*.rb", "test/**/*.xml", "html/**/*"
+    ].exclude(/\bCVS\b|~$/)
 end
 
 desc "Create the plugin package"

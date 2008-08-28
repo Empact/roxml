@@ -10,7 +10,6 @@ Gem::Specification.new do |s|
   s.files = [
     'README.rdoc',
     'MIT-LICENSE',
-    'rakeconfig.rb',
     'Rakefile',
     'roxml.gemspec',
     'lib/roxml.rb',

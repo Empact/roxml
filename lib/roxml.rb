@@ -32,8 +32,8 @@ module ROXML
     def initialize(accessor, name = nil)
       @accessor = accessor
       @name = (name || accessor.id2name)
+      @array = false
       yield self if block_given?
-      @array = false unless @array
     end
   end
 
@@ -325,12 +325,12 @@ module ROXML
     private
 
     def add_ref(xml_ref)
-      @xml_refs = [] unless @xml_refs
+      @xml_refs ||= []
       @xml_refs << xml_ref
     end
 
     def assert_accessor(name)
-      @tag_accessors = [] unless @tag_accessors
+      @tag_accessors ||= []
       raise "Accessor #{name} is already defined as XML accessor in class #{self}" if @tag_accessors.include?(name)
       @tag_accessors << name
     end
@@ -347,15 +347,12 @@ module ROXML
           val
         end
       end
-      if writable 
-        unless instance_methods.include?("#{name}=")
-          define_method("#{name}=") do |v|
-            instance_variable_set("@#{name}", v)
-          end
+      if writable && !instance_methods.include?("#{name}=")
+        define_method("#{name}=") do |v|
+          instance_variable_set("@#{name}", v)
         end
       end
-    end
-    
+    end    
   end ## End ROXML_Class module ##############
 
   class << self

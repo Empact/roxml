@@ -1,4 +1,6 @@
 require 'lib/string'
+require 'rubygems'
+require 'activesupport'
 
 module ROXML
   require 'rexml/document'
@@ -166,16 +168,13 @@ module ROXML
     #  book = Book.parse("<book><name>Beyond Java</name></book>")
     #
     def parse(data)
-
       xml = (data.kind_of?(REXML::Element) ? data : REXML::Document.new(data).root)
       
-      inst = self.allocate
-
-      tag_refs.each do |ref|
-        ref.populate(xml, inst)        
+      returning self.allocate do |inst|
+        tag_refs.each do |ref|
+          ref.populate(xml, inst)        
+        end        
       end
-    
-      return inst
     end
   
     # Sets the name of the XML element that represents this class. Use this
@@ -339,12 +338,12 @@ module ROXML
       assert_accessor(name)
       unless instance_methods.include?(name)
         define_method(name) do
-          val = instance_variable_get("@#{name}")
-          if val.nil? && is_array
-            val = Array.new
-            instance_variable_set("@#{name}", val)
+          returning instance_variable_get("@#{name}") do |val|            
+            if val.nil? && is_array
+              val = Array.new
+              instance_variable_set("@#{name}", val)
+            end
           end
-          val
         end
       end
       if writable && !instance_methods.include?("#{name}=")
@@ -369,14 +368,13 @@ module ROXML
   # Returns an REXML::Element representing this object.
   #
   def to_xml
-    root = REXML::Element.new(tag_name)
-    tag_refs.each do |ref|
-      v = __send__(ref.accessor)
-      if v
-        root = ref.update_xml(root, v)
-      end
+    returning REXML::Element.new(tag_name) do |root|
+      tag_refs.each do |ref|
+        if v = __send__(ref.accessor)
+          root = ref.update_xml(root, v)
+        end
+      end      
     end
-    root
   end
 
   #

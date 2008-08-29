@@ -5,7 +5,7 @@ class Book
 
   xml_attribute :isbn
   xml_text :title
-  xml_text :description, :as => ROXML::TAG_CDATA
+  xml_text :description, :as => :cdata
   xml_text :author
 end
 
@@ -13,7 +13,7 @@ class Author
   include ROXML
 
   xml_attribute :role
-  xml_text :text, :as => ROXML::TEXT_CONTENT
+  xml_text :text, :as => :text_content
 end
 
 class BookWithAuthorTextAttribute
@@ -21,7 +21,7 @@ class BookWithAuthorTextAttribute
 
   xml_attribute :isbn
   xml_text :title
-  xml_text :description, :as => ROXML::TAG_CDATA
+  xml_text :description, :as => :cdata
   xml_object :author, :of => Author
 end
 
@@ -39,7 +39,7 @@ class BookWithContributions
   xml_attribute :isbn
   xml_text :title
   xml_text :description
-  xml_object :contributions, :of => Contributor, :as => ROXML::TAG_ARRAY, :in => "contributions"
+  xml_object :contributions, :of => Contributor, :as => :array, :in => "contributions"
 end
 
 class BookWithContributors
@@ -49,7 +49,7 @@ class BookWithContributors
   xml_attribute :isbn
   xml_text :title
   xml_text :description
-  xml_object :contributors, :of => Contributor, :as => ROXML::TAG_ARRAY
+  xml_object :contributors, :of => Contributor, :as => :array
 end
 
 class Publisher
@@ -82,11 +82,11 @@ class Library
   include ROXML
 
   xml_text :name
-  xml_object :books, :of => BookWithContributions, :as => ROXML::TAG_ARRAY
+  xml_object :books, :of => BookWithContributions, :as => :array
 end
 
 class Person
   include ROXML
   
-  xml_text :name, :as => ROXML::TEXT_CONTENT
+  xml_text :name, :as => :text_content
 end

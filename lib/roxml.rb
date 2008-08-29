@@ -7,23 +7,23 @@ module ROXML
 
   # Default tag behavior declaration with single
   # read and write.
-  TAG_DEFAULT = 0
+  TAG_DEFAULT = nil
 
   # Option that may be used to declare that 
   # a variable accessor should be read-only (no "accessor=(val)" is generated).
-  TAG_READONLY = 1
+  TAG_READONLY = :readonly
 
   # Option that declares that an XML text element's value should be
   # wrapped in a CDATA section.
-  TAG_CDATA = 2
+  TAG_CDATA = :cdata
 
   # Option that declares an accessor as an array (referencing "many"
   # items).
-  TAG_ARRAY = 4
+  TAG_ARRAY = :array
   
   # Option that declares an xml_text annotation to define the text
   # content of the container tag
-  TEXT_CONTENT = 8
+  TEXT_CONTENT = :text_content
 
   #
   # Internal base class that represents an XML - Class binding.
@@ -198,7 +198,7 @@ module ROXML
     # [sym]   Symbol representing the name of the accessor
     # [:from]  An optional name that should be used for the attribute in XML.
     #      Default is sym.id2name.
-    # [:as] Valid options are TAG_READONLY to attribute as read-only
+    # [:as] Valid options are :readonly to attribute as read-only
     # 
     # Example:
     #  class Book
@@ -209,9 +209,9 @@ module ROXML
     #  <book ISBN="0974514055"></book>
     #  
     def xml_attribute(sym, args = {})
-      args.reverse_merge! :from => nil, :as => TAG_DEFAULT
+      args.reverse_merge! :from => nil, :as => nil
       add_ref(XMLAttributeRef.new(sym, args[:from]))
-      add_accessor(sym, (TAG_READONLY & args[:as] != TAG_READONLY))
+      add_accessor(sym, args[:as] != :readonly)
     end
 
     #
@@ -220,19 +220,19 @@ module ROXML
     # [sym]   Symbol representing the name of the accessor.
     # [:from]  An optional name that should be used for the attribute in XML.
     #      Default is sym.id2name.
-    # [:as] TAG_CDATA for character data, TAG_ARRAY for one-to-many, 
-    #      TEXT_CONTENT to declare main text content for containing tag,
-    #      and TAG_READONLY for read-only access.
+    # [:as] :cdata for character data, :array for one-to-many, 
+    #      :text_content to declare main text content for containing tag,
+    #      and :readonly for read-only access.
     # [:in] An optional name of a wrapping tag for this XML accessor.
     #
     # Example:
     #  class Author
     #   xml_attribute :role
-    #   xml_text :text, :as => ROXML::TEXT_CONTENT
+    #   xml_text :text, :as => :text_content
     #  end
     #  
     #  class Book
-    #   xml_text :description, :as => ROXML::TAG_CDATA
+    #   xml_text :description, :as => :cdata
     #  end
     # 
     # To map:
@@ -241,26 +241,28 @@ module ROXML
     #   <author role="primary">David Thomas</author>
     #  </book>
     def xml_text(sym, args = {})
-      args.reverse_merge! :from => nil, :in => nil, :as => TAG_DEFAULT
+      args.reverse_merge! :from => nil, :in => nil, :as => []
+      args[:as] = [args[:as]] unless args[:as].respond_to? :include?
+      
       ref = XMLTextRef.new(sym, args[:from]) do |r|
-       r.text_content = (TEXT_CONTENT & args[:as]==TEXT_CONTENT)
-       r.cdata = (TAG_CDATA & args[:as]==TAG_CDATA)
-       r.array = (TAG_ARRAY & args[:as]==TAG_ARRAY)
-       r.wrapper = args[:in] if args[:in]
+        r.text_content = args[:as].include?(:text_content)
+        r.cdata = args[:as].include?(:cdata)
+        r.array = args[:as].include?(:array)
+        r.wrapper = args[:in] if args[:in]
       end
       add_ref(ref)
-      add_accessor(sym, (TAG_READONLY & args[:as] != TAG_READONLY), ref.array)
+      add_accessor(sym, !args[:as].include?(:readonly), ref.array)
     end
     
     #
     # Declares an accessor that represents another ROXML class as child XML element
     # (one-to-one or composition) or array of child elements (one-to-many or
-    # aggregation). Default is one-to-one. Use TAG_ARRAY option for one-to-many.
+    # aggregation). Default is one-to-one. Use :array option for one-to-many.
     #
     # [sym]   Symbol representing the name of the accessor.
     # [:from]  An optional name that should be used for the attribute in XML.
     #      Default is sym.id2name.
-    # [:as] TAG_ARRAY for one-to-many, and TAG_READONLY for read-only access.
+    # [:as] :array for one-to-many, and :readonly for read-only access.
     # [:in] An optional name of a wrapping tag for this XML accessor.
     # 
     # Composition example:
@@ -286,8 +288,8 @@ module ROXML
     #
     # Can be mapped using the following code:
     #  class Library
-    #    xml_text :name, :as => ROXML::TAG_CDATA
-    #    xml_object :books, :of => Book, :as => ROXML::TAG_ARRAY, :in => "books"
+    #    xml_text :name, :as => :cdata
+    #    xml_object :books, :of => Book, :as => [:readonly, :array], :in => "books"
     #  end
     # 
     # If you don't have the <books> tag to wrap around the list of <book> tags:
@@ -298,17 +300,19 @@ module ROXML
     #  </library>
     # 
     # You can skip the wrapper argument:
-    #    xml_object :books, :of => Book, :as => ROXML::TAG_ARRAY
+    #    xml_object :books, :of => Book, :as => :array
     #    
     def xml_object(sym, args = {})
-      args.reverse_merge! :of => nil, :in => nil, :as => TAG_DEFAULT
+      args.reverse_merge! :of => nil, :in => nil, :as => []
+      args[:as] = [args[:as]] unless args[:as].respond_to? :include?
+
       ref = XMLObjectRef.new(sym, nil) do |r|
-        r.array = (TAG_ARRAY & args[:as] == TAG_ARRAY)
+        r.array = args[:as].include?(:array)
         r.wrapper = args[:in] if args[:in]
         r.klass = args[:of]
       end
       add_ref(ref)
-      add_accessor(sym, (TAG_READONLY & args[:as] != TAG_READONLY), ref.array)
+      add_accessor(sym, !args[:as].include?(:readonly), ref.array)
     end
 
     # Returns the tag name (also known as xml_name) of the class.

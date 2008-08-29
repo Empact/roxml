@@ -14,15 +14,15 @@ ROXML, you can annotate the Ruby classes as follows:
 
       xml_attribute :isbn, :from => "ISBN"
       xml_text :title
-      xml_text :description, :as => ROXML::TAG_CDATA
+      xml_text :description, :as => :cdata
       xml_text :author
   end
 
   class Library
       include ROXML
 
-      xml_text :name, :from => "NAME", :as => ROXML::TAG_CDATA
-      xml_object :books, :of => Book, :as => ROXML::TAG_ARRAY, :in => "books"
+      xml_text :name, :from => "NAME", :as => :cdata
+      xml_object :books, :of => Book, :as => :array, :in => "books"
   end
 
 To create a library and put a number of books in it we could run the following code:

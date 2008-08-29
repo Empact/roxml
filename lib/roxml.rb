@@ -208,7 +208,7 @@ module ROXML
     # To map:
     #  <book ISBN="0974514055"></book>
     #  
-    def xml_attribute(sym, name = nil, options = 0)
+    def xml_attribute(sym, name = nil, options = TAG_DEFAULT)
       add_ref(XMLAttributeRef.new(sym, name))
       add_accessor(sym, (TAG_READONLY & options != TAG_READONLY))
     end
@@ -298,7 +298,7 @@ module ROXML
     # You can skip the wrapper argument:
     #    xml_object :books, Book, ROXML::TAG_ARRAY
     #    
-    def xml_object(sym, klass, options = 0, wrapper = nil)
+    def xml_object(sym, klass, options = TAG_DEFAULT, wrapper = nil)
       ref = XMLObjectRef.new(sym, nil) do |r|
         r.array = (TAG_ARRAY & options == TAG_ARRAY)
         r.wrapper = wrapper if wrapper

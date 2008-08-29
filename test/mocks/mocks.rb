@@ -1,34 +1,40 @@
 require "lib/roxml"
 
-class RoxmlMockObject
+class Book
   include ROXML
-end
 
-class Book < RoxmlMockObject
   xml_attribute :isbn
   xml_text :title
   xml_text :description, nil, ROXML::TAG_CDATA
   xml_text :author
 end
 
-class Author < RoxmlMockObject
+class Author
+  include ROXML
+
   xml_attribute :role
   xml_text :text, nil, ROXML::TEXT_CONTENT
 end
 
-class BookWithAuthorTextAttribute < RoxmlMockObject
+class BookWithAuthorTextAttribute
+  include ROXML
+
   xml_attribute :isbn
   xml_text :title
   xml_text :description, nil, ROXML::TAG_CDATA
   xml_object :author, Author
 end
 
-class Contributor < RoxmlMockObject
+class Contributor
+  include ROXML
+
   xml_attribute :role
   xml_text :name
 end
 
-class BookWithContributions < RoxmlMockObject
+class BookWithContributions
+  include ROXML
+
   xml_name :book
   xml_attribute :isbn
   xml_text :title
@@ -36,7 +42,9 @@ class BookWithContributions < RoxmlMockObject
   xml_object :contributions, Contributor, ROXML::TAG_ARRAY, "contributions"
 end
 
-class BookWithContributors < RoxmlMockObject
+class BookWithContributors
+  include ROXML
+
   xml_name :book
   xml_attribute :isbn
   xml_text :title
@@ -44,11 +52,15 @@ class BookWithContributors < RoxmlMockObject
   xml_object :contributors, Contributor, ROXML::TAG_ARRAY
 end
 
-class Publisher < RoxmlMockObject
+class Publisher
+  include ROXML
+
   xml_text :name
 end
 
-class BookWithPublisher < RoxmlMockObject
+class BookWithPublisher
+  include ROXML
+
   xml_name :book
   xml_attribute :isbn
   xml_text :title
@@ -56,7 +68,9 @@ class BookWithPublisher < RoxmlMockObject
   xml_object :publisher, Publisher
 end
 
-class BookPair < RoxmlMockObject
+class BookPair
+  include ROXML
+
   xml_attribute :isbn
   xml_text :title
   xml_text :description
@@ -64,11 +78,15 @@ class BookPair < RoxmlMockObject
   xml_object :book, Book
 end
 
-class Library < RoxmlMockObject
+class Library
+  include ROXML
+
   xml_text :name
   xml_object :books, BookWithContributions, ROXML::TAG_ARRAY
 end
 
-class Person < RoxmlMockObject
+class Person
+  include ROXML
+  
   xml_text :name, nil, ROXML::TEXT_CONTENT
 end

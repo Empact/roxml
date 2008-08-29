@@ -21,10 +21,8 @@ class TestROXML < Test::Unit::TestCase
 
   # Malformed XML parsing should throw REXML::ParseException
   def test_malformed
-    begin
+    assert_raise REXML::ParseException do
       book = Book.parse(fixture(:book_malformed))
-      fail()
-    rescue REXML::ParseException
     end
   end
   
@@ -90,16 +88,13 @@ class TestROXML < Test::Unit::TestCase
   # Verify that an exception is thrown when two accessors have the same
   # name in a ROXML class.
   def test_duplicate_accessor
-    begin
+    assert_raise RuntimeError do
       klass = Class.new do
         include ROXML
         
         xml_attribute :id
         xml_text :id
       end   
-      raise "Defining a class with multiple accessors with same name should fail."
-    rescue
-      # Ok we should fail.
     end
   end
 end

@@ -5,10 +5,10 @@ class RoxmlMockObject
 end
 
 class Book < RoxmlMockObject
-    xml_attribute :isbn
-    xml_text :title
-    xml_text :description, nil, ROXML::TAG_CDATA
-    xml_text :author
+  xml_attribute :isbn
+  xml_text :title
+  xml_text :description, nil, ROXML::TAG_CDATA
+  xml_text :author
 end
 
 class Author < RoxmlMockObject
@@ -17,10 +17,10 @@ class Author < RoxmlMockObject
 end
 
 class BookWithAuthorTextAttribute < RoxmlMockObject
-    xml_attribute :isbn
-    xml_text :title
-    xml_text :description, nil, ROXML::TAG_CDATA
-    xml_object :author, Author
+  xml_attribute :isbn
+  xml_text :title
+  xml_text :description, nil, ROXML::TAG_CDATA
+  xml_object :author, Author
 end
 
 class Contributor < RoxmlMockObject
@@ -29,19 +29,19 @@ class Contributor < RoxmlMockObject
 end
 
 class BookWithContributions < RoxmlMockObject
-    xml_name :book
-    xml_attribute :isbn
-    xml_text :title
-    xml_text :description
-    xml_object :contributions, Contributor, ROXML::TAG_ARRAY, "contributions"
+  xml_name :book
+  xml_attribute :isbn
+  xml_text :title
+  xml_text :description
+  xml_object :contributions, Contributor, ROXML::TAG_ARRAY, "contributions"
 end
 
 class BookWithContributors < RoxmlMockObject
-    xml_name :book
-    xml_attribute :isbn
-    xml_text :title
-    xml_text :description
-    xml_object :contributors, Contributor, ROXML::TAG_ARRAY
+  xml_name :book
+  xml_attribute :isbn
+  xml_text :title
+  xml_text :description
+  xml_object :contributors, Contributor, ROXML::TAG_ARRAY
 end
 
 class Publisher < RoxmlMockObject
@@ -49,19 +49,19 @@ class Publisher < RoxmlMockObject
 end
 
 class BookWithPublisher < RoxmlMockObject
-    xml_name :book
-    xml_attribute :isbn
-    xml_text :title
-    xml_text :description
-    xml_object :publisher, Publisher
+  xml_name :book
+  xml_attribute :isbn
+  xml_text :title
+  xml_text :description
+  xml_object :publisher, Publisher
 end
 
 class BookPair < RoxmlMockObject
-    xml_attribute :isbn
-    xml_text :title
-    xml_text :description
-    xml_text :author
-    xml_object :book, Book
+  xml_attribute :isbn
+  xml_text :title
+  xml_text :description
+  xml_text :author
+  xml_object :book, Book
 end
 
 class Library < RoxmlMockObject
@@ -72,4 +72,3 @@ end
 class Person < RoxmlMockObject
   xml_text :name, nil, ROXML::TEXT_CONTENT
 end
-

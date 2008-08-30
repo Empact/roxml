@@ -4,8 +4,6 @@ require 'rubygems'
 require 'activesupport'
 
 module ROXML
-  require 'rexml/document'
-
   # Default tag behavior declaration with single
   # read and write.
   TAG_DEFAULT = nil

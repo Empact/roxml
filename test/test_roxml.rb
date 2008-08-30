@@ -5,7 +5,7 @@ require "test/mocks/mocks"
 
 class TestROXML < Test::Unit::TestCase
   include FixtureHelper
-  
+
   # Test a simple mapping with no composition
   def test_valid_simple
     book = Book.parse(fixture(:book_valid))
@@ -25,7 +25,7 @@ class TestROXML < Test::Unit::TestCase
       book = Book.parse(fixture(:book_malformed))
     end
   end
-  
+
   # Test XML object containing list of other XML objects (one-to-many)
   # In this case, book with contibutions
   def test_one_to_many_with_container
@@ -36,7 +36,7 @@ class TestROXML < Test::Unit::TestCase
       assert expected_authors.include?(contributor.name)
     end
   end
-  
+
   # Test XML object containing 1-n other XML objects without container (one-to-many)
   # In this case, book with contibutions
   def test_one_to_many_without_container
@@ -46,7 +46,7 @@ class TestROXML < Test::Unit::TestCase
     book.contributors.each do |contributor|
       assert(expected_contributors.include?(contributor.name))
     end
-  end  
+  end
 
   # Test XML object containing one other XML object (one-to-one)
   # In this case, book with publisher
@@ -55,14 +55,14 @@ class TestROXML < Test::Unit::TestCase
     assert_equal("Programming Ruby - 2nd Edition", book.title)
     assert_equal("Pragmatic Bookshelf", book.publisher.name)
   end
-  
+
   # Test XML object containing type of self (self-reference)
   def test_self_reference
     book = BookPair.parse(fixture(:book_pair))
     assert_equal("Programming Ruby - 2nd Edition", book.title)
-    assert_equal("Agile Web Development with Rails", book.book.title)    
+    assert_equal("Agile Web Development with Rails", book.book.title)
   end
-  
+
   # Test three-level composition (one-to-many-to-many)
   def test_one_to_many_to_many
     expected_contributors = ["David Thomas","Andrew Hunt","Chad Fowler", "David Heinemeier Hansson"]
@@ -91,10 +91,10 @@ class TestROXML < Test::Unit::TestCase
     assert_raise RuntimeError do
       klass = Class.new do
         include ROXML
-        
+
         xml_attribute :id
         xml_text :id
-      end   
+      end
     end
   end
 end

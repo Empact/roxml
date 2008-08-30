@@ -87,6 +87,6 @@ end
 
 class Person
   include ROXML
-  
+
   xml_text :name, :as => :text_content
 end

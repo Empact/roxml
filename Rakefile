@@ -12,7 +12,7 @@ spec = eval(IO.read("roxml.gemspec"))
 
 # Provide the username used to upload website etc.
 RubyForgeConfig = {
-  :unix_name=>"roxml", 
+  :unix_name=>"roxml",
   :user_name=>"zakmandhro"
 }
 
@@ -47,12 +47,12 @@ desc "Publish and plugin site on RubyForge"
 task :publish do |task|
   pub = Rake::RubyForgePublisher.new(RubyForgeConfig[:unix_name], RubyForgeConfig[:user_name])
   pub.upload()
-end 
+end
 
 desc "Run all the tests"
 task :test do |task|
   Rake::run_tests()
-end 
+end
 
 desc "Create the ZIP package"
 Rake::PackageTask.new(spec.name, spec.version) do |p|

@@ -8,7 +8,7 @@ module ROXML
   # read and write.
   TAG_DEFAULT = nil
 
-  # Option that may be used to declare that 
+  # Option that may be used to declare that
   # a variable accessor should be read-only (no "accessor=(val)" is generated).
   TAG_READONLY = :readonly
 
@@ -19,14 +19,14 @@ module ROXML
   # Option that declares an accessor as an array (referencing "many"
   # items).
   TAG_ARRAY = :array
-  
+
   # Option that declares an xml_text annotation to define the text
   # content of the container tag
   TEXT_CONTENT = :text_content
 
   # This class defines the annotation methods that are mixed into your
   # Ruby classes for XML mapping information and behavior.
-  # 
+  #
   # See xml_name, xml_text, xml_attribute and xml_object for available
   # annotations.
   #
@@ -34,7 +34,7 @@ module ROXML
     #
     # Creates a new Ruby object from XML using mapping information
     # annotated in the class.
-    # 
+    #
     # The input data is either an XML::Node or a String representing
     # the XML document.
     #
@@ -45,22 +45,22 @@ module ROXML
     #
     def parse(data)
       xml = (data.kind_of?(XML::Node) ? data : XML::Parser.string(data).parse.root)
-      
+
       returning self.allocate do |inst|
         tag_refs.each do |ref|
-          ref.populate(xml, inst)        
-        end        
+          ref.populate(xml, inst)
+        end
       end
     end
-  
+
     # Sets the name of the XML element that represents this class. Use this
     # to override the default lowercase class name.
-    # 
+    #
     # Example:
     #  class BookWithPublisher
     #   xml_name :book
     #  end
-    # 
+    #
     # Without the xml_name annotation, the XML mapped tag would have been "bookwithpublisher".
     #
     def xml_name(name)
@@ -68,22 +68,22 @@ module ROXML
     end
 
     #
-    # Declare an accessor for the included class that should be 
+    # Declare an accessor for the included class that should be
     # represented as an XML attribute.
     #
     # [sym]   Symbol representing the name of the accessor
     # [:from]  An optional name that should be used for the attribute in XML.
     #      Default is sym.id2name.
     # [:as] Valid options are :readonly to attribute as read-only
-    # 
+    #
     # Example:
     #  class Book
     #   xml_attribute :isbn, :from => "ISBN"
     #  end
-    # 
+    #
     # To map:
     #  <book ISBN="0974514055"></book>
-    #  
+    #
     def xml_attribute(sym, args = {})
       args.reverse_merge! :from => nil, :as => nil
       tag_refs << XMLAttributeRef.new(sym, args[:from])
@@ -96,7 +96,7 @@ module ROXML
     # [sym]   Symbol representing the name of the accessor.
     # [:from]  An optional name that should be used for the attribute in XML.
     #      Default is sym.id2name.
-    # [:as] :cdata for character data, :array for one-to-many, 
+    # [:as] :cdata for character data, :array for one-to-many,
     #      :text_content to declare main text content for containing tag,
     #      and :readonly for read-only access.
     # [:in] An optional name of a wrapping tag for this XML accessor.
@@ -106,11 +106,11 @@ module ROXML
     #   xml_attribute :role
     #   xml_text :text, :as => :text_content
     #  end
-    #  
+    #
     #  class Book
     #   xml_text :description, :as => :cdata
     #  end
-    # 
+    #
     # To map:
     #  <book>
     #   <description><![CDATA[Probably the best Ruby book out there]]></description>
@@ -119,7 +119,7 @@ module ROXML
     def xml_text(sym, args = {})
       args.reverse_merge! :from => nil, :in => nil, :as => []
       args[:as] = [args[:as]] unless args[:as].respond_to? :include?
-      
+
       ref = XMLTextRef.new(sym, args[:from]) do |r|
         r.text_content = args[:as].include?(:text_content)
         r.cdata = args[:as].include?(:cdata)
@@ -129,7 +129,7 @@ module ROXML
       tag_refs << ref
       add_accessor(sym, !args[:as].include?(:readonly), ref.array)
     end
-    
+
     #
     # Declares an accessor that represents another ROXML class as child XML element
     # (one-to-one or composition) or array of child elements (one-to-many or
@@ -141,19 +141,19 @@ module ROXML
     # [:as] :array for one-to-many, and :readonly for read-only access.
     # [:in] An optional name of a wrapping tag for this XML accessor.
     # [:of] The class of the object described
-    # 
+    #
     # Composition example:
     # 	<book>
     # 	 <publisher>
     # 	 	<name>Pragmatic Bookshelf</name>
     # 	 </publisher>
     # 	</book>
-    # 
+    #
     # Can be mapped using the following code:
     # 	class Book
     # 	  xml_object :publisher, Publisher
     # 	end
-    # 
+    #
     # Aggregation example:
     #  <library>
     #   <name>Ruby books</name>
@@ -168,17 +168,17 @@ module ROXML
     #    xml_text :name, :as => :cdata
     #    xml_object :books, :of => Book, :as => [:readonly, :array], :in => "books"
     #  end
-    # 
+    #
     # If you don't have the <books> tag to wrap around the list of <book> tags:
     #  <library>
     #   <name>Ruby books</name>
     #   <book/>
     #   <book/>
     #  </library>
-    # 
+    #
     # You can skip the wrapper argument:
     #    xml_object :books, :of => Book, :as => :array
-    #    
+    #
     def xml_object(sym, args = {})
       args.reverse_merge! :of => nil, :in => nil, :as => [], :from => nil
       args[:as] = [args[:as]] unless args[:as].respond_to? :include?
@@ -204,7 +204,7 @@ module ROXML
     def tag_refs
       @xml_refs ||= []
     end
-  
+
   private
 
     def assert_accessor(name)
@@ -217,7 +217,7 @@ module ROXML
       assert_accessor(name)
       unless instance_methods.include?(name)
         define_method(name) do
-          returning instance_variable_get("@#{name}") do |val|            
+          returning instance_variable_get("@#{name}") do |val|
             if val.nil? && is_array
               val = Array.new
               instance_variable_set("@#{name}", val)
@@ -230,7 +230,7 @@ module ROXML
           instance_variable_set("@#{name}", v)
         end
       end
-    end    
+    end
   end ## End ROXML_Class module ##############
 
   class << self
@@ -241,7 +241,7 @@ module ROXML
       super
       klass.__send__(:extend, ROXML_Class)
     end
-  end 
+  end
 
   #
   # To make it easier to reference the class's

@@ -9,7 +9,7 @@ class String
   def to_utf
     begin
       Iconv.new("utf-8", "iso-8859-1").iconv(self)
-    rescue Iconv::IllegalSequence => e
+    rescue Iconv::IllegalSequence
       STDERR << "!! Failed converting from UTF-8 -> ISO-8859-1 (#{self}). Already the right charset?"
       self
     end
@@ -21,7 +21,7 @@ class String
   def to_latin
     begin
       Iconv.new("iso-8859-1", "utf-8").iconv(self)
-    rescue Iconv::IllegalSequence => e
+    rescue Iconv::IllegalSequence
       STDERR << "!! Failed converting from ISO-8859-1 -> UTF-8 (#{self}). Already the right charset?"
       self
     end

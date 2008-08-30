@@ -49,7 +49,7 @@ module ROXML
     def update_xml(xml, value)
       parent = (wrapper ? xml.add_element(wrapper) : xml)
       if text_content
-       parent.text = (cdata ? REXML::CData.new(value.to_utf) : value.to_utf)       
+        parent.text = (cdata ? REXML::CData.new(value.to_utf) : value.to_utf)       
       elsif array
         value.each do |v|
           parent.add_element(name).text = (cdata ? REXML::CData.new(v.to_utf) : v.to_utf)  
@@ -65,7 +65,7 @@ module ROXML
     def populate(xml, instance)
       data = nil
       if text_content
-       data = xml.text
+        data = xml.text
       elsif array
         xpath = (wrapper ? "#{wrapper}/#{name}" : "#{name}")
         data = []

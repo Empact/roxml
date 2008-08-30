@@ -21,7 +21,7 @@ class TestROXML < Test::Unit::TestCase
 
   # Malformed XML parsing should throw REXML::ParseException
   def test_malformed
-    assert_raise REXML::ParseException do
+    assert_raise LibXML::XML::Parser::ParseError do
       book = Book.parse(fixture(:book_malformed))
     end
   end

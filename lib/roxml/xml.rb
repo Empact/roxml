@@ -1,4 +1,10 @@
+require 'libxml'
+
 module ROXML
+  module XML
+    include LibXML::XML
+  end
+
   #
   # Internal base class that represents an XML - Class binding.
   # 
@@ -49,13 +55,13 @@ module ROXML
     def update_xml(xml, value)
       parent = (wrapper ? xml.add_element(wrapper) : xml)
       if text_content
-        parent.text = text(value)
+        parent.content = text(value)
       elsif array
         value.each do |v|
-          parent.add_element(name).text = text(v)
+          parent.add_element(name).content = text(v)
         end
       else
-        parent.add_element(name).text = text(value)
+        parent.add_element(name).content = text(value)
       end
       xml
     end
@@ -65,7 +71,7 @@ module ROXML
     def populate(xml, instance)
       data = nil
       if text_content
-        data = xml.text
+        data = xml.content
       elsif array
         xpath = (wrapper ? "#{wrapper}/#{name}" : "#{name}")
         data = []
@@ -75,8 +81,8 @@ module ROXML
           end
         end
       else
-        child = xml.elements[1, name]
-        data = child.text if child && child.text
+        child = xml.find_first(name)
+        data = child.content if child && child.content
       end
       instance.instance_variable_set("@#{accessor}", data) if data
       instance
@@ -84,7 +90,7 @@ module ROXML
 
   private
     def text(value)
-      cdata ? REXML::CData.new(value.to_utf) : value.to_utf
+      cdata ? XML::Node.new_cdata(value.to_utf) : value.to_utf
     end
   end
   
@@ -110,15 +116,14 @@ module ROXML
     def populate(xml, instance)
       data = nil
       unless array
-        child = xml.elements[1, klass.tag_name]
+        child = xml.find_first(klass.tag_name)
         if child
           data = klass.parse(child)
         end
       else
         xpath = (wrapper ? "#{wrapper}/#{klass.tag_name}" : "#{klass.tag_name}")
-        data = []
-        xml.each_element(xpath) do |e|
-          data << klass.parse(e)
+        data = xml.find(xpath).collect do |e|
+          klass.parse(e)
         end
       end
       instance.instance_variable_set("@#{accessor}", data) if data
@@ -127,10 +132,10 @@ module ROXML
   end
 
   #
-  # Returns an REXML::Element representing this object.
+  # Returns an XML::Node representing this object.
   #
   def to_xml
-    returning REXML::Element.new(tag_name) do |root|
+    returning XML::Node.new_element(tag_name) do |root|
       tag_refs.each do |ref|
         if v = __send__(ref.accessor)
           root = ref.update_xml(root, v)

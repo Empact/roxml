@@ -35,7 +35,7 @@ module ROXML
     # Creates a new Ruby object from XML using mapping information
     # annotated in the class.
     # 
-    # The input data is either a REXML::Element or a String representing
+    # The input data is either an XML::Node or a String representing
     # the XML document.
     #
     # Example
@@ -44,7 +44,7 @@ module ROXML
     #  book = Book.parse("<book><name>Beyond Java</name></book>")
     #
     def parse(data)
-      xml = (data.kind_of?(REXML::Element) ? data : REXML::Document.new(data).root)
+      xml = (data.kind_of?(XML::Node) ? data : XML::Parser.string(data).parse.root)
       
       returning self.allocate do |inst|
         tag_refs.each do |ref|
@@ -205,7 +205,7 @@ module ROXML
       @xml_refs ||= []
     end
   
-    private
+  private
 
     def assert_accessor(name)
       @tag_accessors ||= []

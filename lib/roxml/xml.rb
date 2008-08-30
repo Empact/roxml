@@ -49,13 +49,13 @@ module ROXML
     def update_xml(xml, value)
       parent = (wrapper ? xml.add_element(wrapper) : xml)
       if text_content
-        parent.text = (cdata ? REXML::CData.new(value.to_utf) : value.to_utf)       
+        parent.text = text(value)
       elsif array
         value.each do |v|
-          parent.add_element(name).text = (cdata ? REXML::CData.new(v.to_utf) : v.to_utf)  
+          parent.add_element(name).text = text(v)
         end
       else
-        parent.add_element(name).text = (cdata ? REXML::CData.new(value.to_utf) : value.to_utf)
+        parent.add_element(name).text = text(value)
       end
       xml
     end
@@ -80,6 +80,11 @@ module ROXML
       end
       instance.instance_variable_set("@#{accessor}", data) if data
       instance
+    end
+
+  private
+    def text(value)
+      cdata ? REXML::CData.new(value.to_utf) : value.to_utf
     end
   end
   

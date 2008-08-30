@@ -88,7 +88,7 @@ module ROXML
     #  
     def xml_attribute(sym, args = {})
       args.reverse_merge! :from => nil, :as => nil
-      add_ref(XMLAttributeRef.new(sym, args[:from]))
+      tag_refs << XMLAttributeRef.new(sym, args[:from])
       add_accessor(sym, args[:as] != :readonly)
     end
 
@@ -128,7 +128,7 @@ module ROXML
         r.array = args[:as].include?(:array)
         r.wrapper = args[:in] if args[:in]
       end
-      add_ref(ref)
+      tag_refs << ref
       add_accessor(sym, !args[:as].include?(:readonly), ref.array)
     end
     
@@ -189,7 +189,7 @@ module ROXML
         r.wrapper = args[:in] if args[:in]
         r.klass = args[:of]
       end
-      add_ref(ref)
+      tag_refs << ref
       add_accessor(sym, !args[:as].include?(:readonly), ref.array)
     end
 
@@ -203,15 +203,10 @@ module ROXML
     # Returns array of internal reference objects, such as attributes
     # and composed XML objects
     def tag_refs
-      @xml_refs || []
+      @xml_refs ||= []
     end
   
     private
-
-    def add_ref(xml_ref)
-      @xml_refs ||= []
-      @xml_refs << xml_ref
-    end
 
     def assert_accessor(name)
       @tag_accessors ||= []

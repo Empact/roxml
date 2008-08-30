@@ -142,6 +142,7 @@ module ROXML
     #      Default is sym.id2name.
     # [:as] :array for one-to-many, and :readonly for read-only access.
     # [:in] An optional name of a wrapping tag for this XML accessor.
+    # [:of] The class of the object described
     # 
     # Composition example:
     # 	<book>
@@ -181,10 +182,10 @@ module ROXML
     #    xml_object :books, :of => Book, :as => :array
     #    
     def xml_object(sym, args = {})
-      args.reverse_merge! :of => nil, :in => nil, :as => []
+      args.reverse_merge! :of => nil, :in => nil, :as => [], :from => nil
       args[:as] = [args[:as]] unless args[:as].respond_to? :include?
 
-      ref = XMLObjectRef.new(sym, nil) do |r|
+      ref = XMLObjectRef.new(sym, args[:from]) do |r|
         r.array = args[:as].include?(:array)
         r.wrapper = args[:in] if args[:in]
         r.klass = args[:of]

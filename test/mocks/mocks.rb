@@ -85,6 +85,14 @@ class Library
   xml_object :books, :of => BookWithContributions, :as => :array
 end
 
+class UppercaseLibrary
+  include ROXML
+
+  xml_name :library
+  xml_text :name, :from => 'NAME'
+  xml_object :books, :of => BookWithContributions, :as => :array, :from => 'BOOK'
+end
+
 class Person
   include ROXML
 

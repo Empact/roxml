@@ -94,6 +94,11 @@ module ROXML
   class XMLObjectRef < XMLTextRef
     attr_accessor :klass
 
+    def initialize(accessor, name = nil, &block)
+      super(accessor, name, &block)
+      @name = klass.tag_name.to_s unless name
+    end
+
     # Updates the composed XML object in the given XML block to
     # the value provided.
     def update_xml(xml, value)
@@ -113,12 +118,12 @@ module ROXML
     def populate(xml, instance)
       data = nil
       unless array
-        child = xml.find_first(klass.tag_name)
+        child = xml.find_first(name)
         if child
           data = klass.parse(child)
         end
       else
-        xpath = (wrapper ? "#{wrapper}/#{klass.tag_name}" : klass.tag_name.to_s)
+        xpath = (wrapper ? "#{wrapper}/#{name}" : name)
         data = xml.find(xpath).collect do |e|
           klass.parse(e)
         end

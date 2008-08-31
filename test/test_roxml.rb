@@ -70,12 +70,32 @@ class TestROXML < Test::Unit::TestCase
     expected_books = ["Programming Ruby - 2nd Edition", "Agile Web Development with Rails"]
     library = Library.parse(fixture(:library))
     assert_equal("Ruby library", library.name)
+    assert !library.books.empty?
     library.books.each do |book|
       assert expected_books.include?(book.title)
       book.contributions.each do |contributor|
         assert(expected_contributors.include?(contributor.name))
       end
     end
+  end
+
+  def test_xml_text_without_needed_from
+    assert !Library.parse(fixture(:library_uppercase)).name
+  end
+
+  def test_xml_text_with_needed_from
+    assert_equal "Ruby library", Library.parse(fixture(:library)).name
+    assert_equal "Ruby library", UppercaseLibrary.parse(fixture(:library_uppercase)).name
+  end
+
+  def test_xml_object_without_needed_from
+    assert_equal [], UppercaseLibrary.parse(fixture(:library)).books
+    assert_equal [], Library.parse(fixture(:library_uppercase)).books
+  end
+
+  def test_xml_object_with_needed_from
+    assert Library.parse(fixture(:library)).books
+    assert UppercaseLibrary.parse(fixture(:library_uppercase)).books
   end
 
   def test_text_modificatoin

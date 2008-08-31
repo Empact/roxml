@@ -88,6 +88,11 @@ class TestROXML < Test::Unit::TestCase
     assert_equal "Ruby library", UppercaseLibrary.parse(fixture(:library_uppercase)).name
   end
 
+  def test_xml_text_as_array
+    assert_equal ["David Thomas","Andrew Hunt","Dave Thomas"].sort,
+                 BookWithAuthors.parse(fixture(:book_with_authors)).authors.sort
+  end
+
   def test_xml_object_without_needed_from
     assert_equal [], UppercaseLibrary.parse(fixture(:library)).books
     assert_equal [], Library.parse(fixture(:library_uppercase)).books

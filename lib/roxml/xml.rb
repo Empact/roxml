@@ -78,7 +78,7 @@ module ROXML
         xml.content
       elsif array
         xml.find(xpath).collect do |e|
-          e.text.strip.to_latin if e.text
+          e.content.strip.to_latin if e.content
         end
       else
         child = xml.find_first(name)

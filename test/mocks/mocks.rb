@@ -16,6 +16,15 @@ class Author
   xml_text :text, :as => :text_content
 end
 
+class BookWithAuthors
+  include ROXML
+
+  xml_attribute :isbn
+  xml_text :title
+  xml_text :description, :as => :cdata
+  xml_text :authors, :as => :array, :from => 'author'
+end
+
 class BookWithAuthorTextAttribute
   include ROXML
 

@@ -17,6 +17,14 @@ module ROXML
       @array = false
       yield self if block_given?
     end
+
+    # Reads data from the XML element and populates the instance
+    # accordingly.
+    def populate(xml, instance)
+      data = collect_data(xml)
+      instance.instance_variable_set("@#{accessor}", data) if data
+      instance
+    end
   end
 
   # Interal class representing an XML attribute binding
@@ -33,11 +41,9 @@ module ROXML
       xml
     end
 
-    # Reads data from the XML element and populates the object
-    # instance accordingly.
-    def populate(xml, instance)
-      instance.instance_variable_set("@#{accessor}", xml.attributes[name])
-      instance
+  private
+    def collect_data(xml)
+      xml.attributes[name]
     end
   end
 
@@ -66,25 +72,20 @@ module ROXML
       xml
     end
 
-    # Reads data from the XML element and populates the text
-    # accordingly.
-    def populate(xml, instance)
-      data = nil
+  private
+    def collect_data(xml)
       if text_content
-        data = xml.content
+        xml.content
       elsif array
-        data = xml.find(xpath).collect do |e|
+        xml.find(xpath).collect do |e|
           e.text.strip.to_latin if e.text
         end
       else
         child = xml.find_first(name)
-        data = child.content if child && child.content
+        child.content if child
       end
-      instance.instance_variable_set("@#{accessor}", data) if data
-      instance
     end
 
-  private
     def text(value)
       cdata ? XML::Node.new_cdata(value.to_utf) : value.to_utf
     end
@@ -120,22 +121,17 @@ module ROXML
       xml
     end
 
-    # Reads data from the XML element and populates the references XML
-    # object accordingly.
-    def populate(xml, instance)
-      data = nil
+  private
+    def collect_data(xml)
       unless array
-        child = xml.find_first(name)
-        if child
-          data = klass.parse(child)
+        if child = xml.find_first(name)
+          klass.parse(child)
         end
       else
-        data = xml.find(xpath).collect do |e|
+        xml.find(xpath).collect do |e|
           klass.parse(e)
         end
       end
-      instance.instance_variable_set("@#{accessor}", data) if data
-      instance
     end
   end
 

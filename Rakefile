@@ -1,7 +1,6 @@
 # Rake libraries used
 require "rubygems"
 require "rails_plugin_package_task"
-require "rake/runtest"
 require "rake/rdoctask"
 require "rake/contrib/rubyforgepublisher"
 require "rake/contrib/publisher"
@@ -51,7 +50,8 @@ end
 
 desc "Run all the tests"
 task :test do |task|
-  Rake::run_tests()
+  require "rake/runtest"
+  Rake::run_tests "**/*_test.rb"
 end
 
 desc "Create the ZIP package"

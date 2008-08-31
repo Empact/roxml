@@ -1,30 +1,13 @@
-require "lib/roxml"
-require "test/unit"
-require "test/fixture_helper"
-require "test/mocks"
+require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-class TestROXML < Test::Unit::TestCase
+class TestXMLText < Test::Unit::TestCase
   include FixtureHelper
-
-  # Test a simple mapping with no composition
-  def test_valid_simple
-    book = Book.parse(fixture(:book_valid))
-    assert_equal("The PickAxe", book.title)
-  end
 
   # Test book with text and attribute
   def test_book_author_text_attribute
     book = BookWithAuthorTextAttribute.parse(fixture(:book_text_with_attribute))
     assert_equal("primary",book.author.role)
     assert_equal("David Thomas",book.author.text)
-  end
-
-  # Malformed XML parsing should throw REXML::ParseException
-  def test_malformed
-    LibXML::XML::Parser.register_error_handler {|err| }
-    assert_raise LibXML::XML::Parser::ParseError do
-      book = Book.parse(fixture(:book_malformed))
-    end
   end
 
   # Test XML object containing list of other XML objects (one-to-many)
@@ -79,20 +62,6 @@ class TestROXML < Test::Unit::TestCase
     end
   end
 
-  def test_xml_text_without_needed_from
-    assert !Library.parse(fixture(:library_uppercase)).name
-  end
-
-  def test_xml_text_with_needed_from
-    assert_equal "Ruby library", Library.parse(fixture(:library)).name
-    assert_equal "Ruby library", UppercaseLibrary.parse(fixture(:library_uppercase)).name
-  end
-
-  def test_xml_text_as_array
-    assert_equal ["David Thomas","Andrew Hunt","Dave Thomas"].sort,
-                 BookWithAuthors.parse(fixture(:book_with_authors)).authors.sort
-  end
-
   def test_xml_object_without_needed_from
     assert_equal [], UppercaseLibrary.parse(fixture(:library)).books
     assert_equal [], Library.parse(fixture(:library_uppercase)).books
@@ -101,26 +70,5 @@ class TestROXML < Test::Unit::TestCase
   def test_xml_object_with_needed_from
     assert Library.parse(fixture(:library)).books
     assert UppercaseLibrary.parse(fixture(:library_uppercase)).books
-  end
-
-  def test_text_modificatoin
-    person = Person.parse(fixture(:person))
-    assert_equal("Ben Franklin", person.name)
-    person.name = "Fred"
-    xml=person.to_xml.to_s
-    assert(/Fred/=~xml)
-  end
-
-  # Verify that an exception is thrown when two accessors have the same
-  # name in a ROXML class.
-  def test_duplicate_accessor
-    assert_raise RuntimeError do
-      klass = Class.new do
-        include ROXML
-
-        xml_attribute :id
-        xml_text :id
-      end
-    end
   end
 end

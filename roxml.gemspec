@@ -25,12 +25,18 @@ Gem::Specification.new do |s|
     'test/fixtures/library.xml',
     'test/fixtures/person.xml',
     'test/mocks.rb',
-    'test/fixture_helper.rb',
-    'test/test_roxml.rb',
-    'test/test_string.rb']
+    'test/test_helper.rb',
+    'test/unit/roxml_test.rb',
+    'test/unit/string_test.rb',
+    'test/unit/xml_text_test.rb',
+    'test/unit/xml_object_test.rb']
   s.requirements << 'none'
   s.require_path = 'lib'
-  s.test_files = ["test/test_roxml.rb", 'test/test_string.rb']
+  s.test_files = [
+    'test/unit/roxml_test.rb',
+    'test/unit/string_test.rb',
+    'test/unit/xml_text_test.rb',
+    'test/unit/xml_object_test.rb']
   s.has_rdoc = true
   s.description = <<EOF
 ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML.

@@ -105,7 +105,7 @@ module ROXML
     def initialize(accessor, klass, name = nil, &block)
       @klass = klass
       super(accessor, name, &block)
-      @name = klass.tag_name.to_s unless name
+      @name = klass.tag_name.to_s unless name || !klass.respond_to?(:tag_name)
     end
 
     # Updates the composed XML object in the given XML block to
@@ -126,12 +126,20 @@ module ROXML
     def collect_data(xml)
       unless array
         if child = xml.find_first(name)
-          klass.parse(child)
+          parse(child)
         end
       else
         xml.find(xpath).collect do |e|
-          klass.parse(e)
+          parse(e)
         end
+      end
+    end
+
+    def parse(elem)
+      if klass.respond_to? :parse
+        klass.parse(elem)
+      else
+        klass.new(elem)
       end
     end
   end

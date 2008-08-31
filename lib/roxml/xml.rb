@@ -73,12 +73,9 @@ module ROXML
       if text_content
         data = xml.content
       elsif array
-        xpath = (wrapper ? "#{wrapper}/#{name}" : "#{name}")
-        data = []
-        xml.each_element(xpath) do |e|
-          if e.text
-            data << e.text.strip.to_latin
-          end
+        xpath = (wrapper ? "#{wrapper}/#{name}" : name.to_s)
+        data = xml.find(xpath).collect do |e|
+          e.text.strip.to_latin if e.text
         end
       else
         child = xml.find_first(name)
@@ -121,7 +118,7 @@ module ROXML
           data = klass.parse(child)
         end
       else
-        xpath = (wrapper ? "#{wrapper}/#{klass.tag_name}" : "#{klass.tag_name}")
+        xpath = (wrapper ? "#{wrapper}/#{klass.tag_name}" : klass.tag_name.to_s)
         data = xml.find(xpath).collect do |e|
           klass.parse(e)
         end

@@ -118,7 +118,7 @@ module ROXML
     #  </book>
     def xml_text(sym, args = {})
       args.reverse_merge! :from => nil, :in => nil, :as => []
-      args[:as] = [args[:as]] unless args[:as].respond_to? :include?
+      args[:as] = [*args[:as]]
 
       ref = XMLTextRef.new(sym, args[:from]) do |r|
         r.text_content = args[:as].include?(:text_content)

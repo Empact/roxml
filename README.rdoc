@@ -22,7 +22,7 @@ ROXML, you can annotate the Ruby classes as follows:
       include ROXML
 
       xml_text :name, :from => "NAME", :as => :cdata
-      xml_object :books, :of => Book, :as => :array, :in => "books"
+      xml_object :books, Book, :as => :array, :in => "books"
   end
 
 To create a library and put a number of books in it we could run the following code:
@@ -64,7 +64,7 @@ can be mapped using the following code:
       include ROXML
 
       xml_name :book
-      xml_object :publisher, :of => Publisher
+      xml_object :publisher, Publisher
   end
 
 Note: In the above example, _xml_name_ annotation tells ROXML to set the element

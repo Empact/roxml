@@ -136,11 +136,11 @@ module ROXML
     # aggregation). Default is one-to-one. Use :array option for one-to-many.
     #
     # [sym]   Symbol representing the name of the accessor.
+    # [klass] The class of the object described
     # [:from]  An optional name that should be used for the attribute in XML.
     #      Default is sym.id2name.
     # [:as] :array for one-to-many, and :readonly for read-only access.
     # [:in] An optional name of a wrapping tag for this XML accessor.
-    # [:of] The class of the object described
     #
     # Composition example:
     # 	<book>
@@ -151,7 +151,7 @@ module ROXML
     #
     # Can be mapped using the following code:
     # 	class Book
-    # 	  xml_object :publisher, :of => Publisher
+    # 	  xml_object :publisher, Publisher
     # 	end
     #
     # Aggregation example:
@@ -166,7 +166,7 @@ module ROXML
     # Can be mapped using the following code:
     #  class Library
     #    xml_text :name, :as => :cdata
-    #    xml_object :books, :of => Book, :as => [:readonly, :array], :in => "books"
+    #    xml_object :books, Book, :as => [:readonly, :array], :in => "books"
     #  end
     #
     # If you don't have the <books> tag to wrap around the list of <book> tags:
@@ -177,16 +177,15 @@ module ROXML
     #  </library>
     #
     # You can skip the wrapper argument:
-    #    xml_object :books, :of => Book, :as => :array
+    #    xml_object :books, Book, :as => :array
     #
-    def xml_object(sym, args = {})
-      args.reverse_merge! :of => nil, :in => nil, :as => [], :from => nil
-      args[:as] = [args[:as]] unless args[:as].respond_to? :include?
+    def xml_object(sym, klass, args = {})
+      args.reverse_merge! :in => nil, :as => [], :from => nil
+      args[:as] = [*args[:as]]
 
-      ref = XMLObjectRef.new(sym, args[:from]) do |r|
+      ref = XMLObjectRef.new(sym, klass, args[:from]) do |r|
         r.array = args[:as].include?(:array)
         r.wrapper = args[:in] if args[:in]
-        r.klass = args[:of]
       end
       tag_refs << ref
       add_accessor(sym, !args[:as].include?(:readonly), ref.array)

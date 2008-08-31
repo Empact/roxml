@@ -100,9 +100,10 @@ module ROXML
   end
 
   class XMLObjectRef < XMLTextRef
-    attr_accessor :klass
+    attr_reader :klass
 
-    def initialize(accessor, name = nil, &block)
+    def initialize(accessor, klass, name = nil, &block)
+      @klass = klass
       super(accessor, name, &block)
       @name = klass.tag_name.to_s unless name
     end

@@ -31,7 +31,7 @@ class BookWithAuthorTextAttribute
   xml_attribute :isbn
   xml_text :title
   xml_text :description, :as => :cdata
-  xml_object :author, :of => Author
+  xml_object :author, Author
 end
 
 class Contributor
@@ -48,7 +48,7 @@ class BookWithContributions
   xml_attribute :isbn
   xml_text :title
   xml_text :description
-  xml_object :contributions, :of => Contributor, :as => :array, :in => "contributions"
+  xml_object :contributions, Contributor, :as => :array, :in => "contributions"
 end
 
 class BookWithContributors
@@ -58,7 +58,7 @@ class BookWithContributors
   xml_attribute :isbn
   xml_text :title
   xml_text :description
-  xml_object :contributors, :of => Contributor, :as => :array
+  xml_object :contributors, Contributor, :as => :array
 end
 
 class NamelessBook
@@ -67,7 +67,7 @@ class NamelessBook
   xml_attribute :isbn
   xml_text :title
   xml_text :description
-  xml_object :contributors, :of => Contributor, :as => :array
+  xml_object :contributors, Contributor, :as => :array
 end
 
 class Publisher
@@ -83,7 +83,7 @@ class BookWithPublisher
   xml_attribute :isbn
   xml_text :title
   xml_text :description
-  xml_object :publisher, :of => Publisher
+  xml_object :publisher, Publisher
 end
 
 class BookPair
@@ -93,14 +93,14 @@ class BookPair
   xml_text :title
   xml_text :description
   xml_text :author
-  xml_object :book, :of => Book
+  xml_object :book, Book
 end
 
 class Library
   include ROXML
 
   xml_text :name
-  xml_object :books, :of => BookWithContributions, :as => :array
+  xml_object :books, BookWithContributions, :as => :array
 end
 
 class UppercaseLibrary
@@ -108,14 +108,14 @@ class UppercaseLibrary
 
   xml_name :library
   xml_text :name, :from => 'NAME'
-  xml_object :books, :of => BookWithContributions, :as => :array, :from => 'BOOK'
+  xml_object :books, BookWithContributions, :as => :array, :from => 'BOOK'
 end
 
 class LibraryWithNamelessBooks
   include ROXML
 
   xml_text :name
-  xml_object :books, :of => NamelessBook, :as => :array
+  xml_object :books, NamelessBook, :as => :array
 end
 
 class Person

@@ -1,7 +1,9 @@
-require 'lib/roxml/string'
-require 'lib/roxml/xml'
 require 'rubygems'
 require 'activesupport'
+
+%w(string xml).each do |file|
+  require File.join(File.dirname(__FILE__), 'roxml', file)
+end
 
 module ROXML
   # Default tag behavior declaration with single

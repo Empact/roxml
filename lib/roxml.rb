@@ -151,7 +151,7 @@ module ROXML
     #
     # Can be mapped using the following code:
     # 	class Book
-    # 	  xml_object :publisher, Publisher
+    # 	  xml_object :publisher, :of => Publisher
     # 	end
     #
     # Aggregation example:

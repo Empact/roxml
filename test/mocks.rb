@@ -61,6 +61,15 @@ class BookWithContributors
   xml_object :contributors, :of => Contributor, :as => :array
 end
 
+class NamelessBook
+  include ROXML
+
+  xml_attribute :isbn
+  xml_text :title
+  xml_text :description
+  xml_object :contributors, :of => Contributor, :as => :array
+end
+
 class Publisher
   include ROXML
 
@@ -100,6 +109,13 @@ class UppercaseLibrary
   xml_name :library
   xml_text :name, :from => 'NAME'
   xml_object :books, :of => BookWithContributions, :as => :array, :from => 'BOOK'
+end
+
+class LibraryWithNamelessBooks
+  include ROXML
+
+  xml_text :name
+  xml_object :books, :of => NamelessBook, :as => :array
 end
 
 class Person

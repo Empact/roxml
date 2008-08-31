@@ -1,7 +1,7 @@
 require "lib/roxml"
 require "test/unit"
 require "test/fixture_helper"
-require "test/mocks/mocks"
+require "test/mocks"
 
 class TestROXML < Test::Unit::TestCase
   include FixtureHelper

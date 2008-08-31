@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
     'test/fixtures/book_with_publisher.xml',
     'test/fixtures/library.xml',
     'test/fixtures/person.xml',
-    'test/mocks/mocks.rb',
+    'test/mocks.rb',
     'test/fixture_helper.rb',
     'test/test_roxml.rb',
     'test/test_string.rb']

@@ -3,7 +3,7 @@ require "lib/roxml"
 class Book
   include ROXML
 
-  xml_attribute :isbn
+  xml_attribute :isbn, :from => 'ISBN'
   xml_text :title
   xml_text :description, :as => :cdata
   xml_text :author

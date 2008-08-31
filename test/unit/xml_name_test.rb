@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-class TestXMLText < Test::Unit::TestCase
+class TestXMLName < Test::Unit::TestCase
   include FixtureHelper
 
   def test_named_books_picked_up

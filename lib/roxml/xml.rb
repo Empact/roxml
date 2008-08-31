@@ -73,7 +73,6 @@ module ROXML
       if text_content
         data = xml.content
       elsif array
-        xpath = (wrapper ? "#{wrapper}/#{name}" : name.to_s)
         data = xml.find(xpath).collect do |e|
           e.text.strip.to_latin if e.text
         end
@@ -88,6 +87,10 @@ module ROXML
   private
     def text(value)
       cdata ? XML::Node.new_cdata(value.to_utf) : value.to_utf
+    end
+
+    def xpath
+      wrapper ? "#{wrapper}/#{name}" : name.to_s
     end
   end
 
@@ -123,7 +126,6 @@ module ROXML
           data = klass.parse(child)
         end
       else
-        xpath = (wrapper ? "#{wrapper}/#{name}" : name)
         data = xml.find(xpath).collect do |e|
           klass.parse(e)
         end

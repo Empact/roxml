@@ -53,7 +53,7 @@ module ROXML
     # Updates the text in the given _xml_ block to
     # the _value_ provided.
     def update_xml(xml, value)
-      parent = (wrapper ? xml.add_element(wrapper) : xml)
+      parent = wrap(xml)
       if text_content
         parent.content = text(value)
       elsif array
@@ -92,6 +92,10 @@ module ROXML
     def xpath
       wrapper ? "#{wrapper}/#{name}" : name.to_s
     end
+
+    def wrap(xml)
+      wrapper ? xml.add_element(wrapper) : xml
+    end
   end
 
   class XMLObjectRef < XMLTextRef
@@ -105,7 +109,7 @@ module ROXML
     # Updates the composed XML object in the given XML block to
     # the value provided.
     def update_xml(xml, value)
-      parent = (wrapper ? xml.add_element(wrapper) : xml)
+      parent = wrap(xml)
       unless array
         parent.add_element(value.to_xml)
       else

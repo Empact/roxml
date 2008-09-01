@@ -105,9 +105,12 @@ module ROXML
   class XMLObjectRef < XMLTextRef
     attr_reader :klass
 
-    def initialize(accessor, klass, name, default, &block)
+    def initialize(accessor, klass, args, &block)
       @klass = klass
-      super(accessor, name, default, &block)
+      super(accessor, args[:from], args[:else]) do |r|
+        r.array = args[:as].include?(:array)
+        r.wrapper = args[:in] if args[:in]
+      end
     end
 
     # Updates the composed XML object in the given XML block to

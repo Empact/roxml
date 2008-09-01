@@ -194,11 +194,7 @@ module ROXML
     def xml_object(sym, klass, args = {})
       prep_args(args)
 
-      ref = XMLObjectRef.new(sym, klass, args[:from], args[:else]) do |r|
-        r.array = args[:as].include?(:array)
-        r.wrapper = args[:in] if args[:in]
-      end
-      tag_refs << ref
+      tag_refs << XMLObjectRef.new(sym, klass, args)
       add_accessor(sym, args[:as], args[:else])
     end
 

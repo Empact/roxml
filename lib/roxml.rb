@@ -98,7 +98,7 @@ module ROXML
       prep_args(args)
 
       tag_refs << XMLAttributeRef.new(sym, args)
-      add_accessor(sym, args[:as], args[:else])
+      add_accessor(sym, !args[:as].include?(:readonly), args[:as].include?(:array), args[:else])
     end
 
     #
@@ -132,7 +132,7 @@ module ROXML
       prep_args(args)
 
       tag_refs << XMLTextRef.new(sym, args)
-      add_accessor(sym, args[:as], args[:else])
+      add_accessor(sym, !args[:as].include?(:readonly), args[:as].include?(:array), args[:else])
     end
 
     #
@@ -189,7 +189,7 @@ module ROXML
       prep_args(args)
 
       tag_refs << XMLObjectRef.new(sym, klass, args)
-      add_accessor(sym, args[:as], args[:else])
+      add_accessor(sym, !args[:as].include?(:readonly), args[:as].include?(:array), args[:else])
     end
 
     def xml_construction_args
@@ -231,10 +231,10 @@ module ROXML
       @tag_accessors << name
     end
 
-    def add_accessor(name, as, default = nil)
+    def add_accessor(name, writable, as_array, default = nil)
       assert_accessor(name)
       unless instance_methods.include?(name)
-        default ||= Array.new if as.include?(:array)
+        default ||= Array.new if as_array
 
         define_method(name) do
           val = instance_variable_get("@#{name}")
@@ -245,7 +245,7 @@ module ROXML
           val
         end
       end
-      if !as.include?(:readonly) && !instance_methods.include?("#{name}=")
+      if writable && !instance_methods.include?("#{name}=")
         define_method("#{name}=") do |v|
           instance_variable_set("@#{name}", v)
         end

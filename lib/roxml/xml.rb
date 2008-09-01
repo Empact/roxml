@@ -9,16 +9,14 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef
-    attr_accessor :accessor, :name, :array
-    attr_reader :default
+    attr_reader :accessor, :name, :array, :default
 
-    def initialize(accessor, name, default)
+    def initialize(accessor, args)
       @accessor = accessor
-      @name = (name || accessor.id2name).to_s
-      @array = false
-      yield self if block_given?
+      @array = args[:as].include?(:array)
+      @name = (args[:from] || accessor.id2name).to_s
       @name = @name.singularize if @array
-      @default = default
+      @default = args[:else]
     end
 
     # Reads data from the XML element and populates the instance
@@ -56,7 +54,14 @@ module ROXML
   #   XMLTextRef
   #  </element>
   class XMLTextRef < XMLRef
-    attr_accessor :cdata, :wrapper, :text_content
+    attr_reader :cdata, :wrapper, :text_content
+
+    def initialize(accessor, args)
+      super(accessor, args)
+      @text_content = args[:as].include?(:text_content)
+      @cdata = args[:as].include?(:cdata)
+      @wrapper = args[:in] if args[:in]
+    end
 
     # Updates the text in the given _xml_ block to
     # the _value_ provided.
@@ -106,11 +111,8 @@ module ROXML
     attr_reader :klass
 
     def initialize(accessor, klass, args, &block)
+      super(accessor, args)
       @klass = klass
-      super(accessor, args[:from], args[:else]) do |r|
-        r.array = args[:as].include?(:array)
-        r.wrapper = args[:in] if args[:in]
-      end
     end
 
     # Updates the composed XML object in the given XML block to

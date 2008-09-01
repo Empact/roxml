@@ -97,7 +97,7 @@ module ROXML
     def xml_attribute(sym, args = {})
       prep_args(args)
 
-      tag_refs << XMLAttributeRef.new(sym, args[:from], args[:else])
+      tag_refs << XMLAttributeRef.new(sym, args)
       add_accessor(sym, args[:as], args[:else])
     end
 
@@ -131,13 +131,7 @@ module ROXML
     def xml_text(sym, args = {})
       prep_args(args)
 
-      ref = XMLTextRef.new(sym, args[:from], args[:else]) do |r|
-        r.text_content = args[:as].include?(:text_content)
-        r.cdata = args[:as].include?(:cdata)
-        r.array = args[:as].include?(:array)
-        r.wrapper = args[:in] if args[:in]
-      end
-      tag_refs << ref
+      tag_refs << XMLTextRef.new(sym, args)
       add_accessor(sym, args[:as], args[:else])
     end
 

@@ -71,4 +71,12 @@ class TestXMLText < Test::Unit::TestCase
     assert Library.parse(fixture(:library)).books
     assert UppercaseLibrary.parse(fixture(:library_uppercase)).books
   end
+
+  def test_xml_object_with_recursion
+    p = PersonWithMother.parse(fixture(:person_with_mothers))
+    assert_equal 'Ben Franklin', p.name
+    assert_equal 'Abiah Folger', p.mother.name
+    assert_equal 'Madeup Mother', p.mother.mother.name
+    assert_equal nil, p.mother.mother.mother
+  end
 end

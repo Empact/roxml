@@ -158,3 +158,10 @@ class Person
 
   xml_text :name, :as => :text_content
 end
+
+class PersonWithMother
+  include ROXML
+
+  xml_text :name
+  xml_object :mother, PersonWithMother
+end

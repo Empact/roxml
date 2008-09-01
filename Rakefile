@@ -48,6 +48,11 @@ task :publish do |task|
   pub.upload()
 end
 
+desc "Install the gem"
+task :install => [:package] do
+  sh %{sudo gem install pkg/#{spec.name}-#{spec.version}}
+end
+
 desc "Run all the tests"
 task :test do |task|
   require "rake/runtest"

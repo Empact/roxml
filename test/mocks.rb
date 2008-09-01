@@ -9,6 +9,41 @@ class Book
   xml_text :author
 end
 
+class Measurement
+  include ROXML
+
+  xml_attribute :units
+  xml_text :value, :as => :text_content
+  xml_construct :value, :units
+
+  def initialize(value, units = 'pixels')
+    @value = Float(value)
+    @units = units.to_s
+    if @units.starts_with? 'hundredths-'
+      @value /= 100
+      @units = @units.split('hundredths-')[1]
+    end
+  end
+
+  def ==(other)
+    other.units == @units && other.value == @value
+  end
+end
+
+class BookWithDepth
+  include ROXML
+
+  xml_attribute :isbn, :from => 'ISBN'
+  xml_text :title
+  xml_text :description, :as => :cdata
+  xml_text :author
+  xml_object :depth, Measurement
+end
+
+class InheritedBookWithDepth < Book
+  xml_object :depth, Measurement
+end
+
 class Author
   include ROXML
 

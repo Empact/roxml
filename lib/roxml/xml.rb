@@ -22,7 +22,7 @@ module ROXML
     # Reads data from the XML element and populates the instance
     # accordingly.
     def populate(xml, instance)
-      data = collect_data(xml)
+      data = value(xml)
       instance.instance_variable_set("@#{accessor}", data) if data
       instance
     end
@@ -42,8 +42,7 @@ module ROXML
       xml
     end
 
-  private
-    def collect_data(xml)
+    def value(xml)
       xml.attributes[name]
     end
   end
@@ -73,8 +72,7 @@ module ROXML
       xml
     end
 
-  private
-    def collect_data(xml)
+    def value(xml)
       if text_content
         xml.content
       elsif array
@@ -87,6 +85,7 @@ module ROXML
       end
     end
 
+  private
     def text(value)
       cdata ? XML::Node.new_cdata(value.to_utf) : value.to_utf
     end
@@ -122,8 +121,7 @@ module ROXML
       xml
     end
 
-  private
-    def collect_data(xml)
+    def value(xml)
       unless array
         if child = xml.find_first(name)
           parse(child)
@@ -135,6 +133,7 @@ module ROXML
       end
     end
 
+  private
     def parse(elem)
       if klass.respond_to? :parse
         klass.parse(elem)

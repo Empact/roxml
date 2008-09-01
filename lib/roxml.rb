@@ -48,9 +48,16 @@ module ROXML
     def parse(data)
       xml = (data.kind_of?(XML::Node) ? data : XML::Parser.string(data).parse.root)
 
-      returning self.allocate do |inst|
-        tag_refs.each do |ref|
-          ref.populate(xml, inst)
+      unless xml_construction_args.empty?
+        args = xml_construction_args.map do |arg|
+           tag_refs.find {|ref| ref.name == arg.to_s }
+        end.map {|ref| ref.value(xml) }
+        new(*args)
+      else
+        returning allocate do |inst|
+          tag_refs.each do |ref|
+            ref.populate(xml, inst)
+          end
         end
       end
     end
@@ -191,6 +198,20 @@ module ROXML
       end
       tag_refs << ref
       add_accessor(sym, !args[:as].include?(:readonly), ref.array)
+    end
+
+    def xml_construction_args
+      @xml_construction_args ||= []
+    end
+
+    # On parse, call the target object's initialize function with the listed arguments
+    def xml_construct(*args)
+      if missing_tag = args.detect {|arg| !tag_refs.map(&:name).include?(arg.to_s) }
+        raise ArgumentError, "All construction tags must be declared as xml_object, " +
+                             "xml_text, or xml_attribute. #{missing_tag} is missing. " +
+                             tag_refs.map(&:name).join(', ') + ' are declared.'
+      end
+      @xml_construction_args = args
     end
 
     # Returns the tag name (also known as xml_name) of the class.

@@ -18,8 +18,8 @@ class TestROXML < Test::Unit::TestCase
       Class.new do
         include ROXML
 
-        xml_attribute :id
-        xml_text :id
+        xml_reader :id
+        xml_accessor :id
       end
     end
   end

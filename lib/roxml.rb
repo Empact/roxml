@@ -1,5 +1,7 @@
 require 'rubygems'
 require 'activesupport'
+require 'extensions/enumerable'
+require 'extensions/array'
 
 %w(string xml).each do |file|
   require File.join(File.dirname(__FILE__), 'roxml', file)
@@ -76,93 +78,61 @@ module ROXML
       @tag_name = name
     end
 
-    #
-    # Declare an accessor for the included class that should be
-    # represented as an XML attribute.
+    # Declares an accesser to a certain xml element, whether an attribute, a node,
+    # or a typed collection of nodes
     #
     # [sym]   Symbol representing the name of the accessor
-    # [:from]  An optional name that should be used for the attribute in XML.
-    #      Default is sym.id2name.
-    # [:as] Valid options are :readonly to attribute as read-only
-    # [:else] Default value for attribute, if missing
+    #
+    # == Type options
+    # [:attr] Declare an accessor that represents an XML attribute.
+    #         May be used as the type argument to indicate just type,
+    #         or used as :from to indicate both type and attribute name
     #
     # Example:
     #  class Book
-    #   xml_attribute :isbn, :from => "ISBN"
+    #   xml_reader :isbn, :attr => "ISBN"
+    #   xml_accessor :title, :attr
     #  end
     #
     # To map:
-    #  <book ISBN="0974514055"></book>
+    #  <book ISBN="0974514055" title="Programming Ruby: the pragmatic programmers' guide" />
     #
-    def xml_attribute(sym, opts = {})
-      prep_opts(opts)
-
-      tag_refs << XMLAttributeRef.new(sym, opts)
-      add_accessor(sym, !opts[:as].include?(:readonly), opts[:as].include?(:array), opts[:else])
-    end
-
-    #
-    # Declares an accessor that represents one or more XML text elements.
-    #
-    # [sym]   Symbol representing the name of the accessor.
-    # [:from]  An optional name that should be used for the attribute in XML.
-    #      Default is sym.id2name.
-    # [:as] :cdata for character data, :array for one-to-many,
-    #      :text_content to declare main text content for containing tag,
-    #      and :readonly for read-only access.
-    # [:in] An optional name of a wrapping tag for this XML accessor.
-    # [:else] Default value for text, if missing
+    # [:text] The default type, if none is specified. Declares an accessor that
+    #         represents a text node from XML.  May be left out completely, used
+    #         as the type argument, or used as :from to indicate both the type and attribute name.
     #
     # Example:
-    #  class Author
-    #   xml_attribute :role
-    #   xml_text :text, :as => :text_content
-    #  end
-    #
     #  class Book
-    #   xml_text :description, :as => :cdata
+    #    xml :author, false, :text => 'Author'
+    #    xml_accessor :description, :text, :as => :cdata
+    #    xml_reader :title
     #  end
     #
     # To map:
     #  <book>
+    #   <title>Programming Ruby: the pragmatic programmers' guide</title>
     #   <description><![CDATA[Probably the best Ruby book out there]]></description>
-    #   <author role="primary">David Thomas</author>
+    #   <Author>David Thomas</author>
     #  </book>
-    def xml_text(sym, opts = {})
-      prep_opts(opts)
-
-      tag_refs << XMLTextRef.new(sym, opts)
-      add_accessor(sym, !opts[:as].include?(:readonly), opts[:as].include?(:array), opts[:else])
-    end
-
     #
-    # Declares an accessor that represents another ROXML class as child XML element
+    # [type] Declares an accessor that represents another ROXML class as child XML element
     # (one-to-one or composition) or array of child elements (one-to-many or
-    # aggregation). Default is one-to-one. Use :array option for one-to-many.
-    #
-    # [sym]   Symbol representing the name of the accessor.
-    # [klass] The class of the object described
-    # [:from]  An optional name that should be used for the attribute in XML.
-    #      Default is sym.id2name.
-    # [:as] :array for one-to-many, and :readonly for read-only access.
-    # [:in] An optional name of a wrapping tag for this XML accessor.
-    # [:else] Default value for attribute, if missing
+    # aggregation) of this type. Default is one-to-one. Use :array option for one-to-many.
     #
     # Composition example:
-    # 	<book>
-    # 	 <publisher>
-    # 	 	<name>Pragmatic Bookshelf</name>
-    # 	 </publisher>
-    # 	</book>
+    #  <book>
+    #   <publisher>
+    #          <name>Pragmatic Bookshelf</name>
+    #   </publisher>
+    #  </book>
     #
     # Can be mapped using the following code:
-    # 	class Book
-    # 	  xml_object :publisher, Publisher
-    # 	end
+    #   class Book
+    #     xml_reader :publisher, Publisher
+    #   end
     #
     # Aggregation example:
     #  <library>
-    #   <name>Ruby books</name>
     #   <books>
     #    <book/>
     #    <book/>
@@ -171,8 +141,7 @@ module ROXML
     #
     # Can be mapped using the following code:
     #  class Library
-    #    xml_text :name, :as => :cdata
-    #    xml_object :books, Book, :as => [:readonly, :array], :in => "books"
+    #    xml_reader :books, Book, :as => :array, :in => "books"
     #  end
     #
     # If you don't have the <books> tag to wrap around the list of <book> tags:
@@ -185,11 +154,41 @@ module ROXML
     # You can skip the wrapper argument:
     #    xml_object :books, Book, :as => :array
     #
-    def xml_object(sym, klass, opts = {})
+    # == Common options
+    # [:from]  The name by which the xml value will be found, either an
+    #      attribute or tag name in XML.  Default is sym.id2name.
+    # [:as] :cdata for character data, :array for one-to-many,
+    #      :text_content to declare main text content for containing tag
+    # [:as] :array for one-to-many, and :readonly for read-only access.
+    # [:in] An optional name of a wrapping tag for this XML accessor.
+    # [:else] Default value for attribute, if missing
+    #
+    def xml(sym, writable = false, *args)
+      opts = args.extract_options!
       prep_opts(opts)
+      type = extract_type(args, opts)
 
-      tag_refs << XMLObjectRef.new(sym, klass, opts)
-      add_accessor(sym, !opts[:as].include?(:readonly), opts[:as].include?(:array), opts[:else])
+      tag_refs << case type
+      when :attr
+        XMLAttributeRef.new(sym, opts)
+      when :text
+        XMLTextRef.new(sym, opts)
+      when Symbol
+        raise ArgumentError, "Invalid type argument #{type}"
+      else # object
+        XMLObjectRef.new(sym, type, opts)
+      end
+      add_accessor(sym, writable, opts[:as].include?(:array), opts[:else])
+    end
+
+    # Declares a read-only xml reference. See xml for details.
+    def xml_reader(sym, *args)
+      xml sym, false, *args
+    end
+
+    # Declares a writable xml reference. See xml for details.
+    def xml_accessor(sym, *args)
+      xml sym, true, *args
     end
 
     def xml_construction_args
@@ -223,6 +222,25 @@ module ROXML
     def prep_opts(opts)
       opts.reverse_merge! :from => nil, :as => [], :else => nil, :in => nil
       opts[:as] = [*opts[:as]]
+    end
+
+    def extract_type(args, opts)
+      types = opts.keys.find_all {|key| [:attr, :text].include? key }
+      if args.one? && types.empty?
+        args.only
+      elsif args.empty?
+        if types.one?
+          opts[:from] = opts.delete(types.only)
+          types.only
+        elsif types.empty?
+          :text
+        else
+          raise ArgumentError, "more than one type option specified: #{types.join(', ')}"
+        end
+      else
+        raise ArgumentError, "too many arguments (#{(args + types).join(', ')}).  Should be name, type, and " +
+                             "an options hash, with the type and options optional"
+      end
     end
 
     def assert_accessor(name)

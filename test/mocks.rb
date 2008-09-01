@@ -3,17 +3,17 @@ require "lib/roxml"
 class Book
   include ROXML
 
-  xml_attribute :isbn, :from => 'ISBN'
-  xml_text :title
-  xml_text :description, :as => :cdata
-  xml_text :author
+  xml_accessor :isbn, :attr => 'ISBN'
+  xml_reader :title
+  xml_reader :description, :as => :cdata
+  xml_reader :author
 end
 
 class Measurement
   include ROXML
 
-  xml_attribute :units
-  xml_text :value, :as => :text_content
+  xml_reader :units, :attr
+  xml_reader :value, :as => :text_content
   xml_construct :value, :units
 
   def initialize(value, units = 'pixels')
@@ -33,151 +33,152 @@ end
 class BookWithDepth
   include ROXML
 
-  xml_attribute :isbn, :from => 'ISBN'
-  xml_text :title
-  xml_text :description, :as => :cdata
-  xml_text :author
-  xml_object :depth, Measurement
+  xml_reader :isbn, :attr => 'ISBN'
+  xml_reader :title
+  xml_reader :description, :as => :cdata
+  xml_reader :author
+  xml_reader :pages, :text => 'pagecount'
+  xml_reader :depth, Measurement
 end
 
 class InheritedBookWithDepth < Book
-  xml_object :depth, Measurement
+  xml_reader :depth, Measurement
 end
 
 class Author
   include ROXML
 
-  xml_attribute :role
-  xml_text :text, :as => :text_content
+  xml_reader :role, :attr
+  xml_reader :text, :as => :text_content
 end
 
 class BookWithAuthors
   include ROXML
 
-  xml_attribute :isbn
-  xml_text :title
-  xml_text :description, :as => :cdata
-  xml_text :authors, :as => :array, :from => 'author'
+  xml_reader :isbn, :attr
+  xml_reader :title
+  xml_reader :description, :as => :cdata
+  xml_reader :authors, :as => :array
 end
 
 class BookWithAuthorTextAttribute
   include ROXML
 
-  xml_attribute :isbn
-  xml_text :title
-  xml_text :description, :as => :cdata
-  xml_object :author, Author
+  xml_reader :isbn, :attr
+  xml_reader :title
+  xml_reader :description, :as => :cdata
+  xml_reader :author, Author
 end
 
 class Contributor
   include ROXML
 
-  xml_attribute :role
-  xml_text :name
+  xml_reader :role, :attr
+  xml_reader :name
 end
 
 class BookWithContributions
   include ROXML
 
   xml_name :book
-  xml_attribute :isbn
-  xml_text :title
-  xml_text :description
-  xml_object :contributions, Contributor, :as => :array, :in => "contributions"
+  xml_reader :isbn, :attr
+  xml_reader :title
+  xml_reader :description
+  xml_reader :contributions, Contributor, :as => :array, :in => "contributions"
 end
 
 class BookWithContributors
   include ROXML
 
   xml_name :book
-  xml_attribute :isbn
-  xml_text :title
-  xml_text :description
-  xml_object :contributors, Contributor, :as => :array
+  xml_reader :isbn, :attr
+  xml_reader :title
+  xml_reader :description
+  xml_reader :contributors, Contributor, :as => :array
 end
 
 class NamelessBook
   include ROXML
 
-  xml_attribute :isbn
-  xml_text :title
-  xml_text :description
-  xml_object :contributors, Contributor, :as => :array
+  xml_reader :isbn, :attr
+  xml_reader :title
+  xml_reader :description
+  xml_reader :contributors, Contributor, :as => :array
 end
 
 class Publisher
   include ROXML
 
-  xml_text :name
+  xml_reader :name
 end
 
 class BookWithPublisher
   include ROXML
 
-  xml_name :book
-  xml_attribute :isbn
-  xml_text :title
-  xml_text :description
-  xml_object :publisher, Publisher
+  xml_reader :book
+  xml_reader :isbn, :attr
+  xml_reader :title
+  xml_reader :description
+  xml_reader :publisher, Publisher
 end
 
 class BookPair
   include ROXML
 
-  xml_attribute :isbn
-  xml_text :title
-  xml_text :description
-  xml_text :author
-  xml_object :book, Book
+  xml_reader :isbn, :attr
+  xml_reader :title
+  xml_reader :description
+  xml_reader :author
+  xml_reader :book, Book
 end
 
 class Library
   include ROXML
 
-  xml_text :name
-  xml_object :books, BookWithContributions, :as => :array
+  xml_reader :name
+  xml_reader :books, BookWithContributions, :as => :array
 end
 
 class UppercaseLibrary
   include ROXML
 
   xml_name :library
-  xml_text :name, :from => 'NAME'
-  xml_object :books, BookWithContributions, :as => :array, :from => 'BOOK'
+  xml_reader :name, :from => 'NAME'
+  xml_reader :books, BookWithContributions, :as => :array, :from => 'BOOK'
 end
 
 class LibraryWithBooksOfUnderivableName
   include ROXML
 
-  xml_text :name
-  xml_object :novels, NamelessBook, :as => :array
+  xml :name, true
+  xml_reader :novels, NamelessBook, :as => :array
 end
 
 class Person
   include ROXML
 
-  xml_attribute :age, :else => 21
-  xml_text :name, :as => :text_content, :else => 'Unknown'
+  xml_reader :age, :attr, :else => 21
+  xml_accessor :name, :as => :text_content, :else => 'Unknown'
 end
 
 class PersonWithMother
   include ROXML
 
-  xml_text :name
-  xml_object :mother, PersonWithMother
+  xml_reader :name
+  xml_reader :mother, PersonWithMother
 end
 
 class PersonWithGuardedMother
   include ROXML
 
-  xml_text :name
-  xml_object :mother, PersonWithGuardedMother, :from => :person, :in => :mother
+  xml_reader :name
+  xml_reader :mother, PersonWithGuardedMother, :from => :person, :in => :mother
 end
 
 class PersonWithMotherOrMissing
   include ROXML
 
-  xml_attribute :age, :else => 21
-  xml_text :name, :else => 'Anonymous'
-  xml_object :mother, PersonWithMotherOrMissing, :else => Person.new
+  xml_reader :age, :attr, :else => 21
+  xml_reader :name, :else => 'Anonymous'
+  xml_reader :mother, PersonWithMotherOrMissing, :else => Person.new
 end

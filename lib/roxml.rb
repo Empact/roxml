@@ -94,11 +94,11 @@ module ROXML
     # To map:
     #  <book ISBN="0974514055"></book>
     #
-    def xml_attribute(sym, args = {})
-      prep_args(args)
+    def xml_attribute(sym, opts = {})
+      prep_opts(opts)
 
-      tag_refs << XMLAttributeRef.new(sym, args)
-      add_accessor(sym, !args[:as].include?(:readonly), args[:as].include?(:array), args[:else])
+      tag_refs << XMLAttributeRef.new(sym, opts)
+      add_accessor(sym, !opts[:as].include?(:readonly), opts[:as].include?(:array), opts[:else])
     end
 
     #
@@ -128,11 +128,11 @@ module ROXML
     #   <description><![CDATA[Probably the best Ruby book out there]]></description>
     #   <author role="primary">David Thomas</author>
     #  </book>
-    def xml_text(sym, args = {})
-      prep_args(args)
+    def xml_text(sym, opts = {})
+      prep_opts(opts)
 
-      tag_refs << XMLTextRef.new(sym, args)
-      add_accessor(sym, !args[:as].include?(:readonly), args[:as].include?(:array), args[:else])
+      tag_refs << XMLTextRef.new(sym, opts)
+      add_accessor(sym, !opts[:as].include?(:readonly), opts[:as].include?(:array), opts[:else])
     end
 
     #
@@ -185,11 +185,11 @@ module ROXML
     # You can skip the wrapper argument:
     #    xml_object :books, Book, :as => :array
     #
-    def xml_object(sym, klass, args = {})
-      prep_args(args)
+    def xml_object(sym, klass, opts = {})
+      prep_opts(opts)
 
-      tag_refs << XMLObjectRef.new(sym, klass, args)
-      add_accessor(sym, !args[:as].include?(:readonly), args[:as].include?(:array), args[:else])
+      tag_refs << XMLObjectRef.new(sym, klass, opts)
+      add_accessor(sym, !opts[:as].include?(:readonly), opts[:as].include?(:array), opts[:else])
     end
 
     def xml_construction_args
@@ -220,9 +220,9 @@ module ROXML
     end
 
   private
-    def prep_args(args)
-      args.reverse_merge! :from => nil, :as => [], :else => nil, :in => nil
-      args[:as] = [*args[:as]]
+    def prep_opts(opts)
+      opts.reverse_merge! :from => nil, :as => [], :else => nil, :in => nil
+      opts[:as] = [*opts[:as]]
     end
 
     def assert_accessor(name)

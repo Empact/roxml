@@ -1,7 +1,7 @@
 require 'rubygems'
-require 'activesupport'
 require 'extensions/enumerable'
 require 'extensions/array'
+require 'activesupport'
 
 %w(string xml).each do |file|
   require File.join(File.dirname(__FILE__), 'roxml', file)

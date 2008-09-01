@@ -84,6 +84,7 @@ module ROXML
     # [:from]  An optional name that should be used for the attribute in XML.
     #      Default is sym.id2name.
     # [:as] Valid options are :readonly to attribute as read-only
+    # [:else] Default value for attribute, if missing
     #
     # Example:
     #  class Book
@@ -94,9 +95,11 @@ module ROXML
     #  <book ISBN="0974514055"></book>
     #
     def xml_attribute(sym, args = {})
-      args.reverse_merge! :from => nil, :as => nil
+      args.reverse_merge! :from => nil, :as => [], :else => nil
+      args[:as] = [*args[:as]]
+
       tag_refs << XMLAttributeRef.new(sym, args[:from])
-      add_accessor(sym, args[:as] != :readonly)
+      add_accessor(sym, args[:as], args[:else])
     end
 
     #
@@ -109,6 +112,7 @@ module ROXML
     #      :text_content to declare main text content for containing tag,
     #      and :readonly for read-only access.
     # [:in] An optional name of a wrapping tag for this XML accessor.
+    # [:else] Default value for text, if missing
     #
     # Example:
     #  class Author
@@ -126,7 +130,7 @@ module ROXML
     #   <author role="primary">David Thomas</author>
     #  </book>
     def xml_text(sym, args = {})
-      args.reverse_merge! :from => nil, :in => nil, :as => []
+      args.reverse_merge! :from => nil, :in => nil, :as => [], :else => nil
       args[:as] = [*args[:as]]
 
       ref = XMLTextRef.new(sym, args[:from]) do |r|
@@ -136,7 +140,7 @@ module ROXML
         r.wrapper = args[:in] if args[:in]
       end
       tag_refs << ref
-      add_accessor(sym, !args[:as].include?(:readonly), ref.array)
+      add_accessor(sym, args[:as], args[:else])
     end
 
     #
@@ -150,6 +154,7 @@ module ROXML
     #      Default is sym.id2name.
     # [:as] :array for one-to-many, and :readonly for read-only access.
     # [:in] An optional name of a wrapping tag for this XML accessor.
+    # [:else] Default value for attribute, if missing
     #
     # Composition example:
     # 	<book>
@@ -189,7 +194,7 @@ module ROXML
     #    xml_object :books, Book, :as => :array
     #
     def xml_object(sym, klass, args = {})
-      args.reverse_merge! :in => nil, :as => [], :from => nil
+      args.reverse_merge! :in => nil, :as => [], :from => nil, :else => nil
       args[:as] = [*args[:as]]
 
       ref = XMLObjectRef.new(sym, klass, args[:from]) do |r|
@@ -197,7 +202,7 @@ module ROXML
         r.wrapper = args[:in] if args[:in]
       end
       tag_refs << ref
-      add_accessor(sym, !args[:as].include?(:readonly), ref.array)
+      add_accessor(sym, args[:as], args[:else])
     end
 
     def xml_construction_args
@@ -235,25 +240,27 @@ module ROXML
       @tag_accessors << name
     end
 
-    def add_accessor(name, writable = true, is_array = false)
+    def add_accessor(name, as, default = nil)
       assert_accessor(name)
       unless instance_methods.include?(name)
+        default ||= Array.new if as.include?(:array)
+
         define_method(name) do
-          returning instance_variable_get("@#{name}") do |val|
-            if val.nil? && is_array
-              val = Array.new
-              instance_variable_set("@#{name}", val)
-            end
+          val = instance_variable_get("@#{name}")
+          if val.nil?
+            val = default
+            instance_variable_set("@#{name}", val)
           end
+          val
         end
       end
-      if writable && !instance_methods.include?("#{name}=")
+      if !as.include?(:readonly) && !instance_methods.include?("#{name}=")
         define_method("#{name}=") do |v|
           instance_variable_set("@#{name}", v)
         end
       end
     end
-  end ## End ROXML_Class module ##############
+  end
 
   class << self
     #

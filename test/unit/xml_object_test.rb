@@ -87,4 +87,10 @@ class TestXMLText < Test::Unit::TestCase
     assert_equal 'Madeup Mother', p.mother.mother.name
     assert_equal nil, p.mother.mother.mother
   end
+
+  def test_xml_object_recursive_with_default_initialization
+    p = PersonWithMotherOrMissing.parse(fixture(:person_with_mothers))
+    assert_equal 'Unknown', p.mother.mother.mother.name
+    assert_equal Mother, p.mother.mother.mother.class
+  end
 end

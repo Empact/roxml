@@ -23,11 +23,21 @@ class TestXMLText < Test::Unit::TestCase
                  BookWithAuthors.parse(fixture(:book_with_authors)).authors.sort
   end
 
-  def test_text_modificatoin
+  def test_text_modification
     person = Person.parse(fixture(:person))
     assert_equal("Ben Franklin", person.name)
     person.name = "Fred"
     xml=person.to_xml.to_s
     assert(/Fred/=~xml)
+  end
+
+  def test_default_initialization
+    person = PersonWithMotherOrMissing.parse(fixture(:nameless_ageless_youth))
+    assert_equal "Anonymous", person.name
+  end
+
+  def test_recursive_with_default_initialization
+    p = PersonWithMotherOrMissing.parse(fixture(:person_with_mothers))
+    assert_equal 'Unknown', p.mother.mother.mother.name
   end
 end

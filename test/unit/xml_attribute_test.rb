@@ -8,4 +8,14 @@ class TestXMLAttribute < Test::Unit::TestCase
     assert !book.isbn.empty?
     assert book.respond_to?(:'isbn=')
   end
+
+  def test_default_initialization
+    person = PersonWithMotherOrMissing.parse(fixture(:nameless_ageless_youth))
+    assert_equal 21, person.age
+  end
+
+  def test_recursive_with_default_initialization
+    p = PersonWithMotherOrMissing.parse(fixture(:person_with_mothers))
+    assert_equal 21, p.mother.mother.mother.age
+  end
 end

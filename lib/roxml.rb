@@ -95,8 +95,7 @@ module ROXML
     #  <book ISBN="0974514055"></book>
     #
     def xml_attribute(sym, args = {})
-      args.reverse_merge! :from => nil, :as => [], :else => nil
-      args[:as] = [*args[:as]]
+      prep_args(args)
 
       tag_refs << XMLAttributeRef.new(sym, args[:from], args[:else])
       add_accessor(sym, args[:as], args[:else])
@@ -130,8 +129,7 @@ module ROXML
     #   <author role="primary">David Thomas</author>
     #  </book>
     def xml_text(sym, args = {})
-      args.reverse_merge! :from => nil, :in => nil, :as => [], :else => nil
-      args[:as] = [*args[:as]]
+      prep_args(args)
 
       ref = XMLTextRef.new(sym, args[:from], args[:else]) do |r|
         r.text_content = args[:as].include?(:text_content)
@@ -194,8 +192,7 @@ module ROXML
     #    xml_object :books, Book, :as => :array
     #
     def xml_object(sym, klass, args = {})
-      args.reverse_merge! :in => nil, :as => [], :from => nil, :else => nil
-      args[:as] = [*args[:as]]
+      prep_args(args)
 
       ref = XMLObjectRef.new(sym, klass, args[:from], args[:else]) do |r|
         r.array = args[:as].include?(:array)
@@ -233,6 +230,10 @@ module ROXML
     end
 
   private
+    def prep_args(args)
+      args.reverse_merge! :from => nil, :as => [], :else => nil, :in => nil
+      args[:as] = [*args[:as]]
+    end
 
     def assert_accessor(name)
       @tag_accessors ||= []

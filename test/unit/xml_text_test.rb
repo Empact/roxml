@@ -9,16 +9,16 @@ class TestXMLText < Test::Unit::TestCase
     assert_equal("The PickAxe", book.title)
   end
 
-  def test_xml_text_without_needed_from
+  def test_without_needed_from
     assert !Library.parse(fixture(:library_uppercase)).name
   end
 
-  def test_xml_text_with_needed_from
+  def test_with_needed_from
     assert_equal "Ruby library", Library.parse(fixture(:library)).name
     assert_equal "Ruby library", UppercaseLibrary.parse(fixture(:library_uppercase)).name
   end
 
-  def test_xml_text_as_array
+  def test_as_array
     assert_equal ["David Thomas","Andrew Hunt","Dave Thomas"].sort,
                  BookWithAuthors.parse(fixture(:book_with_authors)).authors.sort
   end

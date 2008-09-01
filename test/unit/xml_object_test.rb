@@ -62,17 +62,17 @@ class TestXMLObject < Test::Unit::TestCase
     end
   end
 
-  def test_xml_object_without_needed_from
+  def test_without_needed_from
     assert_equal [], UppercaseLibrary.parse(fixture(:library)).books
     assert_equal [], Library.parse(fixture(:library_uppercase)).books
   end
 
-  def test_xml_object_with_needed_from
+  def test_with_needed_from
     assert Library.parse(fixture(:library)).books
     assert UppercaseLibrary.parse(fixture(:library_uppercase)).books
   end
 
-  def test_xml_object_with_recursion
+  def test_with_recursion
     p = PersonWithMother.parse(fixture(:person_with_mothers))
     assert_equal 'Ben Franklin', p.name
     assert_equal 'Abiah Folger', p.mother.name
@@ -80,7 +80,7 @@ class TestXMLObject < Test::Unit::TestCase
     assert_equal nil, p.mother.mother.mother
   end
 
-  def test_xml_object_with_guarded_recursion
+  def test_with_guarded_recursion
     p = PersonWithGuardedMother.parse(fixture(:person_with_guarded_mothers))
     assert_equal 'Ben Franklin', p.name
     assert_equal 'Abiah Folger', p.mother.name
@@ -88,7 +88,7 @@ class TestXMLObject < Test::Unit::TestCase
     assert_equal nil, p.mother.mother.mother
   end
 
-  def test_xml_object_recursive_with_default_initialization
+  def test_recursive_with_default_initialization
     p = PersonWithMotherOrMissing.parse(fixture(:person_with_mothers))
     assert_equal 'Unknown', p.mother.mother.mother.name
     assert_equal Mother, p.mother.mother.mother.class

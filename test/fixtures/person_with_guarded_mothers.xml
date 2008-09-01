@@ -1,0 +1,13 @@
+<person>
+  <name>Ben Franklin</name>
+  <mother>
+    <person>
+      <name>Abiah Folger</name>
+      <mother>
+        <person>
+          <name>Madeup Mother</name>
+        </person>
+      </mother>
+    </person>
+  </mother>
+</person>

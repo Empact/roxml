@@ -79,4 +79,12 @@ class TestXMLText < Test::Unit::TestCase
     assert_equal 'Madeup Mother', p.mother.mother.name
     assert_equal nil, p.mother.mother.mother
   end
+
+  def test_xml_object_with_guarded_recursion
+    p = PersonWithGuardedMother.parse(fixture(:person_with_guarded_mothers))
+    assert_equal 'Ben Franklin', p.name
+    assert_equal 'Abiah Folger', p.mother.name
+    assert_equal 'Madeup Mother', p.mother.mother.name
+    assert_equal nil, p.mother.mother.mother
+  end
 end

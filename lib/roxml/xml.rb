@@ -123,7 +123,7 @@ module ROXML
 
     def value(xml)
       unless array
-        if child = xml.find_first(name)
+        if child = xml.find_first(xpath)
           parse(child)
         end
       else

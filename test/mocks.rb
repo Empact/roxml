@@ -165,3 +165,10 @@ class PersonWithMother
   xml_text :name
   xml_object :mother, PersonWithMother
 end
+
+class PersonWithGuardedMother
+  include ROXML
+
+  xml_text :name
+  xml_object :mother, PersonWithGuardedMother, :from => :person, :in => :mother
+end

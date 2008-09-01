@@ -6,6 +6,6 @@ class TestXMLAttribute < Test::Unit::TestCase
   def test_mutable_attr
     book = Book.parse(fixture(:book_text_with_attribute))
     assert !book.isbn.empty?
-    assert book.respond_to? :'isbn='
+    assert book.respond_to?(:'isbn=')
   end
 end

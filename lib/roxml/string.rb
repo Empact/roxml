@@ -1,6 +1,6 @@
 # Extension of String class to handle conversion from/to
 # UTF-8/ISO-8869-1
-class String
+class Object
   require 'iconv'
 
   #
@@ -8,7 +8,7 @@ class String
   #
   def to_utf
     begin
-      Iconv.new("utf-8", "iso-8859-1").iconv(self)
+      Iconv.new("utf-8", "iso-8859-1").iconv(to_s)
     rescue Iconv::IllegalSequence
       STDERR << "!! Failed converting from UTF-8 -> ISO-8859-1 (#{self}). Already the right charset?"
       self
@@ -20,7 +20,7 @@ class String
   #
   def to_latin
     begin
-      Iconv.new("iso-8859-1", "utf-8").iconv(self)
+      Iconv.new("iso-8859-1", "utf-8").iconv(to_s)
     rescue Iconv::IllegalSequence
       STDERR << "!! Failed converting from ISO-8859-1 -> UTF-8 (#{self}). Already the right charset?"
       self

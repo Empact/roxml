@@ -111,11 +111,11 @@ class UppercaseLibrary
   xml_object :books, BookWithContributions, :as => :array, :from => 'BOOK'
 end
 
-class LibraryWithNamelessBooks
+class LibraryWithBooksOfUnderivableName
   include ROXML
 
   xml_text :name
-  xml_object :books, NamelessBook, :as => :array
+  xml_object :novels, NamelessBook, :as => :array
 end
 
 class Person

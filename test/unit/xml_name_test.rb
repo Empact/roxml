@@ -10,7 +10,7 @@ class TestXMLName < Test::Unit::TestCase
   end
 
   def test_nameless_books_missing
-    nameless = LibraryWithNamelessBooks.parse(fixture(:library))
-    assert nameless.books.empty?
+    nameless = LibraryWithBooksOfUnderivableName.parse(fixture(:library))
+    assert nameless.novels.empty?
   end
 end

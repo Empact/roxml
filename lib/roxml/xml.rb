@@ -13,9 +13,10 @@ module ROXML
 
     def initialize(accessor, name = nil)
       @accessor = accessor
-      @name = (name || accessor.id2name)
+      @name = (name || accessor.id2name).to_s
       @array = false
       yield self if block_given?
+      @name = @name.singularize if @array
     end
 
     # Reads data from the XML element and populates the instance
@@ -105,7 +106,6 @@ module ROXML
     def initialize(accessor, klass, name = nil, &block)
       @klass = klass
       super(accessor, name, &block)
-      @name = klass.tag_name.to_s unless name || !klass.respond_to?(:tag_name)
     end
 
     # Updates the composed XML object in the given XML block to

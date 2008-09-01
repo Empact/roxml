@@ -156,6 +156,7 @@ end
 class Person
   include ROXML
 
+  xml_attribute :age, :else => 21
   xml_text :name, :as => :text_content, :else => 'Unknown'
 end
 
@@ -178,5 +179,5 @@ class PersonWithMotherOrMissing
 
   xml_attribute :age, :else => 21
   xml_text :name, :else => 'Anonymous'
-  xml_object :mother, PersonWithMother, :else => Person.new
+  xml_object :mother, PersonWithMotherOrMissing, :else => Person.new
 end

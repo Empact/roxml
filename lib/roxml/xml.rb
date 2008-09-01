@@ -10,13 +10,15 @@ module ROXML
   #
   class XMLRef
     attr_accessor :accessor, :name, :array
+    attr_reader :default
 
-    def initialize(accessor, name = nil)
+    def initialize(accessor, name, default)
       @accessor = accessor
       @name = (name || accessor.id2name).to_s
       @array = false
       yield self if block_given?
       @name = @name.singularize if @array
+      @default = default
     end
 
     # Reads data from the XML element and populates the instance
@@ -43,7 +45,7 @@ module ROXML
     end
 
     def value(xml)
-      xml.attributes[name]
+      xml.attributes[name] || default
     end
   end
 
@@ -76,13 +78,14 @@ module ROXML
       if text_content
         xml.content
       elsif array
-        xml.find(xpath).collect do |e|
+        arr = xml.find(xpath).collect do |e|
           e.content.strip.to_latin if e.content
         end
+        arr unless arr.empty?
       else
         child = xml.find_first(name)
         child.content if child
-      end
+      end || default
     end
 
   private
@@ -102,9 +105,9 @@ module ROXML
   class XMLObjectRef < XMLTextRef
     attr_reader :klass
 
-    def initialize(accessor, klass, name = nil, &block)
+    def initialize(accessor, klass, name, default, &block)
       @klass = klass
-      super(accessor, name, &block)
+      super(accessor, name, default, &block)
     end
 
     # Updates the composed XML object in the given XML block to
@@ -124,17 +127,18 @@ module ROXML
     def value(xml)
       unless array
         if child = xml.find_first(xpath)
-          parse(child)
+          instantiate(child)
         end
       else
-        xml.find(xpath).collect do |e|
-          parse(e)
+        arr = xml.find(xpath).collect do |e|
+          instantiate(e)
         end
-      end
+        arr unless arr.empty?
+      end || default
     end
 
   private
-    def parse(elem)
+    def instantiate(elem)
       if klass.respond_to? :parse
         klass.parse(elem)
       else

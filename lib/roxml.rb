@@ -98,7 +98,7 @@ module ROXML
       args.reverse_merge! :from => nil, :as => [], :else => nil
       args[:as] = [*args[:as]]
 
-      tag_refs << XMLAttributeRef.new(sym, args[:from])
+      tag_refs << XMLAttributeRef.new(sym, args[:from], args[:else])
       add_accessor(sym, args[:as], args[:else])
     end
 
@@ -133,7 +133,7 @@ module ROXML
       args.reverse_merge! :from => nil, :in => nil, :as => [], :else => nil
       args[:as] = [*args[:as]]
 
-      ref = XMLTextRef.new(sym, args[:from]) do |r|
+      ref = XMLTextRef.new(sym, args[:from], args[:else]) do |r|
         r.text_content = args[:as].include?(:text_content)
         r.cdata = args[:as].include?(:cdata)
         r.array = args[:as].include?(:array)
@@ -197,7 +197,7 @@ module ROXML
       args.reverse_merge! :in => nil, :as => [], :from => nil, :else => nil
       args[:as] = [*args[:as]]
 
-      ref = XMLObjectRef.new(sym, klass, args[:from]) do |r|
+      ref = XMLObjectRef.new(sym, klass, args[:from], args[:else]) do |r|
         r.array = args[:as].include?(:array)
         r.wrapper = args[:in] if args[:in]
       end

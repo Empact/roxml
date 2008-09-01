@@ -91,6 +91,6 @@ class TestXMLObject < Test::Unit::TestCase
   def test_recursive_with_default_initialization
     p = PersonWithMotherOrMissing.parse(fixture(:person_with_mothers))
     assert_equal 'Unknown', p.mother.mother.mother.name
-    assert_equal Mother, p.mother.mother.mother.class
+    assert_equal Person, p.mother.mother.mother.class
   end
 end

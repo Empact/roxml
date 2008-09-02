@@ -9,14 +9,15 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef
-    attr_reader :accessor, :name, :array, :default
+    attr_reader :accessor, :name, :array, :default, :block
 
-    def initialize(accessor, args)
+    def initialize(accessor, args, &block)
       @accessor = accessor
       @array = args[:as].include?(:array)
       @name = (args[:from] || accessor.id2name).to_s
       @name = @name.singularize if @array
       @default = args[:else]
+      @block = block
     end
 
     # Reads data from the XML element and populates the instance
@@ -43,7 +44,8 @@ module ROXML
     end
 
     def value(xml)
-      xml.attributes[name] || default
+      val = xml.attributes[name] || default
+      block ? block.call(val) : val
     end
   end
 
@@ -56,8 +58,8 @@ module ROXML
   class XMLTextRef < XMLRef
     attr_reader :cdata, :wrapper, :text_content
 
-    def initialize(accessor, args)
-      super(accessor, args)
+    def initialize(accessor, args, &block)
+      super(accessor, args, &block)
       @text_content = args[:as].include?(:text_content)
       @cdata = args[:as].include?(:cdata)
       @wrapper = args[:in] if args[:in]
@@ -80,7 +82,7 @@ module ROXML
     end
 
     def value(xml)
-      if text_content
+      val = if text_content
         xml.content
       elsif array
         arr = xml.find(xpath).collect do |e|
@@ -91,6 +93,7 @@ module ROXML
         child = xml.find_first(name)
         child.content if child
       end || default
+      block ? block.call(val) : val
     end
 
   private
@@ -111,7 +114,7 @@ module ROXML
     attr_reader :klass
 
     def initialize(accessor, klass, args, &block)
-      super(accessor, args)
+      super(accessor, args, &block)
       @klass = klass
     end
 
@@ -130,7 +133,7 @@ module ROXML
     end
 
     def value(xml)
-      unless array
+      val = unless array
         if child = xml.find_first(xpath)
           instantiate(child)
         end
@@ -140,6 +143,7 @@ module ROXML
         end
         arr unless arr.empty?
       end || default
+      block ? block.call(val) : val
     end
 
   private

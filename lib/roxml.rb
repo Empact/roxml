@@ -163,32 +163,32 @@ module ROXML
     # [:in] An optional name of a wrapping tag for this XML accessor.
     # [:else] Default value for attribute, if missing
     #
-    def xml(sym, writable = false, *args)
+    def xml(sym, writable = false, *args, &block)
       opts = args.extract_options!
       prep_opts(opts)
       type = extract_type(args, opts)
 
       tag_refs << case type
       when :attr
-        XMLAttributeRef.new(sym, opts)
+        XMLAttributeRef.new(sym, opts, &block)
       when :text
-        XMLTextRef.new(sym, opts)
+        XMLTextRef.new(sym, opts, &block)
       when Symbol
         raise ArgumentError, "Invalid type argument #{type}"
       else # object
-        XMLObjectRef.new(sym, type, opts)
+        XMLObjectRef.new(sym, type, opts, &block)
       end
       add_accessor(sym, writable, opts[:as].include?(:array), opts[:else])
     end
 
     # Declares a read-only xml reference. See xml for details.
-    def xml_reader(sym, *args)
-      xml sym, false, *args
+    def xml_reader(sym, *args, &block)
+      xml sym, false, *args, &block
     end
 
     # Declares a writable xml reference. See xml for details.
-    def xml_accessor(sym, *args)
-      xml sym, true, *args
+    def xml_accessor(sym, *args, &block)
+      xml sym, true, *args, &block
     end
 
     def xml_construction_args

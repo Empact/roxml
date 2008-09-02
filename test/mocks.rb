@@ -7,6 +7,9 @@ class Book
   xml_reader :title
   xml_reader :description, :as => :cdata
   xml_reader :author
+  xml_reader :pages, :text => 'pagecount' do |val|
+    Integer(val)
+  end
 end
 
 class Measurement
@@ -37,7 +40,6 @@ class BookWithDepth
   xml_reader :title
   xml_reader :description, :as => :cdata
   xml_reader :author
-  xml_reader :pages, :text => 'pagecount'
   xml_reader :depth, Measurement
 end
 

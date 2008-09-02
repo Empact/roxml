@@ -40,4 +40,9 @@ class TestXMLText < Test::Unit::TestCase
     p = PersonWithMotherOrMissing.parse(fixture(:person_with_mothers))
     assert_equal 'Unknown', p.mother.mother.mother.name
   end
+
+  def test_get_with_block
+    p = Book.parse(fixture(:book_valid))
+    assert_equal 357, p.pages
+  end
 end

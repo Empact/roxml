@@ -5,6 +5,7 @@ require "rake/rdoctask"
 require "rake/contrib/rubyforgepublisher"
 require "rake/contrib/publisher"
 require 'rake/gempackagetask'
+require 'rake/testtask'
 
 # load settings
 spec = eval(IO.read("roxml.gemspec"))
@@ -53,10 +54,10 @@ task :install => [:package] do
   sh %{sudo gem install pkg/#{spec.name}-#{spec.version}}
 end
 
-desc "Run all the tests"
-task :test do |task|
-  require "rake/runtest"
-  Rake::run_tests "**/*_test.rb"
+Rake::TestTask.new do |t|
+  t.libs << "test"
+  t.test_files = FileList['test/unit/*_test.rb']
+  t.verbose = true
 end
 
 desc "Create the ZIP package"

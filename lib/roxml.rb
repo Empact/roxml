@@ -226,20 +226,20 @@ module ROXML
 
     def extract_type(args, opts)
       types = opts.keys.find_all {|key| [:attr, :text].include? key }
-      if args.one? && types.empty?
-        args.only
-      elsif args.empty?
-        if types.one?
-          opts[:from] = opts.delete(types.only)
-          types.only
-        elsif types.empty?
-          :text
-        else
-          raise ArgumentError, "more than one type option specified: #{types.join(', ')}"
-        end
-      else
+      return args.only if args.one? && types.empty?
+
+      unless args.empty?
         raise ArgumentError, "too many arguments (#{(args + types).join(', ')}).  Should be name, type, and " +
                              "an options hash, with the type and options optional"
+      end
+
+      if types.one?
+        opts[:from] = opts.delete(types.only)
+        types.only
+      elsif types.empty?
+        :text
+      else
+        raise ArgumentError, "more than one type option specified: #{types.join(', ')}"
       end
     end
 

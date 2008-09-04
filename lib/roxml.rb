@@ -33,7 +33,7 @@ module ROXML
 
     def initialize(sym, *args)
       @opts = args.extract_options!
-      @opts.reverse_merge! :from => nil, :as => [], :else => nil, :in => nil
+      @opts.reverse_merge! DEFAULT_OPTS
       @opts[:as] = [*@opts[:as]]
       @type = extract_type(args)
 
@@ -65,12 +65,16 @@ module ROXML
     end
 
   private
+    TYPE_KEYS = [:attr, :text]
+    DEFAULT_OPTS = {:from => nil, :as => [], :else => nil, :in => nil}
+
     def extract_type(args)
-      types = @opts.keys.find_all {|key| [:attr, :text].include? key }
+      types = (@opts.keys & TYPE_KEYS)
+      # type arg
       if args.one? && types.empty?
         if args.only.is_a? Array
           @opts[:as] << :array
-          return args.only[0]
+          return args.only.only
         else
           return args.only
         end
@@ -81,6 +85,7 @@ module ROXML
                              "an options hash, with the type and options optional"
       end
 
+      # type options
       if types.one?
         @opts[:from] = @opts.delete(types.only)
         types.only
@@ -236,7 +241,7 @@ module ROXML
       when :text
         XMLTextRef.new(sym, opts, &block)
       when Symbol
-        raise ArgumentError, "Invalid type argument #{type}"
+        raise ArgumentError, "Invalid type argument #{opts.type}"
       else # object
         XMLObjectRef.new(sym, opts, &block)
       end

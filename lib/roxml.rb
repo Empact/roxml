@@ -31,7 +31,7 @@ module ROXML
   class Opts
     attr_reader :type
 
-    def initialize(sym, args)
+    def initialize(sym, *args)
       @opts = args.extract_options!
       @opts.reverse_merge! :from => nil, :as => [], :else => nil, :in => nil
       @opts[:as] = [*@opts[:as]]
@@ -67,7 +67,14 @@ module ROXML
   private
     def extract_type(args)
       types = @opts.keys.find_all {|key| [:attr, :text].include? key }
-      return args.only if args.one? && types.empty?
+      if args.one? && types.empty?
+        if args.only.is_a? Array
+          @opts[:as] << :array
+          return args.only[0]
+        else
+          return args.only
+        end
+      end
 
       unless args.empty?
         raise ArgumentError, "too many arguments (#{(args + types).join(', ')}).  Should be name, type, and " +
@@ -221,7 +228,7 @@ module ROXML
     # [:else] Default value for attribute, if missing
     #
     def xml(sym, writable = false, *args, &block)
-      opts = Opts.new(sym, args)
+      opts = Opts.new(sym, *args)
 
       tag_refs << case opts.type
       when :attr

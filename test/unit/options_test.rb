@@ -18,4 +18,19 @@ class TestOptions < Test::Unit::TestCase
     assert opts.array?
     assert_equal Hash, opts.type
   end
+
+  def test_hash_of_attrs
+    opts = ROXML::Opts.new(:attributes, {:attrs => [:name, :value]})
+    assert opts.hash?
+    assert [:attr, :attr], opts.hash.types
+    assert [:name, :value], opts.hash.names
+  end
+
+  def test_hash_with_attr_key_and_text_val
+    opts = ROXML::Opts.new(:attributes, {:key => {:attr => :name},
+                                         :value => :text})
+    assert opts.hash?
+    assert [:attr, :text], opts.hash.types
+    assert [:name, :value], opts.hash.names
+  end
 end

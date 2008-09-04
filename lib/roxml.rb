@@ -20,16 +20,61 @@ module ROXML
   # content of the container tag
   TEXT_CONTENT = :text_content
 
+  HASH_KEYS = [:attrs, :key, :value]
+  TYPE_KEYS = [:attr, :text, :hash]
+  DEFAULT_OPTS = {:from => nil, :as => [], :else => nil, :in => nil}
+
+  class HashDesc
+    def initialize(opts)
+      invalid_keys = (opts.keys - HASH_KEYS)
+      unless invalid_keys.empty?
+        raise ArgumentError, "Invalid Hash description keys: #{invalid_keys.join(', ')}"
+      end
+
+      if opts.has_key? :attrs
+        @key   = {:type => :attr, :name => opts[:attrs][0]}
+        @value = {:type => :attr, :name => opts[:attrs][1]}
+      else
+        @key = fetch_element(opts, :key)
+        @value = fetch_element(opts, :value)
+      end
+    end
+
+    def types
+      [@key[:type], @value[:type]]
+    end
+
+    def names
+      [@key[:name], @value[:name]]
+    end
+
+  private
+    def fetch_element(opts, what)
+      returning(:type => opts[what], :name => nil) do |elem|
+        if opts[what].is_a? Hash
+          raise ArgumentError, "Hash #{what} is over-specified: #{opts[what].pp_s}" unless opts[what].keys.one?
+          elem[:type] = opts[what].keys.first
+          elem[:name] = opts[what][elem[:type]]
+        end
+      end
+    end
+  end
+
   class Opts
-    attr_reader :type
+    attr_reader :type, :hash
 
     def initialize(sym, *args)
-      @opts = args.extract_options!
+      @opts = extract_options!(args)
+
       @opts.reverse_merge! DEFAULT_OPTS
       @opts[:as] = [*@opts[:as]]
       @type = extract_type(args)
 
-      @name = (@opts[:from] || sym.id2name).to_s
+      if hash?
+        @hash = HashDesc.new(@opts.delete(:from))
+      else
+        @name = (@opts[:from] || sym.id2name).to_s
+      end
     end
 
     def name
@@ -38,6 +83,10 @@ module ROXML
 
     def default
       @opts[:else]
+    end
+
+    def hash?
+      @type == :hash
     end
 
     def array?
@@ -57,8 +106,13 @@ module ROXML
     end
 
   private
-    TYPE_KEYS = [:attr, :text]
-    DEFAULT_OPTS = {:from => nil, :as => [], :else => nil, :in => nil}
+    def extract_options!(args)
+      opts = args.extract_options!
+      unless (opts.keys & HASH_KEYS).empty?
+        opts = {:hash => opts}
+      end
+      opts
+    end
 
     def extract_type(args)
       types = (@opts.keys & TYPE_KEYS)
@@ -231,6 +285,8 @@ module ROXML
         XMLAttributeRef.new(sym, opts, &block)
       when :text
         XMLTextRef.new(sym, opts, &block)
+      when :hash
+        return
       when Symbol
         raise ArgumentError, "Invalid type argument #{opts.type}"
       else # object

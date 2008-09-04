@@ -3,9 +3,18 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 class TestXMLAttribute < Test::Unit::TestCase
   include FixtureHelper
 
+  def test_attr_from
+    # :attr => *
+    book = Book.parse(fixture(:book_text_with_attribute))
+    assert_equal '0201710897', book.isbn
+
+    # :attr, :from => *
+    book = BookWithAttrFrom.parse(fixture(:book_text_with_attribute))
+    assert_equal '0201710897', book.isbn
+  end
+
   def test_mutable_attr
     book = Book.parse(fixture(:book_text_with_attribute))
-    assert !book.isbn.empty?
     assert book.respond_to?(:'isbn=')
   end
 

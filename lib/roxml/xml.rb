@@ -13,10 +13,9 @@ module ROXML
 
     def initialize(accessor, args, &block)
       @accessor = accessor
-      @array = args[:as].include?(:array)
-      @name = (args[:from] || accessor.id2name).to_s
-      @name = @name.singularize if @array
-      @default = args[:else]
+      @array = args.array?
+      @name = args.name
+      @default = args.default
       @block = block
     end
 
@@ -60,9 +59,9 @@ module ROXML
 
     def initialize(accessor, args, &block)
       super(accessor, args, &block)
-      @text_content = args[:as].include?(:text_content)
-      @cdata = args[:as].include?(:cdata)
-      @wrapper = args[:in] if args[:in]
+      @text_content = args.text_content?
+      @cdata = args.cdata?
+      @wrapper = args.wrapper
     end
 
     # Updates the text in the given _xml_ block to
@@ -113,9 +112,9 @@ module ROXML
   class XMLObjectRef < XMLTextRef
     attr_reader :klass
 
-    def initialize(accessor, klass, args, &block)
+    def initialize(accessor, args, &block)
       super(accessor, args, &block)
-      @klass = klass
+      @klass = args.type
     end
 
     # Updates the composed XML object in the given XML block to

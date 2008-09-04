@@ -28,6 +28,63 @@ module ROXML
   # content of the container tag
   TEXT_CONTENT = :text_content
 
+  class Opts
+    attr_reader :type
+
+    def initialize(sym, args)
+      @opts = args.extract_options!
+      @opts.reverse_merge! :from => nil, :as => [], :else => nil, :in => nil
+      @opts[:as] = [*@opts[:as]]
+      @type = extract_type(args)
+
+      @name = (@opts[:from] || sym.id2name).to_s
+    end
+
+    def name
+      array? ? @name.singularize : @name
+    end
+
+    def default
+      @opts[:else]
+    end
+
+    def array?
+      @opts[:as].include? :array
+    end
+
+    def text_content?
+      @opts[:as].include? :text_content
+    end
+
+    def cdata?
+      @opts[:as].include? :cdata
+    end
+
+    def wrapper
+      @opts[:in]
+    end
+
+  private
+    def extract_type(args)
+      types = @opts.keys.find_all {|key| [:attr, :text].include? key }
+      return args.only if args.one? && types.empty?
+
+      unless args.empty?
+        raise ArgumentError, "too many arguments (#{(args + types).join(', ')}).  Should be name, type, and " +
+                             "an options hash, with the type and options optional"
+      end
+
+      if types.one?
+        @opts[:from] = @opts.delete(types.only)
+        types.only
+      elsif types.empty?
+        :text
+      else
+        raise ArgumentError, "more than one type option specified: #{types.join(', ')}"
+      end
+    end
+  end
+
   # This class defines the annotation methods that are mixed into your
   # Ruby classes for XML mapping information and behavior.
   #
@@ -164,11 +221,9 @@ module ROXML
     # [:else] Default value for attribute, if missing
     #
     def xml(sym, writable = false, *args, &block)
-      opts = args.extract_options!
-      prep_opts(opts)
-      type = extract_type(args, opts)
+      opts = Opts.new(sym, args)
 
-      tag_refs << case type
+      tag_refs << case opts.type
       when :attr
         XMLAttributeRef.new(sym, opts, &block)
       when :text
@@ -176,9 +231,9 @@ module ROXML
       when Symbol
         raise ArgumentError, "Invalid type argument #{type}"
       else # object
-        XMLObjectRef.new(sym, type, opts, &block)
+        XMLObjectRef.new(sym, opts, &block)
       end
-      add_accessor(sym, writable, opts[:as].include?(:array), opts[:else])
+      add_accessor(sym, writable, opts.array?, opts.default)
     end
 
     # Declares a read-only xml reference. See xml for details.
@@ -219,30 +274,6 @@ module ROXML
     end
 
   private
-    def prep_opts(opts)
-      opts.reverse_merge! :from => nil, :as => [], :else => nil, :in => nil
-      opts[:as] = [*opts[:as]]
-    end
-
-    def extract_type(args, opts)
-      types = opts.keys.find_all {|key| [:attr, :text].include? key }
-      return args.only if args.one? && types.empty?
-
-      unless args.empty?
-        raise ArgumentError, "too many arguments (#{(args + types).join(', ')}).  Should be name, type, and " +
-                             "an options hash, with the type and options optional"
-      end
-
-      if types.one?
-        opts[:from] = opts.delete(types.only)
-        types.only
-      elsif types.empty?
-        :text
-      else
-        raise ArgumentError, "more than one type option specified: #{types.join(', ')}"
-      end
-    end
-
     def assert_accessor(name)
       @tag_accessors ||= []
       raise "Accessor #{name} is already defined as XML accessor in class #{self}" if @tag_accessors.include?(name)

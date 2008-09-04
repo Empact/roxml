@@ -12,6 +12,12 @@ class Book
   end
 end
 
+class BookWithAttrFrom
+  include ROXML
+
+  xml_accessor :isbn, :attr, :from => 'ISBN'
+end
+
 class Measurement
   include ROXML
 

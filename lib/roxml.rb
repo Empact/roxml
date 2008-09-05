@@ -8,14 +8,6 @@ require 'activesupport'
 end
 
 module ROXML
-  # Default tag behavior declaration with single
-  # read and write.
-  TAG_DEFAULT = nil
-
-  # Option that may be used to declare that
-  # a variable accessor should be read-only (no "accessor=(val)" is generated).
-  TAG_READONLY = :readonly
-
   # Option that declares that an XML text element's value should be
   # wrapped in a CDATA section.
   TAG_CDATA = :cdata
@@ -228,7 +220,6 @@ module ROXML
     #      attribute or tag name in XML.  Default is sym.id2name.
     # [:as] :cdata for character data, :array for one-to-many,
     #      :text_content to declare main text content for containing tag
-    # [:as] :array for one-to-many, and :readonly for read-only access.
     # [:in] An optional name of a wrapping tag for this XML accessor.
     # [:else] Default value for attribute, if missing
     #

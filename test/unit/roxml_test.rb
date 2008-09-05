@@ -1,8 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class TestROXML < Test::Unit::TestCase
-  include FixtureHelper
-
   # Malformed XML parsing should throw REXML::ParseException
   def test_malformed
     LibXML::XML::Parser.register_error_handler {|err| }

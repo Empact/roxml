@@ -1,8 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class TestXMLName < Test::Unit::TestCase
-  include FixtureHelper
-
   def test_named_books_picked_up
     named = Library.parse(fixture(:library))
     assert named.books

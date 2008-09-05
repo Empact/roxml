@@ -1,8 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class TestXMLObject < Test::Unit::TestCase
-  include FixtureHelper
-
   # Test book with text and attribute
   def test_book_author_text_attribute
     book = BookWithAuthorTextAttribute.parse(fixture(:book_text_with_attribute))

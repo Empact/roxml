@@ -20,9 +20,8 @@ module ROXML
   # content of the container tag
   TEXT_CONTENT = :text_content
 
-  HASH_KEYS = [:attrs, :key, :value]
-  TYPE_KEYS = [:attr, :text, :hash]
-  DEFAULT_OPTS = {:from => nil, :as => [], :else => nil, :in => nil}
+  HASH_KEYS = [:attrs, :key, :value].freeze
+  TYPE_KEYS = [:attr, :text, :hash].freeze
 
   class HashDesc
     def initialize(opts)
@@ -66,7 +65,7 @@ module ROXML
     def initialize(sym, *args)
       @opts = extract_options!(args)
 
-      @opts.reverse_merge! DEFAULT_OPTS
+      @opts.reverse_merge!(:from => nil, :as => [], :else => nil, :in => nil)
       @opts[:as] = [*@opts[:as]]
       @type = extract_type(args)
 

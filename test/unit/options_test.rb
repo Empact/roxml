@@ -22,6 +22,7 @@ class TestOptions < Test::Unit::TestCase
   def test_hash_of_attrs
     opts = ROXML::Opts.new(:attributes, {:attrs => [:name, :value]})
     assert opts.hash?
+    assert !opts.array?
     assert [:attr, :attr], opts.hash.types
     assert [:name, :value], opts.hash.names
   end
@@ -30,6 +31,7 @@ class TestOptions < Test::Unit::TestCase
     opts = ROXML::Opts.new(:attributes, {:key => {:attr => :name},
                                          :value => :text})
     assert opts.hash?
+    assert !opts.array?
     assert [:attr, :text], opts.hash.types
     assert [:name, :value], opts.hash.names
   end

@@ -3,7 +3,7 @@ require 'extensions/enumerable'
 require 'extensions/array'
 require 'activesupport'
 
-%w(string xml).each do |file|
+%w(array string xml).each do |file|
   require File.join(File.dirname(__FILE__), 'roxml', file)
 end
 
@@ -77,11 +77,8 @@ module ROXML
       @opts[:as] = [*@opts[:as]]
       @type = extract_type(args)
 
-      if hash?
-        @hash = HashDesc.new(@opts.delete(:from))
-      else
-        @name = (@opts[:from] || sym).to_s
-      end
+      @hash = HashDesc.new(@opts.delete(:hash)) if hash?
+      @name = (@opts[:from] || sym).to_s
     end
 
     def name=(n)
@@ -89,11 +86,15 @@ module ROXML
     end
 
     def name
-      array? ? @name.singularize : @name
+      enumerable? ? @name.singularize : @name
     end
 
     def default
       @opts[:else]
+    end
+
+    def enumerable?
+      hash? || array?
     end
 
     def hash?
@@ -102,11 +103,6 @@ module ROXML
 
     def array?
       @opts[:as].include? :array
-    end
-
-    def array!
-      @type = nil if @type == :hash
-      @opts[:as] << :array unless array?
     end
 
     def text_content?
@@ -123,7 +119,6 @@ module ROXML
 
     def to_hash_args(desc)
       returning dup do |args|
-        args.array!
         args.type = desc[:type]
         args.name = desc[:name]
       end
@@ -147,7 +142,7 @@ module ROXML
           @opts[:as] << :array
           return args.only.only
         elsif args.only.is_a? Hash
-          @opts[:from] = args.only
+          @opts[:hash] = args.only
           return :hash
         else
           return args.only

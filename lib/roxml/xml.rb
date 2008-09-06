@@ -118,13 +118,15 @@ module ROXML
     end
 
     def value(xml)
-      returning @keys.value(xml).zip(@vals.value(xml)) do |vals|
-        if block
-          vals.collect! do |(key, val)|
-            block.call(key, val)
-          end
+      vals = xml.find(xpath).collect do |e|
+        [@keys.value(e), @vals.value(xml)]
+      end
+      if block
+        vals.collect! do |(key, val)|
+          block.call(key, val)
         end
       end
+      vals.to_h
     end
 
   private

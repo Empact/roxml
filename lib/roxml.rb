@@ -24,6 +24,8 @@ module ROXML
   TYPE_KEYS = [:attr, :text, :hash].freeze
 
   class HashDesc
+    attr_reader :key, :value
+
     def initialize(opts)
       invalid_keys = (opts.keys - HASH_KEYS)
       unless invalid_keys.empty?
@@ -54,6 +56,9 @@ module ROXML
           raise ArgumentError, "Hash #{what} is over-specified: #{opts[what].pp_s}" unless opts[what].keys.one?
           elem[:type] = opts[what].keys.first
           elem[:name] = opts[what][elem[:type]]
+        else
+          elem[:name] = elem[:type].to_s
+          elem[:type] = :text_content
         end
       end
     end
@@ -61,6 +66,9 @@ module ROXML
 
   class Opts
     attr_reader :type, :hash
+
+    # FIXME: ideally this would not be exposed, as it should only be used in to_hash_args
+    attr_writer :type
 
     def initialize(sym, *args)
       @opts = extract_options!(args)
@@ -72,8 +80,12 @@ module ROXML
       if hash?
         @hash = HashDesc.new(@opts.delete(:from))
       else
-        @name = (@opts[:from] || sym.id2name).to_s
+        @name = (@opts[:from] || sym).to_s
       end
+    end
+
+    def name=(n)
+      @name = n.to_s
     end
 
     def name
@@ -92,6 +104,11 @@ module ROXML
       @opts[:as].include? :array
     end
 
+    def array!
+      @type = nil if @type == :hash
+      @opts[:as] << :array unless array?
+    end
+
     def text_content?
       @opts[:as].include? :text_content
     end
@@ -104,11 +121,20 @@ module ROXML
       @opts[:in]
     end
 
+    def to_hash_args(desc)
+      returning dup do |args|
+        args.array!
+        args.type = desc[:type]
+        args.name = desc[:name]
+      end
+    end
+
   private
     def extract_options!(args)
       opts = args.extract_options!
       unless (opts.keys & HASH_KEYS).empty?
-        opts = {:hash => opts}
+        args.push(opts)
+        opts = {}
       end
       opts
     end
@@ -120,6 +146,9 @@ module ROXML
         if args.only.is_a? Array
           @opts[:as] << :array
           return args.only.only
+        elsif args.only.is_a? Hash
+          @opts[:from] = args.only
+          return :hash
         else
           return args.only
         end
@@ -236,7 +265,7 @@ module ROXML
     # Composition example:
     #  <book>
     #   <publisher>
-    #          <name>Pragmatic Bookshelf</name>
+    #     <name>Pragmatic Bookshelf</name>
     #   </publisher>
     #  </book>
     #
@@ -285,7 +314,7 @@ module ROXML
       when :text
         XMLTextRef.new(sym, opts, &block)
       when :hash
-        return
+        XMLHashRef.new(sym, opts, &block)
       when Symbol
         raise ArgumentError, "Invalid type argument #{opts.type}"
       else # object

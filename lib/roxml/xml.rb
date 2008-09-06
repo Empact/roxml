@@ -109,6 +109,39 @@ module ROXML
     end
   end
 
+  class XMLHashRef < XMLTextRef
+    def initialize(accessor, args, &block)
+      super(accessor, args, &block)
+      @hash = args.hash
+      @keys = to_ref(args.hash.key, args)
+      @vals = to_ref(args.hash.value, args)
+    end
+
+    def value(xml)
+      returning @keys.value(xml).zip(@vals.value(xml)) do |vals|
+        if block
+          vals.collect! do |(key, val)|
+            block.call(key, val)
+          end
+        end
+      end
+    end
+
+  private
+    def to_ref(desc, args)
+      case desc[:type]
+      when :attr
+        XMLAttributeRef.new(nil, args.to_hash_args(desc))
+      when :text
+        XMLTextRef.new(nil, args.to_hash_args(desc))
+      when Symbol
+        XMLTextRef.new(nil, args.to_hash_args(desc))
+      else
+        raise ArgumentError, "Missing key description #{desc.pp_s}"
+      end
+    end
+  end
+
   class XMLObjectRef < XMLTextRef
     attr_reader :klass
 

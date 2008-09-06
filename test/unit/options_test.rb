@@ -35,4 +35,14 @@ class TestOptions < Test::Unit::TestCase
     assert [:attr, :text], opts.hash.types
     assert [:name, :value], opts.hash.names
   end
+
+  def test_hash_with_options
+    opts = ROXML::Opts.new(:definitions, {:attrs => [:dt, :dd]},
+                           :in => :definitions)
+
+    assert opts.hash?
+    assert !opts.array?
+    assert [:attr, :text], opts.hash.types
+    assert [:name, :value], opts.hash.names
+  end
 end

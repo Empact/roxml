@@ -110,16 +110,18 @@ module ROXML
   end
 
   class XMLHashRef < XMLTextRef
+    attr_reader :hash_key, :hash_value
+
     def initialize(accessor, args, &block)
       super(accessor, args, &block)
       @hash = args.hash
-      @keys = to_ref(args.hash.key, args)
-      @vals = to_ref(args.hash.value, args)
+      @hash_key = to_ref(:key, args)
+      @hash_value = to_ref(:value, args)
     end
 
     def value(xml)
       vals = xml.find(xpath).collect do |e|
-        [@keys.value(e), @vals.value(xml)]
+        [@hash_key.value(e), @hash_value.value(e)]
       end
       if block
         vals.collect! do |(key, val)|
@@ -130,16 +132,16 @@ module ROXML
     end
 
   private
-    def to_ref(desc, args)
-      case desc[:type]
+    def to_ref(what, args)
+      case args.hash.send(what)[:type]
       when :attr
-        XMLAttributeRef.new(nil, args.to_hash_args(desc))
+        XMLAttributeRef.new(nil, args.to_hash_args(what))
       when :text
-        XMLTextRef.new(nil, args.to_hash_args(desc))
+        XMLTextRef.new(nil, args.to_hash_args(what))
       when Symbol
-        XMLTextRef.new(nil, args.to_hash_args(desc))
+        XMLTextRef.new(nil, args.to_hash_args(what))
       else
-        raise ArgumentError, "Missing key description #{desc.pp_s}"
+        raise ArgumentError, "Missing key description #{args.hash.send(what).pp_s}"
       end
     end
   end

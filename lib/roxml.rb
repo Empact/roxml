@@ -27,8 +27,7 @@ module ROXML
     attr_reader :key, :value
 
     def initialize(opts)
-      invalid_keys = (opts.keys - HASH_KEYS)
-      unless invalid_keys.empty?
+      unless (invalid_keys = opts.keys - HASH_KEYS).empty?
         raise ArgumentError, "Invalid Hash description keys: #{invalid_keys.join(', ')}"
       end
 
@@ -52,13 +51,17 @@ module ROXML
   private
     def fetch_element(opts, what)
       returning(:type => opts[what], :name => nil) do |elem|
-        if opts[what].is_a? Hash
+        case opts[what]
+        when Hash
           raise ArgumentError, "Hash #{what} is over-specified: #{opts[what].pp_s}" unless opts[what].keys.one?
           elem[:type] = opts[what].keys.first
           elem[:name] = opts[what][elem[:type]]
-        else
-          elem[:name] = elem[:type].to_s
+        when :text_content
+          elem[:name] = opts[:name]
           elem[:type] = :text_content
+        when Symbol
+          elem[:name] = opts[what]
+          elem[:type] = :text
         end
       end
     end
@@ -73,12 +76,12 @@ module ROXML
     def initialize(sym, *args)
       @opts = extract_options!(args)
 
-      @opts.reverse_merge!(:from => nil, :as => [], :else => nil, :in => nil)
+      @opts.reverse_merge!(:from => sym.to_s, :as => [], :else => nil, :in => nil)
       @opts[:as] = [*@opts[:as]]
       @type = extract_type(args)
 
+      @name = @opts[:from].to_s
       @hash = HashDesc.new(@opts.delete(:hash)) if hash?
-      @name = (@opts[:from] || sym).to_s
     end
 
     def name=(n)
@@ -105,6 +108,10 @@ module ROXML
       @opts[:as].include? :array
     end
 
+    def text_content!
+      @opts[:as] << :text_content unless text_content?
+    end
+
     def text_content?
       @opts[:as].include? :text_content
     end
@@ -117,10 +124,12 @@ module ROXML
       @opts[:in]
     end
 
-    def to_hash_args(desc)
+    def to_hash_args(what)
+      desc = hash.send(what)
       returning dup do |args|
         args.type = desc[:type]
-        args.name = desc[:name]
+        args.name = desc[:name] || name
+        args.text_content! if desc[:type] == :text_content
       end
     end
 

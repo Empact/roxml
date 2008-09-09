@@ -36,6 +36,16 @@ class TestOptions < Test::Unit::TestCase
     assert [:name, :value], opts.hash.names
   end
 
+  def test_hash_with_attr_key_and_text_content_val
+    opts = ROXML::Opts.new(:attributes, {:key => {:attr => :name},
+                                         :value => :text_content})
+    assert opts.hash?
+    assert !opts.array?
+    assert opts.to_hash_args(:value).text_content?
+    assert [:attr, :text_content], opts.hash.types
+    assert [:name, :value], opts.hash.names
+  end
+
   def test_hash_with_options
     opts = ROXML::Opts.new(:definitions, {:attrs => [:dt, :dd]},
                            :in => :definitions)

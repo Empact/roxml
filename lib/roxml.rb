@@ -50,19 +50,14 @@ module ROXML
 
   private
     def fetch_element(opts, what)
-      returning(:type => opts[what], :name => nil) do |elem|
-        case opts[what]
-        when Hash
-          raise ArgumentError, "Hash #{what} is over-specified: #{opts[what].pp_s}" unless opts[what].keys.one?
-          elem[:type] = opts[what].keys.first
-          elem[:name] = opts[what][elem[:type]]
-        when :text_content
-          elem[:name] = opts[:name]
-          elem[:type] = :text_content
-        when Symbol
-          elem[:name] = opts[what]
-          elem[:type] = :text
-        end
+      case opts[what]
+      when Hash
+        raise ArgumentError, "Hash #{what} is over-specified: #{opts[what].pp_s}" unless opts[what].keys.one?
+        {:type => opts[what].keys.first, :name => opts[what][opts[what].keys.first]}
+      when :text_content
+        {:type => :text_content, :name => opts[:name]}
+      when Symbol
+        {:type => :text, :name => opts[what]}
       end
     end
   end

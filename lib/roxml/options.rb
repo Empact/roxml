@@ -3,13 +3,14 @@ module ROXML
   TYPE_KEYS = [:attr, :text, :hash].freeze
 
   class HashDesc
-    attr_reader :key, :value
+    attr_reader :key, :value, :wrapper
 
-    def initialize(opts)
+    def initialize(opts, wrapper)
       unless (invalid_keys = opts.keys - HASH_KEYS).empty?
         raise ArgumentError, "Invalid Hash description keys: #{invalid_keys.join(', ')}"
       end
 
+      @wrapper = wrapper
       if opts.has_key? :attrs
         @key   = to_ref(opts, :attr, opts[:attrs][0])
         @value = to_ref(opts, :attr, opts[:attrs][1])
@@ -63,6 +64,7 @@ module ROXML
           opts[:type] = :text
           (opts[:as] ||= []) << :text_content
         end
+        opts[:in] = @wrapper if @wrapper
         Opts.new(name, opts)
       else
         opts = args.extract_options!
@@ -82,7 +84,6 @@ module ROXML
       @type = extract_type(args)
 
       @name = @opts[:from].to_s
-      @hash = HashDesc.new(@opts.delete(:hash)) if hash?
     end
 
     def name=(n)
@@ -91,6 +92,10 @@ module ROXML
 
     def name
       enumerable? ? @name.singularize : @name
+    end
+
+    def hash
+      @hash ||= HashDesc.new(@opts.delete(:hash), name) if hash?
     end
 
     def default

@@ -9,7 +9,7 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef
-    attr_reader :accessor, :name, :array, :default, :block
+    attr_reader :accessor, :name, :array, :default, :block, :wrapper
 
     def initialize(accessor, args, &block)
       @accessor = accessor
@@ -17,6 +17,7 @@ module ROXML
       @name = args.name
       @default = args.default
       @block = block
+      @wrapper = args.wrapper
     end
 
     # Reads data from the XML element and populates the instance
@@ -25,6 +26,15 @@ module ROXML
       data = value(xml)
       instance.instance_variable_set("@#{accessor}", data) if data
       instance
+    end
+
+  private
+    def xpath
+      wrapper ? "#{wrapper}#{xpath_separator}#{name}" : name.to_s
+    end
+
+    def wrap(xml)
+      wrapper ? xml.child_add(LibXML::XML::Node.new(wrapper)) : xml
     end
   end
 
@@ -43,8 +53,14 @@ module ROXML
     end
 
     def value(xml)
+      parent = wrap(xml)
       val = xml.attributes[name] || default
       block ? block.call(val) : val
+    end
+
+  private
+    def xpath_separator
+      '@'
     end
   end
 
@@ -55,13 +71,12 @@ module ROXML
   #   XMLTextRef
   #  </element>
   class XMLTextRef < XMLRef
-    attr_reader :cdata, :wrapper, :text_content
+    attr_reader :cdata, :text_content
 
     def initialize(accessor, args, &block)
       super(accessor, args, &block)
       @text_content = args.text_content?
       @cdata = args.cdata?
-      @wrapper = args.wrapper
     end
 
     # Updates the text in the given _xml_ block to
@@ -72,10 +87,10 @@ module ROXML
         parent.content = text(value)
       elsif array
         value.each do |v|
-          parent.add_element(name).content = text(v)
+          parent.child_add(name).content = text(v)
         end
       else
-        parent.add_element(name).content = text(value)
+        parent.child_add(name).content = text(value)
       end
       xml
     end
@@ -96,16 +111,12 @@ module ROXML
     end
 
   private
+    def xpath_separator
+      '/'
+    end
+
     def text(value)
       cdata ? XML::Node.new_cdata(value.to_utf) : value.to_utf
-    end
-
-    def xpath
-      wrapper ? "#{wrapper}/#{name}" : name.to_s
-    end
-
-    def wrap(xml)
-      wrapper ? xml.add_element(wrapper) : xml
     end
   end
 
@@ -115,6 +126,18 @@ module ROXML
     def initialize(accessor, args, &block)
       super(accessor, args, &block)
       @hash = args.hash
+    end
+
+    # Updates the composed XML object in the given XML block to
+    # the value provided.
+    def update_xml(xml, value)
+      parent = wrap(xml)
+      value.each_pair do |k, v|
+        node = add_node(parent)
+        hash.key.update_xml(node, k)
+        hash.value.update_xml(node, v)
+      end
+      xml
     end
 
     def value(xml)
@@ -127,6 +150,15 @@ module ROXML
         end
       end
       vals.to_h
+    end
+
+  private
+    def add_node(xml)
+      if hash.key.wrapper == hash.value.wrapper
+        xml.child_add(LibXML::XML::Node.new(hash.key.wrapper))
+      else
+        xml
+      end
     end
   end
 
@@ -143,10 +175,10 @@ module ROXML
     def update_xml(xml, value)
       parent = wrap(xml)
       unless array
-        parent.add_element(value.to_xml)
+        parent.child_add(value.to_xml)
       else
         value.each do |v|
-          parent.add_element(v.to_xml)
+          parent.child_add(v.to_xml)
         end
       end
       xml
@@ -183,7 +215,7 @@ module ROXML
     returning XML::Node.new_element(tag_name) do |root|
       tag_refs.each do |ref|
         if v = __send__(ref.accessor)
-          root = ref.update_xml(root, v)
+          ref.update_xml(root, v)
         end
       end
     end

@@ -87,10 +87,10 @@ module ROXML
         parent.content = text(value)
       elsif array
         value.each do |v|
-          parent.child_add(name).content = text(v)
+          parent.child_add(XML::Node.new(name)).content = text(v)
         end
       else
-        parent.child_add(name).content = text(value)
+        parent.child_add(XML::Node.new(name)).content = text(value)
       end
       xml
     end

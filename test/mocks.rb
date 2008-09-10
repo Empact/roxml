@@ -63,7 +63,8 @@ end
 class BookWithAuthors
   include ROXML
 
-  xml_reader :isbn, :attr
+  xml_name :book
+  xml_reader :isbn, :attr, :from => 'ISBN'
   xml_reader :title
   xml_reader :description, :as => :cdata
   xml_reader :authors, :as => :array
@@ -72,7 +73,8 @@ end
 class BookWithAuthorTextAttribute
   include ROXML
 
-  xml_reader :isbn, :attr
+  xml_name :book
+  xml_reader :isbn, :attr, :from => 'ISBN'
   xml_reader :title
   xml_reader :description, :as => :cdata
   xml_reader :author, Author
@@ -92,7 +94,7 @@ class BookWithContributions
   xml_reader :isbn, :attr
   xml_reader :title
   xml_reader :description
-  xml_reader :contributions, Contributor, :as => :array, :in => "contributions"
+  xml_reader :contributions, Contributor, :as => :array, :from => 'contributor', :in => "contributions"
 end
 
 class BookWithContributors

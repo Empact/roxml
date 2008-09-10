@@ -3,12 +3,14 @@ require 'lib/roxml'
 class DictionaryOfAttrs
   include ROXML
 
+  xml_name :dictionary
   xml_reader :definitions, {:attrs => [:dt, :dd]}, :in => :definitions
 end
 
 class DictionaryOfTexts
   include ROXML
 
+  xml_name :dictionary
   xml_reader :definitions, {:key => :word,
                             :value => :meaning}
 end
@@ -16,6 +18,7 @@ end
 class DictionaryOfMixeds
   include ROXML
 
+  xml_name :dictionary
   xml_reader :definitions, {:key => {:attr => :word},
                             :value => :text_content}
 end

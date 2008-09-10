@@ -34,7 +34,7 @@ module ROXML
     end
 
     def wrap(xml)
-      wrapper ? xml.child_add(LibXML::XML::Node.new(wrapper)) : xml
+      (wrapper && xml.name != wrapper) ? xml.child_add(LibXML::XML::Node.new(wrapper)) : xml
     end
   end
 

@@ -32,20 +32,20 @@ module ROXML
       end
 
       if opts.has_key? :attrs
-        @key   = {:type => :attr, :name => opts[:attrs][0]}
-        @value = {:type => :attr, :name => opts[:attrs][1]}
+        @key   = to_ref(opts, :attr, opts[:attrs][0])
+        @value = to_ref(opts, :attr, opts[:attrs][1])
       else
-        @key = fetch_element(opts, :key)
-        @value = fetch_element(opts, :value)
+        @key = to_ref opts, *fetch_element(opts, :key)
+        @value = to_ref opts, *fetch_element(opts, :value)
       end
     end
 
     def types
-      [@key[:type], @value[:type]]
+      [@key.class, @value.class]
     end
 
     def names
-      [@key[:name], @value[:name]]
+      [@key.name, @value.name]
     end
 
   private
@@ -53,20 +53,47 @@ module ROXML
       case opts[what]
       when Hash
         raise ArgumentError, "Hash #{what} is over-specified: #{opts[what].pp_s}" unless opts[what].keys.one?
-        {:type => opts[what].keys.first, :name => opts[what][opts[what].keys.first]}
+        type = opts[what].keys.first
+        [type, opts[what][type]]
       when :text_content
-        {:type => :text_content, :name => opts[:name]}
+        [:text_content, opts[:name]]
       when Symbol
-        {:type => :text, :name => opts[what]}
+        [:text, opts[what]]
+      end
+    end
+
+    def to_ref(args, type, name)
+      case type
+      when :attr
+        XMLAttributeRef.new(nil, to_hash_args(args, type, name))
+      when :text
+        XMLTextRef.new(nil, to_hash_args(args, type, name))
+      when Symbol
+        XMLTextRef.new(nil, to_hash_args(args, type, name))
+      else
+        raise ArgumentError, "Missing key description #{{:type => type, :name => name}.pp_s}"
+      end
+    end
+
+    def to_hash_args(args, type, name)
+      args = [args] unless args.is_a? Array
+
+      if args.one? && !(args.only.keys & HASH_KEYS).empty?
+        opts = {type => name}
+        if type == :text_content
+          opts[:type] = :text
+          (opts[:as] ||= []) << :text_content
+        end
+        Opts.new(name, opts)
+      else
+        opts = args.extract_options!
+        raise opts.to_s
       end
     end
   end
 
   class Opts
     attr_reader :type, :hash
-
-    # FIXME: ideally this would not be exposed, as it should only be used in to_hash_args
-    attr_writer :type
 
     def initialize(sym, *args)
       @opts = extract_options!(args)
@@ -103,10 +130,6 @@ module ROXML
       @opts[:as].include? :array
     end
 
-    def text_content!
-      @opts[:as] << :text_content unless text_content?
-    end
-
     def text_content?
       @opts[:as].include? :text_content
     end
@@ -117,15 +140,6 @@ module ROXML
 
     def wrapper
       @opts[:in]
-    end
-
-    def to_hash_args(what)
-      desc = hash.send(what)
-      returning dup do |args|
-        args.type = desc[:type]
-        args.name = desc[:name] || name
-        args.text_content! if desc[:type] == :text_content
-      end
     end
 
   private

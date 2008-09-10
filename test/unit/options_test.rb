@@ -23,17 +23,17 @@ class TestOptions < Test::Unit::TestCase
     opts = ROXML::Opts.new(:attributes, {:attrs => [:name, :value]})
     assert opts.hash?
     assert !opts.array?
-    assert [:attr, :attr], opts.hash.types
-    assert [:name, :value], opts.hash.names
+    assert_equal [ROXML::XMLAttributeRef, ROXML::XMLAttributeRef], opts.hash.types
+    assert_equal ['name', 'value'], opts.hash.names
   end
 
   def test_hash_with_attr_key_and_text_val
     opts = ROXML::Opts.new(:attributes, {:key => {:attr => :name},
-                                         :value => :text})
+                                         :value => :value})
     assert opts.hash?
     assert !opts.array?
-    assert [:attr, :text], opts.hash.types
-    assert [:name, :value], opts.hash.names
+    assert_equal [ROXML::XMLAttributeRef, ROXML::XMLTextRef], opts.hash.types
+    assert_equal ['name', 'value'], opts.hash.names
   end
 
   def test_hash_with_attr_key_and_text_content_val
@@ -41,9 +41,9 @@ class TestOptions < Test::Unit::TestCase
                                          :value => :text_content})
     assert opts.hash?
     assert !opts.array?
-    assert opts.to_hash_args(:value).text_content?
-    assert [:attr, :text_content], opts.hash.types
-    assert [:name, :value], opts.hash.names
+    assert opts.hash.value.text_content
+    assert_equal [ROXML::XMLAttributeRef, ROXML::XMLTextRef], opts.hash.types
+    assert_equal ['name', ''], opts.hash.names
   end
 
   def test_hash_with_options
@@ -52,7 +52,7 @@ class TestOptions < Test::Unit::TestCase
 
     assert opts.hash?
     assert !opts.array?
-    assert [:attr, :text], opts.hash.types
-    assert [:name, :value], opts.hash.names
+    assert_equal [ROXML::XMLAttributeRef, ROXML::XMLAttributeRef], opts.hash.types
+    assert_equal ['dt', 'dd'], opts.hash.names
   end
 end

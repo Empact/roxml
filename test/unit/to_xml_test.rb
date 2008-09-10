@@ -7,7 +7,11 @@ def to_xml_test(*names)
 
     define_method "test_#{name}" do
       dict = name.to_s.camelize.constantize.parse(fixture(xml_name))
-      assert_equal xml_fixture(xml_name), dict.to_xml
+      xml = xml_fixture(xml_name)
+      xml.children.each do |child|
+        child.remove! if child.empty?
+      end
+      assert_equal xml, dict.to_xml
     end
   end
 end

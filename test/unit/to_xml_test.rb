@@ -30,11 +30,13 @@ end
 
 class TestOtherToXml < Test::Unit::TestCase
   to_xml_test :book => :book_valid,
-              :book_with_author_text_attribute => :book_text_with_attribute
+              :book_with_author_text_attribute => :book_text_with_attribute,
+              :uppercase_library => :library_uppercase
 
   to_xml_test :book_with_authors,
               :book_with_contributors,
-              :book_with_contributions
+              :book_with_contributions,
+              :library
 
   to_xml_test :person_with_mother => :person_with_mothers,
               :person_with_guarded_mother => :person_with_guarded_mothers

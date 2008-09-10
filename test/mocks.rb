@@ -94,7 +94,7 @@ class BookWithContributions
   xml_reader :isbn, :attr
   xml_reader :title
   xml_reader :description
-  xml_reader :contributions, Contributor, :as => :array, :from => 'contributor', :in => "contributions"
+  xml_reader :contributions, [Contributor], :from => 'contributor', :in => "contributions"
 end
 
 class BookWithContributors
@@ -154,7 +154,7 @@ class UppercaseLibrary
 
   xml_name :library
   xml_reader :name, :from => 'NAME'
-  xml_reader :books, BookWithContributions, :as => :array, :from => 'BOOK'
+  xml_reader :books, [BookWithContributions], :from => 'BOOK'
 end
 
 class LibraryWithBooksOfUnderivableName

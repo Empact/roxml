@@ -84,13 +84,13 @@ module ROXML
     def update_xml(xml, value)
       parent = wrap(xml)
       if text_content
-        parent.content = text(value)
+        add(parent, value)
       elsif array
         value.each do |v|
-          parent.child_add(XML::Node.new(name)).content = text(v)
+          add(parent.child_add(XML::Node.new(name)), v)
         end
       else
-        parent.child_add(XML::Node.new(name)).content = text(value)
+        add(parent.child_add(XML::Node.new(name)), value)
       end
       xml
     end
@@ -115,8 +115,12 @@ module ROXML
       '/'
     end
 
-    def text(value)
-      cdata ? XML::Node.new_cdata(value.to_utf) : value.to_utf
+    def add(dest, value)
+      if cdata
+        dest.child_add(XML::Node.new_cdata(value.to_utf))
+      else
+        dest.content = value.to_utf
+      end
     end
   end
 

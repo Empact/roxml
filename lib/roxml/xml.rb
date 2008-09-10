@@ -179,10 +179,10 @@ module ROXML
     def update_xml(xml, value)
       parent = wrap(xml)
       unless array
-        parent.child_add(value.to_xml)
+        parent.child_add(value.to_xml(name))
       else
         value.each do |v|
-          parent.child_add(v.to_xml)
+          parent.child_add(v.to_xml(name))
         end
       end
       xml
@@ -215,8 +215,8 @@ module ROXML
   #
   # Returns an XML::Node representing this object.
   #
-  def to_xml
-    returning XML::Node.new_element(tag_name) do |root|
+  def to_xml(name = nil)
+    returning XML::Node.new_element(name || tag_name) do |root|
       tag_refs.each do |ref|
         if v = __send__(ref.accessor)
           ref.update_xml(root, v)

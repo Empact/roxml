@@ -172,6 +172,7 @@ end
 class PersonWithMother
   include ROXML
 
+  xml_name :person
   xml_reader :name
   xml_reader :mother, PersonWithMother
 end
@@ -179,6 +180,7 @@ end
 class PersonWithGuardedMother
   include ROXML
 
+  xml_name :person
   xml_reader :name
   xml_reader :mother, PersonWithGuardedMother, :from => :person, :in => :mother
 end

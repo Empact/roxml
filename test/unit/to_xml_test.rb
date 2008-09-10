@@ -22,4 +22,5 @@ end
 
 class TestOtherToXml < Test::Unit::TestCase
   to_xml_test :book => :book_valid
+  to_xml_test :person_with_mother => :person_with_mothers, :person_with_guarded_mother => :person_with_guarded_mothers
 end

@@ -34,6 +34,11 @@ class TestXMLText < Test::Unit::TestCase
     assert_equal "Anonymous", person.name
   end
 
+  def test_default_initialization_of_text_content
+    person = Person.parse(fixture(:nameless_ageless_youth))
+    assert_equal "Unknown", person.name
+  end
+
   def test_recursive_with_default_initialization
     p = PersonWithMotherOrMissing.parse(fixture(:person_with_mothers))
     assert_equal 'Unknown', p.mother.mother.mother.name

@@ -41,3 +41,12 @@ class TestOtherToXml < Test::Unit::TestCase
   to_xml_test :person_with_mother => :person_with_mothers,
               :person_with_guarded_mother => :person_with_guarded_mothers
 end
+
+class TestToXmlWithDefaults < Test::Unit::TestCase
+  def test_text_content_and_attr_defaults_are_represented_in_output
+    dict = Person.parse(fixture(:nameless_ageless_youth))
+
+    xml = '<person age="21">Unknown</person>'
+    assert_equal LibXML::XML::Parser.string(xml).parse.root, dict.to_xml
+  end
+end

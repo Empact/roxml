@@ -97,7 +97,7 @@ module ROXML
 
     def value(xml)
       val = if text_content
-        xml.content
+        xml.content.strip
       elsif array
         arr = xml.find(xpath).collect do |e|
           e.content.strip.to_latin if e.content
@@ -106,7 +106,8 @@ module ROXML
       else
         child = xml.find_first(name)
         child.content if child
-      end || default
+      end
+      val = default unless val && !val.blank?
       block ? block.call(val) : val
     end
 

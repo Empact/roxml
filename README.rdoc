@@ -10,19 +10,19 @@ can map this structure to Ruby classes that provide addition useful behavior. Wi
 ROXML, you can annotate the Ruby classes as follows:
 
   class Book
-      include ROXML
+    include ROXML
 
-      xml_attribute :isbn, :from => "ISBN"
-      xml_text :title
-      xml_text :description, :as => :cdata
-      xml_text :author
+    xml_reader :isbn, :attr => "ISBN" # attribute with name 'ISBN'
+    xml_reader :title
+    xml_reader :description, :as => :cdata  # text node with cdata protection
+    xml_reader :author
   end
 
   class Library
-      include ROXML
+    include ROXML
 
-      xml_text :name, :from => "NAME", :as => :cdata
-      xml_object :books, Book, :as => :array, :in => "books"
+    xml_accessor :name, :from => "NAME", :as => :cdata
+    xml_accessor :books, [Book], :in => "books"
   end
 
 To create a library and put a number of books in it we could run the following code:
@@ -40,7 +40,7 @@ To create a library and put a number of books in it we could run the following c
 To save this information to an XML file:
 
   File.open("library.xml", "w") do |f|
-      lib.to_xml.write(f, 0)
+    lib.to_xml.write(f, 0)
   end
 
 To later populate the library object from the XML file:
@@ -61,10 +61,10 @@ you would use the *xml_object* annotation. For example:
 can be mapped using the following code:
 
   class BookWithPublisher
-      include ROXML
+    include ROXML
 
-      xml_name :book
-      xml_object :publisher, Publisher
+    xml_name :book
+    xml_reader :publisher, Publisher
   end
 
 Note: In the above example, _xml_name_ annotation tells ROXML to set the element

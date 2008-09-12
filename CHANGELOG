@@ -1,0 +1,45 @@
+== 2.0 (September 11, 2008)
+
+* Allow supplying a default via the :else option [Ben Woosley]
+
+* Allow hash mapping of text and attr elements: [Ben Woosley]
+
+  xml_reader :name, {:key => {:text => 'key_name'},
+                     :value => {:attr => 'attr_name'}}, :in => 'container'
+
+* Allow 'xml_reader :name, [Type]' as an alternative to 'xml_reader :name, Type, :as => :array'
+  [Ben Woosley]
+
+* Allow attaching a block for manipulating a value on fetch: [Ben Woosley]
+
+  xml_reader :count, :attr => 'my_int' do |val|
+    Integer(val)
+  end
+
+* Collapse xml_attr, xml_text and xml_object into a single api: xml, patterned after the standard
+  attr, and offer xml_reader and xml_accessor as well.  Remove the :readonly arg in the process
+  [Ben Woosley]
+
+* Attach string extensions (#to_latin, #to_utf) to Object rather than String, so we don't have to
+  call #to_s first every time [Ben Woosley]
+
+* Allow a ROXML object to call its constructor on initialization with the xml_construct function
+  [Ben Woosley]
+
+* Use symbols (e.g. :text_content) rather than TAG_CONSTANTS (e.g. TEXT_CONTENT) for readability
+  [Ben Woosley]
+
+* Use named arguments (e.g. :as, :in) rather than positional for clarity,
+  position-independence, and invisible exclusion [Ben Woosley]
+
+* Split out rails_plugin_package_task_gem [Ben Woosley]
+
+* Increase testing significantly, particularly on new functionality & to_xml [Ben Woosley]
+
+== 1.2 (October 10, 2007)
+
+* Fix a bug such that the TEXT_CONTENT tag is no longer also READ_ONLY [Russ Olsen]
+
+== 1.1 (September 24, 2006)
+
+* Initial design & development [Zak Mandhro & Anders Engstrom]

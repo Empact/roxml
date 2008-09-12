@@ -1,6 +1,6 @@
 module ROXML
   HASH_KEYS = [:attrs, :key, :value].freeze
-  TYPE_KEYS = [:attr, :text, :hash].freeze
+  TYPE_KEYS = [:attr, :text, :hash, :text_content].freeze
 
   class HashDesc # ::nodoc::
     attr_reader :key, :value, :wrapper
@@ -110,12 +110,12 @@ module ROXML
       @type == :hash
     end
 
-    def array?
-      @opts[:as].include? :array
+    def text_content?
+      @type == :text_content
     end
 
-    def text_content?
-      @opts[:as].include? :text_content
+    def array?
+      @opts[:as].include? :array
     end
 
     def cdata?

@@ -107,6 +107,18 @@ module ROXML
     #   <Author>David Thomas</author>
     #  </book>
     #
+    # [:text_content] A special case of :text, this refers to the content of the current node,
+    #                 rather than a sub-node
+    #
+    # Example:
+    #  class Contributor
+    #    xml_reader :name, :text_content
+    #    xml_reader :role, :attr
+    #  end
+    #
+    # To map:
+    #  <contributor role="editor">James Wick</contributor>
+    #
     # [type] Declares an accessor that represents another ROXML class as child XML element
     # (one-to-one or composition) or array of child elements (one-to-many or
     # aggregation) of this type. Default is one-to-one. Use :array option for one-to-many, or
@@ -151,8 +163,7 @@ module ROXML
     # [:from]  The name by which the xml value will be found, either an
     #      attribute or tag name in XML.  Default is sym, or the singular form
     #      of sym, in the case of arrays and hashes.
-    # [:as] :cdata for character data, :array for one-to-many,
-    #      :text_content to declare main text content for containing tag
+    # [:as] :cdata for character data, :array for one-to-many (or both)
     # [:in] An optional name of a wrapping tag for this XML accessor.
     # [:else] Default value for attribute, if missing
     #
@@ -162,6 +173,8 @@ module ROXML
       tag_refs << case opts.type
       when :attr
         XMLAttributeRef.new(sym, opts, &block)
+      when :text_content
+        XMLTextRef.new(sym, opts, &block)
       when :text
         XMLTextRef.new(sym, opts, &block)
       when :hash

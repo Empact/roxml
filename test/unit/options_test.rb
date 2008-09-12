@@ -19,6 +19,10 @@ class TestOptions < Test::Unit::TestCase
     assert_equal Hash, opts.type
   end
 
+  def test_text_content_is_a_recognized_type
+    assert ROXML::Opts.new(:author, :text_content).text_content?
+  end
+
   def test_hash_of_attrs
     opts = ROXML::Opts.new(:attributes, {:attrs => [:name, :value]})
     assert opts.hash?

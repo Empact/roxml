@@ -109,7 +109,8 @@ module ROXML
     #
     # [type] Declares an accessor that represents another ROXML class as child XML element
     # (one-to-one or composition) or array of child elements (one-to-many or
-    # aggregation) of this type. Default is one-to-one. Use :array option for one-to-many.
+    # aggregation) of this type. Default is one-to-one. Use :array option for one-to-many, or
+    # simply pass the class in an array.
     #
     # Composition example:
     #  <book>
@@ -133,7 +134,7 @@ module ROXML
     #
     # Can be mapped using the following code:
     #  class Library
-    #    xml_reader :books, Book, :as => :array, :in => "books"
+    #    xml_reader :books, [Book], :in => "books"
     #  end
     #
     # If you don't have the <books> tag to wrap around the list of <book> tags:
@@ -148,7 +149,8 @@ module ROXML
     #
     # == Common options
     # [:from]  The name by which the xml value will be found, either an
-    #      attribute or tag name in XML.  Default is sym.id2name.
+    #      attribute or tag name in XML.  Default is sym, or the singular form
+    #      of sym, in the case of arrays and hashes.
     # [:as] :cdata for character data, :array for one-to-many,
     #      :text_content to declare main text content for containing tag
     # [:in] An optional name of a wrapping tag for this XML accessor.
@@ -182,7 +184,7 @@ module ROXML
       xml sym, true, *args, &block
     end
 
-    def xml_construction_args
+    def xml_construction_args # ::nodoc::
       @xml_construction_args ||= []
     end
 

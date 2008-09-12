@@ -2,7 +2,7 @@ module ROXML
   HASH_KEYS = [:attrs, :key, :value].freeze
   TYPE_KEYS = [:attr, :text, :hash].freeze
 
-  class HashDesc
+  class HashDesc # ::nodoc::
     attr_reader :key, :value, :wrapper
 
     def initialize(opts, wrapper)
@@ -73,7 +73,7 @@ module ROXML
     end
   end
 
-  class Opts
+  class Opts # ::nodoc::
     attr_reader :type, :hash
 
     def initialize(sym, *args)

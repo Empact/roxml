@@ -5,6 +5,8 @@ visit http://roxml.rubyforge.org
 
 This is a short usage example. See ROXML::ROXML_Class and packaged test cases for more information.
 
+==Basic Mapping
+
 Consider an XML document representing a Library containing a number of Books. You
 can map this structure to Ruby classes that provide addition useful behavior. With
 ROXML, you can annotate the Ruby classes as follows:
@@ -70,5 +72,42 @@ can be mapped using the following code:
 Note: In the above example, _xml_name_ annotation tells ROXML to set the element
 name to "book" for mapping to XML. The default is XML element name is the class name in lowercase; "bookwithpublisher"
 in this case.
+
+== Manipulation
+
+Extending the above examples, say you want to parse a book's page count and have it available as an Integer.
+In such a case, you can extend any object with a block to manipulate it's value at parse time.  For example:
+
+  class Child
+    include ROXML
+
+    xml_reader :age, :attr do |val|
+      Integer(val)
+    end
+  end
+
+The result of the block above is stored, rather than the actual value parsed from the document.
+
+== Construction
+
+Complicated initialization may require action on multiple attributes of an object.  As such, you can
+use xml_construct to cause your ROXML object to call its own constructor.  For example:
+
+  class Measurement
+    include ROXML
+
+    xml_reader :units, :attr
+    xml_reader :value, :as => :text_content
+
+    xml_construct :value, :units
+
+    def initialize(value, units)
+      # translate units & value into metric, for example
+    end
+  end
+
+will map the following xml and then call the constructor above:
+
+  <measurement units="inches">2.7</measurement>
 
 For more information on available annotations, see ROXML::ROXML_Class

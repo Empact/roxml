@@ -8,23 +8,11 @@ require 'activesupport'
 end
 
 module ROXML
-  # Option that declares that an XML text element's value should be
-  # wrapped in a CDATA section.
-  TAG_CDATA = :cdata
-
-  # Option that declares an accessor as an array (referencing "many"
-  # items).
-  TAG_ARRAY = :array
-
-  # Option that declares an xml_text annotation to define the text
-  # content of the container tag
-  TEXT_CONTENT = :text_content
-
   # This class defines the annotation methods that are mixed into your
   # Ruby classes for XML mapping information and behavior.
   #
-  # See xml_name, xml_text, xml_attribute and xml_object for available
-  # annotations.
+  # See xml_name, xml_construct, xml, xml_reader and xml_accessor for
+  # available annotations.
   #
   module ROXML_Class
     #
@@ -76,22 +64,24 @@ module ROXML
     # [sym]   Symbol representing the name of the accessor
     #
     # == Type options
+    # All type arguments may be used as the type argument to indicate just type,
+    # or used as :from, pointing to a xml name to indicate both type and attribute name.
+    # Also, any type may be passed via an array to indicate that multiple instances
+    # of the object should be returned as an array.
+    #
     # [:attr] Declare an accessor that represents an XML attribute.
-    #         May be used as the type argument to indicate just type,
-    #         or used as :from to indicate both type and attribute name
     #
     # Example:
     #  class Book
-    #   xml_reader :isbn, :attr => "ISBN"
-    #   xml_accessor :title, :attr
+    #   xml_reader :isbn, :attr => "ISBN" # 'ISBN' is used to specify :from
+    #   xml_accessor :title, :attr        # :from defaults to :title
     #  end
     #
     # To map:
     #  <book ISBN="0974514055" title="Programming Ruby: the pragmatic programmers' guide" />
     #
     # [:text] The default type, if none is specified. Declares an accessor that
-    #         represents a text node from XML.  May be left out completely, used
-    #         as the type argument, or used as :from to indicate both the type and attribute name.
+    # represents a text node from XML.
     #
     # Example:
     #  class Book
@@ -108,7 +98,7 @@ module ROXML
     #  </book>
     #
     # [:text_content] A special case of :text, this refers to the content of the current node,
-    #                 rather than a sub-node
+    # rather than a sub-node
     #
     # Example:
     #  class Contributor
@@ -159,12 +149,19 @@ module ROXML
     # You can skip the wrapper argument:
     #    xml_object :books, Book, :as => :array
     #
+    # == Blocks
+    # For any attribute, you may pass a block which manipulates the associated parsed value.
+    #
+    #  class Muffins
+    #    include ROXML
+    #
+    #    xml_reader :count, :from => 'bakers_dozens' {|val| val.to_i * 13 }
+    #  end
+    #
     # == Common options
-    # [:from]  The name by which the xml value will be found, either an
-    #      attribute or tag name in XML.  Default is sym, or the singular form
-    #      of sym, in the case of arrays and hashes.
-    # [:as] :cdata for character data, :array for one-to-many (or both)
-    # [:in] An optional name of a wrapping tag for this XML accessor.
+    # [:from] The name by which the xml value will be found, either an attribute or tag name in XML.  Default is sym, or the singular form of sym, in the case of arrays and hashes.
+    # [:as] :cdata for character data, and/or :array for one-to-many
+    # [:in] An optional name of a wrapping tag for this XML accessor
     # [:else] Default value for attribute, if missing
     #
     def xml(sym, writable = false, *args, &block)
@@ -204,8 +201,8 @@ module ROXML
     # On parse, call the target object's initialize function with the listed arguments
     def xml_construct(*args)
       if missing_tag = args.detect {|arg| !tag_refs.map(&:name).include?(arg.to_s) }
-        raise ArgumentError, "All construction tags must be declared as xml_object, " +
-                             "xml_text, or xml_attribute. #{missing_tag} is missing. " +
+        raise ArgumentError, "All construction tags must be declared first using xml, " +
+                             "xml_reader, or xml_accessor. #{missing_tag} is missing. " +
                              tag_refs.map(&:name).join(', ') + ' are declared.'
       end
       @xml_construction_args = args
@@ -257,7 +254,7 @@ module ROXML
     #
     # Extends the klass with the ROXML_Class module methods.
     #
-    def included(klass)
+    def included(klass) # ::nodoc::
       super
       klass.__send__(:extend, ROXML_Class)
     end

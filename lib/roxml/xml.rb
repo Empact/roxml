@@ -1,14 +1,14 @@
 require 'libxml'
 
 module ROXML
-  module XML
+  module XML # ::nodoc::
     include LibXML::XML
   end
 
   #
   # Internal base class that represents an XML - Class binding.
   #
-  class XMLRef
+  class XMLRef # ::nodoc::
     attr_reader :accessor, :name, :array, :default, :block, :wrapper
 
     def initialize(accessor, args, &block)
@@ -44,7 +44,7 @@ module ROXML
   #  <element attribute="XMLAttributeRef">
   #   XMLTextRef
   #  </element>
-  class XMLAttributeRef < XMLRef
+  class XMLAttributeRef < XMLRef # ::nodoc::
     # Updates the attribute in the given XML block to
     # the value provided.
     def update_xml(xml, value)
@@ -70,7 +70,7 @@ module ROXML
   #  <element attribute="XMLAttributeRef">
   #   XMLTextRef
   #  </element>
-  class XMLTextRef < XMLRef
+  class XMLTextRef < XMLRef # ::nodoc::
     attr_reader :cdata, :text_content
 
     def initialize(accessor, args, &block)
@@ -125,7 +125,7 @@ module ROXML
     end
   end
 
-  class XMLHashRef < XMLTextRef
+  class XMLHashRef < XMLTextRef # ::nodoc::
     attr_reader :hash
 
     def initialize(accessor, args, &block)
@@ -167,7 +167,7 @@ module ROXML
     end
   end
 
-  class XMLObjectRef < XMLTextRef
+  class XMLObjectRef < XMLTextRef # ::nodoc::
     attr_reader :klass
 
     def initialize(accessor, args, &block)

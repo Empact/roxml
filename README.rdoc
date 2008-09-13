@@ -106,8 +106,7 @@ use xml_construct to cause your ROXML object to call its own constructor.  For e
     end
   end
 
-will map the following xml and then call the constructor above:
-
-  <measurement units="inches">2.7</measurement>
+Will, on parse, read all listed xml attributes (units and value, in this case), then call initialize
+with the arguments listed after the xml_construct call.
 
 For more information on available annotations, see ROXML::ROXML_Class

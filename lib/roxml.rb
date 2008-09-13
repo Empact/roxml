@@ -267,9 +267,9 @@ module ROXML
   # To make it easier to reference the class's
   # attributes all method calls to the instance that
   # doesn't match an instance method are forwarded to the
-  # class's singleton instance. Only methods starting with 'tag_' are delegated.
+  # class's singleton instance. Only methods 'tag_name' and 'tag_refs' are delegated.
   def method_missing(name, *args)
-    if name.id2name =~ /^tag_/
+    if [:tag_name, :tag_refs].include? name
       self.class.__send__(name, *args)
     else
       super

@@ -69,7 +69,8 @@ module ROXML
     # Also, any type may be passed via an array to indicate that multiple instances
     # of the object should be returned as an array.
     #
-    # [:attr] Declare an accessor that represents an XML attribute.
+    # === :attr
+    # Declare an accessor that represents an XML attribute.
     #
     # Example:
     #  class Book
@@ -80,7 +81,8 @@ module ROXML
     # To map:
     #  <book ISBN="0974514055" title="Programming Ruby: the pragmatic programmers' guide" />
     #
-    # [:text] The default type, if none is specified. Declares an accessor that
+    # === :text
+    # The default type, if none is specified. Declares an accessor that
     # represents a text node from XML.
     #
     # Example:
@@ -97,7 +99,8 @@ module ROXML
     #   <Author>David Thomas</author>
     #  </book>
     #
-    # [:text_content] A special case of :text, this refers to the content of the current node,
+    # === :text_content
+    # A special case of :text, this refers to the content of the current node,
     # rather than a sub-node
     #
     # Example:
@@ -109,7 +112,62 @@ module ROXML
     # To map:
     #  <contributor role="editor">James Wick</contributor>
     #
-    # [type] Declares an accessor that represents another ROXML class as child XML element
+    # === Hash
+    # Somewhere between the simplicity of a :text/:attr mapping, and the complexity of
+    # a full Object/Type mapping, lies the Hash mapping.  It serves in the case where you have
+    # a collection of key-value pairs represented in your xml.  You create a hash declaration by
+    # passing a hash mapping as the type argument.  A few examples:
+    #
+    # ==== Hash of :attrs
+    # For xml such as this:
+    #
+    #    <dictionary>
+    #      <definitions>
+    #        <definition dt="quaquaversally"
+    #                    dd="adjective: (of a geological formation) sloping downward from the center in all directions." />
+    #        <definition dt="tergiversate"
+    #                    dd="To use evasions or ambiguities; equivocate." />
+    #      </definitions>
+    #    </dictionary>
+    #
+    # You can use the :attrs key in you has with a [:key, :value] name array:
+    #
+    #    xml_reader :definitions, {:attrs => [:dt, :dd]}, :in => :definitions
+    #
+    # ==== Hash of :texts
+    # For xml such as this:
+    #
+    #    <dictionary>
+    #      <definition>
+    #        <word/>
+    #        <meaning/>
+    #      </definition>
+    #      <definition>
+    #        <word/>
+    #        <meaning/>
+    #      </definition>
+    #    </dictionary>
+    #
+    # You can individually declare your key and value names:
+    #    xml_reader :definitions, {:key => :word,
+    #                              :value => :meaning}
+    #
+    # ==== Hash of :text_content &c.
+    # For xml such as this:
+    #
+    #    <dictionary>
+    #      <definition word="quaquaversally">adjective: (of a geological formation) sloping downward from the center in all directions.</definition>
+    #      <definition word="tergiversate">To use evasions or ambiguities; equivocate.</definition>
+    #    </dictionary>
+    #
+    # You can individually declare the key and value, but with the attr, you need to provide both the type
+    # and name of that type (i.e. {:attr => :word}), because omitting the type will result in ROXML
+    # defaulting to :text
+    #    xml_reader :definitions, {:key => {:attr => :word},
+    #                              :value => :text_content}
+    #
+    # === Other ROXML Class
+    # Declares an accessor that represents another ROXML class as child XML element
     # (one-to-one or composition) or array of child elements (one-to-many or
     # aggregation) of this type. Default is one-to-one. Use :array option for one-to-many, or
     # simply pass the class in an array.
@@ -158,7 +216,10 @@ module ROXML
     #    xml_reader :count, :from => 'bakers_dozens' {|val| val.to_i * 13 }
     #  end
     #
-    # == Common options
+    # For hash types, the block recieves the key and value as arguments, and they should
+    # be returned as an array of [key, value]
+    #
+    # == Other options
     # [:from] The name by which the xml value will be found, either an attribute or tag name in XML.  Default is sym, or the singular form of sym, in the case of arrays and hashes.
     # [:as] :cdata for character data, and/or :array for one-to-many
     # [:in] An optional name of a wrapping tag for this XML accessor

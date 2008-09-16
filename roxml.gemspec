@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
     'test/fixtures/person_with_guarded_mothers.xml',
     'test/fixtures/person_with_mothers.xml',
     'test/fixtures/person.xml',
-    'test/mocks.rb',
+    'test/mocks/mocks.rb',
     'test/mocks/dictionaries.rb',
     'test/test_helper.rb',
     'test/unit/options_test.rb',

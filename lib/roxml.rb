@@ -225,8 +225,8 @@ module ROXML
     # [:in] An optional name of a wrapping tag for this XML accessor
     # [:else] Default value for attribute, if missing
     #
-    def xml(sym, writable = false, *args, &block)
-      opts = Opts.new(sym, *args)
+    def xml(sym, writable = false, type_and_or_opts = :text, opts = nil, &block)
+      opts = Opts.new(sym, *[type_and_or_opts, opts].compact)
 
       tag_refs << case opts.type
       when :attr
@@ -246,13 +246,13 @@ module ROXML
     end
 
     # Declares a read-only xml reference. See xml for details.
-    def xml_reader(sym, *args, &block)
-      xml sym, false, *args, &block
+    def xml_reader(sym, type_and_or_opts = :text, opts = nil, &block)
+      xml sym, false, type_and_or_opts, opts, &block
     end
 
     # Declares a writable xml reference. See xml for details.
-    def xml_accessor(sym, *args, &block)
-      xml sym, true, *args, &block
+    def xml_accessor(sym, type_and_or_opts = :text, opts = nil, &block)
+      xml sym, true, type_and_or_opts, opts, &block
     end
 
     def xml_construction_args # ::nodoc::

@@ -27,6 +27,8 @@ module ROXML
     # or
     #  book = Book.parse("<book><name>Beyond Java</name></book>")
     #
+    # See also: xml_construct
+    #
     def parse(data)
       xml = (data.kind_of?(XML::Node) ? data : XML::Parser.string(data).parse.root)
 

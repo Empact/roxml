@@ -39,8 +39,12 @@ module ROXML
         [:text_content, opts[:name]]
       when :node_name
         [:node_name, '*']
+      when String
+        [:text, opts[what]]
       when Symbol
         [:text, opts[what]]
+      else
+        raise ArgumentError, "unrecognized hash parameter: #{what} => #{opts[what]}"
       end
     end
 

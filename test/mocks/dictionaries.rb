@@ -38,3 +38,19 @@ class DictionaryOfGuardedNames
   xml_reader :definitions, {:key => :node_name,
                             :value => :text_content}, :in => :definitions
 end
+
+class DictionaryOfNameClashes
+  include ROXML
+
+  xml_name :dictionary
+  xml_reader :definitions, {:key => 'node_name',
+                            :value => 'text_content'}, :from => :definition
+end
+
+class DictionaryOfAttrNameClashes
+  include ROXML
+
+  xml_name :dictionary
+  xml_reader :definitions, {:key => {:attr => :node_name},
+                            :value => 'text_content'}, :from => :definition
+end

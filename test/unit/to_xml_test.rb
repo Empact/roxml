@@ -29,7 +29,9 @@ class TestHashToXml < Test::Unit::TestCase
               :dictionary_of_mixeds,
               :dictionary_of_texts,
               :dictionary_of_names,
-              :dictionary_of_guarded_names
+              :dictionary_of_guarded_names,
+              :dictionary_of_name_clashes,
+              :dictionary_of_attr_name_clashes
 end
 
 class TestOtherToXml < Test::Unit::TestCase

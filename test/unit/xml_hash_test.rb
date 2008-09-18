@@ -39,4 +39,16 @@ class TestXMLHash < Test::Unit::TestCase
     assert_equal Hash, dict.definitions.class
     assert_equal @contents, dict.definitions
   end
+
+  def test_text_name_clashes
+    dict = DictionaryOfNameClashes.parse(fixture(:dictionary_of_name_clashes))
+    assert_equal Hash, dict.definitions.class
+    assert_equal @contents, dict.definitions
+  end
+
+  def test_attr_name_clashes
+    dict = DictionaryOfAttrNameClashes.parse(fixture(:dictionary_of_attr_name_clashes))
+    assert_equal Hash, dict.definitions.class
+    assert_equal @contents, dict.definitions
+  end
 end

@@ -22,3 +22,11 @@ class DictionaryOfMixeds
   xml_reader :definitions, {:key => {:attr => :word},
                             :value => :text_content}
 end
+
+class DictionaryOfNames
+  include ROXML
+
+  xml_name :dictionary
+  xml_reader :definitions, {:key => :node_name,
+                            :value => :text_content}
+end

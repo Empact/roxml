@@ -168,6 +168,18 @@ module ROXML
     #    xml_reader :definitions, {:key => {:attr => :word},
     #                              :value => :text_content}
     #
+    # ==== Hash of :node_name &c.
+    # For xml such as this:
+    #
+    #    <dictionary>
+    #      <quaquaversally>adjective: (of a geological formation) sloping downward from the center in all directions.</quaquaversally>
+    #      <tergiversate>To use evasions or ambiguities; equivocate.</tergiversate>
+    #    </dictionary>
+    #
+    # You can pick up the node names (e.g. quaquaversally) using the :node_name keyword:
+    #    xml_reader :definitions, {:key => :node_name,
+    #                              :value => :text_content}
+    #
     # === Other ROXML Class
     # Declares an accessor that represents another ROXML class as child XML element
     # (one-to-one or composition) or array of child elements (one-to-many or

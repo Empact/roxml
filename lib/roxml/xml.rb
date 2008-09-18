@@ -28,6 +28,10 @@ module ROXML
       instance
     end
 
+    def node_name?
+      false
+    end
+
   private
     def xpath
       wrapper ? "#{wrapper}#{xpath_separator}#{name}" : name.to_s
@@ -98,6 +102,8 @@ module ROXML
     def value(xml)
       val = if text_content
         xml.content.strip
+      elsif node_name?
+        xml.name
       elsif array
         arr = xml.find(xpath).collect do |e|
           e.content.strip.to_latin if e.content
@@ -109,6 +115,10 @@ module ROXML
       end
       val = default unless val && !val.blank?
       block ? block.call(val) : val
+    end
+
+    def node_name?
+      name == '*'
     end
 
   private
@@ -131,6 +141,9 @@ module ROXML
     def initialize(accessor, args, &block)
       super(accessor, args, &block)
       @hash = args.hash
+      if @hash.key.node_name? || @hash.value.node_name?
+        @name = '*'
+      end
     end
 
     # Updates the composed XML object in the given XML block to

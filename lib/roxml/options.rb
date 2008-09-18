@@ -37,6 +37,8 @@ module ROXML
         [type, opts[what][type]]
       when :text_content
         [:text_content, opts[:name]]
+      when :node_name
+        [:node_name, '*']
       when Symbol
         [:text, opts[what]]
       end

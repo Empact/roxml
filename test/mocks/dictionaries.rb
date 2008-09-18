@@ -30,3 +30,11 @@ class DictionaryOfNames
   xml_reader :definitions, {:key => :node_name,
                             :value => :text_content}
 end
+
+class DictionaryOfGuardedNames
+  include ROXML
+
+  xml_name :dictionary
+  xml_reader :definitions, {:key => :node_name,
+                            :value => :text_content}, :in => :definitions
+end

@@ -33,4 +33,10 @@ class TestXMLHash < Test::Unit::TestCase
     assert_equal Hash, dict.definitions.class
     assert_equal @contents, dict.definitions
   end
+
+  def test_guarded_name_hash
+    dict = DictionaryOfGuardedNames.parse(fixture(:dictionary_of_guarded_names))
+    assert_equal Hash, dict.definitions.class
+    assert_equal @contents, dict.definitions
+  end
 end

@@ -25,7 +25,7 @@ def remove_children(xml)
 end
 
 class TestHashToXml < Test::Unit::TestCase
-  to_xml_test :dictionary_of_attrs, :dictionary_of_mixeds, :dictionary_of_texts
+  to_xml_test :dictionary_of_attrs, :dictionary_of_mixeds, :dictionary_of_texts, :dictionary_of_names
 end
 
 class TestOtherToXml < Test::Unit::TestCase

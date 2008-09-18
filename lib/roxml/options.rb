@@ -66,7 +66,6 @@ module ROXML
           opts[:type] = :text
           (opts[:as] ||= []) << :text_content
         end
-        opts[:in] = @wrapper if @wrapper
         Opts.new(name, opts)
       else
         opts = args.extract_options!

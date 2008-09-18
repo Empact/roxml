@@ -89,6 +89,8 @@ module ROXML
       parent = wrap(xml)
       if text_content
         add(parent, value)
+      elsif node_name?
+        parent.name = value
       elsif array
         value.each do |v|
           add(parent.child_add(XML::Node.new(name)), v)
@@ -172,11 +174,7 @@ module ROXML
 
   private
     def add_node(xml)
-      if hash.key.wrapper == hash.value.wrapper
-        xml.child_add(LibXML::XML::Node.new(hash.key.wrapper))
-      else
-        xml
-      end
+      xml.child_add(LibXML::XML::Node.new(hash.wrapper))
     end
   end
 

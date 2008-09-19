@@ -48,4 +48,10 @@ class TestXMLText < Test::Unit::TestCase
     p = Book.parse(fixture(:book_valid))
     assert_equal 357, p.pages
   end
+
+  def test_no_name_clashes
+    n = NodeWithNameConflicts.parse(fixture(:node_with_name_conflicts))
+    assert_equal "Just junk... really", n.text_content
+    assert_equal "Cartwheel", n.node_name
+  end
 end

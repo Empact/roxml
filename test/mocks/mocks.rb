@@ -164,6 +164,22 @@ class LibraryWithBooksOfUnderivableName
   xml_reader :novels, NamelessBook, :as => :array
 end
 
+class NodeWithNameConflicts
+  include ROXML
+
+  xml_name :node
+  xml_reader :text_content
+  xml_reader :node_name
+end
+
+class NodeWithAttrNameConflicts
+  include ROXML
+
+  xml_name :node
+  xml_reader :text_content, :attr => :text_content
+  xml_reader :node_name, :attr => :node_name
+end
+
 class Person
   include ROXML
 

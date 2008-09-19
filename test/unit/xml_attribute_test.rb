@@ -25,4 +25,10 @@ class TestXMLAttribute < Test::Unit::TestCase
     p = PersonWithMotherOrMissing.parse(fixture(:person_with_mothers))
     assert_equal 21, p.mother.mother.mother.age
   end
+
+  def test_no_name_clashes
+    n = NodeWithAttrNameConflicts.parse(fixture(:node_with_attr_name_conflicts))
+    assert_equal "Just junk... really", n.text_content
+    assert_equal "Cartwheel", n.node_name
+  end
 end

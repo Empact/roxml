@@ -101,13 +101,13 @@ module ROXML
     #   <Author>David Thomas</author>
     #  </book>
     #
-    # === :node_content
+    # === :content
     # A special case of :text, this refers to the content of the current node,
     # rather than a sub-node
     #
     # Example:
     #  class Contributor
-    #    xml_reader :name, :node_content
+    #    xml_reader :name, :content
     #    xml_reader :role, :attr
     #  end
     #
@@ -154,7 +154,7 @@ module ROXML
     #    xml_reader :definitions, {:key => :word,
     #                              :value => :meaning}
     #
-    # ==== Hash of :node_content &c.
+    # ==== Hash of :content &c.
     # For xml such as this:
     #
     #    <dictionary>
@@ -166,9 +166,9 @@ module ROXML
     # and name of that type (i.e. {:attr => :word}), because omitting the type will result in ROXML
     # defaulting to :text
     #    xml_reader :definitions, {:key => {:attr => :word},
-    #                              :value => :node_content}
+    #                              :value => :content}
     #
-    # ==== Hash of :node_name &c.
+    # ==== Hash of :name &c.
     # For xml such as this:
     #
     #    <dictionary>
@@ -176,9 +176,9 @@ module ROXML
     #      <tergiversate>To use evasions or ambiguities; equivocate.</tergiversate>
     #    </dictionary>
     #
-    # You can pick up the node names (e.g. quaquaversally) using the :node_name keyword:
-    #    xml_reader :definitions, {:key => :node_name,
-    #                              :value => :node_content}
+    # You can pick up the node names (e.g. quaquaversally) using the :name keyword:
+    #    xml_reader :definitions, {:key => :name,
+    #                              :value => :content}
     #
     # === Other ROXML Class
     # Declares an accessor that represents another ROXML class as child XML element
@@ -249,7 +249,7 @@ module ROXML
       tag_refs << case opts.type
       when :attr
         XMLAttributeRef.new(sym, opts, &block)
-      when :node_content
+      when :content
         XMLTextRef.new(sym, opts, &block)
       when :text
         XMLTextRef.new(sym, opts, &block)

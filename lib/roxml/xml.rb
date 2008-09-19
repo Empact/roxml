@@ -28,7 +28,7 @@ module ROXML
       instance
     end
 
-    def node_name?
+    def name?
       false
     end
 
@@ -75,11 +75,11 @@ module ROXML
   #   XMLTextRef
   #  </element>
   class XMLTextRef < XMLRef # ::nodoc::
-    attr_reader :cdata, :node_content
+    attr_reader :cdata, :content
 
     def initialize(accessor, args, &block)
       super(accessor, args, &block)
-      @node_content = args.node_content?
+      @content = args.content?
       @cdata = args.cdata?
     end
 
@@ -87,9 +87,9 @@ module ROXML
     # the _value_ provided.
     def update_xml(xml, value)
       parent = wrap(xml)
-      if node_content
+      if content
         add(parent, value)
-      elsif node_name?
+      elsif name?
         parent.name = value
       elsif array
         value.each do |v|
@@ -102,9 +102,9 @@ module ROXML
     end
 
     def value(xml)
-      val = if node_content
+      val = if content
         xml.content.strip
-      elsif node_name?
+      elsif name?
         xml.name
       elsif array
         arr = xml.find(xpath).collect do |e|
@@ -119,7 +119,7 @@ module ROXML
       block ? block.call(val) : val
     end
 
-    def node_name?
+    def name?
       name == '*'
     end
 
@@ -143,7 +143,7 @@ module ROXML
     def initialize(accessor, args, &block)
       super(accessor, args, &block)
       @hash = args.hash
-      if @hash.key.node_name? || @hash.value.node_name?
+      if @hash.key.name? || @hash.value.name?
         @name = '*'
       end
     end

@@ -1,8 +1,8 @@
 <dictionary>
-  <definition node_name="quaquaversally">
-    <node_content>adjective: (of a geological formation) sloping downward from the center in all directions.</node_content>
+  <definition name="quaquaversally">
+    <content>adjective: (of a geological formation) sloping downward from the center in all directions.</content>
   </definition>
-  <definition node_name="tergiversate">
-    <node_content>To use evasions or ambiguities; equivocate.</node_content>
+  <definition name="tergiversate">
+    <content>To use evasions or ambiguities; equivocate.</content>
   </definition>
 </dictionary>

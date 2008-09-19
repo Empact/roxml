@@ -1,6 +1,6 @@
 module ROXML
   HASH_KEYS = [:attrs, :key, :value].freeze
-  TYPE_KEYS = [:attr, :text, :hash, :node_content].freeze
+  TYPE_KEYS = [:attr, :text, :hash, :content].freeze
 
   class HashDesc # ::nodoc::
     attr_reader :key, :value, :wrapper
@@ -35,10 +35,10 @@ module ROXML
         raise ArgumentError, "Hash #{what} is over-specified: #{opts[what].pp_s}" unless opts[what].keys.one?
         type = opts[what].keys.first
         [type, opts[what][type]]
-      when :node_content
-        [:node_content, opts[:name]]
-      when :node_name
-        [:node_name, '*']
+      when :content
+        [:content, opts[:name]]
+      when :name
+        [:name, '*']
       when String
         [:text, opts[what]]
       when Symbol
@@ -66,9 +66,9 @@ module ROXML
 
       if args.one? && !(args.only.keys & HASH_KEYS).empty?
         opts = {type => name}
-        if type == :node_content
+        if type == :content
           opts[:type] = :text
-          (opts[:as] ||= []) << :node_content
+          (opts[:as] ||= []) << :content
         end
         Opts.new(name, opts)
       else
@@ -115,8 +115,8 @@ module ROXML
       @type == :hash
     end
 
-    def node_content?
-      @type == :node_content
+    def content?
+      @type == :content
     end
 
     def array?

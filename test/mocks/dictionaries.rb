@@ -20,37 +20,37 @@ class DictionaryOfMixeds
 
   xml_name :dictionary
   xml_reader :definitions, {:key => {:attr => :word},
-                            :value => :node_content}
+                            :value => :content}
 end
 
 class DictionaryOfNames
   include ROXML
 
   xml_name :dictionary
-  xml_reader :definitions, {:key => :node_name,
-                            :value => :node_content}
+  xml_reader :definitions, {:key => :name,
+                            :value => :content}
 end
 
 class DictionaryOfGuardedNames
   include ROXML
 
   xml_name :dictionary
-  xml_reader :definitions, {:key => :node_name,
-                            :value => :node_content}, :in => :definitions
+  xml_reader :definitions, {:key => :name,
+                            :value => :content}, :in => :definitions
 end
 
 class DictionaryOfNameClashes
   include ROXML
 
   xml_name :dictionary
-  xml_reader :definitions, {:key => 'node_name',
-                            :value => 'node_content'}, :from => :definition
+  xml_reader :definitions, {:key => 'name',
+                            :value => 'content'}, :from => :definition
 end
 
 class DictionaryOfAttrNameClashes
   include ROXML
 
   xml_name :dictionary
-  xml_reader :definitions, {:key => {:attr => :node_name},
-                            :value => 'node_content'}, :from => :definition
+  xml_reader :definitions, {:key => {:attr => :name},
+                            :value => 'content'}, :from => :definition
 end

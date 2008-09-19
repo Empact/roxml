@@ -1,4 +1,4 @@
 <node>
-  <node_content>Just junk... really</node_content>
-  <node_name>Cartwheel</node_name>
+  <content>Just junk... really</content>
+  <name>Cartwheel</name>
 </node>

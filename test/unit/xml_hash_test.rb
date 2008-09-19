@@ -22,7 +22,7 @@ class TestXMLHash < Test::Unit::TestCase
     assert_equal @contents, dict.definitions
   end
 
-  def test_mixed_node_content_hash
+  def test_mixed_content_hash
     dict = DictionaryOfMixeds.parse(fixture(:dictionary_of_mixeds))
     assert_equal Hash, dict.definitions.class
     assert_equal @contents, dict.definitions

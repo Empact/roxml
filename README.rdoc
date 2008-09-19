@@ -97,7 +97,7 @@ use xml_construct to cause your ROXML object to call its own constructor.  For e
     include ROXML
 
     xml_reader :units, :attr
-    xml_reader :value, :as => :text_content
+    xml_reader :value, :as => :node_content
 
     xml_construct :value, :units
 

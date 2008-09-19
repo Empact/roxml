@@ -22,7 +22,7 @@ class Measurement
   include ROXML
 
   xml_reader :units, :attr
-  xml_reader :value, :text_content
+  xml_reader :value, :node_content
   xml_construct :value, :units
 
   def initialize(value, units = 'pixels')
@@ -57,7 +57,7 @@ class Author
   include ROXML
 
   xml_reader :role, :attr
-  xml_reader :text, :text_content
+  xml_reader :text, :node_content
 end
 
 class BookWithAuthors
@@ -168,7 +168,7 @@ class NodeWithNameConflicts
   include ROXML
 
   xml_name :node
-  xml_reader :text_content
+  xml_reader :node_content
   xml_reader :node_name
 end
 
@@ -176,7 +176,7 @@ class NodeWithAttrNameConflicts
   include ROXML
 
   xml_name :node
-  xml_reader :text_content, :attr => :text_content
+  xml_reader :node_content, :attr => :node_content
   xml_reader :node_name, :attr => :node_name
 end
 
@@ -184,7 +184,7 @@ class Person
   include ROXML
 
   xml_reader :age, :attr, :else => 21
-  xml_accessor :name, :text_content, :else => 'Unknown'
+  xml_accessor :name, :node_content, :else => 'Unknown'
 end
 
 class PersonWithMother

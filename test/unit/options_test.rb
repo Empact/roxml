@@ -19,8 +19,8 @@ class TestOptions < Test::Unit::TestCase
     assert_equal Hash, opts.type
   end
 
-  def test_text_content_is_a_recognized_type
-    assert ROXML::Opts.new(:author, :text_content).text_content?
+  def test_node_content_is_a_recognized_type
+    assert ROXML::Opts.new(:author, :node_content).node_content?
   end
 
   def test_hash_of_attrs
@@ -40,12 +40,12 @@ class TestOptions < Test::Unit::TestCase
     assert_equal ['name', 'value'], opts.hash.names
   end
 
-  def test_hash_with_attr_key_and_text_content_val
+  def test_hash_with_attr_key_and_node_content_val
     opts = ROXML::Opts.new(:attributes, {:key => {:attr => :name},
-                                         :value => :text_content})
+                                         :value => :node_content})
     assert opts.hash?
     assert !opts.array?
-    assert opts.hash.value.text_content
+    assert opts.hash.value.node_content
     assert_equal [ROXML::XMLAttributeRef, ROXML::XMLTextRef], opts.hash.types
     assert_equal ['name', ''], opts.hash.names
   end

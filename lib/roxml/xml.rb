@@ -75,11 +75,11 @@ module ROXML
   #   XMLTextRef
   #  </element>
   class XMLTextRef < XMLRef # ::nodoc::
-    attr_reader :cdata, :text_content
+    attr_reader :cdata, :node_content
 
     def initialize(accessor, args, &block)
       super(accessor, args, &block)
-      @text_content = args.text_content?
+      @node_content = args.node_content?
       @cdata = args.cdata?
     end
 
@@ -87,7 +87,7 @@ module ROXML
     # the _value_ provided.
     def update_xml(xml, value)
       parent = wrap(xml)
-      if text_content
+      if node_content
         add(parent, value)
       elsif node_name?
         parent.name = value
@@ -102,7 +102,7 @@ module ROXML
     end
 
     def value(xml)
-      val = if text_content
+      val = if node_content
         xml.content.strip
       elsif node_name?
         xml.name

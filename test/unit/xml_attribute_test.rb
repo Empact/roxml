@@ -28,7 +28,7 @@ class TestXMLAttribute < Test::Unit::TestCase
 
   def test_no_name_clashes
     n = NodeWithAttrNameConflicts.parse(fixture(:node_with_attr_name_conflicts))
-    assert_equal "Just junk... really", n.text_content
+    assert_equal "Just junk... really", n.node_content
     assert_equal "Cartwheel", n.node_name
   end
 end

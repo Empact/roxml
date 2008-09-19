@@ -20,7 +20,7 @@ class DictionaryOfMixeds
 
   xml_name :dictionary
   xml_reader :definitions, {:key => {:attr => :word},
-                            :value => :text_content}
+                            :value => :node_content}
 end
 
 class DictionaryOfNames
@@ -28,7 +28,7 @@ class DictionaryOfNames
 
   xml_name :dictionary
   xml_reader :definitions, {:key => :node_name,
-                            :value => :text_content}
+                            :value => :node_content}
 end
 
 class DictionaryOfGuardedNames
@@ -36,7 +36,7 @@ class DictionaryOfGuardedNames
 
   xml_name :dictionary
   xml_reader :definitions, {:key => :node_name,
-                            :value => :text_content}, :in => :definitions
+                            :value => :node_content}, :in => :definitions
 end
 
 class DictionaryOfNameClashes
@@ -44,7 +44,7 @@ class DictionaryOfNameClashes
 
   xml_name :dictionary
   xml_reader :definitions, {:key => 'node_name',
-                            :value => 'text_content'}, :from => :definition
+                            :value => 'node_content'}, :from => :definition
 end
 
 class DictionaryOfAttrNameClashes
@@ -52,5 +52,5 @@ class DictionaryOfAttrNameClashes
 
   xml_name :dictionary
   xml_reader :definitions, {:key => {:attr => :node_name},
-                            :value => 'text_content'}, :from => :definition
+                            :value => 'node_content'}, :from => :definition
 end

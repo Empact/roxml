@@ -51,7 +51,7 @@ class TestOtherToXml < Test::Unit::TestCase
 end
 
 class TestToXmlWithDefaults < Test::Unit::TestCase
-  def test_text_content_and_attr_defaults_are_represented_in_output
+  def test_node_content_and_attr_defaults_are_represented_in_output
     dict = Person.parse(fixture(:nameless_ageless_youth))
 
     xml = '<person age="21">Unknown</person>'

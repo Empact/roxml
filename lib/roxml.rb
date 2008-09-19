@@ -101,13 +101,13 @@ module ROXML
     #   <Author>David Thomas</author>
     #  </book>
     #
-    # === :text_content
+    # === :node_content
     # A special case of :text, this refers to the content of the current node,
     # rather than a sub-node
     #
     # Example:
     #  class Contributor
-    #    xml_reader :name, :text_content
+    #    xml_reader :name, :node_content
     #    xml_reader :role, :attr
     #  end
     #
@@ -154,7 +154,7 @@ module ROXML
     #    xml_reader :definitions, {:key => :word,
     #                              :value => :meaning}
     #
-    # ==== Hash of :text_content &c.
+    # ==== Hash of :node_content &c.
     # For xml such as this:
     #
     #    <dictionary>
@@ -166,7 +166,7 @@ module ROXML
     # and name of that type (i.e. {:attr => :word}), because omitting the type will result in ROXML
     # defaulting to :text
     #    xml_reader :definitions, {:key => {:attr => :word},
-    #                              :value => :text_content}
+    #                              :value => :node_content}
     #
     # ==== Hash of :node_name &c.
     # For xml such as this:
@@ -178,7 +178,7 @@ module ROXML
     #
     # You can pick up the node names (e.g. quaquaversally) using the :node_name keyword:
     #    xml_reader :definitions, {:key => :node_name,
-    #                              :value => :text_content}
+    #                              :value => :node_content}
     #
     # === Other ROXML Class
     # Declares an accessor that represents another ROXML class as child XML element
@@ -249,7 +249,7 @@ module ROXML
       tag_refs << case opts.type
       when :attr
         XMLAttributeRef.new(sym, opts, &block)
-      when :text_content
+      when :node_content
         XMLTextRef.new(sym, opts, &block)
       when :text
         XMLTextRef.new(sym, opts, &block)

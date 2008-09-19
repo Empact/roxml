@@ -34,7 +34,7 @@ class TestXMLText < Test::Unit::TestCase
     assert_equal "Anonymous", person.name
   end
 
-  def test_default_initialization_of_text_content
+  def test_default_initialization_of_node_content
     person = Person.parse(fixture(:nameless_ageless_youth))
     assert_equal "Unknown", person.name
   end
@@ -51,7 +51,7 @@ class TestXMLText < Test::Unit::TestCase
 
   def test_no_name_clashes
     n = NodeWithNameConflicts.parse(fixture(:node_with_name_conflicts))
-    assert_equal "Just junk... really", n.text_content
+    assert_equal "Just junk... really", n.node_content
     assert_equal "Cartwheel", n.node_name
   end
 end

@@ -1,5 +1,12 @@
 == 2.0 (September 11, 2008)
 
+* :text_content becomes simply :content, and is joined by :name  [Ben Woosley]
+
+* Allow hash mapping from node names and contents: [Ben Woosley]
+
+  xml_reader :name, {:key => :name,
+                     :value => :content}, :in => 'container'
+
 * Allow supplying a default via the :else option [Ben Woosley]
 
 * Allow hash mapping of text and attr elements: [Ben Woosley]

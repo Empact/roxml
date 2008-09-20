@@ -9,3 +9,7 @@ Construction:
    question of when to call initialize: before or after parsing.  Before and you maintain
    the standard 'initialization is called on empty objects', but you don't have the benefit of
    xml attrs to initialize with.  After and vice versa.
+
+ * :as => :self for sending method_missing to this attribute
+
+ * :as => :int/float  as shorthand for "do |val| Integer(val) end"

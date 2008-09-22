@@ -256,10 +256,6 @@ module ROXML
     # [:else] Default value for attribute, if missing
     #
     def xml(sym, writable = false, type_and_or_opts = :text, opts = nil, &block)
-      if writable and block_given?
-        raise ArgumentError, "block applicable to readonly values, as there is no " +
-                             "easy way to 'untranslate' the parsed values for output back to xml"
-      end
       opts = Opts.new(sym, *[type_and_or_opts, opts].compact)
 
       tag_refs << case opts.type
@@ -285,8 +281,8 @@ module ROXML
     end
 
     # Declares a writable xml reference. See xml for details.
-    def xml_accessor(sym, type_and_or_opts = :text, opts = nil)
-      xml sym, true, type_and_or_opts, opts
+    def xml_accessor(sym, type_and_or_opts = :text, opts = nil, &block)
+      xml sym, true, type_and_or_opts, opts, &block
     end
 
     def xml_construction_args # ::nodoc::

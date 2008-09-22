@@ -21,16 +21,4 @@ class TestROXML < Test::Unit::TestCase
       end
     end
   end
-
-  def test_block_with_xml_writer_should_be_rejected
-    assert_raise ArgumentError do
-      Class.new do
-        include ROXML
-
-        xml :id, true do |val|
-          val * 3
-        end
-      end
-    end
-  end
 end

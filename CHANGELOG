@@ -19,7 +19,7 @@
 
 * Allow attaching a block for manipulating a value on fetch: [Ben Woosley]
 
-  xml_reader :count, :attr => 'my_int' do |val|
+  xml_accessor :count, :attr => 'my_int' do |val|
     Integer(val)
   end
 

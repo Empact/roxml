@@ -58,3 +58,17 @@ class TestToXmlWithDefaults < Test::Unit::TestCase
     assert_equal LibXML::XML::Parser.string(xml).parse.root, dict.to_xml
   end
 end
+
+class TestToXmlWithBlocks < Test::Unit::TestCase
+  def test_pagecount_serialized_properly_after_modification
+    b = Book.parse(fixture(:book_valid))
+    xml = xml_fixture(:book_valid)
+    assert_equal '357', xml.find_first('pagecount').content
+    assert_equal 357, b.pages
+
+    b.pages = 500
+    doc = LibXML::XML::Document.new()
+    doc.root = b.to_xml
+    assert_equal '500', doc.find_first('pagecount').content
+  end
+end

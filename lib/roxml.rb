@@ -150,7 +150,7 @@ module ROXML
     #
     # You can use the :attrs key in you has with a [:key, :value] name array:
     #
-    #    xml_reader :definitions, {:attrs => [:dt, :dd]}, :in => :definitions
+    #    xml_reader :definitions, {:attrs => ['dt', 'dd']}, :in => :definitions
     #
     # ==== Hash of :texts
     # For xml such as this:
@@ -167,8 +167,8 @@ module ROXML
     #    </dictionary>
     #
     # You can individually declare your key and value names:
-    #    xml_reader :definitions, {:key => :word,
-    #                              :value => :meaning}
+    #    xml_reader :definitions, {:key => 'word',
+    #                              :value => 'meaning'}
     #
     # ==== Hash of :content &c.
     # For xml such as this:
@@ -181,7 +181,7 @@ module ROXML
     # You can individually declare the key and value, but with the attr, you need to provide both the type
     # and name of that type (i.e. {:attr => :word}), because omitting the type will result in ROXML
     # defaulting to :text
-    #    xml_reader :definitions, {:key => {:attr => :word},
+    #    xml_reader :definitions, {:key => {:attr => 'word'},
     #                              :value => :content}
     #
     # ==== Hash of :name &c.

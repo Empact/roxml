@@ -50,7 +50,7 @@ To later populate the library object from the XML file:
   lib = Library.parse(File.read("library.xml"))
 
 Similarly, to do a one-to-one mapping between XML objects, such as book and publisher,
-you would use the *xml_object* annotation. For example:
+you would add a reference to another ROXML class. For example:
 
   <book isbn="0974514055">
     <title>Programming Ruby - 2nd Edition</title>

@@ -235,7 +235,7 @@ module ROXML
     #  </library>
     #
     # You can skip the wrapper argument:
-    #    xml_object :books, [Book]
+    #    xml_reader :books, [Book]
     #
     # == Blocks
     # For readonly attributes, you may pass a block which manipulates the associated parsed value.

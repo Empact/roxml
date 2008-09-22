@@ -101,6 +101,22 @@ module ROXML
     #   <Author>David Thomas</author>
     #  </book>
     #
+    # Likewise, a number of :text node values can be collected in an array like so:
+    #
+    # Example:
+    #  class Library
+    #    xml_reader :books, [:text], :in => 'books'
+    #  end
+    #
+    # To map:
+    #  <library>
+    #    <books>
+    #      <book>To kill a mockingbird</book>
+    #      <book>House of Leaves</book>
+    #      <book>Gödel, Escher, Bach</book>
+    #    </books>
+    #  </library>
+    #
     # === :content
     # A special case of :text, this refers to the content of the current node,
     # rather than a sub-node
@@ -219,7 +235,7 @@ module ROXML
     #  </library>
     #
     # You can skip the wrapper argument:
-    #    xml_object :books, Book, :as => :array
+    #    xml_object :books, [Book]
     #
     # == Blocks
     # For readonly attributes, you may pass a block which manipulates the associated parsed value.
@@ -235,7 +251,7 @@ module ROXML
     #
     # == Other options
     # [:from] The name by which the xml value will be found, either an attribute or tag name in XML.  Default is sym, or the singular form of sym, in the case of arrays and hashes.
-    # [:as] :cdata for character data, and/or :array for one-to-many
+    # [:as] :cdata for character data
     # [:in] An optional name of a wrapping tag for this XML accessor
     # [:else] Default value for attribute, if missing
     #

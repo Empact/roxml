@@ -2,17 +2,21 @@ module ROXML
   module XML # ::nodoc::
     begin
       require 'libxml'
+      Document = LibXML::XML::Document
       Node = LibXML::XML::Node
       class LibXML::XML::Node
-        alias_attribute :search, :find
+        alias :search :find
+        alias :search_first :find_first
       end
       class Parser < LibXML::XML::Parser
-        def parse(str_data)
-          string(str_data).parse
-        end
+        class << self
+          def parse(str_data)
+            string(str_data).parse
+          end
 
-        def parse_file(path)
-          file(path).parse
+          def parse_file(path)
+            file(path).parse
+          end
         end
       end
     rescue LoadError

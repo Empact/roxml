@@ -56,7 +56,7 @@ class TestToXmlWithDefaults < Test::Unit::TestCase
     dict = Person.parse(fixture(:nameless_ageless_youth))
 
     xml = '<person age="21">Unknown</person>'
-    assert_equal XML::Parser.parse(xml).root, dict.to_xml
+    assert_equal ROXML::XML::Parser.parse(xml).root, dict.to_xml
   end
 end
 
@@ -68,7 +68,7 @@ class TestToXmlWithBlocks < Test::Unit::TestCase
     assert_equal 357, b.pages
 
     b.pages = 500
-    doc = XML::Document.new()
+    doc = ROXML::XML::Document.new()
     doc.root = b.to_xml
     assert_equal '500', doc.find_first('pagecount').content
   end

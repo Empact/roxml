@@ -4,12 +4,14 @@ module ROXML
       require 'libxml'
       Document = LibXML::XML::Document
       Node = LibXML::XML::Node
-      class LibXML::XML::Node
+      Parser = LibXML::XML::Parser
+
+      class Node
         alias :search :find
         alias :search_first :find_first
       end
-      Parser = LibXML::XML::Parser
-      class LibXML::XML::Parser
+
+      class Parser
         class << self
           def parse(str_data)
             string(str_data).parse
@@ -22,7 +24,8 @@ module ROXML
       end
     rescue LoadError
       Node = REXML::Element
-      class REXML::Element
+
+      class Node
         class << self
           def new_cdata(content)
             REXML::CData.new(content)

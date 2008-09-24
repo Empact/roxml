@@ -1,8 +1,69 @@
-require 'libxml'
-
 module ROXML
   module XML # ::nodoc::
-    include LibXML::XML
+    begin
+      require 'libxml'
+      Node = LibXML::XML::Node
+      class LibXML::XML::Node
+        alias_attribute :search, :find
+      end
+      class Parser < LibXML::XML::Parser
+        def parse(str_data)
+          string(str_data).parse
+        end
+
+        def parse_file(path)
+          file(path).parse
+        end
+      end
+    rescue LoadError
+      Node = REXML::Element
+      class REXML::Element
+        class << self
+          def new_cdata(content)
+            REXML::CData.new(content)
+          end
+
+          def new_element(name)
+            name = name.id2name if name.is_a? Symbol
+            REXML::Element.new(name)
+          end
+        end
+
+        alias_attribute :content, :text
+
+        def child_add(element)
+          add_element(element)
+        end
+
+        def search(xpath)
+          returning [] do |result|
+            each_element(xpath) do |val|
+              result << val
+            end
+          end
+        end
+
+        def search_first(xpath)
+          elements[1, xpath]
+        end
+      end
+
+      class Parser
+        class << self
+          def parse(string)
+            REXML::Document.new(string)
+          end
+
+          def parse_file(path)
+            REXML::Document.new(open(path), :ignore_whitespace_nodes => :all)
+          end
+
+          def register_error_handler(&block)
+          end
+        end
+        ParseError = REXML::ParseException
+      end
+    end
   end
 
   #
@@ -38,7 +99,7 @@ module ROXML
     end
 
     def wrap(xml)
-      (wrapper && xml.name != wrapper) ? xml.child_add(LibXML::XML::Node.new(wrapper)) : xml
+      (wrapper && xml.name != wrapper) ? xml.child_add(XML::Node.new(wrapper)) : xml
     end
   end
 
@@ -107,12 +168,12 @@ module ROXML
       elsif name?
         xml.name
       elsif array
-        arr = xml.find(xpath).collect do |e|
+        arr = xml.search(xpath).collect do |e|
           e.content.strip.to_latin if e.content
         end
         arr unless arr.empty?
       else
-        child = xml.find_first(name)
+        child = xml.search_first(name)
         child.content if child
       end
       val = default unless val && !val.blank?
@@ -161,7 +222,7 @@ module ROXML
     end
 
     def value(xml)
-      vals = xml.find(xpath).collect do |e|
+      vals = xml.search(xpath).collect do |e|
         [@hash.key.value(e), @hash.value.value(e)]
       end
       if block
@@ -174,7 +235,7 @@ module ROXML
 
   private
     def add_node(xml)
-      xml.child_add(LibXML::XML::Node.new(hash.wrapper))
+      xml.child_add(XML::Node.new(hash.wrapper))
     end
   end
 
@@ -202,11 +263,11 @@ module ROXML
 
     def value(xml)
       val = unless array
-        if child = xml.find_first(xpath)
+        if child = xml.search_first(xpath)
           instantiate(child)
         end
       else
-        arr = xml.find(xpath).collect do |e|
+        arr = xml.search(xpath).collect do |e|
           instantiate(e)
         end
         arr unless arr.empty?

@@ -30,7 +30,7 @@ module ROXML
     # See also: xml_construct
     #
     def parse(data)
-      xml = (data.kind_of?(XML::Node) ? data : XML::Parser.string(data).parse.root)
+      xml = (data.kind_of?(XML::Node) ? data : XML::Parser.parse(data).root)
 
       unless xml_construction_args.empty?
         args = xml_construction_args.map do |arg|

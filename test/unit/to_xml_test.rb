@@ -9,14 +9,15 @@ def to_xml_test(*names)
       dict = name.to_s.camelize.constantize.parse(fixture(xml_name))
       xml = xml_fixture(xml_name)
       remove_children(xml)
-      assert_equal xml, dict.to_xml
+      assert_equal xml.to_s, dict.to_xml.to_s
     end
   end
 end
 
 def remove_children(xml)
+  return unless xml.respond_to? :children
   xml.children.each do |child|
-    if child.empty?
+    if child.blank?
       child.remove!
     else
       remove_children(child)
@@ -55,7 +56,7 @@ class TestToXmlWithDefaults < Test::Unit::TestCase
     dict = Person.parse(fixture(:nameless_ageless_youth))
 
     xml = '<person age="21">Unknown</person>'
-    assert_equal LibXML::XML::Parser.string(xml).parse.root, dict.to_xml
+    assert_equal XML::Parser.parse(xml).root, dict.to_xml
   end
 end
 
@@ -63,11 +64,11 @@ class TestToXmlWithBlocks < Test::Unit::TestCase
   def test_pagecount_serialized_properly_after_modification
     b = Book.parse(fixture(:book_valid))
     xml = xml_fixture(:book_valid)
-    assert_equal '357', xml.find_first('pagecount').content
+    assert_equal '357', xml.search_first('pagecount').content
     assert_equal 357, b.pages
 
     b.pages = 500
-    doc = LibXML::XML::Document.new()
+    doc = XML::Document.new()
     doc.root = b.to_xml
     assert_equal '500', doc.find_first('pagecount').content
   end

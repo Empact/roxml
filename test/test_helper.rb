@@ -8,7 +8,7 @@ def fixture(name)
 end
 
 def xml_fixture(name)
-  LibXML::XML::Parser.file(fixture_path(name)).parse.root
+  ROXML::XML::Parser.parse_file(fixture_path(name)).root
 end
 
 def fixture_path(name)

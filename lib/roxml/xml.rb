@@ -40,7 +40,11 @@ module ROXML
         alias_attribute :content, :text
 
         def child_add(element)
-          add_element(element)
+          if element.is_a?(REXML::CData)
+            REXML::CData.new(element, true, self)
+          else
+            add_element(element)
+          end
         end
 
         def search(xpath)

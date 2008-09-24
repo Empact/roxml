@@ -111,7 +111,7 @@ module ROXML
     end
 
     def wrap(xml)
-      (wrapper && xml.name != wrapper) ? xml.child_add(XML::Node.new(wrapper)) : xml
+      (wrapper && xml.name != wrapper) ? xml.child_add(XML::Node.new_element(wrapper)) : xml
     end
   end
 
@@ -166,10 +166,10 @@ module ROXML
         parent.name = value
       elsif array
         value.each do |v|
-          add(parent.child_add(XML::Node.new(name)), v)
+          add(parent.child_add(XML::Node.new_element(name)), v)
         end
       else
-        add(parent.child_add(XML::Node.new(name)), value)
+        add(parent.child_add(XML::Node.new_element(name)), value)
       end
       xml
     end
@@ -247,7 +247,7 @@ module ROXML
 
   private
     def add_node(xml)
-      xml.child_add(XML::Node.new(hash.wrapper))
+      xml.child_add(XML::Node.new_element(hash.wrapper))
     end
   end
 

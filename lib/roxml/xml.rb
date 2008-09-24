@@ -8,7 +8,8 @@ module ROXML
         alias :search :find
         alias :search_first :find_first
       end
-      class Parser < LibXML::XML::Parser
+      Parser = LibXML::XML::Parser
+      class LibXML::XML::Parser
         class << self
           def parse(str_data)
             string(str_data).parse

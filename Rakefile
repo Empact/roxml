@@ -54,10 +54,20 @@ task :install => [:package] do
   sh %{sudo gem install pkg/#{spec.name}-#{spec.version}}
 end
 
+# Store reference to test Task for use by rcov.
+@test_files = FileList['test/unit/*_test.rb']
 Rake::TestTask.new do |t|
   t.libs << "test"
-  t.test_files = FileList['test/unit/*_test.rb']
+  t.test_files = @test_files
   t.verbose = true
+end
+
+desc "Runs tests under RCOV"
+namespace :test do
+	task :rcov do
+		rcov = "rcov -T --no-html -x '^/'  #{@test_files}"
+		system rcov
+	end
 end
 
 desc "Create the ZIP package"
@@ -72,6 +82,7 @@ desc "Create the plugin package"
 
 task :package=>:rdoc
 task :rdoc=>:test
+
 
 desc "Create a RubyGem project"
 Rake::GemPackageTask.new(spec).define

@@ -8,7 +8,6 @@ module ROXML
 
       class Node
         alias :search :find
-        alias :search_first :find_first
       end
 
       class Parser
@@ -56,10 +55,6 @@ module ROXML
           end
         end
 
-        def search_first(xpath)
-          elements[1, xpath]
-        end
-
         def ==(other)
           to_s == other.to_s
         end
@@ -82,7 +77,7 @@ module ROXML
       end
 
       class Document
-        delegate :search_first, :to => :root
+        delegate :search, :to => :root
 
         def root=(node)
           raise ArgumentError, "Root is already defined" if root
@@ -199,7 +194,7 @@ module ROXML
         end
         arr unless arr.empty?
       else
-        child = xml.search_first(name)
+        child = xml.search(name).first
         child.content if child
       end
       val = default unless val && !val.blank?
@@ -289,7 +284,7 @@ module ROXML
 
     def value(xml)
       val = unless array
-        if child = xml.search_first(xpath)
+        if child = xml.search(xpath).first
           instantiate(child)
         end
       else

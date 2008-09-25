@@ -23,6 +23,7 @@ module ROXML
         end
       end
     rescue LoadError
+      Document = REXML::Document
       Node = REXML::Element
 
       class Node
@@ -78,6 +79,15 @@ module ROXML
           end
         end
         ParseError = REXML::ParseException
+      end
+
+      class Document
+        delegate :search_first, :to => :root
+
+        def root=(node)
+          raise ArgumentError, "Root is already defined" if root
+          add(node)
+        end
       end
     end
   end

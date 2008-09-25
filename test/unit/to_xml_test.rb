@@ -70,6 +70,6 @@ class TestToXmlWithBlocks < Test::Unit::TestCase
     b.pages = 500
     doc = ROXML::XML::Document.new()
     doc.root = b.to_xml
-    assert_equal '500', doc.find_first('pagecount').content
+    assert_equal '500', doc.search_first('pagecount').content
   end
 end

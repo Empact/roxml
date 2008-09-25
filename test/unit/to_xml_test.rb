@@ -9,7 +9,7 @@ def to_xml_test(*names)
       dict = name.to_s.camelize.constantize.parse(fixture(xml_name))
       xml = xml_fixture(xml_name)
       remove_children(xml)
-      assert_equal xml.to_s, dict.to_xml.to_s
+      assert_equal xml, dict.to_xml
     end
   end
 end

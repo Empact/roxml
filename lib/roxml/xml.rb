@@ -58,6 +58,10 @@ module ROXML
         def search_first(xpath)
           elements[1, xpath]
         end
+
+        def ==(other)
+          to_s == other.to_s
+        end
       end
 
       class Parser

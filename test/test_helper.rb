@@ -12,5 +12,5 @@ def xml_fixture(name)
 end
 
 def fixture_path(name)
-  "test/fixtures/#{name.to_s}.xml"
+  "test/fixtures/#{name}.xml"
 end

@@ -1,12 +1,14 @@
 module ROXML
   module XML # ::nodoc::
-    begin
-      require 'libxml'
-      engine = 'libxml'
-    rescue LoadError
-      engine = 'rexml'
+    unless const_defined? 'ENGINE'
+      begin
+        require 'libxml' unless const_defined? 'LibXML'
+        ENGINE = 'libxml'
+      rescue LoadError
+        ENGINE = 'rexml'
+      end
     end
-    require File.join(File.dirname(__FILE__), 'xml', engine)
+    require File.join(File.dirname(__FILE__), 'xml', ENGINE)
   end
 
   #

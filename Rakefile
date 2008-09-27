@@ -60,10 +60,30 @@ Rake::TestTask.new(:bugs) do |t|
   t.verbose = true
 end
 
-Rake::TestTask.new do |t|
-  t.libs << "test"
-  t.test_files = FileList['test/unit/*_test.rb']
-  t.verbose = true
+namespace :test do
+  desc "Test ROXML under the LibXML parser"
+  task :libxml do
+    module ROXML
+      module XML
+        ENGINE = 'libxml'
+      end
+    end
+    require 'lib/roxml'
+    require 'rake/runtest'
+    Rake.run_tests 'test/unit/*_test.rb'
+  end
+
+  desc "Test ROXML under the REXML parser"
+  task :rexml do
+    module ROXML
+      module XML
+        ENGINE = 'rexml'
+      end
+    end
+    require 'lib/roxml'
+    require 'rake/runtest'
+    Rake.run_tests 'test/unit/*_test.rb'
+  end
 end
 
 desc "Create the ZIP package"

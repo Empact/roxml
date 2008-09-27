@@ -1,3 +1,5 @@
+require 'libxml'
+
 module ROXML
   module XML # ::nodoc::
     Document = LibXML::XML::Document

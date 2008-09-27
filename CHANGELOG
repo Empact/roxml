@@ -1,3 +1,10 @@
+== 2.1 (?)
+
+* Enable optional selection of a parser through the early definition of ROXML::XML::ENGINE
+  [Ben Woosley]
+
+* Enable fallback to the REXML parser if LibXML is unavailable [Ben Woosley]
+
 == 2.0 (September 20, 2008)
 
 * :text_content becomes simply :content, and is joined by :name  [Ben Woosley]

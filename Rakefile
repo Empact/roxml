@@ -60,6 +60,8 @@ Rake::TestTask.new(:bugs) do |t|
   t.verbose = true
 end
 
+task :test => :'test:rexml'
+
 namespace :test do
   desc "Test ROXML under the LibXML parser"
   task :libxml do

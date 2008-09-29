@@ -17,6 +17,8 @@ Gem::Specification.new do |s|
     'lib/roxml/options.rb',
     'lib/roxml/string.rb',
     'lib/roxml/xml.rb',
+    'lib/roxml/xml/libxml.rb',
+    'lib/roxml/xml/rexml.rb',
     'test/fixtures/book_malformed.xml',
     'test/fixtures/book_pair.xml',
     'test/fixtures/book_text_with_attribute.xml',

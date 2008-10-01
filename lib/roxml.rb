@@ -259,19 +259,14 @@ module ROXML
       opts = Opts.new(sym, *[type_and_or_opts, opts].compact)
 
       tag_refs << case opts.type
-      when :attr
-        XMLAttributeRef.new(sym, opts, &block)
-      when :content
-        XMLTextRef.new(sym, opts, &block)
-      when :text
-        XMLTextRef.new(sym, opts, &block)
-      when :hash
-        XMLHashRef.new(sym, opts, &block)
-      when Symbol
-        raise ArgumentError, "Invalid type argument #{opts.type}"
-      else # object
-        XMLObjectRef.new(sym, opts, &block)
-      end
+      when :attr    then XMLAttributeRef
+      when :content then XMLTextRef
+      when :text    then XMLTextRef
+      when :hash    then XMLHashRef
+      when Symbol   then raise ArgumentError, "Invalid type argument #{opts.type}"
+      else               XMLObjectRef
+      end.new(sym, opts, &block)
+
       add_accessor(sym, writable, opts.array?, opts.default)
     end
 

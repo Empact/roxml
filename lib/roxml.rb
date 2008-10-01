@@ -298,7 +298,7 @@ module ROXML
     # If no tag name is set with xml_name method, returns default class name
     # in lowercase.
     def tag_name
-      @tag_name ||= self.name.split('::').last.downcase
+      @tag_name ||= name.split('::').last.downcase
     end
 
     # Returns array of internal reference objects, such as attributes

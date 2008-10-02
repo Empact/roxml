@@ -1,5 +1,7 @@
 == 2.1 (?)
 
+* Accommodate that libxml requires you to name the default namespace when available [Ben Woosley]
+
 * Enable optional selection of a parser through the early definition of ROXML::XML::ENGINE
   [Ben Woosley]
 

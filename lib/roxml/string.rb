@@ -27,3 +27,9 @@ class Object
     end
   end
 end
+
+class String
+  def between(separator, &block)
+    split(separator).collect(&block).join(separator)
+  end
+end

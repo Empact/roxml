@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
     'test/fixtures/book_with_contributions.xml',
     'test/fixtures/book_with_contributors_attrs.xml',
     'test/fixtures/book_with_contributors.xml',
+    'test/fixtures/book_with_default_namespace.xml',
     'test/fixtures/book_with_depth.xml',
     'test/fixtures/book_with_publisher.xml',
     'test/fixtures/dictionary_of_attrs.xml',
@@ -49,6 +50,7 @@ Gem::Specification.new do |s|
     'test/unit/xml_construct_test.rb',
     'test/unit/xml_hash_test.rb',
     'test/unit/xml_name_test.rb',
+    'test/unit/xml_namespace_test.rb',
     'test/unit/xml_object_test.rb',
     'test/unit/xml_text_test.rb']
   s.requirements << 'none'
@@ -62,6 +64,7 @@ Gem::Specification.new do |s|
     'test/unit/xml_construct_test.rb',
     'test/unit/xml_hash_test.rb',
     'test/unit/xml_name_test.rb',
+    'test/unit/xml_namespace_test.rb',
     'test/unit/xml_object_test.rb',
     'test/unit/xml_text_test.rb']
   s.has_rdoc = true

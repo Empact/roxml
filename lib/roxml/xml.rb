@@ -1,15 +1,13 @@
 module ROXML
-  module XML # ::nodoc::
-    unless const_defined? 'ENGINE'
-      begin
-        require 'libxml' unless const_defined? 'LibXML'
-        ENGINE = 'libxml'
-      rescue LoadError
-        ENGINE = 'rexml'
-      end
+  unless const_defined? 'XML_PARSER'
+    begin
+      require 'libxml'
+      XML_PARSER = 'libxml'
+    rescue LoadError
+      XML_PARSER = 'rexml'
     end
-    require File.join(File.dirname(__FILE__), 'xml', ENGINE)
   end
+  require File.join(File.dirname(__FILE__), 'xml', XML_PARSER)
 
   #
   # Internal base class that represents an XML - Class binding.

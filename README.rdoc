@@ -111,13 +111,11 @@ with the arguments listed after the xml_construct call.
 
 == Selecting a parser ==
 
-By default, ROXML will use libxml-ruby if it is available, or otherwise REXML.  If you'd like to
+By default, ROXML will use LibXML if it is available, or otherwise REXML.  If you'd like to
 explicitly require one or the other, you may do the following:
 
   module ROXML
-    module XML
-      ENGINE = 'libxml' # or 'rexml'
-    end
+    XML_PARSER = 'libxml' # or 'rexml'
   end
   require 'roxml'
 

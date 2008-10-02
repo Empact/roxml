@@ -2,7 +2,7 @@
 
 * Accommodate that libxml requires you to name the default namespace when available [Ben Woosley]
 
-* Enable optional selection of a parser through the early definition of ROXML::XML::ENGINE
+* Enable optional selection of a parser through the early definition of ROXML::XML_PARSER
   [Ben Woosley]
 
 * Enable fallback to the REXML parser if LibXML is unavailable [Ben Woosley]

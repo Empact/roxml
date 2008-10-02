@@ -66,9 +66,7 @@ namespace :test do
   desc "Test ROXML under the LibXML parser"
   task :libxml do
     module ROXML
-      module XML
-        ENGINE = 'libxml'
-      end
+      XML_PARSER = 'libxml'
     end
     require 'lib/roxml'
     require 'rake/runtest'
@@ -78,9 +76,7 @@ namespace :test do
   desc "Test ROXML under the REXML parser"
   task :rexml do
     module ROXML
-      module XML
-        ENGINE = 'rexml'
-      end
+      XML_PARSER = 'rexml'
     end
     require 'lib/roxml'
     require 'rake/runtest'

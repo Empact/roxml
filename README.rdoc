@@ -109,7 +109,7 @@ use xml_construct to cause your ROXML object to call its own constructor.  For e
 Will, on parse, read all listed xml attributes (units and value, in this case), then call initialize
 with the arguments listed after the xml_construct call.
 
-== Selecting a parser ==
+== Selecting a parser
 
 By default, ROXML will use LibXML if it is available, or otherwise REXML.  If you'd like to
 explicitly require one or the other, you may do the following:

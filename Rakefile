@@ -60,18 +60,21 @@ Rake::TestTask.new(:bugs) do |t|
   t.verbose = true
 end
 
-task :test => :'test:rexml'
-
 @test_files = 'test/unit/*_test.rb'
+desc "Test ROXML using the default parser selection behavior"
+task :test do
+  require 'lib/roxml'
+  require 'rake/runtest'
+  Rake.run_tests @test_files
+end
+
 namespace :test do
   desc "Test ROXML under the LibXML parser"
   task :libxml do
     module ROXML
       XML_PARSER = 'libxml'
     end
-    require 'lib/roxml'
-    require 'rake/runtest'
-    Rake.run_tests @test_files
+    Rake::Task["test"].invoke
   end
 
   desc "Test ROXML under the REXML parser"
@@ -79,15 +82,12 @@ namespace :test do
     module ROXML
       XML_PARSER = 'rexml'
     end
-    require 'lib/roxml'
-    require 'rake/runtest'
-    Rake.run_tests @test_files
+    Rake::Task["test"].invoke
   end
 
   desc "Runs tests under RCOV"
   task :rcov do
-    rcov = "rcov -T --no-html -x '^/'  #{FileList[@test_files]}"
-    system rcov
+    system "rcov -T --no-html -x '^/'  #{FileList[@test_files]}"
   end
 end
 

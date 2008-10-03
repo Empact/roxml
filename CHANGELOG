@@ -1,5 +1,7 @@
 == 2.1 (October 3, 2008)
 
+* rake test now uses the default parser selection [Ben Woosley]
+
 * Added rcov code coverage for tests [Anders Engström]
 
 * Accommodate that libxml requires you to name the default namespace when available [Ben Woosley]

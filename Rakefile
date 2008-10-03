@@ -62,6 +62,7 @@ end
 
 task :test => :'test:rexml'
 
+@test_files = 'test/unit/*_test.rb'
 namespace :test do
   desc "Test ROXML under the LibXML parser"
   task :libxml do
@@ -70,7 +71,7 @@ namespace :test do
     end
     require 'lib/roxml'
     require 'rake/runtest'
-    Rake.run_tests 'test/unit/*_test.rb'
+    Rake.run_tests @test_files
   end
 
   desc "Test ROXML under the REXML parser"
@@ -80,7 +81,13 @@ namespace :test do
     end
     require 'lib/roxml'
     require 'rake/runtest'
-    Rake.run_tests 'test/unit/*_test.rb'
+    Rake.run_tests @test_files
+  end
+
+  desc "Runs tests under RCOV"
+  task :rcov do
+    rcov = "rcov -T --no-html -x '^/'  #{FileList[@test_files]}"
+    system rcov
   end
 end
 

@@ -38,8 +38,8 @@ task :rails_plugin=>:clobber
 desc "Publish Ruby on Rails plug-in on RubyForge"
 task :release_plugin=>:rails_plugin do |task|
   pub = Rake::SshDirPublisher.new("#{RubyForgeConfig[:user_name]}@rubyforge.org",
-	"/var/www/gforge-projects/#{RubyForgeConfig[:unix_name]}",
-	"pkg/rails_plugin")
+      "/var/www/gforge-projects/#{RubyForgeConfig[:unix_name]}",
+      "pkg/rails_plugin")
   pub.upload()
 end
 

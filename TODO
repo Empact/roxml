@@ -10,6 +10,11 @@ Construction:
    the standard 'initialization is called on empty objects', but you don't have the benefit of
    xml attrs to initialize with.  After and vice versa.
 
+As
  * :as => :self for sending method_missing to this attribute
 
- * :as => :int/float  as shorthand for "do |val| Integer(val) end"
+ * :as => :int/:float/Integer/Float  as shorthand for "do |val| Integer(val) end" &c.
+
+ * :as => :required  Not sure about syntax, but throws on nil.
+                     Maybe do :as => :optional and make the default required.
+                     Or both and parameterize default...

@@ -29,8 +29,9 @@ class TestXMLNamespaces < Test::Unit::TestCase
     xml = LibXML::XML::Parser.string(
       '<container xmlns="http://defaultnamespace.org"><node>Yeah, content</node><node><subnode>Another</subnode></node></container>').parse
 
-    assert_equal nil, xml.find_first('container')
-    assert_equal "Yeah, content", xml.find_first('container:node', 'container:http://defaultnamespace.org').content
-    assert_equal "Another", xml.find_first('container:node/container:subnode', 'container:http://defaultnamespace.org').content
+    assert_equal nil, xml.find_first('node')
+    assert_equal "Yeah, content", xml.find_first('ns:node', 'ns:http://defaultnamespace.org').content
+    assert_equal nil, xml.find_first('ns:node/subnode', 'ns:http://defaultnamespace.org')
+    assert_equal "Another", xml.find_first('ns:node/ns:subnode', 'ns:http://defaultnamespace.org').content
   end
 end

@@ -29,6 +29,13 @@ class TestOptions < Test::Unit::TestCase
     assert !ROXML::Opts.new(:author, :content, :required => false).required?
   end
 
+  def test_required_conflicts_with_else
+    assert_raise ArgumentError do
+      ROXML::Opts.new(:author, :content, :required => true, :else => 'Johnny')
+    end
+    ROXML::Opts.new(:author, :content, :required => false, :else => 'Johnny')
+  end
+
   def test_hash_of_attrs
     opts = ROXML::Opts.new(:attributes, {:attrs => [:name, :value]})
     assert opts.hash?

@@ -14,7 +14,3 @@ As:
  * :as => :self for sending method_missing to this attribute
 
  * :as => :int/:float/Integer/Float  as shorthand for "do |val| Integer(val) end" &c.
-
- * :as => :required  Not sure about syntax, but throws on nil.
-                     Maybe do :as => :optional and make the default required.
-                     Or both and parameterize default...

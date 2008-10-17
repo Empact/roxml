@@ -89,6 +89,8 @@ module ROXML
       @type = extract_type(args)
 
       @name = @opts[:from].to_s
+
+      raise ArgumentError, "Can't specify both :else default and :required" if required? && default
     end
 
     def name=(n)

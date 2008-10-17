@@ -1,5 +1,11 @@
 require "lib/roxml"
 
+class Muffins
+  include ROXML
+
+  xml_reader(:count, :from => 'bakers_dozens') {|val| val.to_i * 13 }
+end
+
 class Contributor
   include ROXML
 
@@ -14,9 +20,7 @@ class Book
   xml_reader :title
   xml_reader :description, :as => :cdata
   xml_reader :author
-  xml_accessor :pages, :text => 'pagecount' do |val|
-    Integer(val)
-  end
+  xml_accessor :pages, :text => 'pagecount', :as => Integer
 end
 
 class BookWithRequired

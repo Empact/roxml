@@ -72,4 +72,15 @@ class TestOptions < Test::Unit::TestCase
     assert_equal [ROXML::XMLAttributeRef, ROXML::XMLAttributeRef], opts.hash.types
     assert_equal ['dt', 'dd'], opts.hash.names
   end
+
+  def test_block_shorthands
+    assert !ROXML::Opts.new(:count).block
+    assert !ROXML::Opts.new(:count, :as => :intager).block
+    assert !ROXML::Opts.new(:count, :as => :foat).block
+
+    assert_equal 3, ROXML::Opts.new(:count, :as => :integer).block['3']
+    assert_equal 3, ROXML::Opts.new(:count, :as => Integer).block['3']
+    assert_equal 3.1, ROXML::Opts.new(:count, :as => :float).block['3.1']
+    assert_equal 3.1, ROXML::Opts.new(:count, :as => Float).block['3.1']
+  end
 end

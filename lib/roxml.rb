@@ -250,9 +250,22 @@ module ROXML
     # For hash types, the block recieves the key and value as arguments, and they should
     # be returned as an array of [key, value]
     #
+    # === Block Shorthands
+    #
+    # Alternatively, you may use block shorthands to specify common coercions, such that:
+    #
+    #  xml_reader :count, :as => Integer
+    #
+    # is equivalent to:
+    #
+    #  xml_reader(:count) {|val| Integer(val) }
+    #
+    # Block shorthands :float, Float, :integer and Integer are currently available,
+    # but only for non-Hash declarations.
+    #
     # == Other options
     # [:from] The name by which the xml value will be found, either an attribute or tag name in XML.  Default is sym, or the singular form of sym, in the case of arrays and hashes.
-    # [:as] :cdata for character data
+    # [:as] :cdata for character data; :integer, Integer, :float, Float to coerce to Integer or Float respectively
     # [:in] An optional name of a wrapping tag for this XML accessor
     # [:else] Default value for attribute, if missing
     # [:required] If true, throws RequiredElementMissing when the element isn't present

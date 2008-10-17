@@ -121,6 +121,13 @@ module ROXML
       @type == :content
     end
 
+    def block
+      shorthands = @opts[:as] & BLOCK_SHORTHANDS.keys
+      unless shorthands.empty?
+        BLOCK_SHORTHANDS[shorthands.only]
+      end
+    end
+
     def array?
       @opts[:as].include? :array
     end
@@ -138,6 +145,13 @@ module ROXML
     end
 
   private
+    BLOCK_SHORTHANDS = {
+      :integer => lambda {|val| Integer(val) },
+      Integer  => lambda {|val| Integer(val) },
+      :float   => lambda {|val| Float(val) },
+      Float    => lambda {|val| Float(val) }
+    }
+
     def extract_options!(args)
       opts = args.extract_options!
       unless (opts.keys & HASH_KEYS).empty?

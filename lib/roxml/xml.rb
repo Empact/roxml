@@ -19,11 +19,16 @@ module ROXML
     delegate :required?, :to => :opts
 
     def initialize(accessor, args, &block)
+      if args.block && block
+        # TODO: Curry blocks, until then, fail
+        raise ArgumentError, "more than one block specification"
+      end
+
       @accessor = accessor
       @array = args.array?
       @name = args.name
       @default = args.default
-      @block = block
+      @block = args.block || block
       @wrapper = args.wrapper
       @opts = args
     end

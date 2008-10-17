@@ -13,4 +13,7 @@ Construction:
 As:
  * :as => :self for sending method_missing to this attribute
 
- * :as => :int/:float/Integer/Float  as shorthand for "do |val| Integer(val) end" &c.
+ * Allow stacking of block shorthands with explicit block.
+   I.e., :as => Integer is applied before the explicit block is called
+
+ * Add shorthand support to hash declaration

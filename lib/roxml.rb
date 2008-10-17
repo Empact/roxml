@@ -244,7 +244,7 @@ module ROXML
     #  class Muffins
     #    include ROXML
     #
-    #    xml_reader :count, :from => 'bakers_dozens' {|val| val.to_i * 13 }
+    #    xml_reader(:count, :from => 'bakers_dozens') {|val| val.to_i * 13 }
     #  end
     #
     # For hash types, the block recieves the key and value as arguments, and they should

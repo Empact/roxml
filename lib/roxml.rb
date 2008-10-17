@@ -238,7 +238,7 @@ module ROXML
     #    xml_reader :books, [Book]
     #
     # == Blocks
-    # For readonly attributes, you may pass a block which manipulates the associated parsed value.
+    # You may also pass a block which manipulates the associated parsed value.
     #
     #  class Muffins
     #    include ROXML

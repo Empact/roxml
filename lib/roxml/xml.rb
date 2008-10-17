@@ -9,11 +9,14 @@ module ROXML
   end
   require File.join(File.dirname(__FILE__), 'xml', XML_PARSER)
 
+  class RequiredElementMissing < Exception; end
+
   #
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef # ::nodoc::
     attr_reader :accessor, :name, :array, :default, :block, :wrapper
+    delegate :required?, :to => :opts
 
     def initialize(accessor, args, &block)
       @accessor = accessor
@@ -22,6 +25,7 @@ module ROXML
       @default = args.default
       @block = block
       @wrapper = args.wrapper
+      @opts = args
     end
 
     # Reads data from the XML element and populates the instance
@@ -37,6 +41,8 @@ module ROXML
     end
 
   private
+    attr_reader :opts
+
     def xpath
       wrapper ? "#{wrapper}#{xpath_separator}#{name}" : name.to_s
     end
@@ -62,7 +68,10 @@ module ROXML
 
     def value(xml)
       parent = wrap(xml)
-      val = xml.attributes[name] || default
+      unless val = xml.attributes[name]
+        raise RequiredElementMissing if opts.required?
+        val = default
+      end
       block ? block.call(val) : val
     end
 
@@ -119,7 +128,10 @@ module ROXML
         child = xml.search(name).first
         child.content if child
       end
-      val = default unless val && !val.blank?
+      if !val || val.blank?
+        raise RequiredElementMissing if required?
+        val = default
+      end
       block ? block.call(val) : val
     end
 
@@ -168,6 +180,10 @@ module ROXML
       vals = xml.search(xpath).collect do |e|
         [@hash.key.value(e), @hash.value.value(e)]
       end
+      if vals.empty?
+        raise RequiredElementMissing if required?
+        vals = default
+      end
       if block
         vals.collect! do |(key, val)|
           block.call(key, val)
@@ -214,7 +230,11 @@ module ROXML
           instantiate(e)
         end
         arr unless arr.empty?
-      end || default
+      end
+      unless val
+        raise RequiredElementMissing if opts.required?
+        val = default
+      end
       block ? block.call(val) : val
     end
 

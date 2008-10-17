@@ -131,6 +131,10 @@ module ROXML
       @opts[:in]
     end
 
+    def required?
+      @opts[:required]
+    end
+
   private
     def extract_options!(args)
       opts = args.extract_options!

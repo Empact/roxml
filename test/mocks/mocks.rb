@@ -1,5 +1,12 @@
 require "lib/roxml"
 
+class Contributor
+  include ROXML
+
+  xml_reader :role, :attr
+  xml_reader :name
+end
+
 class Book
   include ROXML
 
@@ -10,6 +17,16 @@ class Book
   xml_accessor :pages, :text => 'pagecount' do |val|
     Integer(val)
   end
+end
+
+class BookWithRequired
+  include ROXML
+
+  xml_accessor :isbn, :attr => 'ISBN', :required => true
+  xml_reader :title, :required => true
+  xml_reader :contributors, [Contributor], :in => 'contributor_array', :required => true
+  xml_reader :contributor_hash, {:attrs => ['role', 'name']},
+                                :from => 'contributor', :in => 'contributor_hash', :required => true
 end
 
 class BookWithAttrFrom
@@ -78,13 +95,6 @@ class BookWithAuthorTextAttribute
   xml_reader :title
   xml_reader :description, :as => :cdata
   xml_reader :author, Author
-end
-
-class Contributor
-  include ROXML
-
-  xml_reader :role, :attr
-  xml_reader :name
 end
 
 class BookWithContributions

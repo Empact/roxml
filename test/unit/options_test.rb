@@ -23,6 +23,12 @@ class TestOptions < Test::Unit::TestCase
     assert ROXML::Opts.new(:author, :content).content?
   end
 
+  def test_required
+    assert !ROXML::Opts.new(:author, :content).required?
+    assert ROXML::Opts.new(:author, :content, :required => true).required?
+    assert !ROXML::Opts.new(:author, :content, :required => false).required?
+  end
+
   def test_hash_of_attrs
     opts = ROXML::Opts.new(:attributes, {:attrs => [:name, :value]})
     assert opts.hash?

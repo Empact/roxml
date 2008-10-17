@@ -255,6 +255,7 @@ module ROXML
     # [:as] :cdata for character data
     # [:in] An optional name of a wrapping tag for this XML accessor
     # [:else] Default value for attribute, if missing
+    # [:required] If true, throws RequiredElementMissing when the element isn't present
     #
     def xml(sym, writable = false, type_and_or_opts = :text, opts = nil, &block)
       opts = Opts.new(sym, *[type_and_or_opts, opts].compact)

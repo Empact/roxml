@@ -1,4 +1,4 @@
-A few ideas:
+A few ideas...
 
 Construction:
  * xml_construct is somewhat limited in that it overrides default constructor
@@ -10,7 +10,7 @@ Construction:
    the standard 'initialization is called on empty objects', but you don't have the benefit of
    xml attrs to initialize with.  After and vice versa.
 
-As
+As:
  * :as => :self for sending method_missing to this attribute
 
  * :as => :int/:float/Integer/Float  as shorthand for "do |val| Integer(val) end" &c.

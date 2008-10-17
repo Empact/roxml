@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'extensions/enumerable'
 require 'extensions/array'
+require 'extensions/object'
 require 'activesupport'
 
 %w(array string options xml).each do |file|

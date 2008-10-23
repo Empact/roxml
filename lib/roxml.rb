@@ -9,13 +9,17 @@ require 'activesupport'
 end
 
 module ROXML
+  def self.included(base) # ::nodoc::
+    base.extend(ClassMethods)
+  end
+
   # This class defines the annotation methods that are mixed into your
   # Ruby classes for XML mapping information and behavior.
   #
   # See xml_name, xml_construct, xml, xml_reader and xml_accessor for
   # available annotations.
   #
-  module ROXML_Class
+  module ClassMethods
     #
     # Creates a new Ruby object from XML using mapping information
     # annotated in the class.
@@ -348,16 +352,6 @@ module ROXML
           instance_variable_set("@#{name}", v)
         end
       end
-    end
-  end
-
-  class << self
-    #
-    # Extends the klass with the ROXML_Class module methods.
-    #
-    def included(klass) # ::nodoc::
-      super
-      klass.__send__(:extend, ROXML_Class)
     end
   end
 

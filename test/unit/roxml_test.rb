@@ -5,7 +5,7 @@ class TestROXML < Test::Unit::TestCase
   def test_malformed
     ROXML::XML::Parser.register_error_handler {|err| }
     assert_raise ROXML::XML::Parser::ParseError do
-      book = Book.parse(fixture(:book_malformed))
+      book = Book.from_xml(fixture(:book_malformed))
     end
   end
 

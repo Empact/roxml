@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 class TestXMLObject < Test::Unit::TestCase
   # Test book with text and attribute
   def test_book_author_text_attribute
-    book = BookWithAuthorTextAttribute.parse(fixture(:book_text_with_attribute))
+    book = BookWithAuthorTextAttribute.from_xml(fixture(:book_text_with_attribute))
     assert_equal("primary",book.author.role)
     assert_equal("David Thomas",book.author.text)
   end
@@ -12,7 +12,7 @@ class TestXMLObject < Test::Unit::TestCase
   # In this case, book with contibutions
   def test_one_to_many_with_container
     expected_authors = ["David Thomas","Andrew Hunt","Chad Fowler"]
-    book = BookWithContributions.parse(fixture(:book_with_contributions))
+    book = BookWithContributions.from_xml(fixture(:book_with_contributions))
     assert_equal("Programming Ruby - 2nd Edition", book.title)
     book.contributions.each do |contributor|
       assert expected_authors.include?(contributor.name)
@@ -23,7 +23,7 @@ class TestXMLObject < Test::Unit::TestCase
   # In this case, book with contibutions
   def test_one_to_many_without_container
     expected_contributors = ["David Thomas","Andrew Hunt","Chad Fowler"]
-    book = BookWithContributors.parse(fixture(:book_with_contributors))
+    book = BookWithContributors.from_xml(fixture(:book_with_contributors))
     assert_equal("Programming Ruby - 2nd Edition", book.title)
     book.contributors.each do |contributor|
       assert(expected_contributors.include?(contributor.name))
@@ -33,14 +33,14 @@ class TestXMLObject < Test::Unit::TestCase
   # Test XML object containing one other XML object (one-to-one)
   # In this case, book with publisher
   def test_one_to_one
-    book = BookWithPublisher.parse(fixture(:book_with_publisher))
+    book = BookWithPublisher.from_xml(fixture(:book_with_publisher))
     assert_equal("Programming Ruby - 2nd Edition", book.title)
     assert_equal("Pragmatic Bookshelf", book.publisher.name)
   end
 
   # Test XML object containing type of self (self-reference)
   def test_self_reference
-    book = BookPair.parse(fixture(:book_pair))
+    book = BookPair.from_xml(fixture(:book_pair))
     assert_equal("Programming Ruby - 2nd Edition", book.title)
     assert_equal("Agile Web Development with Rails", book.book.title)
   end
@@ -49,7 +49,7 @@ class TestXMLObject < Test::Unit::TestCase
   def test_one_to_many_to_many
     expected_contributors = ["David Thomas","Andrew Hunt","Chad Fowler", "David Heinemeier Hansson"]
     expected_books = ["Programming Ruby - 2nd Edition", "Agile Web Development with Rails"]
-    library = Library.parse(fixture(:library))
+    library = Library.from_xml(fixture(:library))
     assert_equal("Ruby library", library.name)
     assert !library.books.empty?
     library.books.each do |book|
@@ -61,17 +61,17 @@ class TestXMLObject < Test::Unit::TestCase
   end
 
   def test_without_needed_from
-    assert_equal [], UppercaseLibrary.parse(fixture(:library)).books
-    assert_equal [], Library.parse(fixture(:library_uppercase)).books
+    assert_equal [], UppercaseLibrary.from_xml(fixture(:library)).books
+    assert_equal [], Library.from_xml(fixture(:library_uppercase)).books
   end
 
   def test_with_needed_from
-    assert Library.parse(fixture(:library)).books
-    assert UppercaseLibrary.parse(fixture(:library_uppercase)).books
+    assert Library.from_xml(fixture(:library)).books
+    assert UppercaseLibrary.from_xml(fixture(:library_uppercase)).books
   end
 
   def test_with_recursion
-    p = PersonWithMother.parse(fixture(:person_with_mothers))
+    p = PersonWithMother.from_xml(fixture(:person_with_mothers))
     assert_equal 'Ben Franklin', p.name
     assert_equal 'Abiah Folger', p.mother.name
     assert_equal 'Madeup Mother', p.mother.mother.name
@@ -79,7 +79,7 @@ class TestXMLObject < Test::Unit::TestCase
   end
 
   def test_with_guarded_recursion
-    p = PersonWithGuardedMother.parse(fixture(:person_with_guarded_mothers))
+    p = PersonWithGuardedMother.from_xml(fixture(:person_with_guarded_mothers))
     assert_equal 'Ben Franklin', p.name
     assert_equal 'Abiah Folger', p.mother.name
     assert_equal 'Madeup Mother', p.mother.mother.name
@@ -87,7 +87,7 @@ class TestXMLObject < Test::Unit::TestCase
   end
 
   def test_recursive_with_default_initialization
-    p = PersonWithMotherOrMissing.parse(fixture(:person_with_mothers))
+    p = PersonWithMotherOrMissing.from_xml(fixture(:person_with_mothers))
     assert_equal 'Unknown', p.mother.mother.mother.name
     assert_equal Person, p.mother.mother.mother.class
   end

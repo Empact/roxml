@@ -6,6 +6,8 @@
 
 * Add :required option to throw on abscence [Ben Woosley]
 
+* Deprecate the non-specific #parse in favor of #from_xml [Ben Woosley]
+
 == 2.1 (October 3, 2008)
 
 * rake test now uses the default parser selection [Ben Woosley]

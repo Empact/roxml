@@ -6,7 +6,7 @@ def to_xml_test(*names)
     xml_name ||= name
 
     define_method "test_#{name}" do
-      dict = name.to_s.camelize.constantize.parse(fixture(xml_name))
+      dict = name.to_s.camelize.constantize.from_xml(fixture(xml_name))
       xml = xml_fixture(xml_name)
       remove_children(xml)
       assert_equal xml, dict.to_xml
@@ -53,7 +53,7 @@ end
 
 class TestToXmlWithDefaults < Test::Unit::TestCase
   def test_content_and_attr_defaults_are_represented_in_output
-    dict = Person.parse(fixture(:nameless_ageless_youth))
+    dict = Person.from_xml(fixture(:nameless_ageless_youth))
 
     xml = '<person age="21">Unknown</person>'
     assert_equal ROXML::XML::Parser.parse(xml).root, dict.to_xml
@@ -62,7 +62,7 @@ end
 
 class TestToXmlWithBlocks < Test::Unit::TestCase
   def test_pagecount_serialized_properly_after_modification
-    b = Book.parse(fixture(:book_valid))
+    b = Book.from_xml(fixture(:book_valid))
     xml = xml_fixture(:book_valid)
     assert_equal '357', xml.search('pagecount').first.content
     assert_equal 357, b.pages

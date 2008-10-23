@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class TestXMLNamespaces < Test::Unit::TestCase
   def setup
-    @book = BookWithContributions.parse(fixture(:book_with_default_namespace))
+    @book = BookWithContributions.from_xml(fixture(:book_with_default_namespace))
   end
 
   def test_default_namespace_doesnt_interfere_with_normal_operation

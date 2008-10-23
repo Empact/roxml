@@ -4,7 +4,7 @@ Construction:
  * xml_construct is somewhat limited in that it overrides default constructor
    arguments arguments and doesn't allow non-xml arguments
 
- * parse has room to provide non-xml initialization arguments after the initial xml argument
+ * from_xml has room to provide non-xml initialization arguments after the initial xml argument
    but such a feature would need to integrate with xml_construct, and must settle the
    question of when to call initialize: before or after parsing.  Before and you maintain
    the standard 'initialization is called on empty objects', but you don't have the benefit of

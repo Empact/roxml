@@ -245,8 +245,8 @@ module ROXML
 
   private
     def instantiate(elem)
-      if klass.respond_to? :parse
-        klass.parse(elem)
+      if klass.respond_to? :from_xml
+        klass.from_xml(elem)
       else
         klass.new(elem)
       end

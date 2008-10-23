@@ -65,29 +65,29 @@ BOOK
   end
 
   def test_required_passes_on_prescence
-    BookWithRequired.parse(@full_book)
+    BookWithRequired.from_xml(@full_book)
   end
 
   def test_required_throws_on_attr_absence
     assert_raise ROXML::RequiredElementMissing do
-      BookWithRequired.parse(@book_missing_attr)    end
+      BookWithRequired.from_xml(@book_missing_attr)    end
   end
 
   def test_required_throws_on_text_absence
     assert_raise ROXML::RequiredElementMissing do
-      BookWithRequired.parse(@book_missing_text)
+      BookWithRequired.from_xml(@book_missing_text)
     end
   end
 
   def test_required_throws_on_array_absence
     assert_raise ROXML::RequiredElementMissing do
-      BookWithRequired.parse(@book_missing_array)
+      BookWithRequired.from_xml(@book_missing_array)
     end
   end
 
   def test_required_throws_on_hash_absence
     assert_raise ROXML::RequiredElementMissing do
-      BookWithRequired.parse(@book_missing_hash)
+      BookWithRequired.from_xml(@book_missing_hash)
     end
   end
 end

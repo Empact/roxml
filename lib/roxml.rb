@@ -37,13 +37,13 @@ module ROXML
     # the XML document.
     #
     # Example
-    #  book = Book.parse(File.read("book.xml"))
+    #  book = Book.from_xml(File.read("book.xml"))
     # or
-    #  book = Book.parse("<book><name>Beyond Java</name></book>")
+    #  book = Book.from_xml("<book><name>Beyond Java</name></book>")
     #
     # See also: xml_construct
     #
-    def parse(data)
+    def from_xml(data)
       xml = (data.kind_of?(XML::Node) ? data : XML::Parser.parse(data).root)
 
       unless xml_construction_args.empty?
@@ -58,6 +58,11 @@ module ROXML
           end
         end
       end
+    end
+
+    def parse(data) # ::nodoc::
+      ActiveSupport::Deprecation.warn '#parse has been deprecated, please use #from_xml instead'
+      from_xml(data)
     end
 
     # Sets the name of the XML element that represents this class. Use this

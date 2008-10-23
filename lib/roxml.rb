@@ -11,6 +11,15 @@ end
 module ROXML
   def self.included(base) # ::nodoc::
     base.extend(ClassMethods)
+    base.class_eval do
+      def tag_name
+        self.class.tag_name
+      end
+
+      def tag_refs
+        self.class.tag_refs
+      end
+    end
   end
 
   # This class defines the annotation methods that are mixed into your
@@ -352,19 +361,6 @@ module ROXML
           instance_variable_set("@#{name}", v)
         end
       end
-    end
-  end
-
-  #
-  # To make it easier to reference the class's
-  # attributes all method calls to the instance that
-  # doesn't match an instance method are forwarded to the
-  # class's singleton instance. Only methods 'tag_name' and 'tag_refs' are delegated.
-  def method_missing(name, *args)
-    if [:tag_name, :tag_refs].include? name
-      self.class.__send__(name, *args)
-    else
-      super
     end
   end
 end

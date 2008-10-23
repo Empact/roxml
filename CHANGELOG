@@ -1,3 +1,11 @@
+== 2.2 (?)
+
+* fix gem dependencies [James Healy]
+
+* Add block shorthands for Float and Integer [Ben Woosley]
+
+* Add :required option to throw on abscence [Ben Woosley]
+
 == 2.1 (October 3, 2008)
 
 * rake test now uses the default parser selection [Ben Woosley]

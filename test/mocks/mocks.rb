@@ -13,6 +13,13 @@ class Contributor
   xml_reader :name
 end
 
+class WriteableContributor
+  include ROXML
+
+  xml_accessor :role, :attr
+  xml_accessor :name
+end
+
 class Book
   include ROXML
 
@@ -119,6 +126,16 @@ class BookWithContributors
   xml_reader :title
   xml_reader :description
   xml_reader :contributors, Contributor, :as => :array
+end
+
+class WriteableBookWithContributors
+  include ROXML
+
+  xml_name :book
+  xml_accessor :isbn, :attr
+  xml_accessor :title
+  xml_accessor :description
+  xml_accessor :contributors, Contributor, :as => :array
 end
 
 class NamelessBook

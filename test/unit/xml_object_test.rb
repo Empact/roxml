@@ -30,6 +30,29 @@ class TestXMLObject < Test::Unit::TestCase
     end
   end
 
+  # when building objects that contain arrays, the second object seems to
+  # inherit data from the first
+  #
+  def test_one_to_many_without_container_sequence
+    contrib = WriteableContributor.new
+    contrib.name = "David Thomas"
+
+    book_one = WriteableBookWithContributors.new
+    book_one.isbn = "9781843549161"
+    book_one.title = "Anathem"
+    book_one.description = "A new title from Neal Stephenson"
+    book_one.contributors << contrib
+
+    # this book should be completely empty
+    book_two = WriteableBookWithContributors.new
+    puts book_two.to_xml
+
+    assert_equal(nil, book_two.isbn)
+    assert_equal(nil, book_two.title)
+    assert_equal(nil, book_two.description)
+    assert_equal(0, book_two.contributors.size)
+  end
+
   # Test XML object containing one other XML object (one-to-one)
   # In this case, book with publisher
   def test_one_to_one

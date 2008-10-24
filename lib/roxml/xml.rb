@@ -15,8 +15,8 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef # ::nodoc::
-    attr_reader :accessor, :name, :array, :default, :block, :wrapper
-    delegate :required?, :to => :opts
+    attr_reader :accessor, :block, :name
+    delegate :required?, :array?, :default, :wrapper, :to => :opts
 
     def initialize(accessor, args, &block)
       if args.block && block
@@ -25,11 +25,8 @@ module ROXML
       end
 
       @accessor = accessor
-      @array = args.array?
       @name = args.name
-      @default = args.default
       @block = args.block || block
-      @wrapper = args.wrapper
       @opts = args
     end
 
@@ -93,23 +90,17 @@ module ROXML
   #   XMLTextRef
   #  </element>
   class XMLTextRef < XMLRef # ::nodoc::
-    attr_reader :cdata, :content
-
-    def initialize(accessor, args, &block)
-      super(accessor, args, &block)
-      @content = args.content?
-      @cdata = args.cdata?
-    end
+    delegate :cdata?, :content?, :to => :opts
 
     # Updates the text in the given _xml_ block to
     # the _value_ provided.
     def update_xml(xml, value)
       parent = wrap(xml)
-      if content
+      if content?
         add(parent, value)
       elsif name?
         parent.name = value
-      elsif array
+      elsif array?
         value.each do |v|
           add(parent.child_add(XML::Node.new_element(name)), v)
         end
@@ -120,11 +111,11 @@ module ROXML
     end
 
     def value(xml)
-      val = if content
+      val = if content?
         xml.content.strip
       elsif name?
         xml.name
-      elsif array
+      elsif array?
         arr = xml.search(xpath).collect do |e|
           e.content.strip.to_latin if e.content
         end
@@ -150,7 +141,7 @@ module ROXML
     end
 
     def add(dest, value)
-      if cdata
+      if cdata?
         dest.child_add(XML::Node.new_cdata(value.to_utf))
       else
         dest.content = value.to_utf
@@ -159,12 +150,11 @@ module ROXML
   end
 
   class XMLHashRef < XMLTextRef # ::nodoc::
-    attr_reader :hash
+    delegate :hash, :to => :opts
 
     def initialize(accessor, args, &block)
       super(accessor, args, &block)
-      @hash = args.hash
-      if @hash.key.name? || @hash.value.name?
+      if hash.key.name? || hash.value.name?
         @name = '*'
       end
     end
@@ -183,7 +173,7 @@ module ROXML
 
     def value(xml)
       vals = xml.search(xpath).collect do |e|
-        [@hash.key.value(e), @hash.value.value(e)]
+        [hash.key.value(e), hash.value.value(e)]
       end
       if vals.empty?
         raise RequiredElementMissing if required?
@@ -215,7 +205,7 @@ module ROXML
     # the value provided.
     def update_xml(xml, value)
       parent = wrap(xml)
-      unless array
+      unless array?
         parent.child_add(value.to_xml(name))
       else
         value.each do |v|
@@ -226,7 +216,7 @@ module ROXML
     end
 
     def value(xml)
-      val = unless array
+      val = unless array?
         if child = xml.search(xpath).first
           instantiate(child)
         end

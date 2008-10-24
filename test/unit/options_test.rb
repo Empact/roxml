@@ -58,7 +58,7 @@ class TestOptions < Test::Unit::TestCase
                                          :value => :content})
     assert opts.hash?
     assert !opts.array?
-    assert opts.hash.value.content
+    assert opts.hash.value.content?
     assert_equal [ROXML::XMLAttributeRef, ROXML::XMLTextRef], opts.hash.types
     assert_equal ['name', ''], opts.hash.names
   end

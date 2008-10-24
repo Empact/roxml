@@ -45,7 +45,6 @@ class TestXMLObject < Test::Unit::TestCase
 
     # this book should be completely empty
     book_two = WriteableBookWithContributors.new
-    puts book_two.to_xml
 
     assert_equal(nil, book_two.isbn)
     assert_equal(nil, book_two.title)

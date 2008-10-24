@@ -8,6 +8,8 @@
 
 * Deprecate the non-specific #parse in favor of #from_xml [Ben Woosley]
 
+* Fix a bug whereby the default value was carrying over information from one object to another [James Healy, Ben Woosley]
+
 == 2.1 (October 3, 2008)
 
 * rake test now uses the default parser selection [Ben Woosley]

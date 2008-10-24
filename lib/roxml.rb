@@ -355,7 +355,7 @@ module ROXML
         define_method(name) do
           val = instance_variable_get("@#{name}")
           if val.nil?
-            val = default
+            val = default.duplicable? ? default.dup : default
             instance_variable_set("@#{name}", val)
           end
           val

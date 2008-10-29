@@ -37,6 +37,10 @@ module ROXML
 
     def value(xml)
       value = fetch_value(xml)
+      if value.blank?
+        raise RequiredElementMissing if required?
+        value = default
+      end
       apply_blocks(value)
     end
 
@@ -73,12 +77,7 @@ module ROXML
 
   private
     def fetch_value(xml)
-      parent = wrap(xml)
-      unless val = xml.attributes[name]
-        raise RequiredElementMissing if opts.required?
-        val = default
-      end
-      val
+      xml.attributes[name]
     end
 
     def xpath_separator
@@ -119,7 +118,7 @@ module ROXML
 
   private
     def fetch_value(xml)
-      val = if content?
+      if content?
         xml.content.strip
       elsif name?
         xml.name
@@ -132,11 +131,6 @@ module ROXML
         child = xml.search(name).first
         child.content if child
       end
-      if !val || val.blank?
-        raise RequiredElementMissing if required?
-        val = default
-      end
-      val
     end
 
     def xpath_separator
@@ -169,14 +163,9 @@ module ROXML
 
   private
     def fetch_value(xml)
-      vals = xml.search(xpath).collect do |e|
+      xml.search(xpath).collect do |e|
         [hash.key.value(e), hash.value.value(e)]
       end
-      if vals.empty?
-        raise RequiredElementMissing if required?
-        vals = default
-      end
-      vals
     end
 
     def apply_blocks(vals)
@@ -212,7 +201,7 @@ module ROXML
 
   private
     def fetch_value(xml)
-      val = unless array?
+      unless array?
         if child = xml.search(xpath).first
           instantiate(child)
         end
@@ -222,11 +211,6 @@ module ROXML
         end
         arr unless arr.empty?
       end
-      unless val
-        raise RequiredElementMissing if opts.required?
-        val = default
-      end
-      val
     end
 
     def instantiate(elem)

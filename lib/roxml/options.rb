@@ -79,7 +79,7 @@ module ROXML
   end
 
   class Opts # ::nodoc::
-    attr_reader :type, :hash
+    attr_reader :type, :hash, :block
 
     def initialize(sym, *args)
       @opts = extract_options!(args)
@@ -87,8 +87,8 @@ module ROXML
       @opts.reverse_merge!(:from => sym.to_s, :as => [], :else => nil, :in => nil)
       @opts[:as] = [*@opts[:as]]
       @type = extract_type(args)
-
       @name = @opts[:from].to_s
+      @block = init_block(@opts[:as])
 
       raise ArgumentError, "Can't specify both :else default and :required" if required? && default
     end
@@ -121,13 +121,6 @@ module ROXML
       @type == :content
     end
 
-    def block
-      shorthands = @opts[:as] & BLOCK_SHORTHANDS.keys
-      unless shorthands.empty?
-        BLOCK_SHORTHANDS[shorthands.only]
-      end
-    end
-
     def array?
       @opts[:as].include? :array
     end
@@ -151,6 +144,12 @@ module ROXML
       :float   => lambda {|val| Float(val) },
       Float    => lambda {|val| Float(val) }
     }
+
+    def init_block(as)
+      shorthands = as & BLOCK_SHORTHANDS.keys
+      raise ArgumentError, "multiple block shorthands supplied #{shorthands.map(&:to_s).join(', ')}" if shorthands.size > 1
+      BLOCK_SHORTHANDS[shorthands.only] unless shorthands.empty?
+    end
 
     def extract_options!(args)
       opts = args.extract_options!

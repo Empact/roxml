@@ -83,4 +83,10 @@ class TestOptions < Test::Unit::TestCase
     assert_equal 3.1, ROXML::Opts.new(:count, :as => :float).block['3.1']
     assert_equal 3.1, ROXML::Opts.new(:count, :as => Float).block['3.1']
   end
+
+  def test_multiple_shorthands_raises
+    assert_raises ArgumentError do
+      ROXML::Opts.new(:count, :as => [Float, Integer])
+    end
+  end
 end

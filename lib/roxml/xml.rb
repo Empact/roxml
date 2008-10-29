@@ -194,12 +194,7 @@ module ROXML
   end
 
   class XMLObjectRef < XMLTextRef # ::nodoc::
-    attr_reader :klass
-
-    def initialize(accessor, args, &block)
-      super(accessor, args, &block)
-      @klass = args.type
-    end
+    delegate :type, :to => :opts
 
     # Updates the composed XML object in the given XML block to
     # the value provided.
@@ -235,10 +230,10 @@ module ROXML
 
   private
     def instantiate(elem)
-      if klass.respond_to? :from_xml
-        klass.from_xml(elem)
+      if type.respond_to? :from_xml
+        type.from_xml(elem)
       else
-        klass.new(elem)
+        type.new(elem)
       end
     end
   end

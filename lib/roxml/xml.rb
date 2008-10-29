@@ -35,6 +35,11 @@ module ROXML
       false
     end
 
+    def value(xml)
+      value = fetch_value(xml)
+      apply_blocks(value)
+    end
+
   private
     attr_reader :opts
 
@@ -66,16 +71,16 @@ module ROXML
       xml
     end
 
-    def value(xml)
+  private
+    def fetch_value(xml)
       parent = wrap(xml)
       unless val = xml.attributes[name]
         raise RequiredElementMissing if opts.required?
         val = default
       end
-      apply_blocks(val)
+      val
     end
 
-  private
     def xpath_separator
       '@'
     end
@@ -108,7 +113,12 @@ module ROXML
       xml
     end
 
-    def value(xml)
+    def name?
+      name == '*'
+    end
+
+  private
+    def fetch_value(xml)
       val = if content?
         xml.content.strip
       elsif name?
@@ -126,14 +136,9 @@ module ROXML
         raise RequiredElementMissing if required?
         val = default
       end
-      apply_blocks(val)
+      val
     end
 
-    def name?
-      name == '*'
-    end
-
-  private
     def xpath_separator
       '/'
     end
@@ -162,7 +167,8 @@ module ROXML
       xml
     end
 
-    def value(xml)
+  private
+    def fetch_value(xml)
       vals = xml.search(xpath).collect do |e|
         [hash.key.value(e), hash.value.value(e)]
       end
@@ -170,17 +176,16 @@ module ROXML
         raise RequiredElementMissing if required?
         vals = default
       end
-      apply_blocks(vals)
-      vals.to_h
+      vals
     end
 
-  private
     def apply_blocks(vals)
       unless blocks.empty?
         vals.collect! do |kvp|
           super(kvp)
         end
       end
+      vals.to_h
     end
 
     def add_node(xml)
@@ -205,7 +210,8 @@ module ROXML
       xml
     end
 
-    def value(xml)
+  private
+    def fetch_value(xml)
       val = unless array?
         if child = xml.search(xpath).first
           instantiate(child)
@@ -220,10 +226,9 @@ module ROXML
         raise RequiredElementMissing if opts.required?
         val = default
       end
-      apply_blocks(val)
+      val
     end
 
-  private
     def instantiate(elem)
       if type.respond_to? :from_xml
         type.from_xml(elem)

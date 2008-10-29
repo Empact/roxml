@@ -289,7 +289,7 @@ module ROXML
     # [:required] If true, throws RequiredElementMissing when the element isn't present
     #
     def xml(sym, writable = false, type_and_or_opts = :text, opts = nil, &block)
-      opts = Opts.new(sym, *[type_and_or_opts, opts].compact)
+      opts = Opts.new(sym, *[type_and_or_opts, opts].compact, &block)
 
       tag_refs << case opts.type
       when :attr    then XMLAttributeRef
@@ -298,7 +298,7 @@ module ROXML
       when :hash    then XMLHashRef
       when Symbol   then raise ArgumentError, "Invalid type argument #{opts.type}"
       else               XMLObjectRef
-      end.new(sym, opts, &block)
+      end.new(sym, opts)
 
       add_accessor(sym, writable, opts.array?, opts.default)
     end

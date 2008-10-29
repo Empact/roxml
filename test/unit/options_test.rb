@@ -94,4 +94,9 @@ class TestOptions < Test::Unit::TestCase
       ROXML::Opts.new(:count, :as => [Float, Integer])
     end
   end
+
+  def test_stacked_blocks
+    assert_equal 2, ROXML::Opts.new(:count, :as => Integer) {|val| val.to_i }.blocks.size
+    assert_equal 2, ROXML::Opts.new(:count, :as => Float) {|val| val.object_id }.blocks.size
+  end
 end

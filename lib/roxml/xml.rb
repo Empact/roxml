@@ -15,18 +15,12 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef # ::nodoc::
-    attr_reader :accessor, :block, :name
-    delegate :required?, :array?, :default, :wrapper, :to => :opts
+    attr_reader :accessor, :name
+    delegate :required?, :array?, :default, :wrapper, :blocks, :to => :opts
 
-    def initialize(accessor, args, &block)
-      if args.block && block
-        # TODO: Curry blocks, until then, fail
-        raise ArgumentError, "more than one block specification"
-      end
-
+    def initialize(accessor, args)
       @accessor = accessor
       @name = args.name
-      @block = args.block || block
       @opts = args
     end
 
@@ -44,6 +38,11 @@ module ROXML
 
   private
     attr_reader :opts
+
+    def apply_blocks(val)
+      blocks.each {|block| val = block[*val] } unless blocks.empty?
+      val
+    end
 
     def xpath
       wrapper ? "#{wrapper}#{xpath_separator}#{name}" : name.to_s
@@ -74,7 +73,7 @@ module ROXML
         raise RequiredElementMissing if opts.required?
         val = default
       end
-      block ? block.call(val) : val
+      apply_blocks(val)
     end
 
   private
@@ -128,7 +127,7 @@ module ROXML
         raise RequiredElementMissing if required?
         val = default
       end
-      block ? block.call(val) : val
+      apply_blocks(val)
     end
 
     def name?
@@ -152,8 +151,8 @@ module ROXML
   class XMLHashRef < XMLTextRef # ::nodoc::
     delegate :hash, :to => :opts
 
-    def initialize(accessor, args, &block)
-      super(accessor, args, &block)
+    def initialize(accessor, args)
+      super(accessor, args)
       if hash.key.name? || hash.value.name?
         @name = '*'
       end
@@ -179,15 +178,19 @@ module ROXML
         raise RequiredElementMissing if required?
         vals = default
       end
-      if block
-        vals.collect! do |(key, val)|
-          block.call(key, val)
-        end
-      end
+      apply_blocks(vals)
       vals.to_h
     end
 
   private
+    def apply_blocks(vals)
+      unless blocks.empty?
+        vals.collect! do |kvp|
+          super(kvp)
+        end
+      end
+    end
+
     def add_node(xml)
       xml.child_add(XML::Node.new_element(hash.wrapper))
     end
@@ -225,7 +228,7 @@ module ROXML
         raise RequiredElementMissing if opts.required?
         val = default
       end
-      block ? block.call(val) : val
+      apply_blocks(val)
     end
 
   private

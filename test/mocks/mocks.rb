@@ -6,6 +6,20 @@ class Muffins
   xml_reader(:count, :from => 'bakers_dozens') {|val| val.to_i * 13 }
 end
 
+class MuffinsWithStackedBlocks
+  include ROXML
+
+  xml_reader(:count, :from => 'bakers_dozens', :as => Integer) {|val| val * 13 }
+end
+
+class Numerology
+  include ROXML
+
+  xml_reader :predictions, {:attrs => ['number', 'meaning']} do |k, v|
+    [Integer(k), v]
+  end
+end
+
 class Contributor
   include ROXML
 

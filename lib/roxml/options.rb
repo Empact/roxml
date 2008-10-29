@@ -79,7 +79,7 @@ module ROXML
   end
 
   class Opts # ::nodoc::
-    attr_reader :type, :hash, :blocks
+    attr_reader :name, :type, :hash, :blocks
 
     def initialize(sym, *args, &block)
       @opts = extract_options!(args)
@@ -87,18 +87,15 @@ module ROXML
       @opts.reverse_merge!(:from => sym.to_s, :as => [], :else => nil, :in => nil)
       @opts[:as] = [*@opts[:as]]
       @type = extract_type(args)
-      @name = @opts[:from].to_s
       @blocks = collect_blocks(block, @opts[:as])
 
+      @name = @opts[:from].to_s
+      @name = @name.singularize if hash? || array?
+      if hash? && (hash.key.name? || hash.value.name?)
+        @name = '*'
+      end
+
       raise ArgumentError, "Can't specify both :else default and :required" if required? && default
-    end
-
-    def name=(n)
-      @name = n.to_s
-    end
-
-    def name
-      enumerable? ? @name.singularize : @name
     end
 
     def hash
@@ -107,10 +104,6 @@ module ROXML
 
     def default
       @opts[:else]
-    end
-
-    def enumerable?
-      hash? || array?
     end
 
     def hash?

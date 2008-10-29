@@ -15,12 +15,11 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef # ::nodoc::
-    attr_reader :accessor, :name
-    delegate :required?, :array?, :default, :wrapper, :blocks, :to => :opts
+    attr_reader :accessor
+    delegate :name, :required?, :array?, :default, :wrapper, :blocks, :to => :opts
 
     def initialize(accessor, args)
       @accessor = accessor
-      @name = args.name
       @opts = args
     end
 
@@ -150,13 +149,6 @@ module ROXML
 
   class XMLHashRef < XMLTextRef # ::nodoc::
     delegate :hash, :to => :opts
-
-    def initialize(accessor, args)
-      super(accessor, args)
-      if hash.key.name? || hash.value.name?
-        @name = '*'
-      end
-    end
 
     # Updates the composed XML object in the given XML block to
     # the value provided.

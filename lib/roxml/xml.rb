@@ -36,6 +36,12 @@ module ROXML
       false
     end
 
+    def update_xml(xml, value)
+      xml = wrap(xml)
+      write_xml(xml, value)
+      xml
+    end
+
     def value(xml)
       value = fetch_value(xml)
       if value.blank?
@@ -69,15 +75,13 @@ module ROXML
   #   XMLTextRef
   #  </element>
   class XMLAttributeRef < XMLRef # ::nodoc::
+  private
     # Updates the attribute in the given XML block to
     # the value provided.
-    def update_xml(xml, value)
-      xml = wrap(xml)
+    def write_xml(xml, value)
       xml.attributes[name] = value.to_utf
-      xml
     end
 
-  private
     def fetch_value(xml)
       attr = xml.search(xpath).first
       attr && attr.value
@@ -97,29 +101,27 @@ module ROXML
   class XMLTextRef < XMLRef # ::nodoc::
     delegate :cdata?, :content?, :to => :opts
 
-    # Updates the text in the given _xml_ block to
-    # the _value_ provided.
-    def update_xml(xml, value)
-      parent = wrap(xml)
-      if content?
-        add(parent, value)
-      elsif name?
-        parent.name = value
-      elsif array?
-        value.each do |v|
-          add(parent.child_add(XML::Node.new_element(name)), v)
-        end
-      else
-        add(parent.child_add(XML::Node.new_element(name)), value)
-      end
-      xml
-    end
-
     def name?
       name == '*'
     end
 
   private
+    # Updates the text in the given _xml_ block to
+    # the _value_ provided.
+    def write_xml(xml, value)
+      if content?
+        add(xml, value)
+      elsif name?
+        xml.name = value
+      elsif array?
+        value.each do |v|
+          add(xml.child_add(XML::Node.new_element(name)), v)
+        end
+      else
+        add(xml.child_add(XML::Node.new_element(name)), value)
+      end
+    end
+
     def fetch_value(xml)
       if content?
         xml.content.strip
@@ -148,19 +150,17 @@ module ROXML
   class XMLHashRef < XMLTextRef # ::nodoc::
     delegate :hash, :to => :opts
 
+  private
     # Updates the composed XML object in the given XML block to
     # the value provided.
-    def update_xml(xml, value)
-      parent = wrap(xml)
+    def write_xml(xml, value)
       value.each_pair do |k, v|
-        node = add_node(parent)
+        node = xml.child_add(XML::Node.new_element(hash.wrapper))
         hash.key.update_xml(node, k)
         hash.value.update_xml(node, v)
       end
-      xml
     end
 
-  private
     def fetch_value(xml)
       xml.search(xpath).collect do |e|
         [hash.key.value(e), hash.value.value(e)]
@@ -175,30 +175,24 @@ module ROXML
       end
       vals.to_h
     end
-
-    def add_node(xml)
-      xml.child_add(XML::Node.new_element(hash.wrapper))
-    end
   end
 
   class XMLObjectRef < XMLTextRef # ::nodoc::
     delegate :type, :to => :opts
 
+  private
     # Updates the composed XML object in the given XML block to
     # the value provided.
-    def update_xml(xml, value)
-      parent = wrap(xml)
+    def write_xml(xml, value)
       unless array?
-        parent.child_add(value.to_xml(name))
+        xml.child_add(value.to_xml(name))
       else
         value.each do |v|
-          parent.child_add(v.to_xml(name))
+          xml.child_add(v.to_xml(name))
         end
       end
-      xml
     end
 
-  private
     def fetch_value(xml)
       unless array?
         if child = xml.search(xpath).first

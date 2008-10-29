@@ -73,15 +73,20 @@ class TestOptions < Test::Unit::TestCase
     assert_equal ['dt', 'dd'], opts.hash.names
   end
 
-  def test_block_shorthands
-    assert !ROXML::Opts.new(:count).block
-    assert !ROXML::Opts.new(:count, :as => :intager).block
-    assert !ROXML::Opts.new(:count, :as => :foat).block
+  def test_no_block_shorthand_means_no_block
+    assert ROXML::Opts.new(:count).blocks.empty?
+    assert ROXML::Opts.new(:count, :as => :intager).blocks.empty?
+    assert ROXML::Opts.new(:count, :as => :foat).blocks.empty?
+  end
 
-    assert_equal 3, ROXML::Opts.new(:count, :as => :integer).block['3']
-    assert_equal 3, ROXML::Opts.new(:count, :as => Integer).block['3']
-    assert_equal 3.1, ROXML::Opts.new(:count, :as => :float).block['3.1']
-    assert_equal 3.1, ROXML::Opts.new(:count, :as => Float).block['3.1']
+  def test_block_integer_shorthand
+    assert_equal 3, ROXML::Opts.new(:count, :as => :integer).blocks.only['3']
+    assert_equal 3, ROXML::Opts.new(:count, :as => Integer).blocks.only['3']
+  end
+
+  def test_block_float_shorthand
+    assert_equal 3.1, ROXML::Opts.new(:count, :as => :float).blocks.only['3.1']
+    assert_equal 3.1, ROXML::Opts.new(:count, :as => Float).blocks.only['3.1']
   end
 
   def test_multiple_shorthands_raises

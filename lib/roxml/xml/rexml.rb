@@ -16,7 +16,10 @@ module ROXML
       end
 
       alias_attribute :content, :text
-      alias :search :get_elements
+
+      def search(xpath)
+        REXML::XPath.match(self, xpath)
+      end
 
       def child_add(element)
         if element.is_a?(REXML::CData)

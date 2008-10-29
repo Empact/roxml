@@ -60,6 +60,13 @@ class BookWithAttrFrom
   xml_accessor :isbn, :attr, :from => 'ISBN'
 end
 
+class BookWithWrappedAttr
+  include ROXML
+
+  xml_name :book
+  xml_accessor :isbn, :attr => 'ISBN', :in => 'ids'
+end
+
 class Measurement
   include ROXML
 

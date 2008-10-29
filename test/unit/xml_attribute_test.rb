@@ -31,4 +31,9 @@ class TestXMLAttribute < Test::Unit::TestCase
     assert_equal "Just junk... really", n.content
     assert_equal "Cartwheel", n.name
   end
+
+  def test_wrapped_attr_accessible
+    b = BookWithWrappedAttr.from_xml(fixture(:book_with_wrapped_attr))
+    assert_equal "0974514055", b.isbn
+  end
 end

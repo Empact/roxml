@@ -19,7 +19,7 @@ module ROXML
     private
       def namespaced(xpath)
         xpath.between('/') do |component|
-          if component =~ /\w+/ && !component.include?(':')
+          if component =~ /\w+/ && !component.include?(':') && !component.starts_with?('@')
             in_default_namespace(component)
           else
             component

@@ -17,6 +17,7 @@ module ROXML
   class XMLRef # ::nodoc::
     attr_reader :accessor
     delegate :name, :required?, :array?, :default, :wrapper, :blocks, :to => :opts
+    alias_method :xpath_name, :name
 
     def initialize(accessor, args)
       @accessor = accessor
@@ -53,7 +54,7 @@ module ROXML
     end
 
     def xpath
-      wrapper ? "#{wrapper}#{xpath_separator}#{name}" : name.to_s
+      wrapper ? "#{wrapper}/#{xpath_name}" : xpath_name.to_s
     end
 
     def wrap(xml)
@@ -71,17 +72,19 @@ module ROXML
     # Updates the attribute in the given XML block to
     # the value provided.
     def update_xml(xml, value)
+      xml = wrap(xml)
       xml.attributes[name] = value.to_utf
       xml
     end
 
   private
     def fetch_value(xml)
-      xml.attributes[name]
+      attr = xml.search(xpath).first
+      attr && attr.value
     end
 
-    def xpath_separator
-      '@'
+    def xpath_name
+      "@#{name}"
     end
   end
 
@@ -131,10 +134,6 @@ module ROXML
         child = xml.search(name).first
         child.content if child
       end
-    end
-
-    def xpath_separator
-      '/'
     end
 
     def add(dest, value)

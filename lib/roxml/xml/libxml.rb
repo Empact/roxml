@@ -1,7 +1,7 @@
 require 'libxml'
 
 module ROXML
-  module XML # ::nodoc::
+  module XML # :nodoc:all
     Document = LibXML::XML::Document
     Node = LibXML::XML::Node
     Parser = LibXML::XML::Parser

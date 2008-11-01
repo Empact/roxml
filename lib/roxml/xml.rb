@@ -2,19 +2,20 @@ module ROXML
   unless const_defined? 'XML_PARSER'
     begin
       require 'libxml'
-      XML_PARSER = 'libxml'
+      XML_PARSER = 'libxml' # :nodoc:
     rescue LoadError
-      XML_PARSER = 'rexml'
+      XML_PARSER = 'rexml' # :nodoc:
     end
   end
   require File.join(File.dirname(__FILE__), 'xml', XML_PARSER)
 
-  class RequiredElementMissing < Exception; end
+  class RequiredElementMissing < Exception # :nodoc:
+  end
 
   #
   # Internal base class that represents an XML - Class binding.
   #
-  class XMLRef # ::nodoc::
+  class XMLRef # :nodoc:
     attr_reader :accessor
     delegate :name, :required?, :array?, :default, :wrapper, :blocks, :to => :opts
     alias_method :xpath_name, :name
@@ -37,9 +38,9 @@ module ROXML
     end
 
     def update_xml(xml, value)
-      xml = wrap(xml)
-      write_xml(xml, value)
-      xml
+      returning wrap(xml) do |xml|
+        write_xml(xml, value)
+      end
     end
 
     def value(xml)
@@ -74,7 +75,7 @@ module ROXML
   #  <element attribute="XMLAttributeRef">
   #   XMLTextRef
   #  </element>
-  class XMLAttributeRef < XMLRef # ::nodoc::
+  class XMLAttributeRef < XMLRef # :nodoc:
   private
     # Updates the attribute in the given XML block to
     # the value provided.
@@ -98,7 +99,7 @@ module ROXML
   #  <element attribute="XMLAttributeRef">
   #   XMLTextRef
   #  </element>
-  class XMLTextRef < XMLRef # ::nodoc::
+  class XMLTextRef < XMLRef # :nodoc:
     delegate :cdata?, :content?, :to => :opts
 
     def name?
@@ -128,10 +129,9 @@ module ROXML
       elsif name?
         xml.name
       elsif array?
-        arr = xml.search(xpath).collect do |e|
+        xml.search(xpath).collect do |e|
           e.content.strip.to_latin if e.content
         end
-        arr unless arr.empty?
       else
         child = xml.search(name).first
         child.content if child
@@ -147,7 +147,7 @@ module ROXML
     end
   end
 
-  class XMLHashRef < XMLTextRef # ::nodoc::
+  class XMLHashRef < XMLTextRef # :nodoc:
     delegate :hash, :to => :opts
 
   private
@@ -177,7 +177,7 @@ module ROXML
     end
   end
 
-  class XMLObjectRef < XMLTextRef # ::nodoc::
+  class XMLObjectRef < XMLTextRef # :nodoc:
     delegate :type, :to => :opts
 
   private
@@ -199,10 +199,9 @@ module ROXML
           instantiate(child)
         end
       else
-        arr = xml.search(xpath).collect do |e|
+        xml.search(xpath).collect do |e|
           instantiate(e)
         end
-        arr unless arr.empty?
       end
     end
 

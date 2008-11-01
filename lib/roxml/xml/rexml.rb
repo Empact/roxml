@@ -1,5 +1,5 @@
 module ROXML
-  module XML # ::nodoc::
+  module XML # :nodoc:all
     Document = REXML::Document
     Node = REXML::Element
 

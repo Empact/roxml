@@ -1,4 +1,4 @@
-module ActiveSupport
+module ActiveSupport # :nodoc:all
   module Deprecation
     class << self
       def deprecation_message(callstack, message = nil)

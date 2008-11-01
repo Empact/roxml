@@ -9,13 +9,15 @@ require 'activesupport'
 end
 
 module ROXML
-  def self.included(base) # ::nodoc::
+  def self.included(base) # :nodoc:
     base.extend(ClassMethods)
     base.class_eval do
+      # Provides access to ClassMethods#tag_name directly from an instance of a ROXML class
       def tag_name
         self.class.tag_name
       end
 
+      # Provides access to ClassMethods#tag_refs directly from an instance of a ROXML class
       def tag_refs
         self.class.tag_refs
       end
@@ -60,7 +62,8 @@ module ROXML
       end
     end
 
-    def parse(data) # ::nodoc::
+    # deprecated in favor of #from_xml
+    def parse(data)
       ActiveSupport::Deprecation.warn '#parse has been deprecated, please use #from_xml instead'
       from_xml(data)
     end
@@ -313,7 +316,7 @@ module ROXML
       xml sym, true, type_and_or_opts, opts, &block
     end
 
-    def xml_construction_args # ::nodoc::
+    def xml_construction_args # :nodoc:
       @xml_construction_args ||= []
     end
 

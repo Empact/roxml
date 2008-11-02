@@ -3,7 +3,7 @@ visit http://roxml.rubyforge.org
 
 =Quick Start Guide
 
-This is a short usage example. See ROXML::ClassMethods and packaged test cases for more information.
+This is a short usage example. See ROXML::ClassMethods::Declarations and packaged test cases for more information.
 
 ==Basic Mapping
 
@@ -119,4 +119,4 @@ explicitly require one or the other, you may do the following:
   end
   require 'roxml'
 
-For more information on available annotations, see ROXML::ClassMethods
+For more information on available annotations, see ROXML::ClassMethods::Declarations

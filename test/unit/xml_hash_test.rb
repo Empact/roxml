@@ -13,10 +13,6 @@ class TestXMLHash < Test::Unit::TestCase
   end
 
   def test_text_hash
-    assert_equal 'definition', DictionaryOfTexts.tag_refs.only.name
-    assert_equal 'word', DictionaryOfTexts.tag_refs.only.hash.key.name
-    assert_equal 'meaning', DictionaryOfTexts.tag_refs.only.hash.value.name
-
     dict = DictionaryOfTexts.from_xml(fixture(:dictionary_of_texts))
     assert_equal Hash, dict.definitions.class
     assert_equal @contents, dict.definitions

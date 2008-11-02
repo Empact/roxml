@@ -2,13 +2,15 @@
 
 * fix gem dependencies [James Healy]
 
-* Add block shorthands for Float and Integer [Ben Woosley]
+* Add block shorthands for Float and Integer, which precede the block argume if present [Ben Woosley]
 
-* Add :required option to throw on abscence [Ben Woosley]
+* Add :required option to throw on absence [Ben Woosley]
 
 * Deprecate the non-specific #parse in favor of #from_xml [Ben Woosley]
 
 * Fix a bug whereby the default value was carrying over information from one object to another [James Healy, Ben Woosley]
+
+* Fix support for :in on :attr elements [Ben Woosley]
 
 * Deprecate Array#to_h in favor of Array#to_hash [Ben Woosley]
 

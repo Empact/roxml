@@ -213,17 +213,4 @@ module ROXML
       end
     end
   end
-
-  #
-  # Returns an XML::Node representing this object.
-  #
-  def to_xml(name = nil)
-    returning XML::Node.new_element(name || tag_name) do |root|
-      tag_refs.each do |ref|
-        if v = __send__(ref.accessor)
-          ref.update_xml(root, v)
-        end
-      end
-    end
-  end
 end

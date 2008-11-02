@@ -8,7 +8,7 @@ module ROXML
         # an array with 2 elements:
         #
         #   >> [[:key, :value], [1, 2], ['key', 'value']].to_h
-        #   => {:key => :value, 1 => 2, 'key' => 'value}
+        #   => {:key => :value, 1 => 2, 'key' => 'value'}
         #
         def to_hash
           inject({}) do |result, (k, v)|

@@ -10,6 +10,10 @@
 
 * Fix a bug whereby the default value was carrying over information from one object to another [James Healy, Ben Woosley]
 
+* Deprecate Array#to_h in favor of Array#to_hash [Ben Woosley]
+
+* Deprecate Object#to_latin and Object#to_utf in favor of the same methods on String [Ben Woosley]
+
 == 2.1 (October 3, 2008)
 
 * rake test now uses the default parser selection [Ben Woosley]

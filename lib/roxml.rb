@@ -4,7 +4,7 @@ require 'extensions/array'
 require 'extensions/object'
 require 'activesupport'
 
-%w(array string options xml).each do |file|
+%w(extensions/array extensions/string options xml).each do |file|
   require File.join(File.dirname(__FILE__), 'roxml', file)
 end
 

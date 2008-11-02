@@ -1,4 +1,4 @@
-require 'lib/roxml/string'
+require 'lib/roxml/extensions/string'
 
 class TestROXML < Test::Unit::TestCase
   def test_to_latin_is_accessible

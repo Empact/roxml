@@ -80,7 +80,7 @@ module ROXML
     # Updates the attribute in the given XML block to
     # the value provided.
     def write_xml(xml, value)
-      xml.attributes[name] = value.to_utf
+      xml.attributes[name] = value.to_s.to_utf
     end
 
     def fetch_value(xml)
@@ -140,9 +140,9 @@ module ROXML
 
     def add(dest, value)
       if cdata?
-        dest.child_add(XML::Node.new_cdata(value.to_utf))
+        dest.child_add(XML::Node.new_cdata(value.to_s.to_utf))
       else
-        dest.content = value.to_utf
+        dest.content = value.to_s.to_utf
       end
     end
   end
@@ -173,7 +173,7 @@ module ROXML
           super(kvp)
         end
       end
-      vals.to_h
+      vals.to_hash
     end
   end
 

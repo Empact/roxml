@@ -262,3 +262,15 @@ class PersonWithMotherOrMissing
   xml_reader :name, :else => 'Anonymous'
   xml_reader :mother, PersonWithMotherOrMissing, :else => Person.new
 end
+
+class NestedChild
+  include ROXML
+  
+  xml_name :child
+end
+
+class NestedParent
+  include ROXML
+  
+  xml_accessor :nested_child, NestedChild
+end

@@ -63,6 +63,9 @@ end
 @test_files = 'test/unit/*_test.rb'
 desc "Test ROXML using the default parser selection behavior"
 task :test do
+  module ROXML
+    SILENCE_XML_NAME_WARNING = true
+  end
   require 'lib/roxml'
   require 'rake/runtest'
   Rake.run_tests @test_files

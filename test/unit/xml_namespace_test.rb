@@ -18,6 +18,7 @@ class TestXMLNamespaces < Test::Unit::TestCase
   end
 
   def test_that_rexml_follows_nameless_default_namespace
+    require 'rexml/document'
     xml = REXML::Document.new(
       '<container xmlns="http://fakenamespace.org"><node>Yeah, content</node></container>')
 

@@ -1,3 +1,6 @@
+require 'rexml/document'
+require 'active_support/core_ext/module/aliasing'
+
 module ROXML
   module XML # :nodoc:all
     Document = REXML::Document

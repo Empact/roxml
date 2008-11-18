@@ -1,10 +1,4 @@
-require 'rubygems'
-require 'extensions/enumerable'
-require 'extensions/array'
-require 'extensions/object'
-require 'activesupport'
-
-%w(extensions/array extensions/string options xml).each do |file|
+%w(extensions/active_support extensions/array extensions/string options xml).each do |file|
   require File.join(File.dirname(__FILE__), 'roxml', file)
 end
 

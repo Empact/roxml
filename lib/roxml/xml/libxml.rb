@@ -1,4 +1,5 @@
 require 'libxml'
+require 'active_support/core_ext/module/delegation'
 
 module ROXML
   module XML # :nodoc:all

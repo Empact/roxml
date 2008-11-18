@@ -1,4 +1,3 @@
-require 'active_support'
 require 'active_support/version'
 
 module ActiveSupport # :nodoc:all

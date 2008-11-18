@@ -8,7 +8,7 @@
   :from of parent, xml_name of child, parent's accessor name.  The previous fallback did not include xml_name.
   This new behavior is more consistent, explicit, predictable, and DRY, but it is a breaking change, so a warning
   is printed to alert others of this behavior change. ROXML::SILENCE_XML_NAME_WARNING may be used to deactivate this
-  warning. [Ben Woosley, jwthompson2, Delynn Berry]
+  warning. [Ben Woosley, James W. Thompson, Delynn Berry]
 
 == 2.2 (November 2, 2008)
 

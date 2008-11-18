@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
     'Rakefile',
     'roxml.gemspec',
     'lib/roxml.rb',
+    'lib/roxml/extensions/active_support.rb',
     'lib/roxml/extensions/array.rb',
     'lib/roxml/extensions/array/conversions.rb',
     'lib/roxml/extensions/string.rb',

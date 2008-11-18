@@ -89,9 +89,11 @@ module ROXML
 
       @type = extract_type(args)
       if @type.respond_to?(:xml_name?) && @type.xml_name?
-        warn "WARNING: As of 2.3, a breaking change has been in the naming of sub-objects. " +
-             "ROXML now considers the xml_name of the sub-object before falling back to the accessor name of the parent. " +
-             "Use :from on the parent declaration to override this behavior. Set ROXML::SILENCE_XML_NAME_WARNING to remove this message." unless SILENCE_XML_NAME_WARNING
+        unless ROXML.const_defined?('SILENCE_XML_NAME_WARNING') && ROXML::SILENCE_XML_NAME_WARNING
+          warn "WARNING: As of 2.3, a breaking change has been in the naming of sub-objects. " +
+               "ROXML now considers the xml_name of the sub-object before falling back to the accessor name of the parent. " +
+               "Use :from on the parent declaration to override this behavior. Set ROXML::SILENCE_XML_NAME_WARNING to remove this message."
+        end
         @opts[:from] ||= @type.tag_name
       else
         @opts[:from] ||= sym.to_s

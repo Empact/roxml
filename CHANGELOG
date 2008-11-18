@@ -1,3 +1,9 @@
+== 2.3 (?)
+
+* Rationalize sub-element xml naming by enforcing the following precedence for the containing xml of an object:
+  :from of parent, xml_name of child, parent's accessor name.  The previous fallback did not include xml_name.
+  This new behavior is more consistent, explicit, predictable, and DRY
+
 == 2.2 (November 2, 2008)
 
 * fix gem dependencies [James Healy]

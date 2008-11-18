@@ -55,6 +55,11 @@ module ROXML # :nodoc:
   #
   module ClassMethods # :nodoc:
     module Declarations
+      # A helper which enables us to detect when the xml_name has been explicitly set
+      def xml_name? #:nodoc:
+        @xml_name
+      end
+
       # Sets the name of the XML element that represents this class. Use this
       # to override the default lowercase class name.
       #
@@ -66,6 +71,7 @@ module ROXML # :nodoc:
       # Without the xml_name annotation, the XML mapped tag would have been "bookwithpublisher".
       #
       def xml_name(name)
+        @xml_name = true
         @tag_name = name
       end
 

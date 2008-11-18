@@ -84,9 +84,19 @@ module ROXML
     def initialize(sym, *args, &block)
       @opts = extract_options!(args)
 
-      @opts.reverse_merge!(:from => sym.to_s, :as => [], :else => nil, :in => nil)
+      @opts.reverse_merge!(:as => [], :else => nil, :in => nil)
       @opts[:as] = [*@opts[:as]]
+
       @type = extract_type(args)
+      if @type.respond_to?(:xml_name?) && @type.xml_name?
+        warn "WARNING: As of 2.3, a breaking change has been in the naming of sub-objects. " +
+             "ROXML now considers the xml_name of the sub-object before falling back to the accessor name of the parent. " +
+             "Use :from on the parent declaration to override this behavior."
+        @opts[:from] ||= @type.tag_name
+      else
+        @opts[:from] ||= sym.to_s
+      end
+
       @blocks = collect_blocks(block, @opts[:as])
 
       @name = @opts[:from].to_s

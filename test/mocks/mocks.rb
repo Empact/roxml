@@ -244,7 +244,7 @@ class PersonWithMother
 
   xml_name :person
   xml_reader :name
-  xml_reader :mother, PersonWithMother
+  xml_reader :mother, PersonWithMother, :from => 'mother'
 end
 
 class PersonWithGuardedMother

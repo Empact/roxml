@@ -59,26 +59,26 @@ class TestXMLName < Test::Unit::TestCase
     parent = ParentOfNamedChildWithFrom.new
     parent.child_accessor_name = Child.new
 
-    assert_equal "<parent>\n  <child_from_name/>\n</parent>", parent.to_xml.to_s
+    assert_equal "<parent><child_from_name/></parent>", parent.to_xml.to_s.gsub(/[\n ]/, '')
 
     parent = ParentOfUnnamedChildWithFrom.new
     parent.child_accessor_name = Child.new
 
-    assert_equal "<parent>\n  <child_from_name/>\n</parent>", parent.to_xml.to_s
+    assert_equal "<parent><child_from_name/></parent>", parent.to_xml.to_s.gsub(/[\n ]/, '')
   end
 
   def test_attribute_name_comes_from_the_xml_name_value_if_present
     parent = ParentOfNamedChild.new
     parent.child_accessor_name = Child.new
 
-    assert_equal "<parent>\n  <xml_name_of_child/>\n</parent>", parent.to_xml.to_s
+    assert_equal "<parent><xml_name_of_child/></parent>", parent.to_xml.to_s.gsub(/[\n ]/, '')
   end
 
   def test_attribute_name_comes_from_parent_accessor_by_default
     parent = ParentOfUnnamedChild.new
     parent.child_accessor_name = Child.new
 
-    assert_equal "<parent>\n  <child_accessor_name/>\n</parent>", parent.to_xml.to_s
+    assert_equal "<parent><child_accessor_name/></parent>", parent.to_xml.to_s.gsub(/[\n ]/, '')
   end
 
   def test_named_books_picked_up

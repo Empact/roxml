@@ -81,6 +81,16 @@ module ROXML
   class Opts # :nodoc:
     attr_reader :name, :type, :hash, :blocks
 
+    class << self
+      def silence_xml_name_warning?
+        @silence_xml_name_warning || (ROXML.const_defined?('SILENCE_XML_NAME_WARNING') && ROXML::SILENCE_XML_NAME_WARNING)
+      end
+
+      def silence_xml_name_warning!
+        @silence_xml_name_warning = true
+      end
+    end
+
     def initialize(sym, *args, &block)
       @opts = extract_options!(args)
 
@@ -89,10 +99,11 @@ module ROXML
 
       @type = extract_type(args)
       if @type.respond_to?(:xml_name?) && @type.xml_name?
-        unless ROXML.const_defined?('SILENCE_XML_NAME_WARNING') && ROXML::SILENCE_XML_NAME_WARNING
+        unless self.class.silence_xml_name_warning?
           warn "WARNING: As of 2.3, a breaking change has been in the naming of sub-objects. " +
                "ROXML now considers the xml_name of the sub-object before falling back to the accessor name of the parent. " +
-               "Use :from on the parent declaration to override this behavior. Set ROXML::SILENCE_XML_NAME_WARNING to remove this message."
+               "Use :from on the parent declaration to override this behavior. Set ROXML::SILENCE_XML_NAME_WARNING to avoid this message."
+          self.class.silence_xml_name_warning!
         end
         @opts[:from] ||= @type.tag_name
       else

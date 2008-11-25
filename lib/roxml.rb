@@ -384,7 +384,7 @@ module ROXML # :nodoc:
 
         unless xml_construction_args.empty?
           args = xml_construction_args.map do |arg|
-             tag_refs.find {|ref| ref.name == arg.to_s }
+             tag_refs.find {|ref| ref.accessor == arg }
           end.map {|ref| ref.value(xml) }
           new(*args)
         else

@@ -305,10 +305,12 @@ module ROXML # :nodoc:
 
       # On parse, call the target object's initialize function with the listed arguments
       def xml_construct(*args)
-        if missing_tag = args.detect {|arg| !tag_refs.map(&:name).include?(arg.to_s) }
+        present_tags = tag_refs.map(&:accessor)
+        missing_tags = args - present_tags
+        unless missing_tags.empty?
           raise ArgumentError, "All construction tags must be declared first using xml, " +
-                               "xml_reader, or xml_accessor. #{missing_tag} is missing. " +
-                               tag_refs.map(&:name).join(', ') + ' are declared.'
+                               "xml_reader, or xml_accessor. #{missing_tags.join(', ')} is missing. " +
+                               "#{present_tags.join(', ')} are declared."
         end
         @xml_construction_args = args
       end

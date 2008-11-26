@@ -67,6 +67,7 @@ Gem::Specification.new do |s|
     'test/unit/xml_text_test.rb']
   s.requirements << 'none'
   s.add_dependency 'extensions', '>= 0.6.0'
+  s.add_dependency 'activesupport'
   s.require_path = 'lib'
   s.test_files = [
     'test/unit/options_test.rb',

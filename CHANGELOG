@@ -1,5 +1,7 @@
 == 2.3 (?)
 
+* Add missing dependency ActiveSupport
+
 * Remove support for installing as a rails plugin
 
 * Fix a bug where xml_construct was using the refs' names rather than their accessor names for comparison

@@ -67,7 +67,6 @@ Gem::Specification.new do |s|
     'test/unit/xml_text_test.rb']
   s.requirements << 'none'
   s.add_dependency 'extensions', '>= 0.6.0'
-  s.add_development_dependency('Empact-rails-plugin-package-task', '>= 0.1') if s.respond_to?(:add_development_dependency)
   s.require_path = 'lib'
   s.test_files = [
     'test/unit/options_test.rb',

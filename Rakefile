@@ -1,6 +1,5 @@
 # Rake libraries used
 require "rubygems"
-require "rails_plugin_package_task"
 require "rake/rdoctask"
 require "rake/contrib/rubyforgepublisher"
 require "rake/contrib/publisher"
@@ -23,17 +22,6 @@ Rake::RDocTask.new do |rd|
   rd.rdoc_files.include('MIT-LICENSE', 'README.rdoc', "lib/**/*.rb")
   rd.options << '--main' << 'README.rdoc' << '--title' << 'ROXML Documentation'
 end
-
-Rake::RailsPluginPackageTask.new(spec.name, spec.version) do |p|
-  p.package_files = FileList[
-    "lib/**/*.rb", "*.txt", "README.rdoc", "Rakefile",
-    "rake/**/*", "test/**/*.rb", "test/**/*.xml"]
-  p.plugin_files = FileList["rails_plugin/**/*"]
-  p.extra_links = {"Project page" => spec.homepage,
-                   "Author: Zak Mandhro" => 'http://rubyforge.org/users/zakmandhro/'}
-  p.verbose = true
-end
-task :rails_plugin=>:clobber
 
 desc "Publish Ruby on Rails plug-in on RubyForge"
 task :release_plugin=>:rails_plugin do |task|
@@ -101,8 +89,6 @@ Rake::PackageTask.new(spec.name, spec.version) do |p|
     "lib/**/*.rb", "*.txt", "README.rdoc", "Rakefile",
     "rake/**/*","test/**/*.rb", "test/**/*.xml", "html/**/*"]
 end
-
-desc "Create the plugin package"
 
 task :package=>:rdoc
 task :rdoc=>:test

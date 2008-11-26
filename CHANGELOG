@@ -1,5 +1,7 @@
 == 2.3 (?)
 
+* Fix a bug where xml_construct was using the refs' names rather than their accessor names for comparison
+
 * Significantly reduce our footprint by selectively including smaller parts of ActiveSupport and Extensions.
   This avoids problems such as the conflict between ActiveSupport's #to_json and the JSON gem's #to_json.
   Thanks to Per Melin for reporting this problem. [Ben Woosley]

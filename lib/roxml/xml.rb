@@ -17,7 +17,7 @@ module ROXML
   #
   class XMLRef # :nodoc:
     attr_reader :accessor
-    delegate :name, :required?, :array?, :default, :wrapper, :blocks, :to => :opts
+    delegate :name, :required?, :array?, :wrapper, :blocks, :to => :opts
     alias_method :xpath_name, :name
 
     def initialize(accessor, args)
@@ -41,6 +41,11 @@ module ROXML
       returning wrap(xml) do |xml|
         write_xml(xml, value)
       end
+    end
+
+    def default
+      @default ||= @opts.default || (@opts.array? ? Array.new : nil)
+      @default.duplicable? ? @default.dup : @default
     end
 
     def value(xml)

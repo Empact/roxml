@@ -281,7 +281,7 @@ module ROXML # :nodoc:
       def xml(sym, writable = false, type_and_or_opts = :text, opts = nil, &block)
         opts = Opts.new(sym, *[type_and_or_opts, opts].compact, &block)
 
-        tag_refs << case opts.type
+        ref = case opts.type
         when :attr    then XMLAttributeRef
         when :content then XMLTextRef
         when :text    then XMLTextRef
@@ -290,7 +290,7 @@ module ROXML # :nodoc:
         else               XMLObjectRef
         end.new(sym, opts)
 
-        add_accessor(sym, writable, opts.array?, opts.default)
+        add_accessor(ref, writable)
       end
 
       # Declares a read-only xml reference. See xml for details.
@@ -316,29 +316,24 @@ module ROXML # :nodoc:
       end
 
     private
-      def assert_accessor(name)
-        @tag_accessors ||= []
-        raise "Accessor #{name} is already defined as XML accessor in class #{self}" if @tag_accessors.include?(name)
-        @tag_accessors << name
-      end
-
-      def add_accessor(name, writable, as_array, default = nil)
-        assert_accessor(name)
-        unless instance_methods.include?(name)
-          default ||= Array.new if as_array
-
-          define_method(name) do
-            val = instance_variable_get("@#{name}")
-            if val.nil?
-              val = default.duplicable? ? default.dup : default
-              instance_variable_set("@#{name}", val)
-            end
-            val
-          end
+      def add_accessor(ref, writable)
+        if tag_refs.map(&:accessor).include? ref.accessor
+          raise "Accessor #{ref.accessor} is already defined as XML accessor in class #{self.name}"
         end
-        if writable && !instance_methods.include?("#{name}=")
-          define_method("#{name}=") do |v|
-            instance_variable_set("@#{name}", v)
+        tag_refs << ref
+
+        define_method(ref.accessor) do
+          name = ref.accessor
+          unless result = instance_variable_get("@#{name}")
+            result = ref.default
+            instance_variable_set("@#{name}", result)
+          end
+          result
+        end
+
+        if writable && !instance_methods.include?("#{ref.accessor}=")
+          define_method("#{ref.accessor}=") do |v|
+            instance_variable_set("@#{ref.accessor}", v)
           end
         end
       end

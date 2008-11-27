@@ -16,20 +16,18 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef # :nodoc:
-    attr_reader :accessor
-    delegate :name, :required?, :array?, :wrapper, :blocks, :to => :opts
+    delegate :name, :required?, :array?, :wrapper, :blocks, :accessor, :variable_name, :to => :opts
     alias_method :xpath_name, :name
 
-    def initialize(accessor, args)
-      @accessor = accessor
-      @opts = args
+    def initialize(opts)
+      @opts = opts
     end
 
     # Reads data from the XML element and populates the instance
     # accordingly.
     def populate(xml, instance)
       data = value(xml)
-      instance.instance_variable_set("@#{accessor}", data) if data
+      instance.instance_variable_set("@#{variable_name}", data)
       instance
     end
 
@@ -138,7 +136,7 @@ module ROXML
           e.content.strip.to_latin if e.content
         end
       else
-        child = xml.search(name).first
+        child = xml.search(xpath).first
         child.content if child
       end
     end

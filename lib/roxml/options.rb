@@ -51,11 +51,11 @@ module ROXML
     def to_ref(args, type, name)
       case type
       when :attr
-        XMLAttributeRef.new(nil, to_hash_args(args, type, name))
+        XMLAttributeRef.new(to_hash_args(args, type, name))
       when :text
-        XMLTextRef.new(nil, to_hash_args(args, type, name))
+        XMLTextRef.new(to_hash_args(args, type, name))
       when Symbol
-        XMLTextRef.new(nil, to_hash_args(args, type, name))
+        XMLTextRef.new(to_hash_args(args, type, name))
       else
         raise ArgumentError, "Missing key description #{{:type => type, :name => name}.pp_s}"
       end
@@ -79,7 +79,7 @@ module ROXML
   end
 
   class Opts # :nodoc:
-    attr_reader :name, :type, :hash, :blocks
+    attr_reader :name, :type, :hash, :blocks, :default, :accessor
 
     class << self
       def silence_xml_name_warning?
@@ -92,12 +92,16 @@ module ROXML
     end
 
     def initialize(sym, *args, &block)
+      @accessor = sym
       @opts = extract_options!(args)
+      @default = @opts.delete(:else)
 
-      @opts.reverse_merge!(:as => [], :else => nil, :in => nil)
+      @opts.reverse_merge!(:as => [], :in => nil)
       @opts[:as] = [*@opts[:as]]
 
       @type = extract_type(args)
+      @opts[:as] << :bool if @accessor.to_s.ends_with?('?')
+
       if @type.respond_to?(:xml_name?) && @type.xml_name?
         unless self.class.silence_xml_name_warning?
           warn "WARNING: As of 2.3, a breaking change has been in the naming of sub-objects. " +
@@ -107,7 +111,7 @@ module ROXML
         end
         @opts[:from] ||= @type.tag_name
       else
-        @opts[:from] ||= sym.to_s
+        @opts[:from] ||= variable_name
       end
 
       @blocks = collect_blocks(block, @opts[:as])
@@ -121,12 +125,12 @@ module ROXML
       raise ArgumentError, "Can't specify both :else default and :required" if required? && default
     end
 
-    def hash
-      @hash ||= HashDesc.new(@opts.delete(:hash), name) if hash?
+    def variable_name
+      accessor.to_s.ends_with?('?') ? accessor.to_s.chomp('?') : accessor.to_s
     end
 
-    def default
-      @opts[:else]
+    def hash
+      @hash ||= HashDesc.new(@opts.delete(:hash), name) if hash?
     end
 
     def hash?
@@ -158,7 +162,16 @@ module ROXML
       :integer => lambda {|val| Integer(val) },
       Integer  => lambda {|val| Integer(val) },
       :float   => lambda {|val| Float(val) },
-      Float    => lambda {|val| Float(val) }
+      Float    => lambda {|val| Float(val) },
+      :bool    => lambda do |val|
+        if %w{TRUE True true 1}.include? val
+          true
+        elsif %w{FALSE False false 0}.include? val
+          false
+        else
+          raise ArgumentError, "non-bool value '#{val}' used with '?' method."
+        end
+      end
     }
 
     def collect_blocks(block, as)

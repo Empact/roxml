@@ -1,5 +1,7 @@
 == 2.3 (?)
 
+* Implement automatic bool-ification when the accessor name ends with ?.
+
 * Add missing dependency ActiveSupport
 
 * Remove support for installing as a rails plugin

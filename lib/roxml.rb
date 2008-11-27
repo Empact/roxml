@@ -288,7 +288,7 @@ module ROXML # :nodoc:
         when :hash    then XMLHashRef
         when Symbol   then raise ArgumentError, "Invalid type argument #{opts.type}"
         else               XMLObjectRef
-        end.new(sym, opts)
+        end.new(opts)
 
         add_accessor(ref, writable)
       end
@@ -323,10 +323,10 @@ module ROXML # :nodoc:
         tag_refs << ref
 
         define_method(ref.accessor) do
-          name = ref.accessor
-          unless result = instance_variable_get("@#{name}")
+          result = instance_variable_get("@#{ref.variable_name}")
+          if result.nil?
             result = ref.default
-            instance_variable_set("@#{name}", result)
+            instance_variable_set("@#{ref.variable_name}", result)
           end
           result
         end

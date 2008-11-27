@@ -344,7 +344,6 @@ module ROXML # :nodoc:
         @xml_construction_args ||= []
       end
 
-
       # Returns the tag name (also known as xml_name) of the class.
       # If no tag name is set with xml_name method, returns default class name
       # in lowercase.

@@ -169,7 +169,7 @@ module ROXML
         elsif %w{FALSE False false 0}.include? val
           false
         else
-          raise ArgumentError, "non-bool value '#{val}' used with '?' method."
+          nil
         end
       end
     }

@@ -1,5 +1,3 @@
-require File.join(File.dirname(__FILE__), '../deprecation')
-
 module ROXML
   module CoreExtensions
     module Array #:nodoc:
@@ -18,9 +16,9 @@ module ROXML
         end
 
         def to_h #:nodoc:
-          ActiveSupport::Deprecation.warn "Please use #to_hash instead"
           to_hash
         end
+        deprecate :to_h => :to_hash
       end
     end
   end

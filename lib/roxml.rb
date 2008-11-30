@@ -1,11 +1,11 @@
-%w(extensions/active_support extensions/array extensions/string options xml).each do |file|
+%w(extensions/active_support extensions/deprecation extensions/array extensions/string options xml).each do |file|
   require File.join(File.dirname(__FILE__), 'roxml', file)
 end
 
 module ROXML # :nodoc:
   def self.included(base) # :nodoc:
-    base.extend ClassMethods::Declarations
     base.extend ClassMethods::Accessors
+    base.extend ClassMethods::Declarations
     base.extend ClassMethods::Operations
     base.class_eval do
       include InstanceMethods::Accessors
@@ -392,9 +392,9 @@ module ROXML # :nodoc:
 
       # Deprecated in favor of #from_xml
       def parse(data)
-        ActiveSupport::Deprecation.warn '#parse has been deprecated, please use #from_xml instead'
         from_xml(data)
       end
+      deprecate :parse => :from_xml
     end
   end
 end

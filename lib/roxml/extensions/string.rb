@@ -6,7 +6,6 @@ class String #:nodoc:
   include ROXML::CoreExtensions::String::Iterators
 end
 
-require File.join(File.dirname(__FILE__), 'deprecation')
 class Object #:nodoc:
   # Deprecated in favor of explicit #to_s.to_utf
   def to_utf

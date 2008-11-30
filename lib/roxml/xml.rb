@@ -153,6 +153,11 @@ module ROXML
   class XMLHashRef < XMLTextRef # :nodoc:
     delegate :hash, :to => :opts
 
+    def default
+      result = super
+      result.nil? ? {} : result
+    end
+
   private
     # Updates the composed XML object in the given XML block to
     # the value provided.
@@ -176,7 +181,7 @@ module ROXML
           super(kvp)
         end
       end
-      vals.to_hash
+      vals.to_hash if vals
     end
   end
 

@@ -47,4 +47,19 @@ class TestXMLHash < Test::Unit::TestCase
     assert_equal Hash, dict.definitions.class
     assert_equal @contents, dict.definitions
   end
+
+  def test_it_should_gracefully_handle_empty_hash
+    dict = Class.new do
+      include ROXML
+
+      xml_reader :missing_hash, {:key => :name, :value => :content}, :in => 'EmptyDictionary'
+    end
+
+    assert_equal({}, dict.from_xml(%{
+      <dict>
+        <EmptyDictionary>
+        </EmptyDictionary>
+      </dict>
+    }).missing_hash)
+  end
 end

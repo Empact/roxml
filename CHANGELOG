@@ -1,12 +1,14 @@
 == 2.3 (?)
 
-* Implement automatic bool-ification when the accessor name ends with ?.
+* Fix a bug in the handling of empty Hash types [Ben Woosley]
 
-* Add missing dependency ActiveSupport
+* Implement automatic bool-ification when the accessor name ends with ?. [Ben Woosley]
 
-* Remove support for installing as a rails plugin
+* Add missing dependency ActiveSupport [Ben Woosley]
 
-* Fix a bug where xml_construct was using the refs' names rather than their accessor names for comparison
+* Remove support for installing as a rails plugin [Ben Woosley]
+
+* Fix a bug where xml_construct was using the refs' names rather than their accessor names for comparison [Ben Woosley]
 
 * Significantly reduce our footprint by selectively including smaller parts of ActiveSupport and Extensions.
   This avoids problems such as the conflict between ActiveSupport's #to_json and the JSON gem's #to_json.

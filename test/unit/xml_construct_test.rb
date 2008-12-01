@@ -1,6 +1,38 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-class TestXMLAttribute < Test::Unit::TestCase
+class MeasurementWithXmlConstruct
+  include ROXML
+
+  xml_reader :units, :attr
+  xml_reader :value, :content
+
+  xml_construct_without_deprecation :value, :units
+
+  def initialize(value, units = 'pixels')
+    @value = Float(value)
+    @units = units.to_s
+    if @units.starts_with? 'hundredths-'
+      @value /= 100
+      @units = @units.split('hundredths-')[1]
+    end
+  end
+
+  def ==(other)
+    other.units == @units && other.value == @value
+  end
+end
+
+OriginalMeasurement = Measurement
+Object.send(:remove_const, :Measurement)
+Measurement = MeasurementWithXmlConstruct
+
+class TestXMLConstruct < Test::Unit::TestCase
+  def test_is_deprecated
+    assert_deprecated do
+      Measurement.xml_construction_args
+    end
+  end
+
   def test_initialize_is_run
     m = Measurement.from_xml('<measurement units="hundredths-meters">1130</measurement>')
     assert_equal 11.3, m.value
@@ -26,10 +58,14 @@ class TestXMLAttribute < Test::Unit::TestCase
         xml_reader :foo, :text => 'Foo'
         xml_reader :baz, :attr => 'Bar'
 
-        xml_construct :baz, :bar, :foo
+        xml_construct_without_deprecation :baz, :bar, :foo
         def initialize(baz, bar, foo)
         end
       end
     end
   end
 end
+
+Object.send(:remove_const, :Measurement)
+Measurement = OriginalMeasurement
+Object.send(:remove_const, :OriginalMeasurement)

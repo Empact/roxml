@@ -72,7 +72,10 @@ class Measurement
 
   xml_reader :units, :attr
   xml_reader :value, :content
-  xml_construct :value, :units
+
+  def xml_initialize
+    initialize(value, units)
+  end
 
   def initialize(value, units = 'pixels')
     @value = Float(value)

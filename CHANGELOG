@@ -1,5 +1,8 @@
 == 2.3 (?)
 
+* Add #xml_initialize, which is called at the end of #from_xml, after the xml attributes
+  are set. Deprecate the half-baked xml_construct in it's favor. [Ben Woosley]
+
 * Fix a bug in the handling of empty Hash types [Ben Woosley]
 
 * Implement automatic bool-ification when the accessor name ends with ?. [Ben Woosley]

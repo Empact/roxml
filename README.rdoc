@@ -91,7 +91,8 @@ The result of the block above is stored, rather than the actual value parsed fro
 == Construction
 
 Complicated initialization may require action on multiple attributes of an object.  As such, you can
-use xml_construct to cause your ROXML object to call its own constructor.  For example:
+define method xml_initialize to perform initialization after instantiation and parsing, including
+causing your ROXML object to call its own constructor, as in the following:
 
   class Measurement
     include ROXML
@@ -99,15 +100,18 @@ use xml_construct to cause your ROXML object to call its own constructor.  For e
     xml_reader :units, :attr
     xml_reader :value, :content
 
-    xml_construct :value, :units
+    def xml_initialize
+      # xml attributes of self are already valid
+      initialize(value, units)
+    end
 
     def initialize(value, units)
       # translate units & value into metric, for example
     end
   end
 
-Will, on parse, read all listed xml attributes (units and value, in this case), then call initialize
-with the arguments listed after the xml_construct call.
+One important use of this approach is to make ROXML object which may or may not include an xml backing,
+which may be used via _new_ construction as well as _from_xml_ construction.
 
 == Selecting a parser
 

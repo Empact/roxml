@@ -9,6 +9,7 @@ module ROXML # :nodoc:
     base.extend ClassMethods::Operations
     base.class_eval do
       include InstanceMethods::Accessors
+      include InstanceMethods::Construction
       include InstanceMethods::Conversions
     end
   end
@@ -24,6 +25,41 @@ module ROXML # :nodoc:
       # Provides access to ROXML::ClassMethods::Accessors::tag_refs directly from an instance of a ROXML class
       def tag_refs
         self.class.tag_refs
+      end
+    end
+
+    module Construction
+      # xml_initialize is called at the end of the #from_xml operation on objects
+      # where xml_construct is not in place. Override xml_initialize in order to establish
+      # post-import behavior.  For example, you can use xml_initialize to map xml attribute
+      # values into the object standard initialize function, thus enabling a ROXML object
+      # to freely be either xml-backed or instantiated directly via #new.
+      # An example of this follows:
+      #
+      #  class Measurement
+      #    include ROXML
+      #
+      #    xml_reader :units, :attr
+      #    xml_reader :value, :content
+      #
+      #    def xml_initialize
+      #      # the object is instantiated, and all xml attributes are imported
+      #      # and available, i.e., value and units below are the same value and units
+      #      # found in the xml via the xml_reader declarations above.
+      #      initialize(value, units)
+      #    end
+      #
+      #    def initialize(value, units = 'pixels')
+      #      @value = Float(value)
+      #      @units = units.to_s
+      #      if @units.starts_with? 'hundredths-'
+      #        @value /= 100
+      #        @units = @units.split('hundredths-')[1]
+      #      end
+      #    end
+      #  end
+      #
+      def xml_initialize
       end
     end
 
@@ -44,7 +80,7 @@ module ROXML # :nodoc:
   # This class defines the annotation methods that are mixed into your
   # Ruby classes for XML mapping information and behavior.
   #
-  # See xml_name, xml_construct, xml, xml_reader and xml_accessor for
+  # See xml_name, xml_initialize, xml, xml_reader and xml_accessor for
   # available annotations.
   #
   module ClassMethods # :nodoc:
@@ -303,7 +339,7 @@ module ROXML # :nodoc:
         xml sym, true, type_and_or_opts, opts, &block
       end
 
-      # On parse, call the target object's initialize function with the listed arguments
+      # This method is deprecated, please use xml_initialize instead
       def xml_construct(*args)
         present_tags = tag_refs.map(&:accessor)
         missing_tags = args - present_tags
@@ -314,6 +350,7 @@ module ROXML # :nodoc:
         end
         @xml_construction_args = args
       end
+      deprecate :xml_construct => :xml_initialize
 
     private
       def add_accessor(ref, writable)
@@ -343,6 +380,7 @@ module ROXML # :nodoc:
       def xml_construction_args # :nodoc:
         @xml_construction_args ||= []
       end
+      deprecate :xml_construction_args
 
       # Returns the tag name (also known as xml_name) of the class.
       # If no tag name is set with xml_name method, returns default class name
@@ -371,13 +409,13 @@ module ROXML # :nodoc:
       # or
       #  book = Book.from_xml("<book><name>Beyond Java</name></book>")
       #
-      # See also: xml_construct
+      # See also: xml_initialize
       #
       def from_xml(data)
         xml = (data.kind_of?(XML::Node) ? data : XML::Parser.parse(data).root)
 
-        unless xml_construction_args.empty?
-          args = xml_construction_args.map do |arg|
+        unless xml_construction_args_without_deprecation.empty?
+          args = xml_construction_args_without_deprecation.map do |arg|
              tag_refs.find {|ref| ref.accessor == arg }
           end.map {|ref| ref.value(xml) }
           new(*args)
@@ -386,6 +424,7 @@ module ROXML # :nodoc:
             tag_refs.each do |ref|
               ref.populate(xml, inst)
             end
+            inst.xml_initialize
           end
         end
       end

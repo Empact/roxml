@@ -59,6 +59,9 @@ module ROXML # :nodoc:
       #    end
       #  end
       #
+      # #xml_initialize may be written to take arguments, in which case extra arguments
+      # from from_xml will be passed into the function.
+      #
       def xml_initialize
       end
     end
@@ -409,9 +412,12 @@ module ROXML # :nodoc:
       # or
       #  book = Book.from_xml("<book><name>Beyond Java</name></book>")
       #
+      # _initialization_args_ passed into from_xml will be passed into
+      # the object #xml_initialize method.
+      #
       # See also: xml_initialize
       #
-      def from_xml(data)
+      def from_xml(data, *initialization_args)
         xml = (data.kind_of?(XML::Node) ? data : XML::Parser.parse(data).root)
 
         unless xml_construction_args_without_deprecation.empty?
@@ -424,7 +430,7 @@ module ROXML # :nodoc:
             tag_refs.each do |ref|
               ref.populate(xml, inst)
             end
-            inst.xml_initialize
+            inst.send(:xml_initialize, *initialization_args)
           end
         end
       end

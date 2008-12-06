@@ -22,30 +22,40 @@ class MeasurementWithXmlConstruct
   end
 end
 
-OriginalMeasurement = Measurement
-Object.send(:remove_const, :Measurement)
-Measurement = MeasurementWithXmlConstruct
+class BookWithDepthWithXmlConstruct
+  include ROXML
+
+  xml_reader :isbn, :attr => 'ISBN'
+  xml_reader :title
+  xml_reader :description, :as => :cdata
+  xml_reader :author
+  xml_reader :depth, MeasurementWithXmlConstruct
+end
+
+class InheritedBookWithDepthWithXmlConstruct < Book
+  xml_reader :depth, MeasurementWithXmlConstruct
+end
 
 class TestXMLConstruct < Test::Unit::TestCase
   def test_is_deprecated
     assert_deprecated do
-      Measurement.xml_construction_args
+      MeasurementWithXmlConstruct.xml_construction_args
     end
   end
 
   def test_initialize_is_run
-    m = Measurement.from_xml('<measurement units="hundredths-meters">1130</measurement>')
+    m = MeasurementWithXmlConstruct.from_xml('<measurement units="hundredths-meters">1130</measurement>')
     assert_equal 11.3, m.value
     assert_equal 'meters', m.units
   end
 
   def test_initialize_is_run_for_nested_type
-    b = BookWithDepth.from_xml(fixture(:book_with_depth))
+    b = BookWithDepthWithXmlConstruct.from_xml(fixture(:book_with_depth))
     assert_equal Measurement.new(11.3, 'meters'), b.depth
   end
 
   def test_initialize_is_run_for_nested_type_with_inheritance
-    b = InheritedBookWithDepth.from_xml(fixture(:book_with_depth))
+    b = InheritedBookWithDepthWithXmlConstruct.from_xml(fixture(:book_with_depth))
     assert_equal Measurement.new(11.3, 'meters'), b.depth
   end
 
@@ -65,7 +75,3 @@ class TestXMLConstruct < Test::Unit::TestCase
     end
   end
 end
-
-Object.send(:remove_const, :Measurement)
-Measurement = OriginalMeasurement
-Object.send(:remove_const, :OriginalMeasurement)

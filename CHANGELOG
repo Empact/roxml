@@ -1,5 +1,7 @@
 == 2.3 (?)
 
+* Objects now inherit xml attributes from their parents, as they should [Ben Woosley, Per Melin]
+
 * Add #xml_initialize, which is called at the end of #from_xml, after the xml attributes
   are set. Deprecate the half-baked xml_construct in it's favor. [Ben Woosley]
 

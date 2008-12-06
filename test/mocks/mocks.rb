@@ -86,6 +86,10 @@ class Measurement
     end
   end
 
+  def to_s
+    "#{value} #{units}"
+  end
+
   def ==(other)
     other.units == @units && other.value == @value
   end

@@ -395,7 +395,7 @@ module ROXML # :nodoc:
       # Returns array of internal reference objects, such as attributes
       # and composed XML objects
       def tag_refs
-        @xml_refs ||= []
+        @xml_refs ||= superclass.respond_to?(:tag_refs) ? superclass.tag_refs.clone : []
       end
     end
 

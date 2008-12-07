@@ -59,7 +59,7 @@ module ROXML
     attr_reader :opts
 
     def apply_blocks(val)
-      blocks.each {|block| val = block[*val] } unless blocks.empty?
+      blocks.each {|block| val = block[val] }
       val
     end
 

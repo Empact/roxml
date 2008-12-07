@@ -297,6 +297,8 @@ module ROXML # :nodoc:
       # For hash types, the block recieves the key and value as arguments, and they should
       # be returned as an array of [key, value]
       #
+      # For array types, the entire array is passed in, and must be returned in the same fashion.
+      #
       # === Block Shorthands
       #
       # Alternatively, you may use block shorthands to specify common coercions, such that:

@@ -1,5 +1,7 @@
 == 2.3 (?)
 
+* Fix a bug in the application of blocks to array types [Ben Woosley]
+
 * Objects now inherit xml attributes from their parents, as they should [Ben Woosley, Per Melin]
 
 * Add #xml_initialize, which is called at the end of #from_xml, after the xml attributes

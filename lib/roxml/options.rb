@@ -158,11 +158,31 @@ module ROXML
     end
 
   private
+    BLOCK_TO_FLOAT = lambda do |val|
+      if val.is_a? Array
+        val.collect do |v|
+          Float(v)
+        end
+      else
+        Float(val)
+      end
+    end
+
+    BLOCK_TO_INT = lambda do |val|
+      if val.is_a? Array
+        val.collect do |v|
+          Integer(v)
+        end
+      else
+        Integer(val)
+      end
+    end
+
     BLOCK_SHORTHANDS = {
-      :integer => lambda {|val| Integer(val) },
-      Integer  => lambda {|val| Integer(val) },
-      :float   => lambda {|val| Float(val) },
-      Float    => lambda {|val| Float(val) },
+      :integer => BLOCK_TO_INT,
+      Integer  => BLOCK_TO_INT,
+      :float   => BLOCK_TO_FLOAT,
+      Float    => BLOCK_TO_FLOAT,
       :bool    => lambda do |val|
         if %w{TRUE True true 1}.include? val
           true

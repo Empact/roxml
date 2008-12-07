@@ -21,6 +21,17 @@ class TestXMLText < Test::Unit::TestCase
                  BookWithAuthors.from_xml(fixture(:book_with_authors)).authors.sort
   end
 
+  def test_empty_array_result_returned_properly
+    empty_array = Class.new do
+      include ROXML
+
+      xml_reader :missing_array, [:text], :from => 'missing'
+    end
+
+    obj = empty_array.from_xml('<empty_array></empty_array>')
+    assert_equal [], obj.missing_array
+  end
+
   def test_text_modification
     person = Person.from_xml(fixture(:person))
     assert_equal("Ben Franklin", person.name)

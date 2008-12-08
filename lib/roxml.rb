@@ -109,9 +109,63 @@ module ROXML # :nodoc:
       end
 
       # Declares an accesser to a certain xml element, whether an attribute, a node,
-      # or a typed collection of nodes
+      # or a typed collection of nodes.  Typically you should call xml_reader or xml_accessor
+      # rather than calling this method directly, but the instructions below apply to both.
       #
-      # [sym]   Symbol representing the name of the accessor
+      # == Sym Option
+      # [sym]   Symbol representing the name of the accessor.
+      #
+      # === Default naming
+      # This name will be the default node or attribute name searched for,
+      # if no other is declared.  For example,
+      #
+      #  xml_reader   :bob, :from => 'bob'
+      #  xml_accessor :pony, :attr => 'pony'
+      #
+      # are equivalent to:
+      #
+      #  xml_reader   :bob
+      #  xml_accessor :pony, :attr
+      #
+      # === Boolean attributes
+      # If the name ends in a ?, ROXML will attempt to coerce the value to true or false,
+      # with True, TRUE, true and 1 mapping to true and False, FALSE, false and 0 mapping
+      # to false, as shown below:
+      #
+      #  xml_reader :desirable?
+      #  xml_reader :bizzare?, :attr => 'BIZZARE'
+      #
+      #  x = #from_xml(%{
+      #    <object BIZZARE="1">
+      #      <desirable>False</desirable>
+      #    </object>
+      #  })
+      #  x.desirable?
+      #  => false
+      #  x.bizzare?
+      #  => true
+      #
+      # If an unexpected value is encountered, the attribute will be set to nil,
+      # unless you provide a block, in which case the block will recived
+      # the actual unexpected value.
+      #
+      #  #from_xml(%{
+      #    <object>
+      #      <desirable>Dunno</desirable>
+      #    </object>
+      #  }).desirable?
+      #  => nil
+      #
+      #  xml_reader :strange? do |val|
+      #    val.upcase
+      #  end
+      #
+      #  #from_xml(%{
+      #    <object>
+      #      <strange>Dunno</strange>
+      #    </object>
+      #  }).strange?
+      #  => DUNNO
       #
       # == Type options
       # All type arguments may be used as the type argument to indicate just type,

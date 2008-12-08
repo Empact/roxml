@@ -178,26 +178,49 @@ module ROXML
       end
     end
 
+    TRUE_VALS = %w{TRUE True true 1}
+    FALSE_VALS = %w{FALSE False false 0}
+
     BLOCK_SHORTHANDS = {
       :integer => BLOCK_TO_INT,
       Integer  => BLOCK_TO_INT,
       :float   => BLOCK_TO_FLOAT,
       Float    => BLOCK_TO_FLOAT,
-      :bool    => lambda do |val|
-        if %w{TRUE True true 1}.include? val
+      :bool    => nil,
+      :bool_standalone => lambda do |val|
+        if TRUE_VALS.include? val
           true
-        elsif %w{FALSE False false 0}.include? val
+        elsif FALSE_VALS.include? val
           false
         else
           nil
+        end
+      end,
+
+      :bool_combined => lambda do |val|
+        if TRUE_VALS.include? val
+          true
+        elsif FALSE_VALS.include? val
+          false
+        else
+          val
         end
       end
     }
 
     def collect_blocks(block, as)
       shorthands = as & BLOCK_SHORTHANDS.keys
-      raise ArgumentError, "multiple block shorthands supplied #{shorthands.map(&:to_s).join(', ')}" if shorthands.size > 1
-      [BLOCK_SHORTHANDS[shorthands.first], block].compact
+      if shorthands.size > 1
+        raise ArgumentError, "multiple block shorthands supplied #{shorthands.map(&:to_s).join(', ')}"
+      end
+
+      shorthand = shorthands.first
+      if shorthand == :bool
+        # if a second block is present, and we can't coerce the xml value
+        # to bool, we need to be able to pass it to the user-provided block
+        shorthand = block ? :bool_combined : :bool_standalone
+      end
+      [BLOCK_SHORTHANDS[shorthand], block].compact
     end
 
     def extract_options!(args)

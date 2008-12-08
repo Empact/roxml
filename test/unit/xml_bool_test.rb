@@ -20,6 +20,20 @@ class XmlBoolRequired
   xml_reader :required?, :required => true
 end
 
+class XmlBoolUnexpected
+  include ROXML
+
+  xml_reader :unexpected?
+end
+
+class XmlBoolUnexpectedWithBlock
+  include ROXML
+
+  xml_reader :unexpected? do |val|
+    val
+  end
+end
+
 class TestXMLBool < Test::Unit::TestCase
   def setup
     @bool_xml = %{
@@ -44,6 +58,11 @@ class TestXMLBool < Test::Unit::TestCase
       <xml_bool_required>
       </xml_bool_required>
     }
+    @unexpected_value_xml = %{
+      <xml_bool_unexpected>
+        <unexpected>Unexpected Value</unexpected>
+      </xml_bool_unexpected>
+    }
   end
 
   def test_bool_results_for_various_inputs
@@ -63,9 +82,20 @@ class TestXMLBool < Test::Unit::TestCase
     assert_equal nil, x.missing?
   end
 
+  def test_unexpected_value_results_in_nil
+    x = XmlBoolUnexpected.from_xml(@unexpected_value_xml)
+    assert_equal nil, x.unexpected?
+  end
+
+  def test_block_recieves_unexpected_value_rather_than_nil
+    x = XmlBoolUnexpectedWithBlock.from_xml(@unexpected_value_xml)
+    assert_equal "Unexpected Value", x.unexpected?
+  end
+
   def test_required_raises_on_missing
     assert_nothing_raised do
-      XmlBoolRequired.from_xml(@present)    end
+      XmlBoolRequired.from_xml(@present)
+    end
 
     assert_raises(ROXML::RequiredElementMissing) do
       XmlBoolRequired.from_xml(@absent)

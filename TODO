@@ -1,6 +1,41 @@
-A few ideas...
+Planned:
 
-As:
- * :as => :self for sending method_missing to this attribute
+v 2.4
+ * Test out compatibility with ActiveRecord such that it's easy
+   to have both xml & database-sourced objects
+
+ * provide an overridable extension point for the #to_xml-ing of
+   values.  This would enable easy accommodation of non-standard formats.
+   For example, formatting a number with leading zeros.
+
+v 2.5
+ * xml_convention(s) method for establishing whether names are
+   camel-case, underscored or whatever, which will make the :from
+   defaulting much more effective
+
+ * on array types, check if there's a plural wrapper for :from, and
+   take from it if it's there, which will remove the need for a lot
+   of :from => 'Item', :in => 'Items' args
+
+v 3.0
+ * remove deprecated functionality
+
+ * Perhaps provide cleaner separation between the specification
+   of type vs its source in the XML.  For example,
+
+     xml_reader :count, :from => 'Count, :in => 'Attributes', :as => Integer
+     xml_reader :count, :attr => 'Count, :in => 'Attributes', :as => Integer
+
+   become:
+
+     xml_reader :count, Integer, 'Atributes/Count'
+     xml_reader :count, Integer, 'Atributes/@Count'
+
+   potentially backward-incompatible change.  Needs some thought...
+
+Potential:
 
  * Add shorthand support to hash declaration
+
+ * :as => :self for sending method_missing to this attribute
+

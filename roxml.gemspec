@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name = "roxml"
   s.summary = "Ruby Object to XML mapping library"
-  s.version = "2.2"
+  s.version = "2.3.0"
   s.homepage = "http://roxml.rubyforge.org"
   s.platform = Gem::Platform::RUBY
   s.authors = ["Ben Woosley", "Zak Mandhro", "Anders Engstrom", "Russ Olsen"]

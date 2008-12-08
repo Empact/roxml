@@ -1,9 +1,3 @@
-require 'lib/roxml'
-require 'rubygems'
-require 'active_support/core_ext/module/aliasing'
-require 'active_support/callbacks'
-require 'active_support/test_case'
-
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 #      Parent        |    Child

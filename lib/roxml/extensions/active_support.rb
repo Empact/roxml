@@ -6,10 +6,15 @@ require 'active_support/core_ext/hash/reverse_merge'
 require 'active_support/core_ext/module/delegation'
 require 'active_support/core_ext/module/aliasing'
 require 'active_support/core_ext/object/misc' # returning
+require 'active_support/inflector'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/string/starts_ends_with'
 
 require 'extensions/array'
+
+class Module
+  include ActiveSupport::CoreExtensions::Module if ActiveSupport::CoreExtensions.const_defined? :Module
+end
 
 class String #:nodoc:
   include ActiveSupport::CoreExtensions::String::Inflections

@@ -49,7 +49,7 @@ module ROXML
     def value(xml)
       value = fetch_value(xml)
       if value.blank?
-        raise RequiredElementMissing if required?
+        raise RequiredElementMissing, accessor.to_s if required?
         value = default
       end
       apply_blocks(value)
@@ -59,8 +59,7 @@ module ROXML
     attr_reader :opts
 
     def apply_blocks(val)
-      blocks.each {|block| val = block[val] }
-      val
+      blocks.inject(val) {|val, block| block[val] }
     end
 
     def xpath

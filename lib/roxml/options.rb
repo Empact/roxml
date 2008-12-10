@@ -103,7 +103,7 @@ module ROXML
       @type = extract_type(args)
       @opts[:as] << :bool if @accessor.to_s.ends_with?('?')
 
-      if @type.respond_to?(:xml_name?) && @type.xml_name?
+      if @type.try(:xml_name_without_deprecation?)
         unless self.class.silence_xml_name_warning?
           warn "WARNING: As of 2.3, a breaking change has been in the naming of sub-objects. " +
                "ROXML now considers the xml_name of the sub-object before falling back to the accessor name of the parent. " +

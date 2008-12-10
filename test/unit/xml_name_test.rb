@@ -105,4 +105,11 @@ class TestXMLName < Test::Unit::TestCase
     assert_equal 'word', dict.tag_refs.only.hash.key.name
     assert_equal 'meaning', dict.tag_refs.only.hash.value.name
   end
+
+  def test_xml_name_query_is_deprecated
+    # This query should go when the XML_NAME_WARNING stuff goes
+    assert_deprecated do
+      NamedChild.xml_name?
+    end
+  end
 end

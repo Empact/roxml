@@ -93,6 +93,7 @@ module ROXML # :nodoc:
       def xml_name? #:nodoc:
         @xml_name
       end
+      deprecate :xml_name?
 
       # Sets the name of the XML element that represents this class. Use this
       # to override the default lowercase class name.

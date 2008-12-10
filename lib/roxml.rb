@@ -71,7 +71,8 @@ module ROXML # :nodoc:
       def to_xml(name = nil)
         returning XML::Node.new_element(name || tag_name) do |root|
           tag_refs.each do |ref|
-            if v = __send__(ref.accessor)
+            v = __send__(ref.accessor)
+            unless v.nil?
               ref.update_xml(root, v)
             end
           end

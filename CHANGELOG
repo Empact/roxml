@@ -1,3 +1,7 @@
+== 2.4.0 (?)
+
+* Fix that both false and nil values were excluded from to_xml output, when only nil values should be [Ben Woosley]
+
 == 2.3.1 (December 9, 2008)
 
 * Add missing dependencies to extensions/enumerable and Symbol.to_proc,

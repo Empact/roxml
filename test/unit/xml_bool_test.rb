@@ -34,39 +34,38 @@ class XmlBoolUnexpectedWithBlock
   end
 end
 
-class TestXMLBool < Test::Unit::TestCase
-  def setup
-    @bool_xml = %{
-      <xml_bool attr_for_one="1">
-        <true_from_TRUE>TRUE</true_from_TRUE>
-        <text_for_FALSE>FALSE</text_for_FALSE>
-        <container attr_for_True="True">
-          <text_for_zero>0</text_for_zero>
-        </container>
-        <false_from_cdata_False><![CDATA[False]]></false_from_cdata_False>
-        <true_from_true>true</true_from_true>
-        <false_from_false>false</false_from_false>
-        <present_and_required>true</present_and_required>
-      </xml_bool>
-    }
-    @present = %{
-      <xml_bool_required>
-        <required>true</required>
-      </xml_bool_required>
-    }
-    @absent = %{
-      <xml_bool_required>
-      </xml_bool_required>
-    }
-    @unexpected_value_xml = %{
-      <xml_bool_unexpected>
-        <unexpected>Unexpected Value</unexpected>
-      </xml_bool_unexpected>
-    }
-  end
+BOOL_XML = %{
+  <xml_bool attr_for_one="1">
+    <true_from_TRUE>TRUE</true_from_TRUE>
+    <text_for_FALSE>FALSE</text_for_FALSE>
+    <container attr_for_True="True">
+      <text_for_zero>0</text_for_zero>
+    </container>
+    <false_from_cdata_False><![CDATA[False]]></false_from_cdata_False>
+    <true_from_true>true</true_from_true>
+    <false_from_false>false</false_from_false>
+    <present_and_required>true</present_and_required>
+  </xml_bool>
+}
+PRESENT = %{
+  <xml_bool_required>
+    <required>true</required>
+  </xml_bool_required>
+}
+ABSENT = %{
+  <xml_bool_required>
+  </xml_bool_required>
+}
+UNEXPECTED_VALUE_XML = %{
+  <xml_bool_unexpected>
+    <unexpected>Unexpected Value</unexpected>
+  </xml_bool_unexpected>
+}
 
+
+class TestXMLBool < Test::Unit::TestCase
   def test_bool_results_for_various_inputs
-    x = XmlBool.from_xml(@bool_xml)
+    x = XmlBool.from_xml(BOOL_XML)
     assert_equal true, x.true_from_TRUE?
     assert_equal false, x.false_from_FALSE?
     assert_equal true, x.true_from_one?
@@ -78,27 +77,29 @@ class TestXMLBool < Test::Unit::TestCase
   end
 
   def test_missing_results_in_nil
-    x = XmlBool.from_xml(@bool_xml)
+    x = XmlBool.from_xml(BOOL_XML)
     assert_equal nil, x.missing?
   end
 
   def test_unexpected_value_results_in_nil
-    x = XmlBoolUnexpected.from_xml(@unexpected_value_xml)
+    x = XmlBoolUnexpected.from_xml(UNEXPECTED_VALUE_XML)
     assert_equal nil, x.unexpected?
   end
 
   def test_block_recieves_unexpected_value_rather_than_nil
-    x = XmlBoolUnexpectedWithBlock.from_xml(@unexpected_value_xml)
+    x = XmlBoolUnexpectedWithBlock.from_xml(UNEXPECTED_VALUE_XML)
     assert_equal "Unexpected Value", x.unexpected?
   end
 
   def test_required_raises_on_missing
     assert_nothing_raised do
-      XmlBoolRequired.from_xml(@present)
+      XmlBoolRequired.from_xml(PRESENT)
     end
 
     assert_raises(ROXML::RequiredElementMissing) do
-      XmlBoolRequired.from_xml(@absent)
+      XmlBoolRequired.from_xml(ABSENT)
     end
   end
+
+  to_xml_test XmlBool => BOOL_XML
 end

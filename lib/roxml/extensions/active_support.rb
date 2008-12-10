@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'active_support/core_ext/symbol'
 require 'active_support/core_ext/blank'
 require 'active_support/core_ext/duplicable'
 require 'active_support/core_ext/array/extract_options'
@@ -10,6 +11,7 @@ require 'active_support/inflector'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/string/starts_ends_with'
 
+require 'extensions/enumerable'
 require 'extensions/array'
 
 class Module

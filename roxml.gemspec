@@ -53,6 +53,7 @@ Gem::Specification.new do |s|
     'test/fixtures/person.xml',
     'test/mocks/mocks.rb',
     'test/mocks/dictionaries.rb',
+    'test/release/dependencies_test.rb',
     'test/test_helper.rb',
     'test/unit/options_test.rb',
     'test/unit/roxml_test.rb',

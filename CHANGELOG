@@ -1,3 +1,8 @@
+== 2.3.1 (December 9, 2008)
+
+* Add missing dependencies to extensions/enumerable and Symbol.to_proc,
+  which are as-yet inexplicably pre-included on my system... [Ben Woosley]
+
 == 2.3 (December 7, 2008)
 
 * Fix a bug in the application of blocks to array types [Ben Woosley]

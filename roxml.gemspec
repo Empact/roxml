@@ -45,9 +45,11 @@ Gem::Specification.new do |s|
     'test/fixtures/dictionary_of_texts.xml',
     'test/fixtures/library_uppercase.xml',
     'test/fixtures/library.xml',
+    'test/fixtures/muffins.xml',
     'test/fixtures/node_with_attr_name_conflicts.xml',
     'test/fixtures/node_with_name_conflicts.xml',
     'test/fixtures/nameless_ageless_youth.xml',
+    'test/fixtures/numerology.xml',
     'test/fixtures/person_with_guarded_mothers.xml',
     'test/fixtures/person_with_mothers.xml',
     'test/fixtures/person.xml',
@@ -55,32 +57,42 @@ Gem::Specification.new do |s|
     'test/mocks/dictionaries.rb',
     'test/release/dependencies_test.rb',
     'test/test_helper.rb',
+    'test/unit/inheritance_test.rb',
     'test/unit/options_test.rb',
     'test/unit/roxml_test.rb',
     'test/unit/string_test.rb',
     'test/unit/to_xml_test.rb',
     'test/unit/xml_attribute_test.rb',
+    'test/unit/xml_block_test.rb',
+    'test/unit/xml_bool_test.rb',
     'test/unit/xml_construct_test.rb',
     'test/unit/xml_hash_test.rb',
+    'test/unit/xml_initialize_test.rb',
     'test/unit/xml_name_test.rb',
     'test/unit/xml_namespace_test.rb',
     'test/unit/xml_object_test.rb',
+    'test/unit/xml_required_test.rb',
     'test/unit/xml_text_test.rb']
   s.requirements << 'none'
   s.add_dependency 'extensions', '>= 0.6.0'
   s.add_dependency 'activesupport', '>= 2.0.0'
   s.require_path = 'lib'
   s.test_files = [
+    'test/unit/inheritance_test.rb',
     'test/unit/options_test.rb',
     'test/unit/roxml_test.rb',
     'test/unit/string_test.rb',
     'test/unit/to_xml_test.rb',
     'test/unit/xml_attribute_test.rb',
+    'test/unit/xml_block_test.rb',
+    'test/unit/xml_bool_test.rb',
     'test/unit/xml_construct_test.rb',
     'test/unit/xml_hash_test.rb',
+    'test/unit/xml_initialize_test.rb',
     'test/unit/xml_name_test.rb',
     'test/unit/xml_namespace_test.rb',
     'test/unit/xml_object_test.rb',
+    'test/unit/xml_required_test.rb',
     'test/unit/xml_text_test.rb']
   s.has_rdoc = true
   s.description = <<EOF

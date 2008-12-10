@@ -1,7 +1,7 @@
 == 2.3.1 (December 9, 2008)
 
 * Add missing dependencies to extensions/enumerable and Symbol.to_proc,
-  which are as-yet inexplicably pre-included on my system... [Ben Woosley]
+  which are as-yet inexplicably pre-included on my system... [Ben Woosley, Per Melin]
 
 == 2.3 (December 7, 2008)
 

@@ -1,16 +1,22 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
+PROC_TRUE = proc {|val| val ? 'TRUE' : 'FALSE'}
+PROC_True = proc {|val| val ? 'True' : 'False'}
+PROC_true = proc {|val| val.to_s}
+PROC_1    = proc {|val| val ? 1 : 0}
+
 class XmlBool
   include ROXML
 
-  xml_reader :true_from_TRUE?
-  xml_reader :false_from_FALSE?, :text => 'text_for_FALSE'
-  xml_reader :true_from_one?, :attr => 'attr_for_one'
-  xml_reader :false_from_zero?, :text => 'text_for_zero', :in => 'container'
-  xml_reader :true_from_True?, :attr => 'attr_for_True', :in => 'container'
-  xml_reader :false_from_False?, :text => 'false_from_cdata_False', :as => :cdata
-  xml_reader :true_from_true?
-  xml_reader :false_from_false?
+  xml_name 'xml_bool'
+  xml_reader :true_from_TRUE?, :to_xml => PROC_TRUE
+  xml_reader :false_from_FALSE?, :text => 'text_for_FALSE', :to_xml => PROC_TRUE
+  xml_reader :true_from_one?, :attr => 'attr_for_one', :to_xml => PROC_1
+  xml_reader :false_from_zero?, :text => 'text_for_zero', :in => 'container', :to_xml => PROC_1
+  xml_reader :true_from_True?, :attr => 'attr_for_True', :in => 'container', :to_xml => PROC_True
+  xml_reader :false_from_False?, :text => 'false_from_cdata_False', :as => :cdata, :to_xml => PROC_True
+  xml_reader :true_from_true?, :to_xml => PROC_true
+  xml_reader :false_from_false?, :to_xml => PROC_true
   xml_reader :missing?
 end
 
@@ -44,7 +50,6 @@ BOOL_XML = %{
     <false_from_cdata_False><![CDATA[False]]></false_from_cdata_False>
     <true_from_true>true</true_from_true>
     <false_from_false>false</false_from_false>
-    <present_and_required>true</present_and_required>
   </xml_bool>
 }
 PRESENT = %{

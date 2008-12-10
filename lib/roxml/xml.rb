@@ -31,6 +31,11 @@ module ROXML
       instance
     end
 
+    def to_xml(inst)
+      val = inst.__send__(accessor)
+      opts.to_xml.respond_to?(:call) ? opts.to_xml.call(val) : val
+    end
+
     def name?
       false
     end
@@ -191,12 +196,16 @@ module ROXML
     # Updates the composed XML object in the given XML block to
     # the value provided.
     def write_xml(xml, value)
-      unless array?
-        xml.child_add(value.to_xml(name))
-      else
+      if array?
         value.each do |v|
           xml.child_add(v.to_xml(name))
         end
+      elsif value.respond_to? :tag_refs
+        xml.child_add(value.to_xml(name))
+      else
+        node = XML::Node.new_element(name)
+        node.content = value.to_xml
+        xml.child_add(node)
       end
     end
 

@@ -79,7 +79,7 @@ module ROXML
   end
 
   class Opts # :nodoc:
-    attr_reader :name, :type, :hash, :blocks, :default, :accessor
+    attr_reader :name, :type, :hash, :blocks, :default, :accessor, :to_xml
 
     class << self
       def silence_xml_name_warning?
@@ -95,6 +95,7 @@ module ROXML
       @accessor = sym
       @opts = extract_options!(args)
       @default = @opts.delete(:else)
+      @to_xml = @opts.delete(:to_xml)
 
       @opts.reverse_merge!(:as => [], :in => nil)
       @opts[:as] = [*@opts[:as]]

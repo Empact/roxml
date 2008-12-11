@@ -1,4 +1,4 @@
-== 2.4.0 (?)
+== 2.3.2 (December 11, 2008)
 
 * Fix that both false and nil values were excluded from to_xml output, when only nil values should be [Ben Woosley]
 

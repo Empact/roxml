@@ -1,9 +1,30 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
+BOOK_WITH_CONTRIBUTORS = %{
+  <book isbn="0974514055">
+    <contributor role="author"><name>David Thomas</name></contributor>
+    <contributor role="supporting author"><name>Andrew Hunt</name></contributor>
+    <contributor role="supporting author"><name>Chad Fowler</name></contributor>
+  </book>
+}
+
+class BookWithContributorHash
+  include ROXML
+
+  xml_reader :contributors, {:key => {:attr => 'role'},
+                             :value => 'name'}
+end
+
 class TestXMLHash < Test::Unit::TestCase
   def setup
     @contents = {'quaquaversally' => 'adjective: (of a geological formation) sloping downward from the center in all directions.',
                  'tergiversate' => 'To use evasions or ambiguities; equivocate.'}
+  end
+
+  def test_hash_preserves_data
+    b = BookWithContributorHash.from_xml(BOOK_WITH_CONTRIBUTORS)
+    assert_equal({'author' => 'David Thomas', 'supporting author' => ['Andrew Hunt', 'Chad Fowler']},
+      b.contributors)
   end
 
   def test_attrs_hash

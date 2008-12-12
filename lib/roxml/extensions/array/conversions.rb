@@ -9,10 +9,15 @@ module ROXML
         #   => {:key => :value, 1 => 2, 'key' => 'value'}
         #
         def to_hash
-          inject({}) do |result, (k, v)|
-            result[k] = v
+          hash = inject({}) do |result, (k, v)|
+            result[k] ||= []
+            result[k] << v
             result
           end
+          hash.each_pair do |k, v|
+            hash[k] = v.only if v.one?
+          end
+          hash
         end
 
         def to_h #:nodoc:

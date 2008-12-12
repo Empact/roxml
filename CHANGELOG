@@ -1,6 +1,11 @@
-== 2.3.2 (December 11, 2008)
+== ?
+
+* Preserve hash values where a single key maps to multiple values, return them as an array rather
+  any single one of them at random (as in group_by rather than index_by) [Ben Woosley]
 
 * Deprecate #xml_name? as it's only used for triggering the xml_name warning [Ben Woosley]
+
+== 2.3.2 (December 11, 2008)
 
 * Fix that both false and nil values were excluded from to_xml output, when only nil values should be [Ben Woosley]
 

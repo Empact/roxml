@@ -21,6 +21,7 @@ module ROXML
 
     def initialize(opts)
       @opts = opts
+      @auto_wrapper = false
     end
 
     # Reads data from the XML element and populates the instance
@@ -54,7 +55,7 @@ module ROXML
     def value(xml)
       value = fetch_value(xml)
       if value.blank?
-        raise RequiredElementMissing, accessor.to_s if required?
+        raise RequiredElementMissing, "#{name} from \n#{xml}" if required?
         value = default
       end
       apply_blocks(value)
@@ -71,8 +72,23 @@ module ROXML
       wrapper ? "#{wrapper}/#{xpath_name}" : xpath_name.to_s
     end
 
+    def auto_xpath
+      "#{name.pluralize}/#{xpath_name}" if array?
+    end
+
     def wrap(xml)
       (wrapper && xml.name != wrapper) ? xml.child_add(XML::Node.new_element(wrapper)) : xml
+    end
+
+    def values(xml)
+      raise "Only enumerable refs (Hash, Array) can have auto-wrappers" unless opts.hash? || opts.array?
+      vals = xml.search(xpath)
+
+      if vals.empty? && !wrapper && auto_xpath
+        vals = xml.search(auto_xpath)
+        @auto_vals = true unless vals.empty?
+      end
+      vals
     end
   end
 
@@ -136,7 +152,7 @@ module ROXML
       elsif name?
         xml.name
       elsif array?
-        xml.search(xpath).collect do |e|
+        values(xml).collect do |e|
           e.content.strip.to_latin if e.content
         end
       else
@@ -174,7 +190,7 @@ module ROXML
     end
 
     def fetch_value(xml)
-      xml.search(xpath).collect do |e|
+      values(xml).collect do |e|
         [hash.key.value(e), hash.value.value(e)]
       end
     end
@@ -215,7 +231,7 @@ module ROXML
           instantiate(child)
         end
       else
-        xml.search(xpath).collect do |e|
+        values(xml).collect do |e|
           instantiate(e)
         end
       end

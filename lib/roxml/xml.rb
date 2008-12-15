@@ -200,7 +200,7 @@ module ROXML
         value.each do |v|
           xml.child_add(v.to_xml(name))
         end
-      elsif value.respond_to? :tag_refs
+      elsif value.is_a?(ROXML)
         xml.child_add(value.to_xml(name))
       else
         node = XML::Node.new_element(name)

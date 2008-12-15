@@ -37,10 +37,6 @@ module ROXML
       opts.to_xml.respond_to?(:call) ? opts.to_xml.call(val) : val
     end
 
-    def name?
-      false
-    end
-
     def update_xml(xml, value)
       returning wrap(xml) do |xml|
         write_xml(xml, value)
@@ -123,11 +119,7 @@ module ROXML
   #   XMLTextRef
   #  </element>
   class XMLTextRef < XMLRef # :nodoc:
-    delegate :cdata?, :content?, :to => :opts
-
-    def name?
-      name == '*'
-    end
+    delegate :cdata?, :content?, :name?, :to => :opts
 
   private
     # Updates the text in the given _xml_ block to
@@ -173,6 +165,12 @@ module ROXML
   class XMLHashRef < XMLTextRef # :nodoc:
     delegate :hash, :to => :opts
 
+    def initialize(opts)
+      super(opts)
+      @key = opts.hash.key.to_ref
+      @value = opts.hash.value.to_ref
+    end
+
     def default
       result = super
       result.nil? ? {} : result
@@ -184,14 +182,14 @@ module ROXML
     def write_xml(xml, value)
       value.each_pair do |k, v|
         node = xml.child_add(XML::Node.new_element(hash.wrapper))
-        hash.key.update_xml(node, k)
-        hash.value.update_xml(node, v)
+        @key.update_xml(node, k)
+        @value.update_xml(node, v)
       end
     end
 
     def fetch_value(xml)
       values(xml).collect do |e|
-        [hash.key.value(e), hash.value.value(e)]
+        [@key.value(e), @value.value(e)]
       end
     end
 

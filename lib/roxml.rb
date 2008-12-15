@@ -378,16 +378,7 @@ module ROXML # :nodoc:
       def xml(sym, writable = false, type_and_or_opts = :text, opts = nil, &block)
         opts = Opts.new(sym, *[type_and_or_opts, opts].compact, &block)
 
-        ref = case opts.type
-        when :attr    then XMLAttributeRef
-        when :content then XMLTextRef
-        when :text    then XMLTextRef
-        when :hash    then XMLHashRef
-        when Symbol   then raise ArgumentError, "Invalid type argument #{opts.type}"
-        else               XMLObjectRef
-        end.new(opts)
-
-        add_accessor(ref, writable)
+        add_accessor(opts.to_ref, writable)
       end
 
       # Declares a read-only xml reference. See xml for details.

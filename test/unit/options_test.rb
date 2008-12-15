@@ -1,6 +1,13 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class TestOptions < Test::Unit::TestCase
+  def assert_hash(opts, kvp)
+    assert opts.hash?
+    assert !opts.array?
+    assert_equal kvp, {opts.hash.key.type => opts.hash.key.name,
+                       opts.hash.value.type => opts.hash.value.name}
+  end
+
   def test_text_in_array_means_as_array_for_text
     opts = ROXML::Opts.new(:authors, [:text])
     assert opts.array?
@@ -33,44 +40,38 @@ class TestOptions < Test::Unit::TestCase
     assert_raise ArgumentError do
       ROXML::Opts.new(:author, :content, :required => true, :else => 'Johnny')
     end
-    ROXML::Opts.new(:author, :content, :required => false, :else => 'Johnny')
+    assert_nothing_raised do
+      ROXML::Opts.new(:author, :content, :required => false, :else => 'Johnny')
+    end
   end
 
   def test_hash_of_attrs
     opts = ROXML::Opts.new(:attributes, {:attrs => [:name, :value]})
-    assert opts.hash?
-    assert !opts.array?
-    assert_equal [ROXML::XMLAttributeRef, ROXML::XMLAttributeRef], opts.hash.types
-    assert_equal ['name', 'value'], opts.hash.names
+    assert_hash(opts, :attr => 'name', :attr => 'value')
   end
 
   def test_hash_with_attr_key_and_text_val
     opts = ROXML::Opts.new(:attributes, {:key => {:attr => :name},
                                          :value => :value})
-    assert opts.hash?
-    assert !opts.array?
-    assert_equal [ROXML::XMLAttributeRef, ROXML::XMLTextRef], opts.hash.types
-    assert_equal ['name', 'value'], opts.hash.names
+    assert_hash(opts, :attr => 'name', :text => 'value')
+  end
+
+  def test_hash_with_string_class_for_type
+    opts = ROXML::Opts.new(:attributes, {:key => {String => 'name'},
+                                         :value => {String => 'value'}})
+    assert_hash(opts, :text => 'name', :text => 'value')
   end
 
   def test_hash_with_attr_key_and_content_val
     opts = ROXML::Opts.new(:attributes, {:key => {:attr => :name},
                                          :value => :content})
-    assert opts.hash?
-    assert !opts.array?
-    assert opts.hash.value.content?
-    assert_equal [ROXML::XMLAttributeRef, ROXML::XMLTextRef], opts.hash.types
-    assert_equal ['name', ''], opts.hash.names
+    assert_hash(opts, :attr => 'name', :content => '')
   end
 
   def test_hash_with_options
     opts = ROXML::Opts.new(:definitions, {:attrs => [:dt, :dd]},
                            :in => :definitions)
-
-    assert opts.hash?
-    assert !opts.array?
-    assert_equal [ROXML::XMLAttributeRef, ROXML::XMLAttributeRef], opts.hash.types
-    assert_equal ['dt', 'dd'], opts.hash.names
+    assert_hash(opts, :attr => 'dt', :attr => 'dd')
   end
 
   def test_no_block_shorthand_means_no_block

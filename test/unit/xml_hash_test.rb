@@ -27,6 +27,28 @@ class TestXMLHash < Test::Unit::TestCase
       b.contributors)
   end
 
+  def test_hash_with_object_key_fails
+    assert_raise ArgumentError do
+      Class.new do
+        include ROXML
+
+        xml_reader :object_key_to_text, {:key => BookWithContributorHash,
+                                         :value => 'text_node'}
+      end
+    end
+  end
+
+  def test_hash_with_object_value_fails
+    assert_raise ArgumentError do
+      Class.new do
+        include ROXML
+
+        xml_reader :key_to_object_value, {:key => {:attr => 'text_node'},
+                                          :value => BookWithContributorHash}
+      end
+    end
+  end
+
   def test_attrs_hash
     dict = DictionaryOfAttrs.from_xml(fixture(:dictionary_of_attrs))
     assert_equal Hash, dict.definitions.class

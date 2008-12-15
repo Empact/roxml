@@ -12,27 +12,19 @@ module ROXML
 
       @wrapper = wrapper
       if opts.has_key? :attrs
-        @key   = to_ref(opts, :attr, opts[:attrs][0])
-        @value = to_ref(opts, :attr, opts[:attrs][1])
+        @key   = to_hash_args(opts, :attr, opts[:attrs][0])
+        @value = to_hash_args(opts, :attr, opts[:attrs][1])
       else
-        @key = to_ref opts, *fetch_element(opts, :key)
-        @value = to_ref opts, *fetch_element(opts, :value)
+        @key = to_hash_args opts, *fetch_element(opts, :key)
+        @value = to_hash_args opts, *fetch_element(opts, :value)
       end
-    end
-
-    def types
-      [@key.class, @value.class]
-    end
-
-    def names
-      [@key.name, @value.name]
     end
 
   private
     def fetch_element(opts, what)
       case opts[what]
       when Hash
-        raise ArgumentError, "Hash #{what} is over-specified: #{opts[what].pp_s}" unless opts[what].keys.one?
+        raise ArgumentError, "Hash #{what} is over-specified: #{opts[what].inspect}" unless opts[what].keys.one?
         type = opts[what].keys.first
         [type, opts[what][type]]
       when :content
@@ -48,19 +40,6 @@ module ROXML
       end
     end
 
-    def to_ref(args, type, name)
-      case type
-      when :attr
-        XMLAttributeRef.new(to_hash_args(args, type, name))
-      when :text
-        XMLTextRef.new(to_hash_args(args, type, name))
-      when Symbol
-        XMLTextRef.new(to_hash_args(args, type, name))
-      else
-        raise ArgumentError, "Missing key description #{{:type => type, :name => name}.pp_s}"
-      end
-    end
-
     def to_hash_args(args, type, name)
       args = [args] unless args.is_a? Array
 
@@ -73,7 +52,7 @@ module ROXML
         Opts.new(name, opts)
       else
         opts = args.extract_options!
-        raise opts.to_s
+        raise opts.inspect
       end
     end
   end
@@ -138,6 +117,10 @@ module ROXML
       @type == :hash
     end
 
+    def name?
+      @name == '*'
+    end
+
     def content?
       @type == :content
     end
@@ -156,6 +139,17 @@ module ROXML
 
     def required?
       @opts[:required]
+    end
+
+    def to_ref
+      case type
+      when :attr    then XMLAttributeRef
+      when :content then XMLTextRef
+      when :text    then XMLTextRef
+      when :hash    then XMLHashRef
+      when Symbol   then raise ArgumentError, "Invalid type argument #{opts.type}"
+      else               XMLObjectRef
+      end.new(self)
     end
 
   private

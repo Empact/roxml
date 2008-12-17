@@ -1,5 +1,10 @@
 == ?
 
+* Attempt to minimize node creation by better matching wrappers [Ben Woosley]
+
+* Add xml_convention to enable easy defaulting to common naming formats, such as camel-case and
+  underscored [Ben Woosley]
+
 * Preserve hash values where a single key maps to multiple values, return them as an array rather
   any single one of them at random (as in group_by rather than index_by) [Ben Woosley]
 

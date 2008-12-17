@@ -21,7 +21,6 @@ module ROXML
     def initialize(opts, instance)
       @opts = opts
       @instance = instance
-      @auto_wrapper = false
     end
 
     def to_xml
@@ -82,7 +81,11 @@ module ROXML
     end
 
     def wrap(xml)
-      (wrapper && xml.name != wrapper) ? xml.child_add(XML::Node.new_element(wrapper)) : xml
+      return xml if !wrapper || xml.name == wrapper
+      if child = xml.children.find {|c| c.name == wrapper }
+       return child
+      end
+      xml.child_add(XML::Node.new_element(wrapper))
     end
 
     def values(xml)

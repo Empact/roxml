@@ -76,7 +76,7 @@ class BookCaseUnderScore < BookCase
 end
 
 class BookCaseDashes < BookCase
-  xml_convention :dasherize
+  xml_convention &:dasherize
 end
 
 class BookCaseCamelLower < BookCase

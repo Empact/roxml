@@ -1,13 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-BOOK_WITH_CONTRIBUTORS = %{
-  <book isbn="0974514055">
-    <contributor role="author"><name>David Thomas</name></contributor>
-    <contributor role="supporting author"><name>Andrew Hunt</name></contributor>
-    <contributor role="supporting author"><name>Chad Fowler</name></contributor>
-  </book>
-}
-
 class BookWithContributorHash
   include ROXML
 
@@ -22,7 +14,13 @@ class TestXMLHash < Test::Unit::TestCase
   end
 
   def test_hash_preserves_data
-    b = BookWithContributorHash.from_xml(BOOK_WITH_CONTRIBUTORS)
+    b = BookWithContributorHash.from_xml(%{
+      <book isbn="0974514055">
+        <contributor role="author"><name>David Thomas</name></contributor>
+        <contributor role="supporting author"><name>Andrew Hunt</name></contributor>
+        <contributor role="supporting author"><name>Chad Fowler</name></contributor>
+      </book>
+    })
     assert_equal({'author' => 'David Thomas', 'supporting author' => ['Andrew Hunt', 'Chad Fowler']},
       b.contributors)
   end

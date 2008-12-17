@@ -78,7 +78,7 @@ module ROXML
     end
 
     def auto_xpath
-      "#{name.pluralize}/#{xpath_name}" if array?
+      "#{conventionize(opts.name.pluralize)}/#{xpath_name}" if array?
     end
 
     def wrap(xml)

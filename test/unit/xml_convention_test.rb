@@ -87,6 +87,12 @@ class BookCaseUpCase < BookCase
   xml_convention {|val| val.gsub('_', '').upcase }
 end
 
+class InheritedBookCaseCamelCase < BookCaseCamelCase
+end
+
+class InheritedBookCaseUpCase < BookCaseUpCase
+end
+
 class TestXMLConstruct < Test::Unit::TestCase
   # TODO: Test convention applies to xml_name as well...
 
@@ -100,10 +106,21 @@ class TestXMLConstruct < Test::Unit::TestCase
     define_method(:"test_xml_convention_#{klass.to_s.underscore}") do
       data = :"XML_#{klass.to_s.sub('BookCase', '').upcase}"
       assert_equal Proc, klass.roxml_naming_convention.class
-#      require 'ruby-debug'
-#      debugger if klass == BookCaseCamelLower
+
       bc = klass.from_xml(Object.const_get(data))
       assert_equal 12, bc.book_count
-      assert_equal ['GED', 'House of Leaves'], bc.big_books    end
+      assert_equal ['GED', 'House of Leaves'], bc.big_books
+    end
+  end
+
+  def test_inherited_conventions
+    [InheritedBookCaseUpCase, InheritedBookCaseCamelCase].each do |klass|
+      data = :"XML_#{klass.to_s.sub('InheritedBookCase', '').upcase}"
+      assert_equal Proc, klass.roxml_naming_convention.class
+
+      bc = klass.from_xml(Object.const_get(data))
+      assert_equal 12, bc.book_count
+      assert_equal ['GED', 'House of Leaves'], bc.big_books
+    end
   end
 end

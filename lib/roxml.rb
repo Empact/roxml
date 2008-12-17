@@ -112,21 +112,44 @@ module ROXML # :nodoc:
         @tag_name = name
       end
 
-      # Sets the style of the xml node and attr names.  The default expected names will be filtered
-      # through this block before being sought in XML.  :camelcase and :underscore are common
-      # conventions, but others are supported via the use of a block.
+      # Most xml documents have a consistent naming convention, for example, the node and
+      # and attribute names might appear in CamelCase. xml_convention enables you to adapt
+      # the roxml default names for this object to suit this convention.  For example,
+      # if I had a document like so:
       #
+      #  <XmlDoc>
+      #    <MyPreciousData />
+      #    <MoreToSee InAttrs="" />
+      #  </XmlDoc>
+      #
+      # Then I could access it's contents by defining the following class:
+      #
+      #  class XmlDoc
+      #    include ROXML
+      #    xml_convention :camelcase
+      #    xml_reader :my_precious_data
+      #    xml_reader :in_attrs, :in => 'MoreToSee'
+      #  end
+      #
+      # You may supply a block or any #to_proc-able object as the argument,
+      # and it will be called against the default node and attribute names before searching
+      # the document.  Here are some example declaration:
+      #
+      #  xml_convention :upcase
       #  xml_convention &:camelcase
       #  xml_convention {|val| val.gsub('_', '').downcase }
       #
-      # See ActiveSupport::CoreExtensions::String::Inflections for some common examples
+      # See ActiveSupport::CoreExtensions::String::Inflections for more prepackaged formats
       def xml_convention(to_proc_able = nil, &block)
         raise ArgumentError, "conventions are already set" if @roxml_naming_convention
         raise ArgumentError, "only one conventions can be set" if to_proc_able.respond_to?(:to_proc) && block_given?
         @roxml_naming_convention = to_proc_able.try(:to_proc)
         @roxml_naming_convention = block if block_given?
       end
-      attr_reader :roxml_naming_convention
+
+      def roxml_naming_convention
+        @roxml_naming_convention ||= superclass.try(:roxml_naming_convention)
+      end
 
       # Declares an accesser to a certain xml element, whether an attribute, a node,
       # or a typed collection of nodes.  Typically you should call xml_reader or xml_accessor
@@ -464,7 +487,7 @@ module ROXML # :nodoc:
       end
 
       def tag_refs
-      roxml_attrs.map {|a| a.to_ref(nil) }
+        roxml_attrs.map {|a| a.to_ref(nil) }
       end
       deprecate :tag_refs => :roxml_attrs
     end

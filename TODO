@@ -9,13 +9,17 @@ v 2.4
    For example, formatting a number with leading zeros.
 
 v 2.5
- * xml_convention(s) method for establishing whether names are
+ X xml_convention(s) method for establishing whether names are
    camel-case, underscored or whatever, which will make the :from
    defaulting much more effective
 
- * on array types, check if there's a plural wrapper for :from, and
+ X on array types, check if there's a plural wrapper for :from, and
    take from it if it's there, which will remove the need for a lot
    of :from => 'Item', :in => 'Items' args
+ * Do something similar for hashes?
+
+ * Ensure (perhaps optionally) that references are unambiguous. That is error/warn
+   a singular specification has multiple possible node references
 
 v 3.0
  * remove deprecated functionality
@@ -32,6 +36,10 @@ v 3.0
      xml_reader :count, Integer, 'Atributes/@Count'
 
    potentially backward-incompatible change.  Needs some thought...
+
+ * Back with XmlSimple/FasterXmlSimple to minimize need for specifications
+
+ * Use lazy evaluation to minimize parsing time for large files
 
 Potential:
 

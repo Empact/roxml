@@ -24,8 +24,9 @@ module ROXML # :nodoc:
 
       # Provides access to ROXML::ClassMethods::Accessors::tag_refs directly from an instance of a ROXML class
       def tag_refs
-        self.class.tag_refs
+        self.class.tag_refs_without_deprecation
       end
+      deprecate :tag_refs => :roxml_attrs
     end
 
     module Construction
@@ -70,7 +71,8 @@ module ROXML # :nodoc:
       # Returns a LibXML::XML::Node or a REXML::Element representing this object
       def to_xml(name = nil)
         returning XML::Node.new_element(name || tag_name) do |root|
-          tag_refs.each do |ref|
+          self.class.roxml_attrs.each do |attr|
+            ref = attr.to_ref
             v = ref.to_xml(self)
             unless v.nil?
               ref.update_xml(root, v)
@@ -378,7 +380,7 @@ module ROXML # :nodoc:
       def xml(sym, writable = false, type_and_or_opts = :text, opts = nil, &block)
         opts = Opts.new(sym, *[type_and_or_opts, opts].compact, &block)
 
-        add_accessor(opts.to_ref, writable)
+        add_accessor(opts, writable)
       end
 
       # Declares a read-only xml reference. See xml for details.
@@ -393,7 +395,7 @@ module ROXML # :nodoc:
 
       # This method is deprecated, please use xml_initialize instead
       def xml_construct(*args)
-        present_tags = tag_refs.map(&:accessor)
+        present_tags = tag_refs_without_deprecation.map(&:accessor)
         missing_tags = args - present_tags
         unless missing_tags.empty?
           raise ArgumentError, "All construction tags must be declared first using xml, " +
@@ -405,25 +407,23 @@ module ROXML # :nodoc:
       deprecate :xml_construct => :xml_initialize
 
     private
-      def add_accessor(ref, writable)
-        if tag_refs.map(&:accessor).include? ref.accessor
-          raise "Accessor #{ref.accessor} is already defined as XML accessor in class #{self.name}"
+      def add_accessor(attr, writable)
+        if roxml_attrs.map(&:accessor).include? attr.accessor
+          raise "Accessor #{attr.accessor} is already defined as XML accessor in class #{self.name}"
         end
-        tag_refs << ref
+        roxml_attrs << attr
 
-        define_method(ref.accessor) do
-          result = instance_variable_get("@#{ref.variable_name}")
+        define_method(attr.accessor) do
+          result = instance_variable_get("@#{attr.variable_name}")
           if result.nil?
-            result = ref.default
-            instance_variable_set("@#{ref.variable_name}", result)
+            result = attr.default
+            instance_variable_set("@#{attr.variable_name}", result)
           end
           result
         end
 
-        if writable && !instance_methods.include?("#{ref.accessor}=")
-          define_method("#{ref.accessor}=") do |v|
-            instance_variable_set("@#{ref.accessor}", v)
-          end
+        if writable && !instance_methods.include?("#{attr.accessor}=")
+          attr_writer(attr.accessor)
         end
       end
     end
@@ -443,9 +443,14 @@ module ROXML # :nodoc:
 
       # Returns array of internal reference objects, such as attributes
       # and composed XML objects
-      def tag_refs
-        @xml_refs ||= superclass.respond_to?(:tag_refs) ? superclass.tag_refs.clone : []
+      def roxml_attrs
+        @roxml_attrs ||= superclass.respond_to?(:roxml_attrs) ? superclass.roxml_attrs.clone : []
       end
+
+      def tag_refs
+        roxml_attrs.map(&:to_ref)
+      end
+      deprecate :tag_refs => :roxml_attrs
     end
 
     module Operations
@@ -471,13 +476,13 @@ module ROXML # :nodoc:
 
         unless xml_construction_args_without_deprecation.empty?
           args = xml_construction_args_without_deprecation.map do |arg|
-             tag_refs.find {|ref| ref.accessor == arg }
-          end.map {|ref| ref.value(xml) }
+             roxml_attrs.find {|attr| attr.accessor == arg }
+          end.map {|attr| attr.to_ref.value(xml) }
           new(*args)
         else
           returning allocate do |inst|
-            tag_refs.each do |ref|
-              ref.populate(xml, inst)
+            roxml_attrs.each do |attr|
+              attr.to_ref.populate(xml, inst)
             end
             inst.send(:xml_initialize, *initialization_args)
           end

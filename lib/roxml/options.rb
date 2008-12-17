@@ -58,7 +58,7 @@ module ROXML
   end
 
   class Opts # :nodoc:
-    attr_reader :name, :type, :hash, :blocks, :default, :accessor, :to_xml
+    attr_reader :name, :type, :hash, :blocks, :accessor, :to_xml
 
     class << self
       def silence_xml_name_warning?
@@ -102,7 +102,7 @@ module ROXML
         @name = '*'
       end
 
-      raise ArgumentError, "Can't specify both :else default and :required" if required? && default
+      raise ArgumentError, "Can't specify both :else default and :required" if required? && @default
     end
 
     def variable_name
@@ -139,6 +139,12 @@ module ROXML
 
     def required?
       @opts[:required]
+    end
+
+    def default
+      @default ||= [] if array?
+      @default ||= {} if hash?
+      @default.duplicable? ? @default.dup : @default
     end
 
     def to_ref

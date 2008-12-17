@@ -21,4 +21,11 @@ class TestROXML < Test::Unit::TestCase
       end
     end
   end
+
+  def test_tag_refs_is_deprecated
+    assert_deprecated do
+      Class.new do
+        include ROXML      end.tag_refs
+    end
+  end
 end

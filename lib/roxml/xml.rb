@@ -16,7 +16,7 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef # :nodoc:
-    delegate :name, :required?, :array?, :wrapper, :blocks, :accessor, :variable_name, :to => :opts
+    delegate :name, :required?, :array?, :wrapper, :blocks, :accessor, :variable_name, :default, :to => :opts
     alias_method :xpath_name, :name
 
     def initialize(opts)
@@ -41,11 +41,6 @@ module ROXML
       returning wrap(xml) do |xml|
         write_xml(xml, value)
       end
-    end
-
-    def default
-      @default ||= @opts.default || (@opts.array? ? Array.new : nil)
-      @default.duplicable? ? @default.dup : @default
     end
 
     def value(xml)
@@ -169,11 +164,6 @@ module ROXML
       super(opts)
       @key = opts.hash.key.to_ref
       @value = opts.hash.value.to_ref
-    end
-
-    def default
-      result = super
-      result.nil? ? {} : result
     end
 
   private

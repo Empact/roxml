@@ -16,24 +16,16 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef # :nodoc:
-    delegate :name, :required?, :array?, :wrapper, :blocks, :accessor, :variable_name, :default, :to => :opts
-    alias_method :xpath_name, :name
+    delegate :required?, :array?, :blocks, :accessor, :variable_name, :default, :to => :opts
 
-    def initialize(opts)
+    def initialize(opts, instance)
       @opts = opts
+      @instance = instance
       @auto_wrapper = false
     end
 
-    # Reads data from the XML element and populates the instance
-    # accordingly.
-    def populate(xml, instance)
-      data = value(xml)
-      instance.instance_variable_set("@#{variable_name}", data)
-      instance
-    end
-
-    def to_xml(inst)
-      val = inst.__send__(accessor)
+    def to_xml
+      val = @instance.__send__(accessor)
       opts.to_xml.respond_to?(:call) ? opts.to_xml.call(val) : val
     end
 
@@ -43,10 +35,20 @@ module ROXML
       end
     end
 
-    def value(xml)
+    def name
+      conventionize(opts.name)
+    end
+    alias_method :xpath_name, :name
+
+    def default
+      @default ||= @opts.default || (@opts.array? ? Array.new : nil)
+      @default.duplicable? ? @default.dup : @default
+    end
+
+    def value_in(xml)
       value = fetch_value(xml)
       if value.blank?
-        raise RequiredElementMissing, "#{name} from \n#{xml}" if required?
+        raise RequiredElementMissing, "#{name} from #{xml} for #{accessor}" if required?
         value = default
       end
       apply_blocks(value)
@@ -55,8 +57,20 @@ module ROXML
   private
     attr_reader :opts
 
+    def conventionize(what)
+      if what.present? && @instance.try(:class).try(:roxml_naming_convention).respond_to?(:call)
+         @instance.class.roxml_naming_convention.call(what)
+      else
+        what
+      end
+    end
+
+    def wrapper
+      conventionize(opts.wrapper)
+    end
+
     def apply_blocks(val)
-      blocks.inject(val) {|val, block| block[val] }
+      blocks.apply_to(val)
     end
 
     def xpath
@@ -160,10 +174,10 @@ module ROXML
   class XMLHashRef < XMLTextRef # :nodoc:
     delegate :hash, :to => :opts
 
-    def initialize(opts)
-      super(opts)
-      @key = opts.hash.key.to_ref
-      @value = opts.hash.value.to_ref
+    def initialize(opts, inst)
+      super(opts, inst)
+      @key = opts.hash.key.to_ref(inst)
+      @value = opts.hash.value.to_ref(inst)
     end
 
   private
@@ -179,7 +193,7 @@ module ROXML
 
     def fetch_value(xml)
       values(xml).collect do |e|
-        [@key.value(e), @value.value(e)]
+        [@key.value_in(e), @value.value_in(e)]
       end
     end
 

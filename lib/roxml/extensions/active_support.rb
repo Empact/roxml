@@ -3,13 +3,22 @@ require 'active_support/core_ext/symbol'
 require 'active_support/core_ext/blank'
 require 'active_support/core_ext/duplicable'
 require 'active_support/core_ext/array/extract_options'
+
+class Array #:nodoc:
+  include ActiveSupport::CoreExtensions::Array::ExtractOptions
+end
+
 require 'active_support/core_ext/hash/reverse_merge'
 require 'active_support/core_ext/module/delegation'
 require 'active_support/core_ext/module/aliasing'
+require 'active_support/core_ext/module/attribute_accessors'
 require 'active_support/core_ext/object/misc' # returning
 require 'active_support/inflector'
 require 'active_support/core_ext/string/inflections'
+require 'active_support/core_ext/string/access'
 require 'active_support/core_ext/string/starts_ends_with'
+require 'active_support/multibyte'
+require 'active_support/core_ext/string/multibyte'
 
 require 'extensions/enumerable'
 require 'extensions/array'
@@ -19,12 +28,10 @@ class Module
 end
 
 class String #:nodoc:
+  include ActiveSupport::CoreExtensions::String::Access
   include ActiveSupport::CoreExtensions::String::Inflections
   include ActiveSupport::CoreExtensions::String::StartsEndsWith
-end
-
-class Array #:nodoc:
-  include ActiveSupport::CoreExtensions::Array::ExtractOptions
+  include ActiveSupport::CoreExtensions::String::Multibyte
 end
 
 class Hash #:nodoc:

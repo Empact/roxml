@@ -72,8 +72,8 @@ module ROXML # :nodoc:
       def to_xml(name = nil)
         returning XML::Node.new_element(name || tag_name) do |root|
           self.class.roxml_attrs.each do |attr|
-            ref = attr.to_ref
-            v = ref.to_xml(self)
+            ref = attr.to_ref(self)
+            v = ref.to_xml
             unless v.nil?
               ref.update_xml(root, v)
             end
@@ -112,6 +112,22 @@ module ROXML # :nodoc:
         @tag_name = name
       end
 
+      # Sets the style of the xml node and attr names.  The default expected names will be filtered
+      # through this block before being sought in XML.  :camelcase and :underscore are common
+      # conventions, but others are supported via the use of a block.
+      #
+      #  xml_convention &:camelcase
+      #  xml_convention {|val| val.gsub('_', '').downcase }
+      #
+      # See ActiveSupport::CoreExtensions::String::Inflections for some common examples
+      def xml_convention(to_proc_able = nil, &block)
+        raise ArgumentError, "conventions are already set" if @roxml_naming_convention
+        raise ArgumentError, "only one conventions can be set" if to_proc_able.respond_to?(:to_proc) && block_given?
+        @roxml_naming_convention = to_proc_able.try(:to_proc)
+        @roxml_naming_convention = block if block_given?
+      end
+      attr_reader :roxml_naming_convention
+
       # Declares an accesser to a certain xml element, whether an attribute, a node,
       # or a typed collection of nodes.  Typically you should call xml_reader or xml_accessor
       # rather than calling this method directly, but the instructions below apply to both.
@@ -123,13 +139,13 @@ module ROXML # :nodoc:
       # This name will be the default node or attribute name searched for,
       # if no other is declared.  For example,
       #
-      #  xml_reader   :bob, :from => 'bob'
-      #  xml_accessor :pony, :attr => 'pony'
+      #  xml_reader   :bob
+      #  xml_accessor :pony, :attr
       #
       # are equivalent to:
       #
-      #  xml_reader   :bob
-      #  xml_accessor :pony, :attr
+      #  xml_reader   :bob, :from => 'bob'
+      #  xml_accessor :pony, :attr => 'pony'
       #
       # === Boolean attributes
       # If the name ends in a ?, ROXML will attempt to coerce the value to true or false,
@@ -448,7 +464,7 @@ module ROXML # :nodoc:
       end
 
       def tag_refs
-        roxml_attrs.map(&:to_ref)
+      roxml_attrs.map {|a| a.to_ref(nil) }
       end
       deprecate :tag_refs => :roxml_attrs
     end
@@ -477,12 +493,12 @@ module ROXML # :nodoc:
         unless xml_construction_args_without_deprecation.empty?
           args = xml_construction_args_without_deprecation.map do |arg|
              roxml_attrs.find {|attr| attr.accessor == arg }
-          end.map {|attr| attr.to_ref.value(xml) }
+          end.map {|attr| attr.to_ref(self).value_in(xml) }
           new(*args)
         else
           returning allocate do |inst|
             roxml_attrs.each do |attr|
-              attr.to_ref.populate(xml, inst)
+              inst.instance_variable_set("@#{attr.variable_name}", attr.to_ref(inst).value_in(xml))
             end
             inst.send(:xml_initialize, *initialization_args)
           end

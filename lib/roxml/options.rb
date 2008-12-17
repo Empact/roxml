@@ -147,7 +147,7 @@ module ROXML
       @default.duplicable? ? @default.dup : @default
     end
 
-    def to_ref
+    def to_ref(inst)
       case type
       when :attr    then XMLAttributeRef
       when :content then XMLTextRef
@@ -155,7 +155,7 @@ module ROXML
       when :hash    then XMLHashRef
       when Symbol   then raise ArgumentError, "Invalid type argument #{opts.type}"
       else               XMLObjectRef
-      end.new(self)
+      end.new(self, inst)
     end
 
   private

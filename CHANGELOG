@@ -1,5 +1,7 @@
 == ?
 
+* Add :freeze option for freezing values on parse [Ben Woosley]
+
 * Attempt to minimize node creation by better matching wrappers [Ben Woosley]
 
 * Add xml_convention to enable easy defaulting to common naming formats, such as camel-case and

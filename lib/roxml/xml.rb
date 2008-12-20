@@ -50,7 +50,7 @@ module ROXML
         raise RequiredElementMissing, "#{name} from #{xml} for #{accessor}" if required?
         value = default
       end
-      apply_blocks(value)
+      freeze(apply_blocks(value))
     end
 
   private
@@ -70,6 +70,15 @@ module ROXML
 
     def apply_blocks(val)
       blocks.apply_to(val)
+    end
+
+    def freeze(val)
+      if opts.freeze?
+        val.each(&:freeze) if val.is_a?(Enumerable)
+        val.freeze
+      else
+        val
+      end
     end
 
     def xpath
@@ -207,6 +216,15 @@ module ROXML
         end
       end
       vals.to_hash if vals
+    end
+
+    def freeze(vals)
+      if opts.freeze?
+        vals.each_pair{|k, v| k.freeze; v.freeze }
+        vals.freeze
+      else
+        vals
+      end
     end
   end
 

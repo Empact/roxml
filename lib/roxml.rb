@@ -415,6 +415,7 @@ module ROXML # :nodoc:
       # [:in] An optional name of a wrapping tag for this XML accessor
       # [:else] Default value for attribute, if missing
       # [:required] If true, throws RequiredElementMissing when the element isn't present
+      # [:frozen] If true, all results are frozen at parse-time.
       #
       def xml(sym, writable = false, type_and_or_opts = :text, opts = nil, &block)
         opts = Opts.new(sym, *[type_and_or_opts, opts].compact, &block)
@@ -423,11 +424,19 @@ module ROXML # :nodoc:
       end
 
       # Declares a read-only xml reference. See xml for details.
+      #
+      # Note that while xml_reader does not create a setter for this attribute,
+      # its value can be modified indirectly via methods.  For more complete
+      # protection, consider the :frozen option.
       def xml_reader(sym, type_and_or_opts = :text, opts = nil, &block)
         xml sym, false, type_and_or_opts, opts, &block
       end
 
       # Declares a writable xml reference. See xml for details.
+      #
+      # Note that while xml_accessor does create a setter for this attribute,
+      # you can use the :frozen option to prevent its value from being
+      # modified indirectly via methods.
       def xml_accessor(sym, type_and_or_opts = :text, opts = nil, &block)
         xml sym, true, type_and_or_opts, opts, &block
       end

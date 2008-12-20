@@ -76,6 +76,10 @@ module ROXML
       @default = @opts.delete(:else)
       @to_xml = @opts.delete(:to_xml)
 
+      if @opts.has_key?(:readonly)
+        raise ArgumentError, "There is no 'readonly' option. You probably mean to use :frozen => true"
+      end
+
       @opts.reverse_merge!(:as => [], :in => nil)
       @opts[:as] = [*@opts[:as]]
 
@@ -139,6 +143,10 @@ module ROXML
 
     def required?
       @opts[:required]
+    end
+
+    def freeze?
+      @opts[:frozen]
     end
 
     def default

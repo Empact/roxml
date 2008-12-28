@@ -57,7 +57,7 @@ module ROXML
     attr_reader :opts
 
     def conventionize(what)
-      if what.present? && @instance.try(:class).try(:roxml_naming_convention).respond_to?(:call)
+      if !what.blank? && @instance.try(:class).try(:roxml_naming_convention).respond_to?(:call)
          @instance.class.roxml_naming_convention.call(what)
       else
         what

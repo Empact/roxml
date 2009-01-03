@@ -1,5 +1,8 @@
 == ?
 
+* Don't detect objects which define their own empty? as being absent for the purposes
+  of :default and :required [Ben Woosley]
+
 * Add :freeze option for freezing values on parse [Ben Woosley]
 
 * Attempt to minimize node creation by better matching wrappers [Ben Woosley]

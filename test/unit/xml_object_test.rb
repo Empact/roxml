@@ -1,5 +1,21 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
+class EmptyCart
+  include ROXML
+
+  xml_reader :id
+
+  def empty?
+    true
+  end
+end
+
+class CartHolder
+  include ROXML
+
+  xml_reader :cart, EmptyCart, :required => true
+end
+
 class TestXMLObject < Test::Unit::TestCase
   # Test book with text and attribute
   def test_book_author_text_attribute
@@ -112,5 +128,19 @@ class TestXMLObject < Test::Unit::TestCase
     p = PersonWithMotherOrMissing.from_xml(fixture(:person_with_mothers))
     assert_equal 'Unknown', p.mother.mother.mother.name
     assert_equal Person, p.mother.mother.mother.class
+  end
+
+  def test_defining_empty_on_object_doesnt_cause_it_to_be_seen_as_absent
+    # absent means defaulting, failing required
+
+    holder = CartHolder.from_xml(%{
+      <cartholder>
+        <cart>
+          <id>111111</id>
+        </cart>
+      </cartholder>
+    })
+
+    assert_equal "111111", holder.cart.id
   end
 end

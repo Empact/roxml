@@ -46,10 +46,6 @@ module ROXML
 
     def value_in(xml)
       value = fetch_value(xml)
-      if value.blank?
-        raise RequiredElementMissing, "#{name} from #{xml} for #{accessor}" if required?
-        value = default
-      end
       freeze(apply_blocks(value))
     end
 
@@ -97,15 +93,20 @@ module ROXML
       xml.child_add(XML::Node.new_element(wrapper))
     end
 
-    def values(xml)
-      raise "Only enumerable refs (Hash, Array) can have auto-wrappers" unless opts.hash? || opts.array?
+    def nodes_in(xml)
       vals = xml.search(xpath)
 
-      if vals.empty? && !wrapper && auto_xpath
+      if (opts.hash? || opts.array?) && vals.empty? && !wrapper && auto_xpath
         vals = xml.search(auto_xpath)
-        @auto_vals = true unless vals.empty?
+        @auto_vals = !vals.empty?
       end
-      vals
+
+      if vals.empty?
+        raise RequiredElementMissing, "#{name} from #{xml} for #{accessor}" if required?
+        default
+      else
+        yield(vals)
+      end
     end
   end
 
@@ -124,8 +125,9 @@ module ROXML
     end
 
     def fetch_value(xml)
-      attr = xml.search(xpath).first
-      attr && attr.value
+      nodes_in(xml) do |nodes|
+        nodes.first.value
+      end
     end
 
     def xpath_name
@@ -160,17 +162,30 @@ module ROXML
     end
 
     def fetch_value(xml)
-      if content?
-        xml.content.strip
-      elsif name?
-        xml.name
-      elsif array?
-        values(xml).collect do |e|
-          e.content.strip.to_latin if e.content
+      if content? || name?
+        value =
+          if content?
+            xml.content.strip
+          elsif name?
+            xml.name
+          end
+
+        if value.empty?
+          raise RequiredElementMissing, "#{name} from #{xml} for #{accessor}" if required?
+          default
+        else
+          value
         end
       else
-        child = xml.search(xpath).first
-        child.content if child
+        nodes_in(xml) do |nodes|
+          if array?
+            nodes.collect do |e|
+              e.content.strip.to_latin
+            end
+          else
+            nodes.first.content
+          end
+        end
       end
     end
 
@@ -204,8 +219,10 @@ module ROXML
     end
 
     def fetch_value(xml)
-      values(xml).collect do |e|
-        [@key.value_in(e), @value.value_in(e)]
+      nodes_in(xml) do |nodes|
+        nodes.collect do |e|
+          [@key.value_in(e), @value.value_in(e)]
+        end
       end
     end
 
@@ -249,13 +266,13 @@ module ROXML
     end
 
     def fetch_value(xml)
-      unless array?
-        if child = xml.search(xpath).first
-          instantiate(child)
-        end
-      else
-        values(xml).collect do |e|
-          instantiate(e)
+      nodes_in(xml) do |nodes|
+        unless array?
+          instantiate(nodes.first)
+        else
+          nodes.collect do |e|
+            instantiate(e)
+          end
         end
       end
     end

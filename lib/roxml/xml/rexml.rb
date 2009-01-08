@@ -39,11 +39,11 @@ module ROXML
     class Parser
       class << self
         def parse(string)
-          REXML::Document.new(string)
+          REXML::Document.new(string, :ignore_whitespace_nodes => :all)
         end
 
         def parse_file(path)
-          REXML::Document.new(open(path), :ignore_whitespace_nodes => :all)
+          parse(open(path))
         end
 
         def register_error_handler(&block)

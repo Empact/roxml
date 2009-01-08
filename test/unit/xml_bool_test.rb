@@ -101,7 +101,7 @@ class TestXMLBool < Test::Unit::TestCase
       XmlBoolRequired.from_xml(PRESENT)
     end
 
-    assert_raises(ROXML::RequiredElementMissing) do
+    assert_raise ROXML::RequiredElementMissing do
       XmlBoolRequired.from_xml(ABSENT)
     end
   end

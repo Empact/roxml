@@ -165,7 +165,7 @@ module ROXML
       if content? || name?
         value =
           if content?
-            xml.content.strip
+            xml.content.to_s.strip
           elsif name?
             xml.name
           end

@@ -34,7 +34,7 @@ def remove_children(xml)
   xml = ROXML::XML::Parser.parse(xml).root if xml.is_a?(String)
   return unless xml.respond_to? :children
   xml.children.each do |child|
-    if child.blank?
+    if child.to_s.blank?
       child.remove!
     else
       remove_children(child)

@@ -148,7 +148,7 @@ module ROXML # :nodoc:
       end
 
       def roxml_naming_convention
-        @roxml_naming_convention ||= superclass.try(:roxml_naming_convention)
+        (@roxml_naming_convention || superclass.try(:roxml_naming_convention)).freeze
       end
 
       # Declares an accesser to a certain xml element, whether an attribute, a node,
@@ -459,7 +459,7 @@ module ROXML # :nodoc:
         if roxml_attrs.map(&:accessor).include? attr.accessor
           raise "Accessor #{attr.accessor} is already defined as XML accessor in class #{self.name}"
         end
-        roxml_attrs << attr
+        @roxml_attrs << attr
 
         define_method(attr.accessor) do
           result = instance_variable_get("@#{attr.variable_name}")
@@ -492,7 +492,8 @@ module ROXML # :nodoc:
       # Returns array of internal reference objects, such as attributes
       # and composed XML objects
       def roxml_attrs
-        @roxml_attrs ||= superclass.respond_to?(:roxml_attrs) ? superclass.roxml_attrs.clone : []
+        @roxml_attrs ||= []
+        (@roxml_attrs + (superclass.try(:roxml_attrs) || [])).freeze
       end
 
       def tag_refs

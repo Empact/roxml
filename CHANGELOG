@@ -14,10 +14,12 @@
   * Deprecate #xml_name? as it's only used for triggering the xml_name warning [Ben Woosley]
   * REXML parser ignores whitespace, which doesn't matter to us anyway [Ben Woosley]
 
-* 1 bug fix
+* 2 bug fixes
 
   * Don't detect objects which define their own empty? as being absent for the purposes
     of :default and :required [Ben Woosley]
+  * Sub-objects pick up their parent's attributes, even if they're added after
+    the child's use [Ben Woosley]
 
 == 2.3.2 (December 11, 2008)
 

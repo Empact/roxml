@@ -105,10 +105,6 @@ class BookWithDepth
   xml_reader :depth, Measurement
 end
 
-class InheritedBookWithDepth < Book
-  xml_reader :depth, Measurement
-end
-
 class Author
   include ROXML
 

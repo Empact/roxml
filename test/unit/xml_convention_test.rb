@@ -1,15 +1,5 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-DEFAULT = %{
-  <book_case name="Jonas' Books">
-    <book_count>12</book_count>
-    <big_books>
-      <big_book>GED</big_book>
-      <big_book>House of Leaves</big_book>
-    </big_books>
-  </book_case>
-}
-
 XML_CAMELLOWER = %{
   <bookCase name="Jonas' Books">
     <bookCount>12</bookCount>
@@ -93,13 +83,23 @@ end
 class InheritedBookCaseUpCase < BookCaseUpCase
 end
 
+# Same as BookCase.  Needed to keep BookCase clean for other tests
+class ParentBookCaseDefault
+  include ROXML
+
+  xml_reader :book_count, :as => Integer, :required => true
+  xml_reader :big_books, [:text], :required => true
+end
+
+class InheritedBookCaseDefault < ParentBookCaseDefault
+end
+
 class TestXMLConstruct < Test::Unit::TestCase
   # TODO: Test convention applies to xml_name as well...
 
-  def test_default_conventions
-    bc = BookCase.from_xml(DEFAULT)
-    assert_equal 12, bc.book_count
-    assert_equal ['GED', 'House of Leaves'], bc.big_books
+  def test_default_convention_is_underscore
+    bc = BookCase.from_xml(XML_UNDERSCORE)
+    assert_has_book_case_info(bc)
   end
 
   [BookCaseUpCase, BookCaseCamelLower, BookCaseDashes, BookCaseUnderScore, BookCaseCamelCase].each do |klass|
@@ -108,19 +108,37 @@ class TestXMLConstruct < Test::Unit::TestCase
       assert_equal Proc, klass.roxml_naming_convention.class
 
       bc = klass.from_xml(Object.const_get(data))
-      assert_equal 12, bc.book_count
-      assert_equal ['GED', 'House of Leaves'], bc.big_books
+      assert_has_book_case_info(bc)
     end
   end
 
-  def test_inherited_conventions
+  def test_child_should_inherit_convention_if_it_doesnt_declare_one
     [InheritedBookCaseUpCase, InheritedBookCaseCamelCase].each do |klass|
       data = :"XML_#{klass.to_s.sub('InheritedBookCase', '').upcase}"
       assert_equal Proc, klass.roxml_naming_convention.class
 
       bc = klass.from_xml(Object.const_get(data))
-      assert_equal 12, bc.book_count
-      assert_equal ['GED', 'House of Leaves'], bc.big_books
+      assert_has_book_case_info(bc)
     end
+  end
+
+  def test_child_should_inherit_convention_even_if_it_is_added_after_child_declaration
+    bc = InheritedBookCaseDefault.from_xml(XML_UNDERSCORE)
+    assert_has_book_case_info(bc)
+
+    ParentBookCaseDefault.class_eval do
+      xml_convention :dasherize
+    end
+
+    bc = InheritedBookCaseDefault.from_xml(XML_DASHES)
+    assert_has_book_case_info(bc)
+    assert_raise ROXML::RequiredElementMissing do
+      InheritedBookCaseDefault.from_xml(XML_UNDERSCORE)
+    end
+  end
+
+  def assert_has_book_case_info(bc)
+    assert_equal 12, bc.book_count
+    assert_equal ['GED', 'House of Leaves'], bc.big_books
   end
 end

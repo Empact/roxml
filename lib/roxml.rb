@@ -415,7 +415,7 @@ module ROXML # :nodoc:
       # [:in] An optional name of a wrapping tag for this XML accessor
       # [:else] Default value for attribute, if missing
       # [:required] If true, throws RequiredElementMissing when the element isn't present
-      # [:frozen] If true, all results are frozen at parse-time.
+      # [:frozen] If true, all results are frozen (using #freeze) at parse-time.
       #
       def xml(sym, writable = false, type_and_or_opts = :text, opts = nil, &block)
         opts = Opts.new(sym, *[type_and_or_opts, opts].compact, &block)

@@ -91,12 +91,6 @@ module ROXML # :nodoc:
   #
   module ClassMethods # :nodoc:
     module Declarations
-      # A helper which enables us to detect when the xml_name has been explicitly set
-      def xml_name? #:nodoc:
-        @xml_name
-      end
-      deprecate :xml_name?
-
       # Sets the name of the XML element that represents this class. Use this
       # to override the default lowercase class name.
       #
@@ -108,8 +102,7 @@ module ROXML # :nodoc:
       # Without the xml_name annotation, the XML mapped tag would have been "bookwithpublisher".
       #
       def xml_name(name)
-        @xml_name = true
-        @tag_name = name
+        @roxml_tag_name = name
       end
 
       # Most xml documents have a consistent naming convention, for example, the node and
@@ -482,11 +475,21 @@ module ROXML # :nodoc:
       end
       deprecate :xml_construction_args
 
+      # A helper which enables us to detect when the xml_name has been explicitly set
+      def xml_name? #:nodoc:
+        @roxml_tag_name
+      end
+      deprecate :xml_name?
+
       # Returns the tag name (also known as xml_name) of the class.
       # If no tag name is set with xml_name method, returns default class name
       # in lowercase.
       def tag_name
-        @tag_name ||= name.split('::').last.downcase
+        roxml_tag_name || name.split('::').last.try(:downcase)
+      end
+
+      def roxml_tag_name # :nodoc:
+        @roxml_tag_name || superclass.try(:roxml_tag_name)
       end
 
       # Returns array of internal reference objects, such as attributes

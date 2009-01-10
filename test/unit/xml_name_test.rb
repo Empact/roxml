@@ -75,6 +75,16 @@ class TestXMLName < Test::Unit::TestCase
     assert_equal "<parent><child_accessor_name/></parent>", parent.to_xml.to_s.gsub(/[\n ]/, '')
   end
 
+  def test_it_should_be_inherited
+    class_with_inherited_name = Class.new(ParentOfNamedChild)
+    assert_equal :parent, class_with_inherited_name.tag_name
+  end
+
+  def test_it_should_be_inherited_over_multiple_levels
+    class_with_inherited_name = Class.new(Class.new(ParentOfNamedChild))
+    assert_equal :parent, class_with_inherited_name.tag_name
+  end
+
   def test_named_books_picked_up
     named = Library.from_xml(fixture(:library))
     assert named.books

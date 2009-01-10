@@ -13,6 +13,7 @@
     any single one of them at random (as in group_by rather than index_by) [Ben Woosley]
   * Deprecate #xml_name? as it's only used for triggering the xml_name warning [Ben Woosley]
   * REXML parser ignores whitespace, which doesn't matter to us anyway [Ben Woosley]
+  * xml_name is inherited by default [Ben Woosley]
 
 * 2 bug fixes
 

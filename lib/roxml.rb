@@ -4,13 +4,13 @@ end
 
 module ROXML # :nodoc:
   def self.included(base) # :nodoc:
-    base.extend ClassMethods::Accessors
-    base.extend ClassMethods::Declarations
-    base.extend ClassMethods::Operations
+    base.extend ClassMethods::Accessors,
+                ClassMethods::Declarations,
+                ClassMethods::Operations
     base.class_eval do
-      include InstanceMethods::Accessors
-      include InstanceMethods::Construction
-      include InstanceMethods::Conversions
+      include InstanceMethods::Accessors,
+              InstanceMethods::Construction,
+              InstanceMethods::Conversions
     end
   end
 

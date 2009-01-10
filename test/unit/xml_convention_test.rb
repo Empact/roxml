@@ -137,6 +137,12 @@ class TestXMLConstruct < Test::Unit::TestCase
     end
   end
 
+  def test_tag_name_should_get_convention_treatment_as_well
+    assert_equal "book-case-dashes", BookCaseDashes.tag_name
+    assert_equal "INHERITEDBOOKCASEUPCASE", InheritedBookCaseUpCase.tag_name
+    assert_equal "InheritedBookCaseCamelCase", InheritedBookCaseCamelCase.tag_name
+  end
+
   def assert_has_book_case_info(bc)
     assert_equal 12, bc.book_count
     assert_equal ['GED', 'House of Leaves'], bc.big_books

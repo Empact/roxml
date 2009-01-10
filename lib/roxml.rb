@@ -133,6 +133,9 @@ module ROXML # :nodoc:
       #  xml_convention {|val| val.gsub('_', '').downcase }
       #
       # See ActiveSupport::CoreExtensions::String::Inflections for more prepackaged formats
+      #
+      # Note that the xml_convention is also applied to the default root-level tag_name,
+      # but in this case an underscored version of the name is applied, for convenience.
       def xml_convention(to_proc_able = nil, &block)
         raise ArgumentError, "conventions are already set" if @roxml_naming_convention
         raise ArgumentError, "only one conventions can be set" if to_proc_able.respond_to?(:to_proc) && block_given?
@@ -140,7 +143,7 @@ module ROXML # :nodoc:
         @roxml_naming_convention = block if block_given?
       end
 
-      def roxml_naming_convention
+      def roxml_naming_convention # :nodoc:
         (@roxml_naming_convention || superclass.try(:roxml_naming_convention)).freeze
       end
 
@@ -484,8 +487,17 @@ module ROXML # :nodoc:
       # Returns the tag name (also known as xml_name) of the class.
       # If no tag name is set with xml_name method, returns default class name
       # in lowercase.
+      #
+      # If xml_convention is set, it is called with an *underscored* version of
+      # the class name.  This is because active support's inflector generally expects
+      # an underscored version, and several operations (e.g. camelcase(:lower), dasherize)
+      # do not work without one.
       def tag_name
-        roxml_tag_name || name.split('::').last.try(:downcase)
+        return roxml_tag_name if roxml_tag_name
+        
+        if tag_name = name.split('::').last
+          roxml_naming_convention ? roxml_naming_convention.call(tag_name.underscore) : tag_name.downcase
+        end
       end
 
       def roxml_tag_name # :nodoc:

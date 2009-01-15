@@ -18,7 +18,7 @@ require 'active_support/multibyte'
 require 'active_support/core_ext/string'
 class String
   # This conflicts with builder, unless builder is required first, which we don't want to force on people
-  undef_method :to_xs
+  undef_method :to_xs if method_defined?(:to_xs)
 end
 
 require 'extensions/enumerable'

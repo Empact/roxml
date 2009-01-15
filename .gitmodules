@@ -1,0 +1,3 @@
+[submodule "vendor/override_rake_task"]
+	path = vendor/override_rake_task
+	url = git://github.com/Empact/override_rake_task.git

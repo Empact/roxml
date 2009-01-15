@@ -1,100 +1,90 @@
-# Rake libraries used
-require "rubygems"
-require "rake/rdoctask"
-require "rake/contrib/rubyforgepublisher"
-require "rake/contrib/publisher"
-require 'rake/gempackagetask'
-require 'rake/testtask'
+ENV['RUBY_FLAGS'] = '-W1'
 
-# load settings
-spec = eval(IO.read("roxml.gemspec"))
+%w[rubygems rake rake/clean fileutils newgem rubigen].each { |f| require f }
+require File.join(File.dirname(__FILE__), 'lib/roxml')
 
-# Provide the username used to upload website etc.
-RubyForgeConfig = {
-  :unix_name=>"roxml",
-  :user_name=>"zakmandhro"
-}
+# Generate all the Rake tasks
+# Run 'rake -T' to see list of generated tasks (from gem root directory)
+$hoe = Hoe.new('roxml', ROXML::VERSION) do |p|
+  p.author = ["Ben Woosley", "Zak Mandhro", "Anders Engstrom", "Russ Olsen"]
+  p.email = "ben.woosley@gmail.com"
+  p.url = "http://roxml.rubyforge.org"
+  p.changes              = p.paragraphs_of("History.txt", 0..1).join("\n\n")
+  p.rubyforge_name       = p.name
+  p.extra_deps         = [
+   ['activesupport','>= 2.1.0'],
+   ['extensions', '>= 0.6.0']
+  ]
+  p.extra_dev_deps = [
+    ['newgem', ">= #{::Newgem::VERSION}"]
+  ]
+
+  p.summary = "Ruby Object to XML mapping library"
+  p.description = <<EOF
+ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML.
+Using simple annotations, it enables Ruby classes to be mapped to XML. ROXML takes care
+of the marshalling and unmarshalling of mapped attributes so that developers can focus on
+building first-class Ruby classes. As a result, ROXML simplifies the development of
+RESTful applications, Web Services, and XML-RPC.
+EOF
+
+  p.test_globs = 'test/unit/*_test.rb'
+  p.clean_globs |= %w[**/.DS_Store tmp *.log]
+  path = (p.rubyforge_name == p.name) ? p.rubyforge_name : "\#{p.rubyforge_name}/\#{p.name}"
+  p.remote_rdoc_dir = File.join(path.gsub(/^#{p.rubyforge_name}\/?/,''), 'rdoc')
+  p.rsync_args = '-av --delete --ignore-errors'
+end
+
+require 'newgem/tasks' # load /tasks/*.rake
+
+Dir['tasks/**/*.rake'].each { |t| load t }
 
 task :default => :test
 
-Rake::RDocTask.new do |rd|
-  rd.rdoc_dir = "doc"
-  rd.rdoc_files.include('MIT-LICENSE', 'README.rdoc', "lib/**/*.rb")
-  rd.options << '--main' << 'README.rdoc' << '--title' << 'ROXML Documentation'
-end
+## Provide the username used to upload website etc.
+#RubyForgeConfig = {
+#  :unix_name=>"roxml",
+#  :user_name=>"zakmandhro"
+#}
 
-desc "Publish Ruby on Rails plug-in on RubyForge"
-task :release_plugin=>:rails_plugin do |task|
-  pub = Rake::SshDirPublisher.new("#{RubyForgeConfig[:user_name]}@rubyforge.org",
-      "/var/www/gforge-projects/#{RubyForgeConfig[:unix_name]}",
-      "pkg/rails_plugin")
-  pub.upload()
-end
+#Rake::RDocTask.new do |rd|
+#  rd.rdoc_dir = "doc"
+#  rd.rdoc_files.include('MIT-LICENSE', 'README.rdoc', "lib/**/*.rb")
+#  rd.options << '--main' << 'README.rdoc' << '--title' << 'ROXML Documentation'
+#end
+#
+#desc "Publish Ruby on Rails plug-in on RubyForge"
+#task :release_plugin=>:rails_plugin do |task|
+#  pub = Rake::SshDirPublisher.new("#{RubyForgeConfig[:user_name]}@rubyforge.org",
+#      "/var/www/gforge-projects/#{RubyForgeConfig[:unix_name]}",
+#      "pkg/rails_plugin")
+#  pub.upload()
+#end
+#
+#desc "Publish and plugin site on RubyForge"
+#task :publish do |task|
+#  pub = Rake::RubyForgePublisher.new(RubyForgeConfig[:unix_name], RubyForgeConfig[:user_name])
+#  pub.upload()
+#end
+#
+#desc "Install the gem"
+#task :install => [:package] do
+#  sh %{sudo gem install pkg/#{spec.name}-#{spec.version}}
+#end
 
-desc "Publish and plugin site on RubyForge"
-task :publish do |task|
-  pub = Rake::RubyForgePublisher.new(RubyForgeConfig[:unix_name], RubyForgeConfig[:user_name])
-  pub.upload()
-end
-
-desc "Install the gem"
-task :install => [:package] do
-  sh %{sudo gem install pkg/#{spec.name}-#{spec.version}}
-end
-
-Rake::TestTask.new(:bugs) do |t|
-  t.libs << 'test'
-  t.test_files = FileList['test/bugs/*_bugs.rb']
-  t.verbose = true
-end
-
-@test_files = 'test/unit/*_test.rb'
-desc "Test ROXML using the default parser selection behavior"
-task :test do
-  module ROXML
-    SILENCE_XML_NAME_WARNING = true
-  end
-  require 'lib/roxml'
-  require 'rake/runtest'
-  Rake.run_tests @test_files
-end
-
-namespace :test do
-  desc "Test ROXML under the LibXML parser"
-  task :libxml do
-    module ROXML
-      XML_PARSER = 'libxml'
-    end
-    Rake::Task["test"].invoke
-  end
-
-  desc "Test ROXML under the REXML parser"
-  task :rexml do
-    module ROXML
-      XML_PARSER = 'rexml'
-    end
-    Rake::Task["test"].invoke
-  end
-
-  desc "Runs tests under RCOV"
-  task :rcov do
-    system "rcov -T --no-html -x '^/'  #{FileList[@test_files]}"
-  end
-end
-
-desc "Create the ZIP package"
-Rake::PackageTask.new(spec.name, spec.version) do |p|
-  p.need_zip = true
-  p.package_files = FileList[
-    "lib/**/*.rb", "*.txt", "README.rdoc", "Rakefile",
-    "rake/**/*","test/**/*.rb", "test/**/*.xml", "html/**/*"]
-end
-
-task :package=>:rdoc
-task :rdoc=>:test
-
-desc "Create a RubyGem project"
-Rake::GemPackageTask.new(spec).define
-
-desc "Clobber generated files"
-task :clobber=>[:clobber_package, :clobber_rdoc]
+#desc "Create the ZIP package"
+#Rake::PackageTask.new(spec.name, spec.version) do |p|
+#  p.need_zip = true
+#  p.package_files = FileList[
+#    "lib/**/*.rb", "*.txt", "README.rdoc", "Rakefile",
+#    "rake/**/*","test/**/*.rb", "test/**/*.xml", "html/**/*"]
+#end
+#
+#task :package=>:rdoc
+#task :rdoc=>:test
+#
+#desc "Create a RubyGem project"
+#Rake::GemPackageTask.new(spec).define
+#
+#desc "Clobber generated files"
+#task :clobber=>[:clobber_package, :clobber_rdoc]

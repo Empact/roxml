@@ -1,0 +1,145 @@
+== 2.4.0 (January 9, 2009)
+
+* 1 major enhancement
+
+  * Add xml_convention to enable easy defaulting to common naming formats, such as camel-case and
+    underscored [Ben Woosley]
+
+* 6 minor enhancements
+
+  * Add :frozen option for freezing values on parse [Ben Woosley]
+  * Attempt to minimize node creation by better matching wrappers [Ben Woosley]
+  * Preserve hash values where a single key maps to multiple values, return them as an array rather
+    any single one of them at random (as in group_by rather than index_by) [Ben Woosley]
+  * Deprecate #xml_name? as it's only used for triggering the xml_name warning [Ben Woosley]
+  * REXML parser ignores whitespace, which doesn't matter to us anyway [Ben Woosley]
+  * xml_name is inherited by default [Ben Woosley]
+
+* 2 bug fixes
+
+  * Don't detect objects which define their own empty? as being absent for the purposes
+    of :default and :required [Ben Woosley]
+  * Sub-objects pick up their parent's attributes, even if they're added after
+    the child's use [Ben Woosley]
+
+== 2.3.2 (December 11, 2008)
+
+* Fix that both false and nil values were excluded from to_xml output, when only nil values should be [Ben Woosley]
+
+== 2.3.1 (December 9, 2008)
+
+* Add missing dependencies to extensions/enumerable and Symbol.to_proc,
+  which are as-yet inexplicably pre-included on my system... [Ben Woosley, Per Melin]
+
+== 2.3 (December 7, 2008)
+
+* Fix a bug in the application of blocks to array types [Ben Woosley]
+
+* Objects now inherit xml attributes from their parents, as they should [Ben Woosley, Per Melin]
+
+* Add #xml_initialize, which is called at the end of #from_xml, after the xml attributes
+  are set. Deprecate the half-baked xml_construct in it's favor. [Ben Woosley]
+
+* Fix a bug in the handling of empty Hash types [Ben Woosley]
+
+* Implement automatic bool-ification when the accessor name ends with ?. [Ben Woosley]
+
+* Add missing dependency ActiveSupport [Ben Woosley]
+
+* Remove support for installing as a rails plugin [Ben Woosley]
+
+* Fix a bug where xml_construct was using the refs' names rather than their accessor names for comparison [Ben Woosley]
+
+* Significantly reduce our footprint by selectively including smaller parts of ActiveSupport and Extensions.
+  This avoids problems such as the conflict between ActiveSupport's #to_json and the JSON gem's #to_json.
+  Thanks to Per Melin for reporting this problem. [Ben Woosley]
+
+* Rationalize sub-element xml naming by enforcing the following precedence for the containing xml of an object:
+  :from of parent, xml_name of child, parent's accessor name.  The previous fallback did not include xml_name.
+  This new behavior is more consistent, explicit, predictable, and DRY, but it is a breaking change, so a warning
+  is printed to alert others of this behavior change. ROXML::SILENCE_XML_NAME_WARNING may be used to deactivate this
+  warning. [Ben Woosley, James W. Thompson, Delynn Berry]
+
+== 2.2 (November 2, 2008)
+
+* fix gem dependencies [James Healy]
+
+* Add block shorthands for Float and Integer, which precede the block argume if present [Ben Woosley]
+
+* Add :required option to throw on absence [Ben Woosley]
+
+* Deprecate the non-specific #parse in favor of #from_xml [Ben Woosley]
+
+* Fix a bug whereby the default value was carrying over information from one object to another [James Healy, Ben Woosley]
+
+* Fix support for :in on :attr elements [Ben Woosley]
+
+* Deprecate Array#to_h in favor of Array#to_hash [Ben Woosley]
+
+* Deprecate Object#to_latin and Object#to_utf in favor of the same methods on String [Ben Woosley]
+
+== 2.1 (October 3, 2008)
+
+* rake test now uses the default parser selection [Ben Woosley]
+
+* Added rcov code coverage for tests [Anders Engström]
+
+* Accommodate that libxml requires you to name the default namespace when available [Ben Woosley]
+
+* Enable optional selection of a parser through the early definition of ROXML::XML_PARSER
+  [Ben Woosley]
+
+* Enable fallback to the REXML parser if LibXML is unavailable [Ben Woosley]
+
+== 2.0 (September 20, 2008)
+
+* :text_content becomes simply :content, and is joined by :name  [Ben Woosley]
+
+* Allow hash mapping from node names and contents: [Ben Woosley]
+
+  xml_reader :name, {:key => :name,
+                     :value => :content}, :in => 'container'
+
+* Allow supplying a default via the :else option [Ben Woosley]
+
+* Allow hash mapping of text and attr elements: [Ben Woosley]
+
+  xml_reader :name, {:key => {:text => 'key_name'},
+                     :value => {:attr => 'attr_name'}}, :in => 'container'
+
+* Allow 'xml_reader :name, [Type]' as an alternative to 'xml_reader :name, Type, :as => :array'
+  [Ben Woosley]
+
+* Allow attaching a block for manipulating a value on fetch: [Ben Woosley]
+
+  xml_accessor :count, :attr => 'my_int' do |val|
+    Integer(val)
+  end
+
+* Collapse xml_attr, xml_text and xml_object into a single api: xml, patterned after the standard
+  attr, and offer xml_reader and xml_accessor as well.  Remove the :readonly arg in the process
+  [Ben Woosley]
+
+* Attach string extensions (#to_latin, #to_utf) to Object rather than String, so we don't have to
+  call #to_s first every time [Ben Woosley]
+
+* Allow a ROXML object to call its constructor on initialization with the xml_construct function
+  [Ben Woosley]
+
+* Use symbols (e.g. :text_content) rather than TAG_CONSTANTS (e.g. TEXT_CONTENT) for readability
+  [Ben Woosley]
+
+* Use named arguments (e.g. :as, :in) rather than positional for clarity,
+  position-independence, and invisible exclusion [Ben Woosley]
+
+* Split out rails_plugin_package_task_gem [Ben Woosley]
+
+* Increase testing significantly, particularly on new functionality & to_xml [Ben Woosley]
+
+== 1.2 (October 10, 2007)
+
+* Fix a bug such that the TEXT_CONTENT tag is no longer also READ_ONLY [Russ Olsen]
+
+== 1.1 (September 24, 2006)
+
+* Initial design & development [Zak Mandhro & Anders Engstrom]

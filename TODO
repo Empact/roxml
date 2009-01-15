@@ -1,6 +1,6 @@
 Planned:
 
-v 2.4
+v 2.5
  * Test out compatibility with ActiveRecord such that it's easy
    to have both xml & database-sourced objects
 
@@ -8,18 +8,11 @@ v 2.4
    values.  This would enable easy accommodation of non-standard formats.
    For example, formatting a number with leading zeros.
 
-v 2.5
- X xml_convention(s) method for establishing whether names are
-   camel-case, underscored or whatever, which will make the :from
-   defaulting much more effective
-
- X on array types, check if there's a plural wrapper for :from, and
-   take from it if it's there, which will remove the need for a lot
-   of :from => 'Item', :in => 'Items' args
- * Do something similar for hashes?
-
  * Ensure (perhaps optionally) that references are unambiguous. That is error/warn
    a singular specification has multiple possible node references
+
+ * Ensure support for nodes which aren't merely children, which hang out deep
+   in the file, but are accessible via xpath
 
 v 3.0
  * remove deprecated functionality

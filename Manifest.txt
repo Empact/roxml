@@ -19,7 +19,7 @@ lib/roxml/xml.rb
 lib/roxml/xml/libxml.rb
 lib/roxml/xml/rexml.rb
 roxml.gemspec
-tasks/rspec.rake
+tasks/test.rake
 test/bugs/rexml_bugs.rb
 test/fixtures/book_malformed.xml
 test/fixtures/book_pair.xml
@@ -75,3 +75,7 @@ test/unit/xml_namespace_test.rb
 test/unit/xml_object_test.rb
 test/unit/xml_required_test.rb
 test/unit/xml_text_test.rb
+vendor/override_rake_task/README
+vendor/override_rake_task/init.rb
+vendor/override_rake_task/install.rb
+vendor/override_rake_task/lib/override_rake_task.rb

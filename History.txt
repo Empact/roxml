@@ -1,4 +1,4 @@
-== 2.4.0 (January 9, 2009)
+== 2.4.0 (January 15, 2009)
 
 * 1 major enhancement
 

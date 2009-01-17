@@ -151,3 +151,99 @@ describe ROXML, "#xml" do
     end
   end
 end
+
+describe ROXML, "inheritance" do
+  class Book
+    include ROXML
+
+    xml_accessor :isbn, :attr => 'ISBN'
+    xml_reader :title
+    xml_reader :description, :as => :cdata
+    xml_reader :author
+    xml_accessor :pages, :text => 'pagecount', :as => Integer
+  end
+
+  class Measurement
+    include ROXML
+
+    xml_reader :units, :attr
+    xml_reader :value, :content
+
+    def xml_initialize
+      initialize(value, units)
+    end
+
+    def initialize(value, units = 'pixels')
+      @value = Float(value)
+      @units = units.to_s
+      if @units.starts_with? 'hundredths-'
+        @value /= 100
+        @units = @units.split('hundredths-')[1]
+      end
+    end
+
+    def to_s
+      "#{value} #{units}"
+    end
+
+    def ==(other)
+      other.units == @units && other.value == @value
+    end
+  end
+
+  class InheritedBookWithDepth < Book
+    xml_reader :depth, Measurement
+  end
+
+  before do
+    @book_xml =  %{
+      <book ISBN="0201710897">
+        <title>The PickAxe</title>
+        <description><![CDATA[Probably the best Ruby book out there]]></description>
+        <author>David Thomas, Andrew Hunt, Dave Thomas</author>
+        <depth units="hundredths-meters">1130</depth>
+        <publisher>Pragmattic Programmers</publisher>
+      </book>
+    }
+
+    @parent = Book.from_xml(@book_xml)
+    @child = InheritedBookWithDepth.from_xml(@book_xml)
+  end
+
+  describe "parent" do
+    it "should include its attributes" do
+      @child.isbn.should == "0201710897"
+      @child.title.should == "The PickAxe"
+      @child.description.should == "Probably the best Ruby book out there"
+      @child.author.should == 'David Thomas, Andrew Hunt, Dave Thomas'
+      @child.pages.should == 0
+    end
+    
+    it "should not include its child's attributes" do
+      @parent.should_not respond_to(:depth)
+    end
+  end
+  
+  describe "child" do
+    it "should include its parent's attributes" do
+      @child.isbn.should == @parent.isbn
+      @child.title.should == @parent.title
+      @child.description.should == @parent.description
+      @child.author.should == @parent.author
+      @child.pages.should == @parent.pages
+    end
+
+    it "should include its attributes" do
+      @child.depth.to_s.should == '11.3 meters'
+    end
+
+    it "should include parent's attributes added after declaration" do
+      Book.class_eval do
+        xml_reader :publisher, :require => true
+      end
+
+      book = InheritedBookWithDepth.from_xml(@book_xml)
+      book.publisher.should == "Pragmattic Programmers"
+    end
+  end
+end

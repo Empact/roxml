@@ -69,7 +69,7 @@ module ROXML
     end
 
     def freeze(val)
-      if opts.freeze?
+      if opts.frozen?
         val.each(&:freeze) if val.is_a?(Enumerable)
         val.freeze
       else
@@ -236,7 +236,7 @@ module ROXML
     end
 
     def freeze(vals)
-      if opts.freeze?
+      if opts.frozen?
         vals.each_pair{|k, v| k.freeze; v.freeze }
         vals.freeze
       else

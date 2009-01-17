@@ -1,5 +1,37 @@
 require File.dirname(__FILE__) + '/spec_helper.rb'
 
+describe ROXML, "#from_xml" do
+  describe "from_xml call", :shared => true do
+    it "should fetch values" do
+      book = BookWithContributors.from_xml(@path)
+      book.title.should == "Programming Ruby - 2nd Edition"
+      book.contributors.map(&:name).should == ["David Thomas","Andrew Hunt","Chad Fowler"]
+    end
+  end
+
+  context "called with PathName" do
+    before do
+      @path = Pathname.new(fixture_path(:book_with_contributors))
+    end
+    it_should_behave_like "from_xml call"
+  end
+
+  context "called with File" do
+    before do
+      @path = File.new(fixture_path(:book_with_contributors))
+    end
+    it_should_behave_like "from_xml call"
+  end
+
+  context "called with URI" do
+    before do
+      require 'uri'
+      @path = URI.parse("file://#{File.expand_path(File.expand_path(fixture_path(:book_with_contributors)))}")
+    end
+    it_should_behave_like "from_xml call"
+  end
+end
+
 describe ROXML, "#xml" do
   class DescriptionReadonly
     include ROXML
@@ -38,6 +70,92 @@ describe ROXML, "#xml" do
   before do
     @writable = BookWithContributions.from_xml(fixture(:book_with_contributions))
     @readonly = BookWithContributionsReadonly.from_xml(fixture(:book_with_contributions))
+  end
+
+  it "should raise on duplicate accessor name" do
+    proc do
+      Class.new do
+        include ROXML
+
+        xml_reader :id
+        xml_accessor :id
+      end
+    end.should raise_error(RuntimeError)
+  end
+
+  class OctalInteger
+    def self.from_xml(val)
+      new(Integer(val.content))
+    end
+
+    def initialize(value)
+      @val = value
+    end
+
+    def ==(other)
+      @val == other
+    end
+
+    def to_xml
+      sprintf("%#o", @val)
+    end
+  end
+
+  describe "overriding output" do
+    class BookWithOctalPages
+      include ROXML
+
+      xml_accessor :pages_with_as, :as => Integer, :to_xml => proc {|val| sprintf("%#o", val) }, :required => true
+      xml_accessor :pages_with_type, OctalInteger, :required => true
+    end
+
+    #      to_xml_test :book_with_octal_pages
+
+    describe "with :to_xml option" do
+      it "should output with to_xml filtering"
+    end
+
+    describe "with #to_xml on the object" do
+      it "should output with to_xml filtering"
+    end
+  end
+
+  describe "overriding input" do
+    before do
+      @book_with_octal_pages_xml = %{
+        <book>
+          <pages>0357</pages>
+        </book>
+      }
+
+      @expected_pages = 239
+    end
+
+    describe "with :as block shorthand" do
+      class BookWithOctalPagesBlockShorthand
+        include ROXML
+
+        xml_accessor :pages, :as => Integer, :required => true
+      end
+
+      it "should apply filtering on input" do
+        book = BookWithOctalPagesBlockShorthand.from_xml(@book_with_octal_pages_xml)
+        book.pages.should == @expected_pages
+      end
+    end
+
+    describe "with #from_xml defined on the object" do
+      class BookWithOctalPagesType
+        include ROXML
+
+        xml_accessor :pages, OctalInteger, :required => true
+      end
+
+      it "should apply filtering on input" do
+        book = BookWithOctalPagesType.from_xml(@book_with_octal_pages_xml)
+        book.pages.should == @expected_pages
+      end
+    end
   end
 
   describe "attribute reference" do

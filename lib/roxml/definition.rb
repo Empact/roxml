@@ -1,8 +1,19 @@
 require File.join(File.dirname(__FILE__), 'hash_definition')
 
+class Module
+  def bool_attr_reader(*attrs)
+    attrs.each do |attr|
+      define_method :"#{attr}?" do
+        instance_variable_get(:"@#{attr}") || false
+      end
+    end
+  end
+end
+
 module ROXML
   class Definition # :nodoc:
     attr_reader :name, :type, :wrapper, :hash, :blocks, :accessor, :to_xml
+    bool_attr_reader :name_explicit, :array, :cdata, :required, :frozen
 
     class << self
       def silence_xml_name_warning?
@@ -18,6 +29,8 @@ module ROXML
       @accessor = sym
       opts = extract_options!(args)
       opts[:as] ||= :bool if @accessor.to_s.ends_with?('?')
+
+      @array = opts[:as].is_a?(Array) || extract_from_as(opts, :array, "Please use [] around your usual type declaration")
       @blocks = collect_blocks(block, opts[:as])
 
       if opts.has_key?(:readonly)
@@ -42,7 +55,7 @@ module ROXML
         opts[:from] = nil
       elsif opts[:from].to_s.starts_with?('@')
         @type = :attr
-        opts[:from] = opts[:from].sub('@', '')
+        opts[:from].sub!('@', '')
       end
 
       @name = (opts[:from] || variable_name).to_s
@@ -75,26 +88,6 @@ module ROXML
 
     def content?
       @name == '.'
-    end
-
-    def name_explicit?
-      @name_explicit
-    end
-
-    def array?
-      @array
-    end
-
-    def cdata?
-      @cdata
-    end
-
-    def required?
-      @required
-    end
-
-    def freeze?
-      @frozen
     end
 
     def default
@@ -195,7 +188,6 @@ module ROXML
           raise ArgumentError, "multiple :as types (#{as.map(&:inspect).join(', ')}) is not supported.  Use a block if you want more complicated behavior."
         end
 
-        @array = true
         as = as.first
       end
 
@@ -228,7 +220,6 @@ module ROXML
       @wrapper = opts.delete(:in)
 
       @cdata ||= extract_from_as(opts, :cdata, "Please use :cdata => true")
-      @array ||= extract_from_as(opts, :array, "Please use [] around your usual type declaration")
 
       if opts[:as].is_a?(Array) && opts[:as].size > 1
         ActiveSupport::Deprecation.warn ":as should point to a single item. #{opts[:as].join(', ')} should be declared some other way."
@@ -246,7 +237,7 @@ module ROXML
         else
           opts[:as].delete(entry)
         end
-        result
+        true
       end
     end
 
@@ -266,6 +257,7 @@ module ROXML
           return :text
         elsif type == :attr
           ActiveSupport::Deprecation.warn ":attr as a type declaration is deprecated.  Use :from => '@attr_name' or :from => :attr instead"
+          opts[:from].sub!('@', '') if opts[:from].to_s.starts_with?('@') # this is added back next line...
           opts[:from] = opts[:from].nil? ? :attr : "@#{opts[:from]}"
           return :attr
         else

@@ -344,8 +344,8 @@ module ROXML # :nodoc:
       # === Other ROXML Class
       # Declares an accessor that represents another ROXML class as child XML element
       # (one-to-one or composition) or array of child elements (one-to-many or
-      # aggregation) of this type. Default is one-to-one. Use :array option for one-to-many, or
-      # simply pass the class in an array.
+      # aggregation) of this type. Default is one-to-one. For one-to-many, simply pass the class
+      # as the only element in an array.
       #
       # Composition example:
       #  <book>

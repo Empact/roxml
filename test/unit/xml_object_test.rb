@@ -116,6 +116,65 @@ class TestXMLObject < Test::Unit::TestCase
     assert_equal nil, p.mother.mother.mother
   end
 
+  class Node
+    include ROXML
+
+    xml_reader :name, :from => 'node_name'
+    xml_reader :nodes, [Node]
+  end
+
+  class Taxonomy
+    include ROXML
+
+    xml_reader :name, :from => 'taxonomy_name'
+    xml_reader :nodes, [Node]
+  end
+
+  class Taxonomies
+    include ROXML
+    xml_reader :taxonomies, [Taxonomy]
+  end
+
+  def test_more_recursion
+    taxonomies = Taxonomies.from_xml(<<HERE)
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE taxonomies SYSTEM "taxonomy.dtd">
+<taxonomies>
+	<taxonomy>
+		<taxonomy_name>World</taxonomy_name>
+		<node node_id="2" content_object_id="82534" object_type_id="2">
+			<node_name lang_iso="eng">Africa</node_name>
+			<node node_id="331" content_object_id="11" object_type_id="4">
+				<node_name lang_iso="eng">Algeria</node_name>
+				<node node_id="7271" content_object_id="117629" object_type_id="8">
+					<node_name lang_iso="eng">Algiers</node_name>
+				</node>
+				<node node_id="7272" content_object_id="117630" object_type_id="8">
+					<node_name lang_iso="eng">Gharda&#239;a</node_name>
+				</node>
+				<node node_id="7871" content_object_id="1000713999" object_type_id="8">
+					<node_name lang_iso="eng">El Oued</node_name>
+				</node>
+				<node node_id="7872" content_object_id="1000714008" object_type_id="8">
+					<node_name lang_iso="eng">Timimoun</node_name>
+				</node>
+				<node node_id="8903" content_object_id="1000565565" object_type_id="8">
+					<node_name lang_iso="eng">Annaba</node_name>
+				</node>
+			</node>
+		</node>
+	</taxonomy>
+</taxonomies>
+HERE
+    assert_equal 1, taxonomies.taxonomies.size
+    assert_equal 'World', taxonomies.taxonomies.first.name
+    node = taxonomies.taxonomies.first.nodes.first
+    assert_equal 'Africa', node.name
+    assert_equal 'Algeria', node.nodes.first.name
+    assert_equal ['Algiers', "Gharda\303\257a", 'El Oued', 'Timimoun', 'Annaba'],
+      node.nodes.first.nodes.map(&:name)
+  end
+
   def test_with_guarded_recursion
     p = PersonWithGuardedMother.from_xml(fixture(:person_with_guarded_mothers))
     assert_equal 'Ben Franklin', p.name

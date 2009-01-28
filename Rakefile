@@ -9,7 +9,7 @@ $hoe = Hoe.new('roxml', ROXML::VERSION) do |p|
   p.author = ["Ben Woosley", "Zak Mandhro", "Anders Engstrom", "Russ Olsen"]
   p.email = "ben.woosley@gmail.com"
   p.url = "http://roxml.rubyforge.org"
-  p.changes              = p.paragraphs_of("History.txt", 0..1).join("\n\n")
+  p.changes              = File.read("History.txt").split(/^==/)[1].strip
   p.rubyforge_name       = p.name
   p.extra_deps         = [
    ['activesupport','>= 2.1.0'],

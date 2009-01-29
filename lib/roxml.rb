@@ -3,7 +3,7 @@
 end
 
 module ROXML # :nodoc:
-  VERSION = '2.4.0'
+  VERSION = '2.4.1'
 
   def self.included(base) # :nodoc:
     base.extend ClassMethods::Accessors,

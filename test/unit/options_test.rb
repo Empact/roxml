@@ -81,13 +81,13 @@ class TestOptions < Test::Unit::TestCase
   end
 
   def test_block_integer_shorthand
-    assert_equal 3, ROXML::Opts.new(:count, :as => :integer).blocks.only['3']
-    assert_equal 3, ROXML::Opts.new(:count, :as => Integer).blocks.only['3']
+    assert_equal 3, ROXML::Opts.new(:count, :as => :integer).blocks.first['3']
+    assert_equal 3, ROXML::Opts.new(:count, :as => Integer).blocks.first['3']
   end
 
   def test_block_float_shorthand
-    assert_equal 3.1, ROXML::Opts.new(:count, :as => :float).blocks.only['3.1']
-    assert_equal 3.1, ROXML::Opts.new(:count, :as => Float).blocks.only['3.1']
+    assert_equal 3.1, ROXML::Opts.new(:count, :as => :float).blocks.first['3.1']
+    assert_equal 3.1, ROXML::Opts.new(:count, :as => Float).blocks.first['3.1']
   end
 
   def test_multiple_shorthands_raises

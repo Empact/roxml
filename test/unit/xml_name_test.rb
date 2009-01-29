@@ -105,21 +105,21 @@ class TestXMLName < Test::Unit::TestCase
   end
 
   def test_tag_refs
-    assert_equal 'definition', DictionaryOfTexts.tag_refs_without_deprecation.only.name
-    assert_equal 'word', DictionaryOfTexts.tag_refs_without_deprecation.only.hash.key.name
-    assert_equal 'meaning', DictionaryOfTexts.tag_refs_without_deprecation.only.hash.value.name
+    assert_equal 'definition', DictionaryOfTexts.tag_refs_without_deprecation.first.name
+    assert_equal 'word', DictionaryOfTexts.tag_refs_without_deprecation.first.hash.key.name
+    assert_equal 'meaning', DictionaryOfTexts.tag_refs_without_deprecation.first.hash.value.name
 
     dict = DictionaryOfTexts.from_xml(fixture(:dictionary_of_texts))
 
-    assert_equal 'definition', dict.tag_refs_without_deprecation.only.name
-    assert_equal 'word', dict.tag_refs_without_deprecation.only.hash.key.name
-    assert_equal 'meaning', dict.tag_refs_without_deprecation.only.hash.value.name
+    assert_equal 'definition', dict.tag_refs_without_deprecation.first.name
+    assert_equal 'word', dict.tag_refs_without_deprecation.first.hash.key.name
+    assert_equal 'meaning', dict.tag_refs_without_deprecation.first.hash.value.name
   end
 
   def test_roxml_attrs
-    assert_equal 'definition', DictionaryOfTexts.roxml_attrs.only.name
-    assert_equal 'word', DictionaryOfTexts.roxml_attrs.only.hash.key.name
-    assert_equal 'meaning', DictionaryOfTexts.roxml_attrs.only.hash.value.name
+    assert_equal 'definition', DictionaryOfTexts.roxml_attrs.first.name
+    assert_equal 'word', DictionaryOfTexts.roxml_attrs.first.hash.key.name
+    assert_equal 'meaning', DictionaryOfTexts.roxml_attrs.first.hash.value.name
   end
 
   def test_xml_name_query_is_deprecated

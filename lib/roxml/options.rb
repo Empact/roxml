@@ -43,7 +43,7 @@ module ROXML
     def to_hash_args(args, type, name)
       args = [args] unless args.is_a? Array
 
-      if args.one? && !(args.only.keys & HASH_KEYS).empty?
+      if args.one? && !(args.first.keys & HASH_KEYS).empty?
         opts = {type => name}
         if type == :content
           opts[:type] = :text
@@ -245,14 +245,15 @@ module ROXML
       types = (@opts.keys & TYPE_KEYS)
       # type arg
       if args.one? && types.empty?
-        if args.only.is_a? Array
+        type = args.first
+        if type.is_a? Array
           @opts[:as] << :array
-          return args.only.only
-        elsif args.only.is_a? Hash
-          @opts[:hash] = args.only
+          return type.first
+        elsif type.is_a? Hash
+          @opts[:hash] = type
           return :hash
         else
-          return args.only
+          return type
         end
       end
 
@@ -263,8 +264,8 @@ module ROXML
 
       # type options
       if types.one?
-        @opts[:from] = @opts.delete(types.only)
-        types.only
+        @opts[:from] = @opts.delete(types.first)
+        types.first
       elsif types.empty?
         :text
       else

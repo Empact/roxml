@@ -1,3 +1,10 @@
+== 2.4.1 (January 28, 2009)
+
+* 1 minor enhancement
+
+  * remove dependency on 'extensions' gem, as we weren't using it much and it
+    was causing problems for some
+
 == 2.4.0 (January 15, 2009)
 
 * 1 major enhancement

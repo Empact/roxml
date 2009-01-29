@@ -21,9 +21,6 @@ class String
   undef_method :to_xs if method_defined?(:to_xs)
 end
 
-require 'extensions/enumerable'
-require 'extensions/array'
-
 class Module #:nodoc:
   include ActiveSupport::CoreExtensions::Module if ActiveSupport::CoreExtensions.const_defined? :Module
 end

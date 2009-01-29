@@ -15,7 +15,7 @@ module ROXML
             result
           end
           hash.each_pair do |k, v|
-            hash[k] = v.only if v.one?
+            hash[k] = v.first if v.one?
           end
           hash
         end

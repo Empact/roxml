@@ -1,278 +1,98 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-
-
-
-  
-  
-  
-  <link rel="stylesheet" type="text/css" media="screen" href="style.css">
-
-
-
-  
-  
-  
-  <title>ROXML - Ruby Object to XML Mapping Library</title>
+	<title>Empact/roxml @ GitHub</title>
+	
+	<style type="text/css">
+		body {
+  		margin-top: 1.0em;
+  		background-color: #baafdb;
+		  font-family: "helvetica"; 
+  		color: #000000;
+    }
+    #container {
+      margin: 0 auto;
+      width: 700px;
+    }
+		h1 { font-size: 3.8em; color: #455024; margin-bottom: 3px; }
+		h1 .small { font-size: 0.4em; }
+		h1 a { text-decoration: none }
+		h2 { font-size: 1.5em; color: #455024; }
+    h3 { text-align: center; color: #455024; }
+    a { color: #455024; }
+    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
+    .download { float: right; }
+		pre { background: #000; color: #fff; padding: 15px;}
+    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
+    .footer { text-align:center; padding-top:30px; font-style: italic; }
+	</style>
+	
 </head>
 
-
 <body>
-
-
-
-
-<div id="header" class="contentBlock">
-<h1>ROXML - Ruby Object to XML Mapping Library</h1>
-
-
-
-
-</div>
-
-
-
-
-<div class="quickLinks"> <a href="#download">Download</a>
-<a href="#quickstart">Quick Start Guide</a> <a href="http://rubyforge.org/projects/roxml">RubyForge Project
-Site</a>
-</div>
-
-
-
-
-<div class="contentBlock">
-<p>ROXML is a <a href="http://ruby-lang.org/" title="Main Ruby Website">Ruby</a>&nbsp;library
-designed to make it easier for Ruby developers to work with <a href="http://en.wikipedia.org/wiki/XML">XML</a>.
-Using
-simple annotations, it enables Ruby classes to be custom-mapped to XML. ROXML
-takes care of the marshalling and unmarshalling of mapped attributes so
-that developers can focus on building first-class Ruby classes. As a
-result, ROXML <span class="highlight">simplifies the
-development of <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">RESTful</a>&nbsp;applications,
-<a href="http://en.wikipedia.org/wiki/Web_Services">Web
-Services</a>, and <a href="http://en.wikipedia.org/wiki/XML-RPC">XML-RPC</a>.</span></p>
-
-
-
-
-<p>ROXML leverages the <a href="http://www.germane-software.com/software/rexml/">REXML</a>
-Ruby XML processor. ROXML powers the <a href="http://rubyforge.org/projects/uddi4r">uddi4r -
-UDDI&nbsp;for Ruby</a> project.</p>
-
-
-
-
-<h2>ROXML 1.0 Features</h2>
-
-
-
-
-ROXML 1.0 provides the following capabilities:<br>
-
-
-
-
-<ul>
-
-
-
-
-  <li>Read Ruby objects from XML (marshal)</li>
-
-
-
-
-  <li>Write Ruby objects to XML (unmarshal)</li>
-
-
-
-
-  <li>Smart defaults for XML mapping</li>
-
-
-
-
-  <li>Annotation-style methods (also known as macros) for XML
-mapping</li>
-
-
-
-
-  <li>One-to-one (composition) Ruby to XML</li>
-
-
-
-
-  <li>One-to-many (aggregation) Ruby with array to XML</li>
-
-
-
-
-  <li>UTF-8 support for multi-lingual documents</li>
-
-
-
-
-</ul>
-
-
-<h2>ROXML 1.1 Features</h2>
-
-
-
-
-ROXML 1.1&nbsp;adds the following new capabilities:
-<ul>
-  <li>Handling text elements with attributes</li>
-  <li>Support for mapped Ruby objects in modules</li>
-</ul>
-<p><a name="download"></a> </p>
-
-
-
-
-<h2>Download</h2>
-
-
-
-
-<p>You can download source and library releases on the <a href="http://rubyforge.org/frs/?group_id=305">RubyForge
-downloads</a> page. Alternatively, you can checkout the latest
-source&nbsp;from <a href="http://rubyforge.org/scm/?group_id=305">CVS</a>.</p>
-
-
-
-
-<p> <a name="quickstart"></a> </p>
-
-
-
-
-<h2>Quick Start Guide</h2>
-
-
-
-
-<p>
-This is a short usage example. See <a href="../doc/classes/ROXML/ROXML_Class.html">ROXML::ROXML_Class</a> and
-packaged test cases for more information.</p>
-
-
-
-
-
-<p>
-Consider an XML document representing a Library containing a number of
-Books. You can map this structure to Ruby classes that provide addition
-useful behavior. With ROXML, you can
-annotate the Ruby classes as follows:</p>
-
-
-
-
-<pre><code><span style="font-weight: bold;">class</span> Book<br> <span style="font-weight: bold;">include</span> ROXML<br><br> xml_attribute :isbn, "ISBN"<br> xml_text :title<br> xml_text :description, <span style="font-weight: bold;">nil</span>, ROXML::TAG_CDATA<br> xml_text :author<span style="font-weight: bold;"></span><br><span style="font-weight: bold;">end</span><br><br><span style="font-weight: bold;">class</span> Library<br> <span style="font-weight: bold;">include</span> ROXML<br><br> xml_text :name, "NAME", ROXML::TAG_CDATA<br> xml_object :books, Book, ROXML::TAG_ARRAY, "books"<br><span style="font-weight: bold;">end</span><br></code><br></pre>
-
-
-
-
-<p>To create a library and put a number of books in it, we could
-run the following code:</p>
-
-
-<pre>  book = Book.<span style="font-weight: bold;">new</span>()<br>  book.isbn = "0201710897"<br>  book.title = "The PickAxe"<br>  book.description = "Best Ruby book out there!"<br>  book.author = "David Thomas, Andrew Hunt, Dave Thomas"<br><br>  lib = Library.<span style="font-weight: bold;">new</span>()<br>  lib.name = "Favorite Books"<br>  lib.books &lt;&lt; book</pre>
-
-
-<p>To save this information to an XML file:</p>
-
-
-
-
-<pre><code>File.open("library.xml", "w") <span style="font-weight: bold;">do</span> |f|<br> lib.to_xml.write(f, 0)<br><span style="font-weight: bold;">end</span><br></code><br></pre>
-
-
-
-
-<p>This would put the following XML into <em>library.xml</em>:</p>
-
-
-
-
-<pre><code>&lt;library&gt;<br> &lt;NAME&gt;&lt;![CDATA[Favorite Books]]&gt;&lt;/NAME&gt;<br> &lt;books&gt;<br>   &lt;book ISBN='0201710897'&gt;<br>   &lt;title&gt;The PickAxe&lt;/title&gt;<br>   &lt;description&gt;&lt;![CDATA[Best Ruby book out there!]]&gt;&lt;/description&gt;<br>   &lt;author&gt;David Thomas, Andrew Hunt, Dave Thomas&lt;/author&gt;<br>   &lt;/book&gt;<br> &lt;/books&gt;<br>&lt;/library&gt;</code><br></pre>
-
-
-
-
-<p>To later populate the library object from the XML file:</p>
-
-
-
-
-<pre> <code>lib = Library.parse(File.read("library.xml"))<br></code><br></pre>
-
-
-
-
-<p>To do a one-to-one mapping between XML objects, such as book
-and publisher,
-you would use the <em>xml_object</em> annotation. For
-example:</p>
-
-
-
-
-<pre><code>&lt;book isbn="0974514055"&gt;<br> &lt;title&gt;Programming Ruby - 2nd Edition&lt;/title&gt;<br> &lt;description&gt;Second edition of the great book&lt;/description&gt;<br> &lt;publisher&gt;<br> &lt;name&gt;Pragmatic Bookshelf&lt;/name&gt;<br> &lt;/publisher&gt;<br>&lt;/book&gt;<br></code><br></pre>
-
-
-
-
-<p>Can be mapped using the following code:</p>
-
-
-
-
-<pre><code><span style="font-weight: bold;">class</span> BookWithPublisher<br> <span style="font-weight: bold;">include</span> ROXML<br><br> xml_name :book<br> xml_object :publisher, Publisher<br><span style="font-weight: bold;">end</span><br></code><br></pre>
-
-
-
-
-<p>Note: In the above example, <em>xml_name</em>
-annotation tells ROXML to set the element
-name to "book" for mapping to XML. The default is XML element name is
-the class name in lowercase; "bookwithpublisher"
-in this case.</p>
-
-
-
-
-</div>
-
-
-
-
-<div id="footer" class="contentBlock">
-<p>ROXML&nbsp;is licensed under the MIT License. See
-bundled MIT-LICENSE.txt for details.&nbsp;ROXML was created by <a href="http://rubyforge.org/users/andersengstrom">Anders
-Engstrom</a> and is being developed and maintained by <a href="http://rubyforge.org/users/zakmandhro">Zak Mandhro</a>.&nbsp;For
-project tracking, downloads, and other information, visit
-the <a href="http://rubyforge.org/projects/roxml">ROXML
-RubyForge Project</a> page.</p>
-
-
-
-
-</div>
-
-
-
-
-<div id="cvs_id">$Id: INDEX,v 1.6 2006/06/28 03:52:38
-zakmandhro Exp $</div>
-
-
-
-
+  <a href="http://github.com/Empact/roxml"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  
+  <div id="container">
+
+    <div class="download">
+      <a href="http://github.com/Empact/roxml/zipball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
+      <a href="http://github.com/Empact/roxml/tarball/master">
+        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+    </div>
+      
+    <h1><a href="http://github.com/Empact/roxml">roxml</a> 
+      <span class="small">by <a href="http://github.com/Empact">Empact</a></small></h1>
+
+    <div class="description">
+      ROXML is a module for binding Ruby classes to XML. It supports custom mapping and bidirectional marshaling between Ruby and XML using annotation-style class methods. ROXML supports the LibXML and REXML XML processors.
+    </div>
+
+    <p>We may not want to work with XML, but we don't always get to pick just how our data comes.  If you do need to do serious work with XML, ROXML is here to make it nice.
+
+Use xpath-based xml declarations to map an XML response into an extensible object, use that object, and then ouput it back to xml as it came.
+
+Aside from the basics, ROXML has a lot of little goodies to make these definitions minimal and readable, which are worth digging in for.  See the 'xml_convention' method for easily referencing xml which uses other naming conventions.  See the handling of '?' in accessor names, the application of blocks and such for other manipulations.
+
+And finally, if you use this library, feel free to push code back my way.  I'll be looking forward to it.</p><h2>Dependencies</h2>
+<p>activesupport >= 2.1.0</p>
+<h2>Install</h2>
+<p>'gem install roxml' will install the latest stable <a href="http://rubyforge.org/frs/?group_id=305">rubyforge version</a></p>
+<h2>License</h2>
+<p>MIT License</p>
+<h2>Authors</h2>
+<p>Ben Woosley (ben.woosley@gmail.com)
+<br/>Anders Engström (anders.engstrom@gnejs.net)
+<br/>James Thompson (james@plainprograms.com)
+<br/>James Healy (jimmy@deefa.com)
+<br/>Zak Mandhro (mandhro@yahoo.com)
+<br/>Russ Olsen (russell.olsen@gmail.com)</p>
+<h2>Contact</h2>
+<p>Ben Woosley (Ben.Woosley@gmail.com)
+<br/>      </p>
+
+
+    <h2>Download</h2>
+    <p>
+      You can download this project in either
+      <a href="http://github.com/Empact/roxml/zipball/master">zip</a> or
+      <a href="http://github.com/Empact/roxml/tarball/master">tar</a> formats.
+    </p>
+    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
+      by running:
+      <pre>$ git clone git://github.com/Empact/roxml</pre>
+    </p>
+      
+    <div class="footer">
+      get the source code on GitHub : <a href="http://github.com/Empact/roxml">Empact/roxml</a>
+    </div>
+    
+  </div>
+
+  
 </body>
 </html>

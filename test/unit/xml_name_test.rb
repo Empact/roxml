@@ -88,7 +88,7 @@ class TestXMLName < Test::Unit::TestCase
   def test_named_books_picked_up
     named = Library.from_xml(fixture(:library))
     assert named.books
-    assert_equal :book, named.books.first.tag_name
+    assert_equal :book, named.books.first.class.tag_name
   end
 
   def test_nameless_books_missing
@@ -101,7 +101,7 @@ class TestXMLName < Test::Unit::TestCase
 
     dict = DictionaryOfTexts.from_xml(fixture(:dictionary_of_texts))
 
-    assert_equal :dictionary, dict.tag_name
+    assert_equal :dictionary, dict.class.tag_name
   end
 
   def test_tag_refs

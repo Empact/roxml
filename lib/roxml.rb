@@ -18,11 +18,12 @@ module ROXML # :nodoc:
 
   module InstanceMethods # :nodoc:
     # Instance method equivalents of the Class method accessors
-    module Accessors
+    module Accessors # :nodoc:all
       # Provides access to ROXML::ClassMethods::Accessors::tag_name directly from an instance of a ROXML class
       def tag_name
         self.class.tag_name
       end
+      deprecate :tag_name => 'use class.tag_name instead'
 
       # Provides access to ROXML::ClassMethods::Accessors::tag_refs directly from an instance of a ROXML class
       def tag_refs
@@ -72,7 +73,7 @@ module ROXML # :nodoc:
     module Conversions
       # Returns a LibXML::XML::Node or a REXML::Element representing this object
       def to_xml(name = nil)
-        returning XML::Node.new_element(name || tag_name) do |root|
+        returning XML::Node.new_element(name || self.class.tag_name) do |root|
           self.class.roxml_attrs.each do |attr|
             ref = attr.to_ref(self)
             v = ref.to_xml
@@ -445,7 +446,7 @@ module ROXML # :nodoc:
       end
 
       # This method is deprecated, please use xml_initialize instead
-      def xml_construct(*args)
+      def xml_construct(*args) # :nodoc:
         present_tags = tag_refs_without_deprecation.map(&:accessor)
         missing_tags = args - present_tags
         unless missing_tags.empty?
@@ -518,7 +519,7 @@ module ROXML # :nodoc:
         (@roxml_attrs + (superclass.try(:roxml_attrs) || [])).freeze
       end
 
-      def tag_refs
+      def tag_refs # :nodoc:
         roxml_attrs.map {|a| a.to_ref(nil) }
       end
       deprecate :tag_refs => :roxml_attrs
@@ -561,7 +562,7 @@ module ROXML # :nodoc:
       end
 
       # Deprecated in favor of #from_xml
-      def parse(data)
+      def parse(data) # :nodoc:
         from_xml(data)
       end
       deprecate :parse => :from_xml

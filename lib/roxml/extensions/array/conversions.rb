@@ -1,6 +1,6 @@
 module ROXML
   module CoreExtensions
-    module Array #:nodoc:
+    module Array #:nodoc:all
       module Conversions
         # Translates an array into a hash, where each element of the array is
         # an array with 2 elements:

@@ -215,7 +215,7 @@ end
 class LibraryWithBooksOfUnderivableName
   include ROXML
 
-  xml :name, true
+  xml_reference true, :name
   xml_reader :novels, NamelessBook, :as => :array
 end
 

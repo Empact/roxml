@@ -1,9 +1,11 @@
 == 2.4.1 (January 28, 2009)
 
-* 1 minor enhancement
+* 2 minor enhancements
 
   * remove dependency on 'extensions' gem, as we weren't using it much and it
     was causing problems for some
+  * deprecate the 'xml' declaration in favor of the more explicit 'xml_reference'
+    declaration.  Reorder params to make for cleaner 3.0 transition.
 
 == 2.4.0 (January 15, 2009)
 

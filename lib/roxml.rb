@@ -232,7 +232,7 @@ module ROXML # :nodoc:
       #
       # Example:
       #  class Book
-      #    xml :author, false, :text => 'Author'
+      #    xml_reader :author, :text => 'Author'
       #    xml_accessor :description, :text, :as => :cdata
       #    xml_reader :title
       #  end
@@ -415,11 +415,16 @@ module ROXML # :nodoc:
       # [:required] If true, throws RequiredElementMissing when the element isn't present
       # [:frozen] If true, all results are frozen (using #freeze) at parse-time.
       #
-      def xml(sym, writable = false, type_and_or_opts = :text, opts = nil, &block)
+      def xml_reference(writable, sym, type_and_or_opts = :text, opts = nil, &block)
         opts = Opts.new(sym, *[type_and_or_opts, opts].compact, &block)
 
         add_accessor(opts, writable)
       end
+
+      def xml(sym, writable = false, type_and_or_opts = :text, opts = nil, &block) #:nodoc:
+        xml_reference(writable, sym, type_and_or_opts, opts, &block)
+      end
+      deprecate :xml => :xml_reference
 
       # Declares a read-only xml reference. See xml for details.
       #
@@ -427,7 +432,7 @@ module ROXML # :nodoc:
       # its value can be modified indirectly via methods.  For more complete
       # protection, consider the :frozen option.
       def xml_reader(sym, type_and_or_opts = :text, opts = nil, &block)
-        xml sym, false, type_and_or_opts, opts, &block
+        xml_reference false, sym, type_and_or_opts, opts, &block
       end
 
       # Declares a writable xml reference. See xml for details.
@@ -436,7 +441,7 @@ module ROXML # :nodoc:
       # you can use the :frozen option to prevent its value from being
       # modified indirectly via methods.
       def xml_accessor(sym, type_and_or_opts = :text, opts = nil, &block)
-        xml sym, true, type_and_or_opts, opts, &block
+        xml_reference true, sym, type_and_or_opts, opts, &block
       end
 
       # This method is deprecated, please use xml_initialize instead

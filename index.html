@@ -26,27 +26,30 @@
     a { color: #455024; }
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
-		pre { background: #000; color: #fff; padding: 15px;}
+		code { background: #000; color: #fff; padding: 15px;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
+    img { border: 0; }
+    .fork_me img { position: absolute; top: 0; right: 0; }
+    .authors { list-style-type:none; padding: 0; margin: 0; }
 	</style>
 	
 </head>
 
 <body>
-  <a href="http://github.com/Empact/roxml"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  <div class="fork_me"><a href="http://github.com/Empact/roxml"><img src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a></div>
   
   <div id="container">
 
     <div class="download">
       <a href="http://github.com/Empact/roxml/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
+        <img width="90" src="http://github.com/images/modules/download/zip.png" alt="download ROXML as a zip archive" /></a>
       <a href="http://github.com/Empact/roxml/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
+        <img width="90" src="http://github.com/images/modules/download/tar.png" alt="download ROXML as a tar archive" /></a>
     </div>
       
     <h1><a href="http://github.com/Empact/roxml">roxml</a> 
-      <span class="small">by <a href="http://github.com/Empact">Empact</a></small></h1>
+      <span class="small">by <a href="http://github.com/Empact">Empact</a></span></h1>
 
     <div class="description">
       ROXML is a module for binding Ruby classes to XML. It supports custom mapping and bidirectional marshaling between Ruby and XML using annotation-style class methods. ROXML supports the LibXML and REXML XML processors.
@@ -61,19 +64,20 @@ Aside from the basics, ROXML has a lot of little goodies to make these definitio
 And finally, if you use this library, feel free to push code back my way.  I'll be looking forward to it.</p><h2>Dependencies</h2>
 <p>activesupport >= 2.1.0</p>
 <h2>Install</h2>
-<p>'gem install roxml' will install the latest stable <a href="http://rubyforge.org/frs/?group_id=305">rubyforge version</a></p>
+<p><code>$ gem install roxml</code> will install the latest stable <a href="http://rubyforge.org/frs/?group_id=305">rubyforge version</a></p>
 <h2>License</h2>
-<p>MIT License</p>
+<p>See MIT_LICENSE within.</p>
 <h2>Authors</h2>
-<p>Ben Woosley (ben.woosley@gmail.com)
-<br/>Anders Engström (anders.engstrom@gnejs.net)
-<br/>James Thompson (james@plainprograms.com)
-<br/>James Healy (jimmy@deefa.com)
-<br/>Zak Mandhro (mandhro@yahoo.com)
-<br/>Russ Olsen (russell.olsen@gmail.com)</p>
+<ul class="authors">
+<li>Ben Woosley (ben.woosley@gmail.com)</li>
+<li>Anders Engström (anders.engstrom@gnejs.net)</li>
+<li>James Thompson (james@plainprograms.com)</li>
+<li>James Healy (jimmy@deefa.com)</li>
+<li>Zak Mandhro (mandhro@yahoo.com)</li>
+<li>Russ Olsen (russell.olsen@gmail.com)</li>
+</ul>
 <h2>Contact</h2>
-<p>Ben Woosley (Ben.Woosley@gmail.com)
-<br/>      </p>
+<p>Ben Woosley (ben.woosley@gmail.com)</p>
 
 
     <h2>Download</h2>
@@ -84,8 +88,8 @@ And finally, if you use this library, feel free to push code back my way.  I'll 
     </p>
     <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
       by running:
-      <pre>$ git clone git://github.com/Empact/roxml</pre>
     </p>
+    <div><code>$ git clone git://github.com/Empact/roxml</code></div>
       
     <div class="footer">
       get the source code on GitHub : <a href="http://github.com/Empact/roxml">Empact/roxml</a>

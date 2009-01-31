@@ -72,7 +72,11 @@ module ROXML
     end
 
     def apply_blocks(val)
-      blocks.apply_to(val)
+      begin
+        blocks.apply_to(val)
+      rescue Exception => ex
+        raise ex, inspect
+      end
     end
 
     def freeze(val)

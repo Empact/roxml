@@ -5,14 +5,14 @@ file_contents = File.read(dir + '/../spec/fixtures/commit.xml')
 
 module GitHub
   class Commit
-    include HappyMapper
+    include ROXML
+    xml_convention :dasherize
 
-    tag "commit"
-    element :url, String
-    element :tree, String
-    element :message, String
-    element :id, String
-    element :'committed-date', Date
+    xml_reader :url
+    xml_reader :tree
+    xml_reader :message
+    xml_reader :id
+    xml_reader :committed_date, :as => Date
   end
 end
 

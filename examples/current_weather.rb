@@ -4,13 +4,14 @@ require File.join(dir, 'happymapper')
 file_contents = File.read(dir + '/../spec/fixtures/current_weather.xml')
 
 class CurrentWeather
-  include HappyMapper
+  include ROXML
+  xml_convention :dasherize
   
-  tag 'ob'
+  xml_name 'ob'
   namespace 'aws'
-  element :temperature, Integer, :tag => 'temp'
-  element :feels_like, Integer, :tag => 'feels-like'
-  element :current_condition, String, :tag => 'current-condition', :attributes => {:icon => String}
+  xml_reader :temperature, :as => Integer, :from => 'temp'
+  xml_reader :feels_like, :as => Integer
+  xml_reader :current_condition, :attributes => {:icon => String}
 end
 
 CurrentWeather.parse(file_contents).each do |current_weather|

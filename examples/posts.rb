@@ -4,15 +4,15 @@ require File.join(dir, 'happymapper')
 file_contents = File.read(dir + '/../spec/fixtures/posts.xml')
 
 class Post
-  include HappyMapper
+  include ROXML
   
-  attribute :href, String
-  attribute :hash, String
-  attribute :description, String
-  attribute :tag, String
-  attribute :time, DateTime
-  attribute :others, Integer
-  attribute :extended, String
+  attribute :href
+  attribute :hash
+  attribute :description
+  attribute :tag
+  attribute :time, :as => DateTime
+  attribute :others, :as => Integer
+  attribute :extended
 end
 
 posts = Post.parse(file_contents)

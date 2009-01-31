@@ -4,27 +4,26 @@ require File.join(dir, 'happymapper')
 file_contents = File.read(dir + '/../spec/fixtures/pita.xml')
 
 # The document `pita.xml` contains both a default namespace and the 'georss'
-# namespace (for the 'point' element).
+# namespace (for the 'point' xml_reader).
 module PITA
-  class Item
-    include HappyMapper
-    
-    tag 'Item' # if you put class in module you need tag
-    element :asin, String, :tag => 'ASIN'
-    element :detail_page_url, String, :tag => 'DetailPageURL'
-    element :manufacturer, String, :tag => 'Manufacturer', :deep => true
-    # this is the only element that exists in a different namespace, so it
-    # must be explicitly specified
-    element :point, String, :tag => 'point', :namespace => 'georss'
+  class Base
+    include ROXML
+    xml_convention :camelcase
   end
 
-  class Items
-    include HappyMapper
-    
-    tag 'Items' # if you put class in module you need tag
-    element :total_results, Integer, :tag => 'TotalResults'
-    element :total_pages, Integer, :tag => 'TotalPages'
-    has_many :items, Item
+  class Item < Base
+    xml_reader :asin, :from => 'ASIN'
+    xml_reader :detail_page_url
+    xml_reader :manufacturer, :in => './'
+    # this is the only xml_reader that exists in a different namespace, so it
+    # must be explicitly specified
+    xml_reader :point, :from => 'point', :namespace => 'georss'
+  end
+
+  class Items < Base
+    xml_reader :total_results, :as => Integer
+    xml_reader :total_pages, :as => Integer
+    xml_reader :items, [Item]
   end
 end
 

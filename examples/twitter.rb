@@ -1,37 +1,36 @@
-dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
-require File.join(dir, 'happymapper')
-
-file_contents = File.read(dir + '/../spec/fixtures/statuses.xml')
+require File.join(File.dirname(__FILE__), '../lib/roxml')
+require 'time'
 
 class User
-  include HappyMapper
+  include ROXML
   
-  element :id, Integer
-  element :name, String
-  element :screen_name, String
-  element :location, String
-  element :description, String
-  element :profile_image_url, String
-  element :url, String
-  element :protected, Boolean
-  element :followers_count, Integer
+  xml_reader :id, :as => Integer
+  xml_reader :name
+  xml_reader :screen_name
+  xml_reader :location
+  xml_reader :description
+  xml_reader :profile_image_url
+  xml_reader :url
+  xml_reader :protected?
+  xml_reader :followers_count, :as => Integer
 end
 
 class Status
-  include HappyMapper
+  include ROXML
   
-  element :id, Integer
-  element :text, String
-	element :created_at, Time
-	element :source, String
-	element :truncated, Boolean
-	element :in_reply_to_status_id, Integer
-	element :in_reply_to_user_id, Integer
-	element :favorited, Boolean
-	has_one :user, User
+  xml_reader :id, :as => Integer
+  xml_reader :text
+	xml_reader :created_at, :as => Time
+	xml_reader :source
+	xml_reader :truncated?
+	xml_reader :in_reply_to_status_id, :as => Integer
+	xml_reader :in_reply_to_user_id, :as => Integer
+	xml_reader :favorited?
+	xml_reader :user, User
 end
 
-statuses = Status.parse(file_contents)
-statuses.each do |status|
-  puts status.user.name, status.user.screen_name, status.text, status.source, ''
+class Statuses
+  include ROXML
+
+  xml_reader :statuses, [Status]
 end

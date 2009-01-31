@@ -2,7 +2,7 @@ module ROXML
   HASH_KEYS = [:attrs, :key, :value].freeze
   TYPE_KEYS = [:attr, :text, :hash, :content].freeze
 
-  class HashDesc # :nodoc:
+  class HashDefinition # :nodoc:
     attr_reader :key, :value, :wrapper
 
     def initialize(opts, wrapper)
@@ -49,7 +49,7 @@ module ROXML
           opts[:type] = :text
           (opts[:as] ||= []) << :content
         end
-        Opts.new(name, opts)
+        Definition.new(name, opts)
       else
         opts = args.extract_options!
         raise opts.inspect

@@ -130,12 +130,12 @@ class TestXMLName < Test::Unit::TestCase
   end
 
   def test_xml_name_should_not_be_conventionalized_if_explicitly_set
-    reference = ROXML::XMLTextRef.new(ROXML::Opts.new(:name, :from => 'georss:name'), WrapModule::InstanceStandin.new)
+    reference = ROXML::XMLTextRef.new(ROXML::Definition.new(:name, :from => 'georss:name'), WrapModule::InstanceStandin.new)
     assert_equal "georss:name", reference.name
   end
 
   def test_xml_name_not_screwed_up_by_xml_convention
-    reference = ROXML::XMLTextRef.new(ROXML::Opts.new(:name, :in => './'), WrapModule::InstanceStandin.new)
+    reference = ROXML::XMLTextRef.new(ROXML::Definition.new(:name, :in => './'), WrapModule::InstanceStandin.new)
     assert_equal "name value", reference.value_in(ROXML::XML::Parser.parse(%(
       <Wrapper>
          <MoreStuff>

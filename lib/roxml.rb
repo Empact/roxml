@@ -1,4 +1,4 @@
-%w(extensions/active_support extensions/deprecation extensions/array extensions/string hash_desc options xml).each do |file|
+%w(extensions/active_support extensions/deprecation extensions/array extensions/string definition xml).each do |file|
   require File.join(File.dirname(__FILE__), 'roxml', file)
 end
 
@@ -439,7 +439,7 @@ module ROXML # :nodoc:
       # [:frozen] If true, all results are frozen (using #freeze) at parse-time.
       #
       def xml_reference(writable, sym, type_and_or_opts = :text, opts = nil, &block)
-        opts = Opts.new(sym, *[type_and_or_opts, opts].compact, &block)
+        opts = Definition.new(sym, *[type_and_or_opts, opts].compact, &block)
 
         add_accessor(opts, writable)
       end

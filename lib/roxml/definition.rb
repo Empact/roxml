@@ -1,5 +1,7 @@
+require File.join(File.dirname(__FILE__), 'hash_definition')
+
 module ROXML
-  class Opts # :nodoc:
+  class Definition # :nodoc:
     attr_reader :name, :type, :hash, :blocks, :accessor, :to_xml
 
     class << self
@@ -57,7 +59,7 @@ module ROXML
     end
 
     def hash
-      @hash ||= HashDesc.new(@opts.delete(:hash), name) if hash?
+      @hash ||= HashDefinition.new(@opts.delete(:hash), name) if hash?
     end
 
     def hash?

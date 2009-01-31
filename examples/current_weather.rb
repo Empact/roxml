@@ -11,18 +11,17 @@ class WeatherObservation < Base
   xml_name 'ob'
   xml_reader :temperature, :as => Float, :from => 'aws:temp'
   xml_reader :feels_like, :as => Integer
-  xml_reader :current_condition #, :attributes => {:icon => String}
+  xml_reader :current_condition #, :attributes => {:icon => String} # pending
 end
 
 class Weather < Base
-  xml_reader :observations, [WeatherObservation]
+  xml_reader :observation, WeatherObservation, :required => true
 end
 
 unless defined?(Spec)
-  Weather.from_xml(xml_for('current_weather')).observations.each do |current_weather|
-    puts "temperature: #{current_weather.temperature}"
-    puts "feels_like: #{current_weather.feels_like}"
-    puts "current_condition: #{current_weather.current_condition}"
-    puts "current_condition.icon: #{current_weather.current_condition.icon}"
-  end
+  current_weather = Weather.from_xml(xml_for('current_weather')).observation
+  puts "temperature: #{current_weather.temperature}"
+  puts "feels_like: #{current_weather.feels_like}"
+  puts "current_condition: #{current_weather.current_condition}"
+# puts "current_condition.icon: #{current_weather.current_condition.icon}"  # pending
 end

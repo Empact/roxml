@@ -7,32 +7,31 @@ describe Weather do
   end
 
   it "should extract observations" do
-    @weather.observations.should_not be_empty
-    @weather.observations.each {|observation| observation.should be_an_instance_of(WeatherObservation) }
+    @weather.observation.should be_an_instance_of(WeatherObservation)
   end
 end
 
 describe WeatherObservation do
   before do
-    @observations = Weather.from_xml(xml_for('current_weather')).observations
-    @observations.should_not be_empty
+    @observation = Weather.from_xml(xml_for('current_weather')).observation
   end
 
   it "should extract temperature" do
-    @observations.each {|observation| observation.temperature.should > 0 }
+    @observation.temperature.should > 0
   end
 
   it "should extract feels_like" do
-    @observations.each {|observation| observation.feels_like.should > 0 }
+    @observation.feels_like.should > 0
   end
 
   describe "#current_condition" do
     it "should extract current_condition" do
-      @observations.each {|observation| observation.current_condition.should_not be_empty }
+      @observation.current_condition.should_not be_empty
     end
 
     it "should extract icon attribute" do
-      @observations.each {|observation| observation.current_condition.should_not be_empty }
+      pending "need to think options through for HappyMapper-style :attributes extensions"
+      @observation.current_condition.icon.should_not be_empty
     end
   end
 end

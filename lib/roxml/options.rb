@@ -167,56 +167,55 @@ module ROXML
     end
 
   private
+    def self.all(items, &block)
+      array = items.is_a?(Array)
+      results = (array ? items : [items]).map do |item|
+        yield item
+      end
+
+      array ? results : results.first
+    end
+
     BLOCK_TO_FLOAT = lambda do |val|
-      if val.is_a? Array
-        val.collect do |v|
-          Float(v)
-        end
-      else
-        Float(val)
+      all(val) do |v|
+        Float(v)
       end
     end
 
     BLOCK_TO_INT = lambda do |val|
-      if val.is_a? Array
-        val.collect do |v|
-          Integer(v)
-        end
-      else
-        Integer(val)
+      all(val) do |v|
+        Integer(v)
       end
     end
 
-    TRUE_VALS = %w{TRUE True true 1}
-    FALSE_VALS = %w{FALSE False false 0}
+    def self.fetch_bool(value, default)
+      value = value.try(:downcase)
+      if %w{true yes 1}.include? value
+        true
+      elsif %w{false no 0}.include? value
+        false
+      else
+        default
+      end
+    end
 
     BLOCK_SHORTHANDS = {
       :integer => BLOCK_TO_INT, # deprecated
       Integer  => BLOCK_TO_INT,
       :float   => BLOCK_TO_FLOAT, # deprecated
       Float    => BLOCK_TO_FLOAT,
-      Date     => lambda {|val| Date.parse(val) },
-      DateTime => lambda {|val| DateTime.parse(val) },
-      Time     => lambda {|val| Time.parse(val) },
-
+      Date     => lambda {|val| all(val) {|v| Date.parse(v) } if defined?(Date) },
+      DateTime => lambda {|val| all(val) {|v| DateTime.parse(v) } if defined?(DateTime) },
+      Time     => lambda {|val| all(val) {|v| Time.parse(v) } if defined?(Time) },
       :bool    => nil,
       :bool_standalone => lambda do |val|
-        if TRUE_VALS.include? val
-          true
-        elsif FALSE_VALS.include? val
-          false
-        else
-          nil
+        all(val) do |v|
+          fetch_bool(v, nil)
         end
       end,
-
       :bool_combined => lambda do |val|
-        if TRUE_VALS.include? val
-          true
-        elsif FALSE_VALS.include? val
-          false
-        else
-          val
+        all(val) do |v|
+          fetch_bool(v, v)
         end
       end
     }

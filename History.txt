@@ -4,6 +4,11 @@
 
   * add :as => Time, DateTime, and Date support
   * support Pathname, IO and URI objects as #from_xml arguments
+  * :as => :bool now supports all capitalizations of 'true', 'false', 'yes', 'no', as well as '1' and '0'
+
+ * 1 bug fix
+
+  * Arrays of attrs or elements :as => :bool weren't previously supported.  An oversight.
 
 == 2.4.1 (January 28, 2009)
 

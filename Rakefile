@@ -38,7 +38,7 @@ require 'newgem/tasks' # load /tasks/*.rake
 
 Dir['tasks/**/*.rake'].each { |t| load t }
 
-task :default => :test
+task :default => [:test, :spec]
 
 ## Provide the username used to upload website etc.
 #RubyForgeConfig = {

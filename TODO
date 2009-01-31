@@ -28,6 +28,8 @@ v 2.5
       xml.reader  :something_else, :as => Date
     end
 
+ * :self => true for sending method_missing to this attribute?
+
 v 3.0
  * remove deprecated functionality
 
@@ -56,7 +58,5 @@ v 3.0
 
  * Use lazy evaluation to minimize parsing time for large files
 
-Potential:
-
- * :as => :self for sending method_missing to this attribute
+ * Consider class_inheritable_attribute rather than superclass.try stuff.
 

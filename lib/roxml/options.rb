@@ -75,6 +75,7 @@ module ROXML
       @opts = extract_options!(args)
       @default = @opts.delete(:else)
       @to_xml = @opts.delete(:to_xml)
+      @name_explicit = @opts.has_key?(:from)
 
       if @opts.has_key?(:readonly)
         raise ArgumentError, "There is no 'readonly' option. You probably mean to use :frozen => true"
@@ -123,6 +124,10 @@ module ROXML
 
     def name?
       @name == '*'
+    end
+
+    def name_explicit?
+      @name_explicit
     end
 
     def content?

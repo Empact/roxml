@@ -37,7 +37,14 @@ module ROXML
     def name
       conventionize(opts.name)
     end
-    alias_method :xpath_name, :name
+
+    def xpath_name
+      if !opts.name_explicit? && namespace = @instance.class.roxml_namespace
+        "#{namespace}:#{name}"
+      else
+        name
+      end
+    end
 
     def default
       @default ||= @opts.default || (@opts.array? ? Array.new : nil)

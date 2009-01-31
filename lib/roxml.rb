@@ -108,6 +108,28 @@ module ROXML # :nodoc:
         @roxml_tag_name = name
       end
 
+      # Sets the namemespace for attributes and elements of this class.  You can override
+      # this value on individual elements via the :from option
+      #
+      # Example:
+      #  class Book
+      #   xml_namespace :aws
+      #
+      #   xml_reader :default_namespace
+      #   xml_reader :different_namespace, :from => 'different:namespace'
+      #   xml_reader :no_namespace, :from => ':no_namespace'
+      #  end
+      #
+      # <aws:book xmlns:aws="http://www.aws.com/aws" xmlns:different="http://www.aws.com/different">
+      #   <aws:default_namespace>value</aws:default_namespace>
+      #   <different:namespace>value</different:namespace>
+      #   <no_namespace>value</no_namespace>
+      # </aws:book>
+      #
+      def xml_namespace(namespace)
+        @roxml_namespace = namespace.to_s
+      end
+
       # Most xml documents have a consistent naming convention, for example, the node and
       # and attribute names might appear in CamelCase. xml_convention enables you to adapt
       # the roxml default names for this object to suit this convention.  For example,
@@ -510,6 +532,10 @@ module ROXML # :nodoc:
 
       def roxml_tag_name # :nodoc:
         @roxml_tag_name || superclass.try(:roxml_tag_name)
+      end
+
+      def roxml_namespace # :nodoc:
+        @roxml_namespace || superclass.try(:roxml_namespace)
       end
 
       # Returns array of internal reference objects, such as attributes

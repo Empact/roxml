@@ -146,4 +146,9 @@ class TestOptions < Test::Unit::TestCase
     assert_equal "1970-09-03T12:05:00+00:00", ROXML::Opts.new(:datevalue, :as => DateTime).blocks.first.call("12:05pm, September 3rd, 1970").to_s
     assert_equal ["1970-09-03T12:05:00+00:00", "1700-05-22T15:00:00+00:00"], ROXML::Opts.new(:datevalue, :as => DateTime).blocks.first.call(["12:05pm, September 3rd, 1970", "3:00pm, May 22, 1700"]).map(&:to_s)
   end
+
+  def test_name_explicit_indicates_whether_from_option_is_present
+    assert_equal true, ROXML::Opts.new(:element, :from => 'somewhere').name_explicit?
+    assert_equal false, ROXML::Opts.new(:element).name_explicit?
+  end
 end

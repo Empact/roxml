@@ -1,5 +1,17 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
+class ParentWithNamespace
+  include ROXML
+  xml_namespace 'parent_namespace'
+end
+
+class ChildWithInheritedNamespace < ParentWithNamespace
+end
+
+class ChildWithOwnNamespace < ParentWithNamespace
+  xml_namespace 'child_namespace'
+end
+
 class InheritedBookWithDepth < Book
   xml_reader :depth, Measurement
 end
@@ -39,5 +51,13 @@ class TestInheritance < Test::Unit::TestCase
 
     book = InheritedBookWithDepth.from_xml(@book_xml)
     assert_equal "Pragmattic Programmers", book.publisher
+  end
+
+  def test_it_should_inherit_namespace
+    assert_equal 'parent_namespace', ChildWithInheritedNamespace.roxml_namespace
+  end
+
+  def test_inherited_namespace_should_be_overridable
+    assert_equal 'child_namespace', ChildWithOwnNamespace.roxml_namespace
   end
 end

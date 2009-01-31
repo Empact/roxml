@@ -81,12 +81,10 @@ class TestOptions < Test::Unit::TestCase
   end
 
   def test_block_integer_shorthand
-    assert_equal 3, ROXML::Opts.new(:count, :as => :integer).blocks.first['3']
     assert_equal 3, ROXML::Opts.new(:count, :as => Integer).blocks.first['3']
   end
 
   def test_block_float_shorthand
-    assert_equal 3.1, ROXML::Opts.new(:count, :as => :float).blocks.first['3.1']
     assert_equal 3.1, ROXML::Opts.new(:count, :as => Float).blocks.first['3.1']
   end
 
@@ -99,6 +97,15 @@ class TestOptions < Test::Unit::TestCase
   def test_stacked_blocks
     assert_equal 2, ROXML::Opts.new(:count, :as => Integer) {|val| val.to_i }.blocks.size
     assert_equal 2, ROXML::Opts.new(:count, :as => Float) {|val| val.object_id }.blocks.size
+  end
+
+  def test_symbol_shorthands_are_deprecated
+    assert_deprecated do
+      ROXML::Opts.new(:junk, :as => :integer)
+    end
+    assert_deprecated do
+      ROXML::Opts.new(:junk, :as => :float)
+    end
   end
 
   def test_block_shorthand_supports_time

@@ -191,9 +191,9 @@ module ROXML
     FALSE_VALS = %w{FALSE False false 0}
 
     BLOCK_SHORTHANDS = {
-      :integer => BLOCK_TO_INT,
+      :integer => BLOCK_TO_INT, # deprecated
       Integer  => BLOCK_TO_INT,
-      :float   => BLOCK_TO_FLOAT,
+      :float   => BLOCK_TO_FLOAT, # deprecated
       Float    => BLOCK_TO_FLOAT,
       Date     => lambda {|val| Date.parse(val) },
       DateTime => lambda {|val| DateTime.parse(val) },
@@ -222,6 +222,9 @@ module ROXML
     }
 
     def collect_blocks(block, as)
+      ActiveSupport::Deprecation.warn ":as => :float is deprecated.  Use :as => Float instead" if as.include?(:float)
+      ActiveSupport::Deprecation.warn ":as => :integer is deprecated.  Use :as => Integer instead" if as.include?(:integer)
+
       shorthands = as & BLOCK_SHORTHANDS.keys
       if shorthands.size > 1
         raise ArgumentError, "multiple block shorthands supplied #{shorthands.map(&:to_s).join(', ')}"

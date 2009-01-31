@@ -178,13 +178,13 @@ module ROXML
 
     BLOCK_TO_FLOAT = lambda do |val|
       all(val) do |v|
-        Float(v)
+        Float(v) unless blank_string?(v)
       end
     end
 
     BLOCK_TO_INT = lambda do |val|
       all(val) do |v|
-        Integer(v)
+        Integer(v) unless blank_string?(v)
       end
     end
 
@@ -199,14 +199,31 @@ module ROXML
       end
     end
 
+    def self.blank_string?(value)
+      value.is_a?(String) && value.blank?
+    end
+
     BLOCK_SHORTHANDS = {
       :integer => BLOCK_TO_INT, # deprecated
       Integer  => BLOCK_TO_INT,
       :float   => BLOCK_TO_FLOAT, # deprecated
       Float    => BLOCK_TO_FLOAT,
-      Date     => lambda {|val| all(val) {|v| Date.parse(v) } if defined?(Date) },
-      DateTime => lambda {|val| all(val) {|v| DateTime.parse(v) } if defined?(DateTime) },
-      Time     => lambda {|val| all(val) {|v| Time.parse(v) } if defined?(Time) },
+      Date     => lambda do |val|
+        if defined?(Date)
+          all(val) {|v| Date.parse(v) unless blank_string?(v) }
+        end
+      end,
+      DateTime => lambda do |val|
+        if defined?(DateTime)
+          all(val) {|v| DateTime.parse(v) unless blank_string?(v) }
+        end
+      end,
+      Time     => lambda do |val|
+        if defined?(Time)
+          all(val) {|v| Time.parse(v) unless blank_string?(v) }
+        end
+      end,
+
       :bool    => nil,
       :bool_standalone => lambda do |val|
         all(val) do |v|

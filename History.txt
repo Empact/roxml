@@ -1,10 +1,13 @@
 == ???
 
-* 2 minor enhancements
+* 4 minor enhancements
 
   * add :as => Time, DateTime, and Date support
   * support Pathname, IO and URI objects as #from_xml arguments
   * :as => :bool now supports all capitalizations of 'true', 'false', 'yes', 'no', as well as '1' and '0'
+  * For basic types (:as => Integer, Float, Date, &c.), interpret empty strings just
+    as missing elements (by returning nil), rather than raising.  Raise behavior can be
+    accessed by supplying your own block or using the :required option.
 
  * 1 bug fix
 

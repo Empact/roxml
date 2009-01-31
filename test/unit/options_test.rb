@@ -114,6 +114,7 @@ class TestOptions < Test::Unit::TestCase
   end
 
   def test_block_shorthand_supports_integer
+    assert_equal nil, ROXML::Opts.new(:floatvalue, :as => Integer).blocks.first.call(" ")
     assert_equal 792, ROXML::Opts.new(:floatvalue, :as => Integer).blocks.first.call("792")
     assert_raise ArgumentError do
       ROXML::Opts.new(:floatvalue, :as => Integer).blocks.first.call("792.13")
@@ -122,22 +123,26 @@ class TestOptions < Test::Unit::TestCase
   end
 
   def test_block_shorthand_supports_float
+    assert_equal nil, ROXML::Opts.new(:floatvalue, :as => Float).blocks.first.call("  ")
     assert_equal 792.13, ROXML::Opts.new(:floatvalue, :as => Float).blocks.first.call("792.13")
     assert_equal 240.0, ROXML::Opts.new(:floatvalue, :as => Float).blocks.first.call("240")
     assert_equal [792.13, 240.0, 3.14], ROXML::Opts.new(:floatvalue, :as => Float).blocks.first.call(["792.13", "240", "3.14"])
   end
 
   def test_block_shorthand_supports_time
+    assert_equal nil, ROXML::Opts.new(:floatvalue, :as => Time).blocks.first.call("  ")
     assert_equal 31, ROXML::Opts.new(:datevalue, :as => Time).blocks.first.call("12:31am").min
     assert_equal [31, 0, 59], ROXML::Opts.new(:datevalue, :as => Time).blocks.first.call(["12:31am", "3:00pm", "11:59pm"]).map(&:min)
   end
 
   def test_block_shorthand_supports_date
+    assert_equal nil, ROXML::Opts.new(:floatvalue, :as => Date).blocks.first.call("  ")
     assert_equal "1970-09-03", ROXML::Opts.new(:datevalue, :as => Date).blocks.first.call("September 3rd, 1970").to_s
     assert_equal ["1970-09-03", "1776-07-04"], ROXML::Opts.new(:datevalue, :as => Date).blocks.first.call(["September 3rd, 1970", "1776-07-04"]).map(&:to_s)
   end
 
   def test_block_shorthand_supports_datetime
+    assert_equal nil, ROXML::Opts.new(:floatvalue, :as => DateTime).blocks.first.call("  ")
     assert_equal "1970-09-03T12:05:00+00:00", ROXML::Opts.new(:datevalue, :as => DateTime).blocks.first.call("12:05pm, September 3rd, 1970").to_s
     assert_equal ["1970-09-03T12:05:00+00:00", "1700-05-22T15:00:00+00:00"], ROXML::Opts.new(:datevalue, :as => DateTime).blocks.first.call(["12:05pm, September 3rd, 1970", "3:00pm, May 22, 1700"]).map(&:to_s)
   end

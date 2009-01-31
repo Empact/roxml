@@ -13,6 +13,7 @@ class TestInheritance < Test::Unit::TestCase
         <author>David Thomas, Andrew Hunt, Dave Thomas</author>
         <depth units="hundredths-meters">1130</depth>
         <publisher>Pragmattic Programmers</publisher>
+        <pagecount>500</pagecount>
       </book>
     }
 
@@ -24,7 +25,7 @@ class TestInheritance < Test::Unit::TestCase
     assert_equal 'The PickAxe', @b.title
     assert_equal 'Probably the best Ruby book out there', @b.description
     assert_equal 'David Thomas, Andrew Hunt, Dave Thomas', @b.author
-    assert_equal 0, @b.pages
+    assert_equal 500, @b.pages
   end
 
   def test_it_should_include_its_own_attributes

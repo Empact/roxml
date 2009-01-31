@@ -195,6 +195,10 @@ module ROXML
       Integer  => BLOCK_TO_INT,
       :float   => BLOCK_TO_FLOAT,
       Float    => BLOCK_TO_FLOAT,
+      Date     => lambda {|val| Date.parse(val) },
+      DateTime => lambda {|val| DateTime.parse(val) },
+      Time     => lambda {|val| Time.parse(val) },
+
       :bool    => nil,
       :bool_standalone => lambda do |val|
         if TRUE_VALS.include? val

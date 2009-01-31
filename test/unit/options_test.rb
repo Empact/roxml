@@ -91,7 +91,7 @@ class TestOptions < Test::Unit::TestCase
   end
 
   def test_multiple_shorthands_raises
-    assert_raises ArgumentError do
+    assert_raise ArgumentError do
       ROXML::Opts.new(:count, :as => [Float, Integer])
     end
   end
@@ -99,5 +99,17 @@ class TestOptions < Test::Unit::TestCase
   def test_stacked_blocks
     assert_equal 2, ROXML::Opts.new(:count, :as => Integer) {|val| val.to_i }.blocks.size
     assert_equal 2, ROXML::Opts.new(:count, :as => Float) {|val| val.object_id }.blocks.size
+  end
+
+  def test_block_shorthand_supports_time
+    assert_equal 31, ROXML::Opts.new(:datevalue, :as => Time).blocks.first.call("12:31am").min
+  end
+
+  def test_block_shorthand_supports_date
+    assert_equal "1970-09-03", ROXML::Opts.new(:datevalue, :as => Date).blocks.first.call("September 3rd, 1970").to_s
+  end
+
+  def test_block_shorthand_supports_datetime
+    assert_equal "1970-09-03T12:05:00+00:00", ROXML::Opts.new(:datevalue, :as => DateTime).blocks.first.call("12:05pm, September 3rd, 1970").to_s
   end
 end

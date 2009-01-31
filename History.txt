@@ -1,3 +1,9 @@
+== ???
+
+* 1 minor enhancement
+
+  * add :as => Time, DateTime, and Date support
+
 == 2.4.1 (January 28, 2009)
 
 * 3 minor enhancements

@@ -410,7 +410,7 @@ module ROXML # :nodoc:
       #
       # == Other options
       # [:from] The name by which the xml value will be found, either an attribute or tag name in XML.  Default is sym, or the singular form of sym, in the case of arrays and hashes.
-      # [:as] :cdata for character data; :integer, Integer, :float, Float to coerce to Integer or Float respectively
+      # [:as] one or more of the following: :cdata for character data; Integer, Float, Date, Time or DateTime to coerce to the respective type
       # [:in] An optional name of a wrapping tag for this XML accessor
       # [:else] Default value for attribute, if missing
       # [:required] If true, throws RequiredElementMissing when the element isn't present

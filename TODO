@@ -14,29 +14,45 @@ v 2.5
  * Ensure support for nodes which aren't merely children, which hang out deep
    in the file, but are accessible via xpath
 
+ * Automatically use Date or DateTime for accessors ending in '_on' and '_at', respectively
+
+ * Add xml_in helper to share :in declarations between several attributes. I.e:
+
+     xml_reader :count, :in => 'Attributes', :as => Integer
+     xml_reader :something_else, :in => 'Attributes', :as => Date
+
+  becomes:
+
+    xml_in 'Attributes' do |xml|
+      xml.reader  :count, :as => Integer
+      xml.reader  :something_else, :as => Date
+    end
+
 v 3.0
  * remove deprecated functionality
 
- * Perhaps provide cleaner separation between the specification
-   of type vs its source in the XML.  For example,
+ * Clarify API via seperation of concerns.  :as for Type, :from and :in for location,
+   All other options as named options, e.g. :cdata => true rather than :as => :cdata.
+   A few not so great examples...:
 
-     xml_reader :count, :from => 'Count, :in => 'Attributes', :as => Integer
-     xml_reader :count, :attr => 'Count, :in => 'Attributes', :as => Integer
+     xml_reader :some_objce, MyObject
+     xml_reader :count, ::as => [Integer, :cdata]
+     xml_reader :count, :attr, :as => Integer
 
    become:
 
-     xml_reader :count, Integer, 'Atributes/Count'
-     xml_reader :count, Integer, 'Atributes/@Count'
+     xml_reader :some_objce, :as => MyObject
+     xml_reader :count, :as => Integer, :cdata => true
+     xml_reader :count, :as => Integer, :from => :attr
 
-   potentially backward-incompatible change.  Needs some thought...
+   This will significantly simplify the internals and will also cleanly split
+   element type, location, name and options, for a more predictable API.
 
- * Back with XmlSimple/FasterXmlSimple to minimize need for specifications
+ * Back with XmlSimple/FasterXmlSimple to minimize need for specifications?
 
  * Use lazy evaluation to minimize parsing time for large files
 
 Potential:
-
- * Add shorthand support to hash declaration
 
  * :as => :self for sending method_missing to this attribute
 

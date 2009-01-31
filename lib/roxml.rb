@@ -1,4 +1,4 @@
-%w(extensions/active_support extensions/deprecation extensions/array extensions/string definition xml).each do |file|
+%w(extensions definition xml).each do |file|
   require File.join(File.dirname(__FILE__), 'roxml', file)
 end
 

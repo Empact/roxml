@@ -1,4 +1,5 @@
-require File.join(File.dirname(__FILE__), '../lib/roxml')
+#!/usr/bin/env ruby
+require File.join(File.dirname(__FILE__), '../spec/spec_helper')
 
 # The document `pita.xml` contains both a default namespace and the 'georss'
 # namespace (for the 'point' xml_reader).
@@ -25,7 +26,7 @@ module PITA
 end
 
 unless defined?(Spec)
-  item = PITA::Items.parse(file_contents, :single => true)
+  item = PITA::ItemSearchResponse.from_xml(xml_for('amazon'))
   item.items.each do |i|
     puts i.asin, i.detail_page_url, i.manufacturer, ''
   end

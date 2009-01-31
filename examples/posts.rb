@@ -1,4 +1,5 @@
-require File.join(File.dirname(__FILE__), '../lib/roxml')
+#!/usr/bin/env ruby
+require File.join(File.dirname(__FILE__), '../spec/spec_helper')
 
 class Post
   include ROXML
@@ -16,4 +17,11 @@ class Posts
   include ROXML
 
   xml_reader :posts, [Post]
+end
+
+unless defined?(Spec)
+  posts = Posts.from_xml(xml_for('posts'))
+  posts.posts.each do |post|
+    puts post.description, post.href, post.extended, ''
+  end
 end

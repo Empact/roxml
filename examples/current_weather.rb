@@ -1,23 +1,25 @@
-require File.join(File.dirname(__FILE__), '../lib/roxml')
+#!/usr/bin/env ruby
+require File.join(File.dirname(__FILE__), '../spec/spec_helper')
 
-class WeatherObservation
+class Base
   include ROXML
   xml_convention :dasherize
-  
-  xml_name 'ob'
   xml_namespace 'aws'
-  xml_reader :temperature, :as => Integer, :from => 'temp'
-  xml_reader :feels_like, :as => Integer
-  xml_reader :current_condition, :attributes => {:icon => String}
 end
 
-class WeatherObservations
-  include ROXML
-  xml_reader :observations, [WeatherObservation], :from => 'ob'
+class WeatherObservation < Base
+  xml_name 'ob'
+  xml_reader :temperature, :as => Float, :from => 'aws:temp'
+  xml_reader :feels_like, :as => Integer
+  xml_reader :current_condition #, :attributes => {:icon => String}
+end
+
+class Weather < Base
+  xml_reader :observations, [WeatherObservation]
 end
 
 unless defined?(Spec)
-  WeatherObeservations.from_xml(file_contents).each do |current_weather|
+  Weather.from_xml(xml_for('current_weather')).observations.each do |current_weather|
     puts "temperature: #{current_weather.temperature}"
     puts "feels_like: #{current_weather.feels_like}"
     puts "current_condition: #{current_weather.current_condition}"

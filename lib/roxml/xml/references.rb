@@ -66,7 +66,7 @@ module ROXML
       begin
         blocks.apply_to(val)
       rescue Exception => ex
-        raise ex, inspect
+        raise ex, "#{accessor}: #{ex.message}"
       end
     end
 

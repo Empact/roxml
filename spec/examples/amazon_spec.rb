@@ -1,32 +1,38 @@
 require example('amazon')
 
-describe PITA::Items do
+describe PITA::ItemSearchResponse do
   before do
-    @items = PITA::Items.from_xml(xml_for('amazon'))
+    @response = PITA::ItemSearchResponse.from_xml(xml_for('amazon'))
   end
 
   describe "#total_results" do
     it "should be parsed as a number" do
-      @items.total_results.should be_an_instance_of(Integer)
-      @items.total_results.should > 0
+      @response.total_results.should > 0
+    end
+  end
+
+  describe "#total_pages" do
+    it "should be parsed as a number" do
+      @response.total_pages.should > 0
     end
   end
 
   describe "#items" do
     it "should return a collection of items" do
-      @items.items.should be_an_instance_of(Array)
-      @items.items.each {|item| item.should be_an_instance_of(PITA::Item) }
+      @response.items.should be_an_instance_of(Array)
+      @response.items.each {|item| item.should be_an_instance_of(PITA::Item) }
     end
 
-    it "should have the same number as the #total_results" do
-      @items.items.size.should == @items.total_results
+    it "should have the some number less than or equal to #total_results" do
+      @response.items.size.should > 0
+      @response.items.size.should <= @response.total_results
     end
   end
 end
 
 describe PITA::Item do
   before do
-    @items = PITA::Items.from_xml(xml_for('amazon')).items
+    @items = PITA::ItemSearchResponse.from_xml(xml_for('amazon')).items
   end
 
   it "should extract asin" do

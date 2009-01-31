@@ -10,16 +10,16 @@ module PITA
 
   class Item < Base
     xml_reader :asin, :from => 'ASIN'
-    xml_reader :detail_page_url
+    xml_reader :detail_page_url, :from => 'DetailPageURL'
     xml_reader :manufacturer, :in => './'
     # this is the only xml_reader that exists in a different namespace, so it
     # must be explicitly specified
     xml_reader :point, :from => 'georss:point'
   end
 
-  class Items < Base
-    xml_reader :total_results, :as => Integer, :required => true
-    xml_reader :total_pages, :as => Integer, :required => true
+  class ItemSearchResponse < Base
+    xml_reader :total_results, :as => Integer, :in => 'Items'
+    xml_reader :total_pages, :as => Integer, :in => 'Items'
     xml_reader :items, [Item]
   end
 end

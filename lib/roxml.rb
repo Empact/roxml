@@ -547,10 +547,10 @@ module ROXML # :nodoc:
         xml =
           if data.is_a?(XML::Node)
             data
-          elsif data.is_a?(File)
-            XML::Parser.parse_file(data).root
-          elsif (defined?(:URI) && data.is_a?(URI::Generic)) ||
-                (defined?(:Pathname) && data.is_a?(Pathname))
+          elsif data.is_a?(File) || data.is_a?(IO)
+            XML::Parser.parse_io(data).root
+          elsif (defined?(URI) && data.is_a?(URI::Generic)) ||
+                (defined?(Pathname) && data.is_a?(Pathname))
             XML::Parser.parse_file(data.to_s).root
           else
             XML::Parser.parse(data).root

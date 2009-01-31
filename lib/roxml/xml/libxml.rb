@@ -57,6 +57,10 @@ module ROXML
         def parse_file(path)
           file(path).parse
         end
+
+        def parse_io(stream)
+          io(stream).parse
+        end
       end
     end
   end

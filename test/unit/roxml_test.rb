@@ -48,4 +48,13 @@ class TestROXML < Test::Unit::TestCase
       assert(expected_contributors.include?(contributor.name))
     end
   end
+
+  def test_from_xml_should_support_files
+    book = BookWithContributors.from_xml(File.new(fixture_path(:book_with_contributors)))
+    expected_contributors = ["David Thomas","Andrew Hunt","Chad Fowler"]
+    assert_equal("Programming Ruby - 2nd Edition", book.title)
+    book.contributors.each do |contributor|
+      assert(expected_contributors.include?(contributor.name))
+    end
+  end
 end

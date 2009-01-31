@@ -38,12 +38,17 @@ module ROXML
 
     class Parser
       class << self
-        def parse(string)
-          REXML::Document.new(string, :ignore_whitespace_nodes => :all)
+        def parse(source)
+          REXML::Document.new(source, :ignore_whitespace_nodes => :all)
         end
 
-        def parse_file(path)
+        def parse_file(path) #:nodoc:
+          path = path.sub('file:', '') if path.starts_with?('file:')
           parse(open(path))
+        end
+
+        def parse_io(path) #:nodoc:
+          parse(path)
         end
 
         def register_error_handler(&block)

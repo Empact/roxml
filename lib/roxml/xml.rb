@@ -35,7 +35,7 @@ module ROXML
     end
 
     def name
-      conventionize(opts.name)
+      opts.name_explicit? ? opts.name : conventionize(opts.name)
     end
 
     def xpath_name
@@ -61,7 +61,8 @@ module ROXML
 
     def conventionize(what)
       if !what.blank? && @instance.try(:class).try(:roxml_naming_convention).respond_to?(:call)
-         @instance.class.roxml_naming_convention.call(what)
+        require 'uri'
+        URI.unescape(@instance.class.roxml_naming_convention.call(URI.escape(what, /\/|::/)))
       else
         what
       end

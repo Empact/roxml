@@ -151,4 +151,10 @@ class TestOptions < Test::Unit::TestCase
     assert_equal true, ROXML::Opts.new(:element, :from => 'somewhere').name_explicit?
     assert_equal false, ROXML::Opts.new(:element).name_explicit?
   end
+
+  def test_xpath_in_is_formed_properly
+    opts = ROXML::Opts.new(:manufacturer, :in => './')
+    assert_equal "manufacturer", opts.name
+    assert_equal "./", opts.wrapper
+  end
 end

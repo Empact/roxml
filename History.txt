@@ -9,9 +9,11 @@
     as missing elements (by returning nil), rather than raising.  Raise behavior can be
     accessed by supplying your own block or using the :required option.
 
- * 1 bug fix
+ * 3 bug fixes
 
   * Arrays of attrs or elements :as => :bool weren't previously supported.  An oversight.
+  * Don't apply xml_convention if name is explicitly set
+  * Protect xpath operators : and / from modification via String#camelcase & such
 
 == 2.4.1 (January 28, 2009)
 

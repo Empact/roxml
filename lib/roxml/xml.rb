@@ -8,7 +8,7 @@ module ROXML
     end
   end
 
-  require File.join(File.dirname(__FILE__), 'xml', XML_PARSER)
+  require File.join(File.dirname(__FILE__), 'xml/parsers', XML_PARSER)
 
   module XML
     class Node

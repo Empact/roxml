@@ -8,6 +8,8 @@ module ROXML
     end
   end
 
+  require File.join(File.dirname(__FILE__), 'xml', XML_PARSER)
+
   module XML
     class Node
       def self.from(data)
@@ -24,8 +26,6 @@ module ROXML
       end
     end
   end
-
-  require File.join(File.dirname(__FILE__), 'xml', XML_PARSER)
 
   class RequiredElementMissing < Exception # :nodoc:
   end

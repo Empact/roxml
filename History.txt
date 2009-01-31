@@ -1,8 +1,9 @@
 == ???
 
-* 1 minor enhancement
+* 2 minor enhancements
 
   * add :as => Time, DateTime, and Date support
+  * support Pathnames and URI objects as #from_xml arguments
 
 == 2.4.1 (January 28, 2009)
 

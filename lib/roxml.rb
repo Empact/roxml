@@ -544,7 +544,17 @@ module ROXML # :nodoc:
       # See also: xml_initialize
       #
       def from_xml(data, *initialization_args)
-        xml = (data.kind_of?(XML::Node) ? data : XML::Parser.parse(data).root)
+        xml =
+          if data.is_a?(XML::Node)
+            data
+          elsif data.is_a?(File)
+            XML::Parser.parse_file(data).root
+          elsif (defined?(:URI) && data.is_a?(URI::Generic)) ||
+                (defined?(:Pathname) && data.is_a?(Pathname))
+            XML::Parser.parse_file(data.to_s).root
+          else
+            XML::Parser.parse(data).root
+          end
 
         unless xml_construction_args_without_deprecation.empty?
           args = xml_construction_args_without_deprecation.map do |arg|

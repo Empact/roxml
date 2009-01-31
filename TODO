@@ -41,12 +41,16 @@ v 3.0
 
    become:
 
-     xml_reader :some_objce, :as => MyObject
+     xml_reader :some_object, :as => MyObject
      xml_reader :count, :as => Integer, :cdata => true
      xml_reader :count, :as => Integer, :from => :attr
 
    This will significantly simplify the internals and will also cleanly split
    element type, location, name and options, for a more predictable API.
+
+   It also enables multiple declarations on a single call, ala attr_*
+
+     xml_reader :count, :size, :number, :as => Integer, :from => :attr
 
  * Back with XmlSimple/FasterXmlSimple to minimize need for specifications?
 

@@ -25,7 +25,27 @@ class TestROXML < Test::Unit::TestCase
   def test_tag_refs_is_deprecated
     assert_deprecated do
       Class.new do
-        include ROXML      end.tag_refs
+        include ROXML
+      end.tag_refs
+    end
+  end
+
+  def test_from_xml_should_support_pathnames
+    book = BookWithContributors.from_xml(Pathname.new(fixture_path(:book_with_contributors)))
+    expected_contributors = ["David Thomas","Andrew Hunt","Chad Fowler"]
+    assert_equal("Programming Ruby - 2nd Edition", book.title)
+    book.contributors.each do |contributor|
+      assert(expected_contributors.include?(contributor.name))
+    end
+  end
+
+  def test_from_xml_should_support_uris
+    uri = URI.parse("file://#{File.expand_path(File.expand_path(fixture_path(:book_with_contributors)))}")
+    book = BookWithContributors.from_xml(uri)
+    expected_contributors = ["David Thomas","Andrew Hunt","Chad Fowler"]
+    assert_equal("Programming Ruby - 2nd Edition", book.title)
+    book.contributors.each do |contributor|
+      assert(expected_contributors.include?(contributor.name))
     end
   end
 end

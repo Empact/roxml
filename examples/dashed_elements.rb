@@ -1,7 +1,4 @@
-dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
-require File.join(dir, 'happymapper')
-
-file_contents = File.read(dir + '/../spec/fixtures/commit.xml')
+require File.join(File.dirname(__FILE__), '../lib/roxml')
 
 module GitHub
   class Commit
@@ -15,6 +12,3 @@ module GitHub
     xml_reader :committed_date, :as => Date
   end
 end
-
-commit = GitHub::Commit.parse(file_contents)
-puts commit.committed_date, commit.url, commit.id

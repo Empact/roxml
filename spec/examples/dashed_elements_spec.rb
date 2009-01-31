@@ -1,4 +1,20 @@
-# To change this template, choose Tools | Templates
-# and open the template in the editor.
+require File.join(File.dirname(__FILE__), '../spec_helper')
+require example('dashed_elements')
 
-puts "Hello World"
+describe GitHub::Commit do
+  before do
+    @commit = GitHub::Commit.from_xml(xml_for('dashed_elements'))
+  end
+
+  it "should extract committed date" do
+    @commit.committed_date.should be_an_instance_of(Date)
+  end
+
+  it "should extract url" do
+    @commit.url.should_not be_empty
+  end
+
+  it "should extract id" do
+    @commit.id.should_not be_empty
+  end
+end

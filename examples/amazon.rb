@@ -1,7 +1,4 @@
-dir = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
-require File.join(dir, 'happymapper')
-
-file_contents = File.read(dir + '/../spec/fixtures/pita.xml')
+require File.join(File.dirname(__FILE__), '../lib/roxml')
 
 # The document `pita.xml` contains both a default namespace and the 'georss'
 # namespace (for the 'point' xml_reader).
@@ -17,17 +14,19 @@ module PITA
     xml_reader :manufacturer, :in => './'
     # this is the only xml_reader that exists in a different namespace, so it
     # must be explicitly specified
-    xml_reader :point, :from => 'point', :namespace => 'georss'
+    xml_reader :point, :from => 'georss:point'
   end
 
   class Items < Base
-    xml_reader :total_results, :as => Integer
-    xml_reader :total_pages, :as => Integer
+    xml_reader :total_results, :as => Integer, :required => true
+    xml_reader :total_pages, :as => Integer, :required => true
     xml_reader :items, [Item]
   end
 end
 
-item = PITA::Items.parse(file_contents, :single => true)
-item.items.each do |i|
-  puts i.asin, i.detail_page_url, i.manufacturer, ''
+unless defined?(Spec)
+  item = PITA::Items.parse(file_contents, :single => true)
+  item.items.each do |i|
+    puts i.asin, i.detail_page_url, i.manufacturer, ''
+  end
 end

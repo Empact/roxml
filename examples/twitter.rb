@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require File.join(File.dirname(__FILE__), '../spec/spec_helper')
+require File.expand_path(File.dirname(__FILE__) + '/../spec/spec_helper')
 require 'time'
 
 class User

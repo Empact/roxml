@@ -1,7 +1,7 @@
 ENV['RUBY_FLAGS'] = '-W1'
 
 %w[rubygems rake rake/clean fileutils newgem rubigen].each { |f| require f }
-require File.join(File.dirname(__FILE__), 'lib/roxml')
+require File.expand_path(File.dirname(__FILE__) + '/lib/roxml')
 
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)

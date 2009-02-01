@@ -1,5 +1,8 @@
+$LOAD_PATH.unshift(File.dirname(__FILE__)) unless
+  $LOAD_PATH.include?(File.dirname(__FILE__)) || $LOAD_PATH.include?(File.expand_path(File.dirname(__FILE__)))
+
 %w(extensions definition xml).each do |file|
-  require File.join(File.dirname(__FILE__), 'roxml', file)
+  require File.join('roxml', file)
 end
 
 module ROXML # :nodoc:

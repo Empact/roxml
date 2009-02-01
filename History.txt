@@ -1,5 +1,9 @@
 == 2.4.2 (January 31, 2009)
 
+* 1 major enhancement
+
+  * xml_namespace for declaring Class-level, inheritable default namespaces.
+
 * 4 minor enhancements
 
   * add :as => Time, DateTime, and Date support

@@ -1,3 +1,7 @@
+module Enumerable
+  undef_method(:one?)
+end
+
 ENV['RUBY_FLAGS'] = '-W1'
 
 %w[rubygems rake rake/clean fileutils newgem rubigen].each { |f| require f }

@@ -27,6 +27,8 @@ v 2.5
 
  * :self => true for sending method_missing to this attribute?
 
+ * :attributes extensions ala HappyMapper?
+
 v 3.0
  * remove deprecated functionality
 

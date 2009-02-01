@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{roxml}
-  s.version = "2.4.2"
+  s.version = "2.4.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Woosley", "Zak Mandhro", "Anders Engstrom", "Russ Olsen"]
-  s.date = %q{2009-01-31}
+  s.date = %q{2009-02-01}
   s.description = %q{ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML. Using simple annotations, it enables Ruby classes to be mapped to XML. ROXML takes care of the marshalling and unmarshalling of mapped attributes so that developers can focus on building first-class Ruby classes. As a result, ROXML simplifies the development of RESTful applications, Web Services, and XML-RPC.}
   s.email = %q{ben.woosley@gmail.com}
   s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.rdoc"]

@@ -6,7 +6,7 @@ $LOAD_PATH.unshift(File.dirname(__FILE__)) unless
 end
 
 module ROXML # :nodoc:
-  VERSION = '2.4.2'
+  VERSION = '2.4.3'
 
   def self.included(base) # :nodoc:
     base.extend ClassMethods::Accessors,

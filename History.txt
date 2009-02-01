@@ -1,3 +1,10 @@
+== 2.4.3 (February 1, 2009)
+
+* 1 bug fix
+
+  * Fix roxml to work in ruby 1.8.6, which has been broken since the removal of
+    extensions in version 2.4.1.  Thanks Pat! [Pat Nakajima]
+
 == 2.4.2 (January 31, 2009)
 
 * 1 major enhancement

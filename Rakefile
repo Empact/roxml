@@ -1,6 +1,6 @@
 module Enumerable
   undef_method(:one?)
-end
+end if [].respond_to?(:one?)
 
 ENV['RUBY_FLAGS'] = '-W1'
 

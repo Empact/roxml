@@ -11,7 +11,7 @@ class BookWithContributionsReadonly
   include ROXML
 
   xml_name :book
-  xml_reader :isbn, :attr, :frozen => true
+  xml_reader :isbn, :from => :attr, :frozen => true
   xml_reader :title, :frozen => true
   xml_reader :description, DescriptionReadonly, :frozen => true
   xml_reader :contributions, [Contributor], :from => 'contributor', :in => "contributions", :frozen => true

@@ -46,7 +46,7 @@ module ROXML # :nodoc:
       #  class Measurement
       #    include ROXML
       #
-      #    xml_reader :units, :attr
+      #    xml_reader :units, :from => :attr
       #    xml_reader :value, :from => :content
       #
       #    def xml_initialize
@@ -188,12 +188,12 @@ module ROXML # :nodoc:
       # if no other is declared.  For example,
       #
       #  xml_reader   :bob
-      #  xml_accessor :pony, :attr
+      #  xml_accessor :pony, :from => :attr
       #
       # are equivalent to:
       #
       #  xml_reader   :bob, :from => 'bob'
-      #  xml_accessor :pony, :attr => 'pony'
+      #  xml_accessor :pony, :from => '@pony'
       #
       # === Boolean attributes
       # If the name ends in a ?, ROXML will attempt to coerce the value to true or false,
@@ -201,7 +201,7 @@ module ROXML # :nodoc:
       # to false, as shown below:
       #
       #  xml_reader :desirable?
-      #  xml_reader :bizzare?, :attr => 'BIZZARE'
+      #  xml_reader :bizzare?, :from => '@BIZZARE'
       #
       #  x = #from_xml(%{
       #    <object BIZZARE="1">
@@ -240,18 +240,6 @@ module ROXML # :nodoc:
       # or used as :from, pointing to a xml name to indicate both type and attribute name.
       # Also, any type may be passed via an array to indicate that multiple instances
       # of the object should be returned as an array.
-      #
-      # === :attr
-      # Declare an accessor that represents an XML attribute.
-      #
-      # Example:
-      #  class Book
-      #   xml_reader :isbn, :attr => "ISBN" # 'ISBN' is used to specify :from
-      #   xml_accessor :title, :attr        # :from defaults to :title
-      #  end
-      #
-      # To map:
-      #  <book ISBN="0974514055" title="Programming Ruby: the pragmatic programmers' guide" />
       #
       # === :text
       # The default type, if none is specified. Declares an accessor that
@@ -428,17 +416,31 @@ module ROXML # :nodoc:
       #
       # This value may also include XPath notation.
       #
+      # ==== :from => :content
       # When :from is set to :content, this refers to the content of the current node,
       # rather than a sub-node. It is equivalent to :from => '.'
       #
       # Example:
       #  class Contributor
       #    xml_reader :name, :from => :content
-      #    xml_reader :role, :attr
+      #    xml_reader :role, :from => :attr
       #  end
       #
       # To map:
       #  <contributor role="editor">James Wick</contributor>
+      #
+      # ==== :from => :attr
+      # When :from is set to :attr, this refers to the content of an attribute,
+      # rather than a sub-node. It is equivalent to :from => '@attribute_name'
+      #
+      # Example:
+      #  class Book
+      #    xml_reader :isbn, :from => "@ISBN"
+      #    xml_accessor :title, :from => :attr # :from defaults to '@title'
+      #  end
+      #
+      # To map:
+      #  <book ISBN="0974514055" title="Programming Ruby: the pragmatic programmers' guide" />
       #
       # === Other Options
       # [:as] Integer, Float, Date, Time or DateTime to coerce to the respective type

@@ -23,21 +23,21 @@ end
 class Contributor
   include ROXML
 
-  xml_reader :role, :attr
+  xml_reader :role, :from => :attr
   xml_reader :name
 end
 
 class WriteableContributor
   include ROXML
 
-  xml_accessor :role, :attr
+  xml_accessor :role, :from => :attr
   xml_accessor :name
 end
 
 class Book
   include ROXML
 
-  xml_accessor :isbn, :attr => 'ISBN'
+  xml_accessor :isbn, :from => '@ISBN'
   xml_reader :title
   xml_reader :description, :cdata => true
   xml_reader :author
@@ -47,7 +47,7 @@ end
 class BookWithRequired
   include ROXML
 
-  xml_accessor :isbn, :attr => 'ISBN', :required => true
+  xml_accessor :isbn, :from => '@ISBN', :required => true
   xml_reader :title, :required => true
   xml_reader :contributors, [Contributor], :in => 'contributor_array', :required => true
   xml_reader :contributor_hash, {:attrs => ['role', 'name']},
@@ -57,20 +57,20 @@ end
 class BookWithAttrFrom
   include ROXML
 
-  xml_accessor :isbn, :attr, :from => 'ISBN'
+  xml_accessor :isbn, :from => '@ISBN'
 end
 
 class BookWithWrappedAttr
   include ROXML
 
   xml_name :book
-  xml_accessor :isbn, :attr => 'ISBN', :in => 'ids'
+  xml_accessor :isbn, :from => '@ISBN', :in => 'ids'
 end
 
 class Measurement
   include ROXML
 
-  xml_reader :units, :attr
+  xml_reader :units, :from => :attr
   xml_reader :value, :from => :content, :as => Float
 
   def initialize(value = 0, units = 'pixels')
@@ -103,7 +103,7 @@ end
 class BookWithDepth
   include ROXML
 
-  xml_reader :isbn, :attr => 'ISBN'
+  xml_reader :isbn, :from => '@ISBN'
   xml_reader :title
   xml_reader :description, :cdata => true
   xml_reader :author
@@ -113,7 +113,7 @@ end
 class Author
   include ROXML
 
-  xml_reader :role, :attr
+  xml_reader :role, :from => :attr
   xml_reader :text, :from => :content
 end
 
@@ -121,7 +121,7 @@ class BookWithAuthors
   include ROXML
 
   xml_name :book
-  xml_reader :isbn, :attr, :from => 'ISBN'
+  xml_reader :isbn, :from => '@ISBN'
   xml_reader :title
   xml_reader :description, :cdata => true
   xml_reader :authors, []
@@ -131,7 +131,7 @@ class BookWithAuthorTextAttribute
   include ROXML
 
   xml_name :book
-  xml_reader :isbn, :attr, :from => 'ISBN'
+  xml_reader :isbn, :from => '@ISBN'
   xml_reader :title
   xml_reader :description, :cdata => true
   xml_reader :author, Author
@@ -141,7 +141,7 @@ class BookWithContributions
   include ROXML
 
   xml_name :book
-  xml_reader :isbn, :attr
+  xml_reader :isbn, :from => :attr
   xml_reader :title
   xml_reader :description
   xml_reader :contributions, [Contributor], :from => 'contributor', :in => "contributions"
@@ -151,7 +151,7 @@ class BookWithContributors
   include ROXML
 
   xml_name :book
-  xml_reader :isbn, :attr
+  xml_reader :isbn, :from => :attr
   xml_reader :title
   xml_reader :description
   xml_reader :contributors, [Contributor]
@@ -161,7 +161,7 @@ class WriteableBookWithContributors
   include ROXML
 
   xml_name :book
-  xml_accessor :isbn, :attr
+  xml_accessor :isbn, :from => :attr
   xml_accessor :title
   xml_accessor :description
   xml_accessor :contributors, [Contributor]
@@ -170,7 +170,7 @@ end
 class NamelessBook
   include ROXML
 
-  xml_reader :isbn, :attr
+  xml_reader :isbn, :from => :attr
   xml_reader :title
   xml_reader :description
   xml_reader :contributors, [Contributor]
@@ -186,7 +186,7 @@ class BookWithPublisher
   include ROXML
 
   xml_reader :book
-  xml_reader :isbn, :attr
+  xml_reader :isbn, :from => :attr
   xml_reader :title
   xml_reader :description
   xml_reader :publisher, Publisher
@@ -195,7 +195,7 @@ end
 class BookPair
   include ROXML
 
-  xml_reader :isbn, :attr
+  xml_reader :isbn, :from => :attr
   xml_reader :title
   xml_reader :description
   xml_reader :author
@@ -236,14 +236,14 @@ class NodeWithAttrNameConflicts
   include ROXML
 
   xml_name :node
-  xml_reader :content, :attr => :content
-  xml_reader :name, :attr => :name
+  xml_reader :content, :from => '@content'
+  xml_reader :name, :from => '@name'
 end
 
 class Person
   include ROXML
 
-  xml_accessor :age, :attr, :else => 21
+  xml_accessor :age, :from => :attr, :else => 21
   xml_accessor :name, :from => :content, :else => 'Unknown'
 
   def self.blank
@@ -273,7 +273,7 @@ end
 class PersonWithMotherOrMissing
   include ROXML
 
-  xml_reader :age, :attr, :else => 21
+  xml_reader :age, :from => :attr, :else => 21
   xml_reader :name, :else => 'Anonymous'
   xml_reader :mother, PersonWithMotherOrMissing, :else => Person.blank
 end

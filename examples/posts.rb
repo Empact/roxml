@@ -4,13 +4,13 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec/spec_helper')
 class Post
   include ROXML
   
-  xml_reader :href, :attr
-  xml_reader :hash, :attr
-  xml_reader :description, :attr
-  xml_reader :tag, :attr
-  xml_reader :time, :attr, :as => DateTime
-  xml_reader :others, :attr, :as => Integer
-  xml_reader :extended, :attr
+  xml_reader :href, :from => :attr
+  xml_reader :hash, :from => :attr
+  xml_reader :description, :from => :attr
+  xml_reader :tag, :from => :attr
+  xml_reader :time, :from => :attr, :as => DateTime
+  xml_reader :others, :from => :attr, :as => Integer
+  xml_reader :extended, :from => :attr
 end
 
 class Posts

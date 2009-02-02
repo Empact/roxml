@@ -108,6 +108,18 @@ class TestDefinition < Test::Unit::TestCase
     assert_equal 3.1, ROXML::Definition.new(:count, :as => Float).blocks.first['3.1']
   end
 
+  def test_from_attr_is_supported
+    opts = ROXML::Definition.new(:count, :from => :attr)
+    assert_equal "count", opts.name
+    assert_equal :attr, opts.type
+  end
+
+  def test_from_at_name_is_supported
+    opts = ROXML::Definition.new(:count, :from => "@COUNT")
+    assert_equal "COUNT", opts.name
+    assert_equal :attr, opts.type
+  end
+
   def test_multiple_shorthands_raises
     assert_raise ArgumentError do
       assert_deprecated do
@@ -234,6 +246,19 @@ class TestDefinition < Test::Unit::TestCase
     assert_deprecated do
       opts = ROXML::Definition.new(:content, :attr => :content)
       assert_equal 'content', opts.name
+      assert_equal :attr, opts.type
+    end
+  end
+
+  def test_attr_is_accepted_as_from
+    assert_equal :attr, ROXML::Definition.new(:author, :from => :attr).type
+    assert_equal :attr, ROXML::Definition.new(:author, :from => '@author').type
+  end
+
+  def test_attr_is_a_recognized_type
+    assert_deprecated do
+      opts = ROXML::Definition.new(:author, :attr)
+      assert_equal 'author', opts.name
       assert_equal :attr, opts.type
     end
   end

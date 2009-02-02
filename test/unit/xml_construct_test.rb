@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 class MeasurementWithXmlConstruct
   include ROXML
 
-  xml_reader :units, :attr
+  xml_reader :units, :from => :attr
   xml_reader :value, :from => :content
 
   xml_construct_without_deprecation :value, :units
@@ -25,7 +25,7 @@ end
 class BookWithDepthWithXmlConstruct
   include ROXML
 
-  xml_reader :isbn, :attr => 'ISBN'
+  xml_reader :isbn, :from => '@ISBN'
   xml_reader :title
   xml_reader :description, :cdata => true
   xml_reader :author
@@ -64,9 +64,9 @@ class TestXMLConstruct < Test::Unit::TestCase
       Class.new do
         include ROXML
 
-        xml_reader :bar, :attr => 'Foo'
+        xml_reader :bar, :from => '@Foo'
         xml_reader :foo, :text => 'Foo'
-        xml_reader :baz, :attr => 'Bar'
+        xml_reader :baz, :from => '@Bar'
 
         xml_construct_without_deprecation :baz, :bar, :foo
         def initialize(baz, bar, foo)

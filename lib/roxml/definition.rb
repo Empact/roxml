@@ -35,7 +35,15 @@ module ROXML
         opts[:from] ||= @type.tag_name
       end
 
-      opts[:from] = '.' if opts[:from] == :content
+      if opts[:from] == :content
+        opts[:from] = '.' 
+      elsif opts[:from] == :attr
+        @type = :attr
+        opts[:from] = nil
+      elsif opts[:from].to_s.starts_with?('@')
+        @type = :attr
+        opts[:from] = opts[:from].sub('@', '')
+      end
 
       @name = (opts[:from] || variable_name).to_s
       @name = @name.singularize if hash? || array?
@@ -256,6 +264,10 @@ module ROXML
           ActiveSupport::Deprecation.warn ":content as a type declaration is deprecated.  Use :from => '.' or :from => :content instead"
           opts[:from] = :content
           return :text
+        elsif type == :attr
+          ActiveSupport::Deprecation.warn ":attr as a type declaration is deprecated.  Use :from => '@attr_name' or :from => :attr instead"
+          opts[:from] = opts[:from].nil? ? :attr : "@#{opts[:from]}"
+          return :attr
         else
           return type
         end

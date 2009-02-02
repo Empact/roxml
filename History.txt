@@ -22,14 +22,16 @@
    * .xml_accessor will overwrite the setter for this variable if it has already been defined.  Use .xml_reader or .xml_attr,
      or define your writer later, if this is not the behavior you want.
 
-* 5 deprecations
+* 6 deprecations
 
   * Use :cdata => true rather than :as => :cdata
   * Use literal [] around your regular object type, rather than :as => :array
-  * Use :from => :content rather than :content as a object declaration type
+  * Use :from => :content rather than the :content object declaration type
   * Specifying an unknown symbol or Class for :as will raise in 3.0
   * Specifying :as with anything other than a type argument e.g. Float, [Date],
     will not be supported in 3.0
+  * Use :from => :attr or :from => '@attribute_name' rather than the :attr
+    object declaration type
 
 * 1 bug fix
 

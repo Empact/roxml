@@ -14,7 +14,7 @@ ROXML, you can annotate the Ruby classes as follows:
   class Book
     include ROXML
 
-    xml_reader :isbn, :attr => "ISBN" # attribute with name 'ISBN'
+    xml_reader :isbn, :from => "@ISBN" # attribute with name 'ISBN'
     xml_reader :title
     xml_reader :description, :cdata => true  # text node with cdata protection
     xml_reader :author
@@ -81,7 +81,7 @@ In such a case, you can extend any object with a block to manipulate it's value 
   class Child
     include ROXML
 
-    xml_reader :age, :attr do |val|
+    xml_reader :age, :from => :attr do |val|
       Integer(val)
     end
   end
@@ -97,7 +97,7 @@ causing your ROXML object to call its own constructor, as in the following:
   class Measurement
     include ROXML
 
-    xml_reader :units, :attr
+    xml_reader :units, :from => :attr
     xml_reader :value, :from => :content
 
     def xml_initialize

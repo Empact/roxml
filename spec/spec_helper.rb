@@ -4,17 +4,17 @@ module ROXML
   SILENCE_XML_NAME_WARNING = true
 end
 
-DIR = Pathname.new(__FILE__).dirname
-require DIR.join('../lib/roxml').expand_path
-
-def example(name)
-  DIR.join("../examples/#{name}.rb").expand_path
-end
-
-$:.unshift(File.dirname(__FILE__) + '/../lib')
+DIR = Pathname.new(__FILE__ + '../..').expand_path.dirname
+LOAD_PATH = DIR.join('lib').to_s
+$LOAD_PATH.unshift(LOAD_PATH) unless
+  $LOAD_PATH.include?(LOAD_PATH) || $LOAD_PATH.include?(File.expand_path(LOAD_PATH))
 require 'roxml'
 
 require File.join(File.dirname(__FILE__), 'shared_specs')
+
+def example(name)
+  DIR.join("examples/#{name}.rb")
+end
 
 def fixture(name)
   File.read(fixture_path(name))
@@ -29,5 +29,5 @@ def fixture_path(name)
 end
 
 def xml_for(name)
-  DIR.join("../examples/xml/#{name}.xml").expand_path
+  DIR.join("examples/xml/#{name}.xml")
 end

@@ -1,6 +1,7 @@
 == ???
 
 <<<<<<< HEAD:History.txt
+<<<<<<< HEAD:History.txt
 * 2 major enhancements
 
    * support for mapping ActiveRecord classes.  See the example.
@@ -10,6 +11,7 @@
 * 1 minor enhancement
 
    * .xml_attr declaration declares neither a reader nor a writer.  With it you're left to your own devices.
+   * You can use literal [] for the [:text] object type declaration
 
 * 3 breaking changes
 
@@ -20,9 +22,10 @@
    * .xml_accessor will overwrite the setter for this variable if it has already been defined.  Use .xml_reader or .xml_attr,
      or define your writer later, if this is not the behavior you want.
 
-* 1 deprecation
+* 2 deprecations
 
   * Use :cdata => true rather than :as => :cdata
+  * Use literal [] around your regular object type, rather than :as => :array
 
 * 1 bug fix
 

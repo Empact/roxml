@@ -2,7 +2,7 @@ require File.join(File.dirname(__FILE__), 'hash_definition')
 
 module ROXML
   class Definition # :nodoc:
-    attr_reader :name, :type, :hash, :blocks, :accessor, :to_xml
+    attr_reader :name, :type, :wrapper, :hash, :blocks, :accessor, :to_xml
 
     class << self
       def silence_xml_name_warning?
@@ -16,25 +16,32 @@ module ROXML
 
     def initialize(sym, *args, &block)
       @accessor = sym
-      @opts = extract_options!(args)
-      @default = @opts.delete(:else)
-      @to_xml = @opts.delete(:to_xml)
-      @name_explicit = @opts.has_key?(:from)
-      @cdata = @opts[:cdata]
-      
-      @opts.reverse_merge!(:as => [], :in => nil)
-      @opts[:as] = [*@opts[:as]]
-      if @opts[:as].include?(:cdata)
+      opts = extract_options!(args)
+      opts[:as] << :bool if @accessor.to_s.ends_with?('?')
+      @default = opts.delete(:else)
+      @to_xml = opts.delete(:to_xml)
+      @name_explicit = opts.has_key?(:from)
+      @cdata = opts.delete(:cdata)
+      @required = opts.delete(:required)
+      @frozen = opts.delete(:frozen)
+      @wrapper = opts.delete(:in)
+      @blocks = collect_blocks(block, opts[:as])
+
+      if opts[:as].include?(:cdata)
         @cdata = true
         ActiveSupport::Deprecation.warn ":as => :cdata is deprecated.  Please use :cdata => true"
       end
 
-      if @opts.has_key?(:readonly)
+      if opts[:as].include?(:array)
+        @array = true
+        ActiveSupport::Deprecation.warn ":as => :array is deprecated.  Please use [] around your usual type declaration"
+      end
+
+      if opts.has_key?(:readonly)
         raise ArgumentError, "There is no 'readonly' option. You probably mean to use :frozen => true"
       end
 
-      @type = extract_type(args)
-      @opts[:as] << :bool if @accessor.to_s.ends_with?('?')
+      @type = extract_type(args, opts)
 
       if @type.try(:xml_name_without_deprecation?)
         unless self.class.silence_xml_name_warning?
@@ -43,14 +50,10 @@ module ROXML
                "Use :from on the parent declaration to override this behavior. Set ROXML::SILENCE_XML_NAME_WARNING to avoid this message."
           self.class.silence_xml_name_warning!
         end
-        @opts[:from] ||= @type.tag_name
-      else
-        @opts[:from] ||= variable_name
+        opts[:from] ||= @type.tag_name
       end
 
-      @blocks = collect_blocks(block, @opts[:as])
-
-      @name = @opts[:from].to_s
+      @name = (opts[:from] || variable_name).to_s
       @name = @name.singularize if hash? || array?
       if hash? && (hash.key.name? || hash.value.name?)
         @name = '*'
@@ -64,11 +67,14 @@ module ROXML
     end
 
     def hash
-      @hash ||= HashDefinition.new(@opts.delete(:hash), name) if hash?
+      if hash?
+        @type.wrapper ||= name
+        @type
+      end
     end
 
     def hash?
-      @type == :hash
+      @type.is_a?(HashDefinition)
     end
 
     def name?
@@ -84,23 +90,19 @@ module ROXML
     end
 
     def array?
-      @opts[:as].include? :array
+      @array
     end
 
     def cdata?
       @cdata
     end
 
-    def wrapper
-      @opts[:in]
-    end
-
     def required?
-      @opts[:required]
+      @required
     end
 
     def freeze?
-      @opts[:frozen]
+      @frozen
     end
 
     def default
@@ -113,12 +115,12 @@ module ROXML
 
     def to_ref(inst)
       case type
-      when :attr    then XMLAttributeRef
-      when :content then XMLTextRef
-      when :text    then XMLTextRef
-      when :hash    then XMLHashRef
-      when Symbol   then raise ArgumentError, "Invalid type argument #{opts.type}"
-      else               XMLObjectRef
+      when :attr          then XMLAttributeRef
+      when :content       then XMLTextRef
+      when :text          then XMLTextRef
+      when HashDefinition then XMLHashRef
+      when Symbol         then raise ArgumentError, "Invalid type argument #{opts.type}"
+      else                     XMLObjectRef
       end.new(self, inst)
     end
 
@@ -217,20 +219,21 @@ module ROXML
         args.push(opts)
         opts = {}
       end
+      opts.reverse_merge!(:as => [], :in => nil)
+      opts[:as] = [*opts[:as]]
       opts
     end
 
-    def extract_type(args)
-      types = (@opts.keys & TYPE_KEYS)
+    def extract_type(args, opts)
+      types = (opts.keys & TYPE_KEYS)
       # type arg
       if args.one? && types.empty?
         type = args.first
         if type.is_a? Array
-          @opts[:as] << :array
-          return type.first
+          @array = true
+          return type.first || :text
         elsif type.is_a? Hash
-          @opts[:hash] = type
-          return :hash
+          return HashDefinition.new(type)
         else
           return type
         end
@@ -243,7 +246,7 @@ module ROXML
 
       # type options
       if types.one?
-        @opts[:from] = @opts.delete(types.first)
+        opts[:from] = opts.delete(types.first)
         types.first
       elsif types.empty?
         :text

@@ -124,7 +124,7 @@ class BookWithAuthors
   xml_reader :isbn, :attr, :from => 'ISBN'
   xml_reader :title
   xml_reader :description, :cdata => true
-  xml_reader :authors, :as => :array
+  xml_reader :authors, []
 end
 
 class BookWithAuthorTextAttribute
@@ -154,7 +154,7 @@ class BookWithContributors
   xml_reader :isbn, :attr
   xml_reader :title
   xml_reader :description
-  xml_reader :contributors, Contributor, :as => :array
+  xml_reader :contributors, [Contributor]
 end
 
 class WriteableBookWithContributors
@@ -164,7 +164,7 @@ class WriteableBookWithContributors
   xml_accessor :isbn, :attr
   xml_accessor :title
   xml_accessor :description
-  xml_accessor :contributors, Contributor, :as => :array
+  xml_accessor :contributors, [Contributor]
 end
 
 class NamelessBook
@@ -173,7 +173,7 @@ class NamelessBook
   xml_reader :isbn, :attr
   xml_reader :title
   xml_reader :description
-  xml_reader :contributors, Contributor, :as => :array
+  xml_reader :contributors, [Contributor]
 end
 
 class Publisher
@@ -206,7 +206,7 @@ class Library
   include ROXML
 
   xml_reader :name
-  xml_reader :books, BookWithContributions, :as => :array
+  xml_reader :books, [BookWithContributions]
 end
 
 class UppercaseLibrary
@@ -221,7 +221,7 @@ class LibraryWithBooksOfUnderivableName
   include ROXML
 
   xml_accessor :name
-  xml_reader :novels, NamelessBook, :as => :array
+  xml_reader :novels, [NamelessBook]
 end
 
 class NodeWithNameConflicts

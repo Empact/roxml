@@ -3,14 +3,14 @@ module ROXML
   TYPE_KEYS = [:attr, :text, :hash, :content].freeze
 
   class HashDefinition # :nodoc:
-    attr_reader :key, :value, :wrapper
+    attr_reader :key, :value
+    attr_accessor :wrapper
 
-    def initialize(opts, wrapper)
+    def initialize(opts)
       unless (invalid_keys = opts.keys - HASH_KEYS).empty?
         raise ArgumentError, "Invalid Hash description keys: #{invalid_keys.join(', ')}"
       end
 
-      @wrapper = wrapper
       if opts.has_key? :attrs
         @key   = to_hash_args(opts, :attr, opts[:attrs][0])
         @value = to_hash_args(opts, :attr, opts[:attrs][1])

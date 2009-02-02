@@ -14,6 +14,12 @@ class TestDefinition < Test::Unit::TestCase
     assert_equal :text, opts.type
   end
 
+  def test_empty_array_means_as_array_for_text
+    opts = ROXML::Definition.new(:authors, [])
+    assert opts.array?
+    assert_equal :text, opts.type
+  end
+
   def test_attr_in_array_means_as_array_for_attr
     opts = ROXML::Definition.new(:authors, [:attr])
     assert opts.array?
@@ -24,6 +30,12 @@ class TestDefinition < Test::Unit::TestCase
     opts = ROXML::Definition.new(:authors, [Hash])
     assert opts.array?
     assert_equal Hash, opts.type
+  end
+
+  def test_literal_as_array_is_deprecated
+    assert_deprecated do
+      assert ROXML::Definition.new(:authors, :as => :array).array?
+    end
   end
 
   def test_content_is_a_recognized_type
@@ -70,8 +82,9 @@ class TestDefinition < Test::Unit::TestCase
 
   def test_hash_with_options
     opts = ROXML::Definition.new(:definitions, {:attrs => [:dt, :dd]},
-                           :in => :definitions)
+                           :in => :definitions, :from => 'definition')
     assert_hash(opts, :attr => 'dt', :attr => 'dd')
+    assert_equal 'definition', opts.hash.wrapper
   end
 
   def test_no_block_shorthand_means_no_block
@@ -177,8 +190,12 @@ class TestDefinition < Test::Unit::TestCase
   end
 
   def test_default_works_for_arrays
-    opts = ROXML::Definition.new(:missing, :as => :array)
+    opts = ROXML::Definition.new(:missing, :as => [])
     assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
+    assert_deprecated do
+      opts = ROXML::Definition.new(:missing, :as => :array)
+      assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
+    end
   end
 
   def test_default_works_for_recursive_objects

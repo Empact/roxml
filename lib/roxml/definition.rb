@@ -18,24 +18,7 @@ module ROXML
       @accessor = sym
       opts = extract_options!(args)
       opts[:as] << :bool if @accessor.to_s.ends_with?('?')
-      @default = opts.delete(:else)
-      @to_xml = opts.delete(:to_xml)
-      @name_explicit = opts.has_key?(:from)
-      @cdata = opts.delete(:cdata)
-      @required = opts.delete(:required)
-      @frozen = opts.delete(:frozen)
-      @wrapper = opts.delete(:in)
       @blocks = collect_blocks(block, opts[:as])
-
-      if opts[:as].include?(:cdata)
-        @cdata = true
-        ActiveSupport::Deprecation.warn ":as => :cdata is deprecated.  Please use :cdata => true"
-      end
-
-      if opts[:as].include?(:array)
-        @array = true
-        ActiveSupport::Deprecation.warn ":as => :array is deprecated.  Please use [] around your usual type declaration"
-      end
 
       if opts.has_key?(:readonly)
         raise ArgumentError, "There is no 'readonly' option. You probably mean to use :frozen => true"
@@ -220,7 +203,26 @@ module ROXML
         opts = {}
       end
       opts.reverse_merge!(:as => [], :in => nil)
+      @default = opts.delete(:else)
+      @to_xml = opts.delete(:to_xml)
+      @name_explicit = opts.has_key?(:from)
+      @cdata = opts.delete(:cdata)
+      @required = opts.delete(:required)
+      @frozen = opts.delete(:frozen)
+      @wrapper = opts.delete(:in)
+
       opts[:as] = [*opts[:as]]
+
+      if opts[:as].include?(:cdata)
+        @cdata = true
+        ActiveSupport::Deprecation.warn ":as => :cdata is deprecated.  Please use :cdata => true"
+      end
+
+      if opts[:as].include?(:array)
+        @array = true
+        ActiveSupport::Deprecation.warn ":as => :array is deprecated.  Please use [] around your usual type declaration"
+      end
+
       opts
     end
 

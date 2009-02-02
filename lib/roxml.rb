@@ -260,7 +260,7 @@ module ROXML # :nodoc:
       # Example:
       #  class Book
       #    xml_reader :author, :text => 'Author'
-      #    xml_accessor :description, :text, :as => :cdata
+      #    xml_accessor :description, :text, :cdata => true
       #    xml_reader :title
       #  end
       #
@@ -436,11 +436,12 @@ module ROXML # :nodoc:
       #
       # == Other options
       # [:from] The name by which the xml value will be found, either an attribute or tag name in XML.  Default is sym, or the singular form of sym, in the case of arrays and hashes.
-      # [:as] one or more of the following: :cdata for character data; Integer, Float, Date, Time or DateTime to coerce to the respective type
+      # [:as] Integer, Float, Date, Time or DateTime to coerce to the respective type
       # [:in] An optional name of a wrapping tag for this XML accessor
       # [:else] Default value for attribute, if missing
       # [:required] If true, throws RequiredElementMissing when the element isn't present
       # [:frozen] If true, all results are frozen (using #freeze) at parse-time.
+      # [:cdata[ True for values which should be input from or output as cdata elements
       #
       def xml_attr(sym, type_and_or_opts = :text, opts = nil, &block)
         returning Definition.new(sym, *[type_and_or_opts, opts].compact, &block) do |attr|

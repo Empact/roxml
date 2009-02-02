@@ -1,5 +1,6 @@
 == ???
 
+<<<<<<< HEAD:History.txt
 * 2 major enhancements
 
    * support for mapping ActiveRecord classes.  See the example.
@@ -18,6 +19,10 @@
    * #xml_initialize has been replaced with the #after_parse callback, which takes no arguments.
    * .xml_accessor will overwrite the setter for this variable if it has already been defined.  Use .xml_reader or .xml_attr,
      or define your writer later, if this is not the behavior you want.
+
+* 1 deprecation
+
+  * Use :cdata => true rather than :as => :cdata
 
 * 1 bug fix
 

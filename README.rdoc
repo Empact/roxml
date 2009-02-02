@@ -16,14 +16,14 @@ ROXML, you can annotate the Ruby classes as follows:
 
     xml_reader :isbn, :attr => "ISBN" # attribute with name 'ISBN'
     xml_reader :title
-    xml_reader :description, :as => :cdata  # text node with cdata protection
+    xml_reader :description, :cdata => true  # text node with cdata protection
     xml_reader :author
   end
 
   class Library
     include ROXML
 
-    xml_accessor :name, :from => "NAME", :as => :cdata
+    xml_accessor :name, :from => "NAME", :cdata => true
     xml_accessor :books, [Book], :in => "books"
   end
 

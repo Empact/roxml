@@ -39,7 +39,7 @@ class Book
 
   xml_accessor :isbn, :attr => 'ISBN'
   xml_reader :title
-  xml_reader :description, :as => :cdata
+  xml_reader :description, :cdata => true
   xml_reader :author
   xml_accessor :pages, :text => 'pagecount', :as => Integer
 end
@@ -105,7 +105,7 @@ class BookWithDepth
 
   xml_reader :isbn, :attr => 'ISBN'
   xml_reader :title
-  xml_reader :description, :as => :cdata
+  xml_reader :description, :cdata => true
   xml_reader :author
   xml_reader :depth, Measurement
 end
@@ -123,7 +123,7 @@ class BookWithAuthors
   xml_name :book
   xml_reader :isbn, :attr, :from => 'ISBN'
   xml_reader :title
-  xml_reader :description, :as => :cdata
+  xml_reader :description, :cdata => true
   xml_reader :authors, :as => :array
 end
 
@@ -133,7 +133,7 @@ class BookWithAuthorTextAttribute
   xml_name :book
   xml_reader :isbn, :attr, :from => 'ISBN'
   xml_reader :title
-  xml_reader :description, :as => :cdata
+  xml_reader :description, :cdata => true
   xml_reader :author, Author
 end
 

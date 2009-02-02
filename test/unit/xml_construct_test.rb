@@ -27,7 +27,7 @@ class BookWithDepthWithXmlConstruct
 
   xml_reader :isbn, :attr => 'ISBN'
   xml_reader :title
-  xml_reader :description, :as => :cdata
+  xml_reader :description, :cdata => true
   xml_reader :author
   xml_reader :depth, MeasurementWithXmlConstruct
 end

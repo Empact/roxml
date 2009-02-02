@@ -20,13 +20,18 @@ module ROXML
       @default = @opts.delete(:else)
       @to_xml = @opts.delete(:to_xml)
       @name_explicit = @opts.has_key?(:from)
+      @cdata = @opts[:cdata]
+      
+      @opts.reverse_merge!(:as => [], :in => nil)
+      @opts[:as] = [*@opts[:as]]
+      if @opts[:as].include?(:cdata)
+        @cdata = true
+        ActiveSupport::Deprecation.warn ":as => :cdata is deprecated.  Please use :cdata => true"
+      end
 
       if @opts.has_key?(:readonly)
         raise ArgumentError, "There is no 'readonly' option. You probably mean to use :frozen => true"
       end
-
-      @opts.reverse_merge!(:as => [], :in => nil)
-      @opts[:as] = [*@opts[:as]]
 
       @type = extract_type(args)
       @opts[:as] << :bool if @accessor.to_s.ends_with?('?')
@@ -83,7 +88,7 @@ module ROXML
     end
 
     def cdata?
-      @opts[:as].include? :cdata
+      @cdata
     end
 
     def wrapper

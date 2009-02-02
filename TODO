@@ -7,6 +7,8 @@ v 2.5
 v 3.0
  * remove deprecated functionality
 
+ * Automatically use Date or DateTime for accessors ending in '_on' and '_at', respectively
+
  * Clarify API via seperation of concerns.  :as for Type, :from and :in for location,
    All other options as named options, e.g. :cdata => true rather than :as => :cdata.
    A few not so great examples...:

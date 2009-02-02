@@ -17,7 +17,7 @@ module ROXML
     def initialize(sym, *args, &block)
       @accessor = sym
       opts = extract_options!(args)
-      opts[:as] << :bool if @accessor.to_s.ends_with?('?')
+      opts[:as] ||= :bool if @accessor.to_s.ends_with?('?')
       @blocks = collect_blocks(block, opts[:as])
 
       if opts.has_key?(:readonly)
@@ -102,7 +102,7 @@ module ROXML
       when :attr          then XMLAttributeRef
       when :text          then XMLTextRef
       when HashDefinition then XMLHashRef
-      when Symbol         then raise ArgumentError, "Invalid type argument #{opts.type}"
+      when Symbol         then raise ArgumentError, "Invalid type argument #{type}"
       else                     XMLObjectRef
       end.new(self, inst)
     end
@@ -179,21 +179,28 @@ module ROXML
     }
 
     def collect_blocks(block, as)
-      ActiveSupport::Deprecation.warn ":as => :float is deprecated.  Use :as => Float instead" if as.include?(:float)
-      ActiveSupport::Deprecation.warn ":as => :integer is deprecated.  Use :as => Integer instead" if as.include?(:integer)
+      ActiveSupport::Deprecation.warn ":as => :float is deprecated.  Use :as => Float instead" if as == :float
+      ActiveSupport::Deprecation.warn ":as => :integer is deprecated.  Use :as => Integer instead" if as == :integer
 
-      shorthands = as & BLOCK_SHORTHANDS.keys
-      if shorthands.size > 1
-        raise ArgumentError, "multiple block shorthands supplied #{shorthands.map(&:to_s).join(', ')}"
+      if as.is_a?(Array)
+        unless as.one?
+          raise ArgumentError, "multiple :as types (#{as.map(&:inspect).join(', ')}) is not supported.  Use a block if you want more complicated behavior."
+        end
+
+        @array = true
+        as = as.first
       end
 
-      shorthand = shorthands.first
-      if shorthand == :bool
+      if as == :bool
         # if a second block is present, and we can't coerce the xml value
         # to bool, we need to be able to pass it to the user-provided block
-        shorthand = block ? :bool_combined : :bool_standalone
+        as = (block ? :bool_combined : :bool_standalone)
       end
-      [BLOCK_SHORTHANDS[shorthand], block].compact
+      as = BLOCK_SHORTHANDS.fetch(as) do
+        ActiveSupport::Deprecation.warn "#{as.inspect} is not a valid type declaration. ROXML will raise in this case in version 3.0" unless as.nil?
+        nil
+      end
+      [as, block].compact
     end
 
     def extract_options!(args)
@@ -202,7 +209,8 @@ module ROXML
         args.push(opts)
         opts = {}
       end
-      opts.reverse_merge!(:as => [], :in => nil)
+
+      opts.reverse_merge!(:as => nil, :in => nil)
       @default = opts.delete(:else)
       @to_xml = opts.delete(:to_xml)
       @name_explicit = opts.has_key?(:from)
@@ -211,19 +219,27 @@ module ROXML
       @frozen = opts.delete(:frozen)
       @wrapper = opts.delete(:in)
 
-      opts[:as] = [*opts[:as]]
+      @cdata ||= extract_from_as(opts, :cdata, "Please use :cdata => true")
+      @array ||= extract_from_as(opts, :array, "Please use [] around your usual type declaration")
 
-      if opts[:as].include?(:cdata)
-        @cdata = true
-        ActiveSupport::Deprecation.warn ":as => :cdata is deprecated.  Please use :cdata => true"
-      end
-
-      if opts[:as].include?(:array)
-        @array = true
-        ActiveSupport::Deprecation.warn ":as => :array is deprecated.  Please use [] around your usual type declaration"
+      if opts[:as].is_a?(Array) && opts[:as].size > 1
+        ActiveSupport::Deprecation.warn ":as should point to a single item. #{opts[:as].join(', ')} should be declared some other way."
       end
 
       opts
+    end
+
+    def extract_from_as(opts, entry, message)
+      # remove with deprecateds...
+      if result = [*opts[:as]].delete(entry)
+        ActiveSupport::Deprecation.warn ":as => #{entry.inspect} is deprecated. #{message}"
+        if opts[:as] == entry
+          opts[:as] = nil
+        else
+          opts[:as].delete(entry)
+        end
+        result
+      end
     end
 
     def extract_type(args, opts)

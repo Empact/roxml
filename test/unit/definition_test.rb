@@ -38,6 +38,13 @@ class TestDefinition < Test::Unit::TestCase
     end
   end
 
+  def test_block_shorthand_in_array_means_array
+    opts = ROXML::Definition.new(:intarray, :as => [Integer])
+    assert opts.array?
+    assert_equal :text, opts.type
+    assert 1, opts.blocks.size
+  end
+
   def test_required
     assert !ROXML::Definition.new(:author).required?
     assert ROXML::Definition.new(:author, :required => true).required?
@@ -85,8 +92,12 @@ class TestDefinition < Test::Unit::TestCase
 
   def test_no_block_shorthand_means_no_block
     assert ROXML::Definition.new(:count).blocks.empty?
-    assert ROXML::Definition.new(:count, :as => :intager).blocks.empty?
-    assert ROXML::Definition.new(:count, :as => :foat).blocks.empty?
+    assert_deprecated do
+      assert ROXML::Definition.new(:count, :as => :intager).blocks.empty?
+    end
+    assert_deprecated do
+      assert ROXML::Definition.new(:count, :as => :foat).blocks.empty?
+    end
   end
 
   def test_block_integer_shorthand
@@ -99,7 +110,9 @@ class TestDefinition < Test::Unit::TestCase
 
   def test_multiple_shorthands_raises
     assert_raise ArgumentError do
-      ROXML::Definition.new(:count, :as => [Float, Integer])
+      assert_deprecated do
+        ROXML::Definition.new(:count, :as => [Float, Integer])
+      end
     end
   end
 
@@ -188,6 +201,10 @@ class TestDefinition < Test::Unit::TestCase
   def test_default_works_for_arrays
     opts = ROXML::Definition.new(:missing, :as => [])
     assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
+    assert_deprecated do
+      opts = ROXML::Definition.new(:missing, [])
+      assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
+    end
     assert_deprecated do
       opts = ROXML::Definition.new(:missing, :as => :array)
       assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))

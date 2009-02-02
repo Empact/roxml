@@ -3,8 +3,8 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 class DescriptionReadonly
   include ROXML
 
-  xml_reader :writable, :content
-  xml_reader :readonly, :content, :frozen => true
+  xml_reader :writable, :from => :content
+  xml_reader :readonly, :from => :content, :frozen => true
 end
 
 class BookWithContributionsReadonly

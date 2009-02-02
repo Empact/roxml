@@ -98,7 +98,7 @@ causing your ROXML object to call its own constructor, as in the following:
     include ROXML
 
     xml_reader :units, :attr
-    xml_reader :value, :content
+    xml_reader :value, :from => :content
 
     def xml_initialize
       # xml attributes of self are already valid

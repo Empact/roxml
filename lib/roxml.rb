@@ -47,7 +47,7 @@ module ROXML # :nodoc:
       #    include ROXML
       #
       #    xml_reader :units, :attr
-      #    xml_reader :value, :content
+      #    xml_reader :value, :from => :content
       #
       #    def xml_initialize
       #      # the object is instantiated, and all xml attributes are imported
@@ -287,19 +287,6 @@ module ROXML # :nodoc:
       #    </books>
       #  </library>
       #
-      # === :content
-      # A special case of :text, this refers to the content of the current node,
-      # rather than a sub-node
-      #
-      # Example:
-      #  class Contributor
-      #    xml_reader :name, :content
-      #    xml_reader :role, :attr
-      #  end
-      #
-      # To map:
-      #  <contributor role="editor">James Wick</contributor>
-      #
       # === Hash
       # Somewhere between the simplicity of a :text/:attr mapping, and the complexity of
       # a full Object/Type mapping, lies the Hash mapping.  It serves in the case where you have
@@ -434,8 +421,26 @@ module ROXML # :nodoc:
       # Block shorthands :float, Float, :integer and Integer are currently available,
       # but only for non-Hash declarations.
       #
-      # == Other options
-      # [:from] The name by which the xml value will be found, either an attribute or tag name in XML.  Default is sym, or the singular form of sym, in the case of arrays and hashes.
+      # == Options
+      # === :from
+      # The name by which the xml value will be found, either an attribute or tag name in XML.
+      # Default is sym, or the singular form of sym, in the case of arrays and hashes.
+      #
+      # This value may also include XPath notation.
+      #
+      # When :from is set to :content, this refers to the content of the current node,
+      # rather than a sub-node. It is equivalent to :from => '.'
+      #
+      # Example:
+      #  class Contributor
+      #    xml_reader :name, :from => :content
+      #    xml_reader :role, :attr
+      #  end
+      #
+      # To map:
+      #  <contributor role="editor">James Wick</contributor>
+      #
+      # === Other Options
       # [:as] Integer, Float, Date, Time or DateTime to coerce to the respective type
       # [:in] An optional name of a wrapping tag for this XML accessor
       # [:else] Default value for attribute, if missing

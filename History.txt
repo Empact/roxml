@@ -22,10 +22,11 @@
    * .xml_accessor will overwrite the setter for this variable if it has already been defined.  Use .xml_reader or .xml_attr,
      or define your writer later, if this is not the behavior you want.
 
-* 2 deprecations
+* 3 deprecations
 
   * Use :cdata => true rather than :as => :cdata
   * Use literal [] around your regular object type, rather than :as => :array
+  * Use :from => :content rather than :content as a object declaration type
 
 * 1 bug fix
 

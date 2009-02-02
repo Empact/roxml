@@ -38,22 +38,18 @@ class TestDefinition < Test::Unit::TestCase
     end
   end
 
-  def test_content_is_a_recognized_type
-    assert ROXML::Definition.new(:author, :content).content?
-  end
-
   def test_required
-    assert !ROXML::Definition.new(:author, :content).required?
-    assert ROXML::Definition.new(:author, :content, :required => true).required?
-    assert !ROXML::Definition.new(:author, :content, :required => false).required?
+    assert !ROXML::Definition.new(:author).required?
+    assert ROXML::Definition.new(:author, :required => true).required?
+    assert !ROXML::Definition.new(:author, :required => false).required?
   end
 
   def test_required_conflicts_with_else
     assert_raise ArgumentError do
-      ROXML::Definition.new(:author, :content, :required => true, :else => 'Johnny')
+      ROXML::Definition.new(:author, :required => true, :else => 'Johnny')
     end
     assert_nothing_raised do
-      ROXML::Definition.new(:author, :content, :required => false, :else => 'Johnny')
+      ROXML::Definition.new(:author, :required => false, :else => 'Johnny')
     end
   end
 
@@ -77,7 +73,7 @@ class TestDefinition < Test::Unit::TestCase
   def test_hash_with_attr_key_and_content_val
     opts = ROXML::Definition.new(:attributes, {:key => {:attr => :name},
                                          :value => :content})
-    assert_hash(opts, :attr => 'name', :content => '')
+    assert_hash(opts, :attr => 'name', :text => '.')
   end
 
   def test_hash_with_options
@@ -202,6 +198,28 @@ class TestDefinition < Test::Unit::TestCase
     opts = ROXML::Definition.new(:notmissing, RecursiveObject, :else => false)
     assert_equal false, opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
   end
+
+  def test_content_is_accepted_as_from
+    assert ROXML::Definition.new(:author, :from => :content).content?
+    assert ROXML::Definition.new(:author, :from => '.').content?
+  end
+
+  def test_content_is_a_recognized_type
+    assert_deprecated do
+      opts = ROXML::Definition.new(:author, :content)
+      assert opts.content?
+      assert_equal '.', opts.name
+      assert_equal :text, opts.type
+    end
+  end
+
+  def test_content_symbol_as_target_is_translated_to_string
+    assert_deprecated do
+      opts = ROXML::Definition.new(:content, :attr => :content)
+      assert_equal 'content', opts.name
+      assert_equal :attr, opts.type
+    end
+  end
 end
 
 class RecursiveObject
@@ -212,4 +230,12 @@ end
 
 class RoxmlObject
   include ROXML
+end
+
+class HashDefinitionTest < Test::Unit::TestCase
+  def test_content_detected_as_from
+    opts = ROXML::Definition.new(:hash, {:key => :content, :value => :name})
+    assert_equal '.', opts.hash.key.name
+    assert_equal :text, opts.hash.key.type
+  end
 end

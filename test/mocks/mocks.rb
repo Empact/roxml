@@ -71,7 +71,7 @@ class Measurement
   include ROXML
 
   xml_reader :units, :attr
-  xml_reader :value, :content, :as => Float
+  xml_reader :value, :from => :content, :as => Float
 
   def initialize(value = 0, units = 'pixels')
     @value = Float(value)
@@ -114,7 +114,7 @@ class Author
   include ROXML
 
   xml_reader :role, :attr
-  xml_reader :text, :content
+  xml_reader :text, :from => :content
 end
 
 class BookWithAuthors
@@ -244,7 +244,7 @@ class Person
   include ROXML
 
   xml_accessor :age, :attr, :else => 21
-  xml_accessor :name, :content, :else => 'Unknown'
+  xml_accessor :name, :from => :content, :else => 'Unknown'
 
   def self.blank
     returning new do |instance|

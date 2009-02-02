@@ -42,7 +42,6 @@ module ROXML
       end
 
       @type = extract_type(args, opts)
-
       if @type.try(:xml_name_without_deprecation?)
         unless self.class.silence_xml_name_warning?
           warn "WARNING: As of 2.3, a breaking change has been in the naming of sub-objects. " +
@@ -52,6 +51,8 @@ module ROXML
         end
         opts[:from] ||= @type.tag_name
       end
+
+      opts[:from] = '.' if opts[:from] == :content
 
       @name = (opts[:from] || variable_name).to_s
       @name = @name.singularize if hash? || array?
@@ -81,12 +82,12 @@ module ROXML
       @name == '*'
     end
 
-    def name_explicit?
-      @name_explicit
+    def content?
+      @name == '.'
     end
 
-    def content?
-      @type == :content
+    def name_explicit?
+      @name_explicit
     end
 
     def array?
@@ -116,7 +117,6 @@ module ROXML
     def to_ref(inst)
       case type
       when :attr          then XMLAttributeRef
-      when :content       then XMLTextRef
       when :text          then XMLTextRef
       when HashDefinition then XMLHashRef
       when Symbol         then raise ArgumentError, "Invalid type argument #{opts.type}"
@@ -234,6 +234,10 @@ module ROXML
           return type.first || :text
         elsif type.is_a? Hash
           return HashDefinition.new(type)
+        elsif type == :content
+          ActiveSupport::Deprecation.warn ":content as a type declaration is deprecated.  Use :from => '.' or :from => :content instead"
+          opts[:from] = :content
+          return :text
         else
           return type
         end
@@ -247,6 +251,10 @@ module ROXML
       # type options
       if types.one?
         opts[:from] = opts.delete(types.first)
+        if opts[:from] == :content
+          opts[:from] = 'content'
+          ActiveSupport::Deprecation.warn ":content is now a reserved as an alias for '.'. Use 'content' instead"
+        end
         types.first
       elsif types.empty?
         :text

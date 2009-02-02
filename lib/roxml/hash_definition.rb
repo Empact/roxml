@@ -28,7 +28,7 @@ module ROXML
         type = opts[what].keys.first
         [type, opts[what][type]]
       when :content
-        [:content, opts[:name]]
+        [:text, '.']
       when :name
         [:name, '*']
       when String
@@ -44,12 +44,7 @@ module ROXML
       args = [args] unless args.is_a? Array
 
       if args.one? && !(args.first.keys & HASH_KEYS).empty?
-        opts = {type => name}
-        if type == :content
-          opts[:type] = :text
-          (opts[:as] ||= []) << :content
-        end
-        Definition.new(name, opts)
+        Definition.new(name, type => name)
       else
         opts = args.extract_options!
         raise opts.inspect

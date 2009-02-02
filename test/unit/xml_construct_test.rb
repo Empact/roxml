@@ -4,7 +4,7 @@ class MeasurementWithXmlConstruct
   include ROXML
 
   xml_reader :units, :attr
-  xml_reader :value, :content
+  xml_reader :value, :from => :content
 
   xml_construct_without_deprecation :value, :units
 

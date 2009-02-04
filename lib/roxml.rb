@@ -241,40 +241,6 @@ module ROXML # :nodoc:
       # Also, any type may be passed via an array to indicate that multiple instances
       # of the object should be returned as an array.
       #
-      # === :text
-      # The default type, if none is specified. Declares an accessor that
-      # represents a text node from XML.
-      #
-      # Example:
-      #  class Book
-      #    xml_reader :author, :text => 'Author'
-      #    xml_accessor :description, :text, :cdata => true
-      #    xml_reader :title
-      #  end
-      #
-      # To map:
-      #  <book>
-      #   <title>Programming Ruby: the pragmatic programmers' guide</title>
-      #   <description><![CDATA[Probably the best Ruby book out there]]></description>
-      #   <Author>David Thomas</author>
-      #  </book>
-      #
-      # Likewise, a number of :text node values can be collected in an array like so:
-      #
-      # Example:
-      #  class Library
-      #    xml_reader :books, [:text], :in => 'books'
-      #  end
-      #
-      # To map:
-      #  <library>
-      #    <books>
-      #      <book>To kill a mockingbird</book>
-      #      <book>House of Leaves</book>
-      #      <book>Gödel, Escher, Bach</book>
-      #    </books>
-      #  </library>
-      #
       # === Hash
       # Somewhere between the simplicity of a :text/:attr mapping, and the complexity of
       # a full Object/Type mapping, lies the Hash mapping.  It serves in the case where you have
@@ -396,20 +362,28 @@ module ROXML # :nodoc:
       #
       # For array types, the entire array is passed in, and must be returned in the same fashion.
       #
-      # === Block Shorthands
+      # == Options
+      # === :as
       #
-      # Alternatively, you may use block shorthands to specify common coercions, such that:
+      # Allows you to specify one of several basic types to return the value as.  For example
       #
       #  xml_reader :count, :as => Integer
       #
       # is equivalent to:
       #
-      #  xml_reader(:count) {|val| Integer(val) }
+      #  xml_reader(:count) {|val| Integer(val) unless val.empty? }
       #
-      # Block shorthands :float, Float, :integer and Integer are currently available,
+      # Such block shorthands for Integer, Float, Date, Time or DateTime are currently available,
       # but only for non-Hash declarations.
       #
-      # == Options
+      # To reference many elements, put the desired type in a literal array. e.g.:
+      #
+      #   xml_reader :counts, :as => [Integer]
+      #
+      # Even an array of :text nodes can be specified with :as => []
+      #
+      #   xml_reader :quotes, :as => []
+      #
       # === :from
       # The name by which the xml value will be found, either an attribute or tag name in XML.
       # Default is sym, or the singular form of sym, in the case of arrays and hashes.
@@ -442,8 +416,44 @@ module ROXML # :nodoc:
       # To map:
       #  <book ISBN="0974514055" title="Programming Ruby: the pragmatic programmers' guide" />
       #
+      # === :from => :text
+      # The default source, if none is specified, this means the accessor
+      # represents a text node from XML.  This is documented for completeness
+      # only.  You should just leave this option off when you want the default behavior,
+      # as in the examples below.
+      #
+      # :text is equivalent to :from => accessor_name, and you should specify the
+      # actual node name if it differs, as in the case of :author below.
+      #
+      # Example:
+      #  class Book
+      #    xml_reader :author, :from => 'Author
+      #    xml_accessor :description, :cdata => true
+      #    xml_reader :title
+      #  end
+      #
+      # To map:
+      #  <book>
+      #   <title>Programming Ruby: the pragmatic programmers' guide</title>
+      #   <description><![CDATA[Probably the best Ruby book out there]]></description>
+      #   <Author>David Thomas</Author>
+      #  </book>
+      #
+      # Likewise, a number of :text node values can be collected in an array like so:
+      #
+      # Example:
+      #  class Library
+      #    xml_reader :books, :as => []
+      #  end
+      #
+      # To map:
+      #  <library>
+      #      <book>To kill a mockingbird</book>
+      #      <book>House of Leaves</book>
+      #    <book>Gödel, Escher, Bach</book>
+      #  </library>
+      #
       # === Other Options
-      # [:as] Integer, Float, Date, Time or DateTime to coerce to the respective type
       # [:in] An optional name of a wrapping tag for this XML accessor
       # [:else] Default value for attribute, if missing
       # [:required] If true, throws RequiredElementMissing when the element isn't present

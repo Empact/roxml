@@ -68,7 +68,7 @@ module ROXML
     end
 
     def variable_name
-      accessor.to_s.ends_with?('?') ? accessor.to_s.chomp('?') : accessor.to_s
+      accessor.to_s.chomp('?')
     end
 
     def hash
@@ -184,11 +184,11 @@ module ROXML
       ActiveSupport::Deprecation.warn ":as => :integer is deprecated.  Use :as => Integer instead" if as == :integer
 
       if as.is_a?(Array)
-        unless as.one?
+        unless as.one? || as.empty?
           raise ArgumentError, "multiple :as types (#{as.map(&:inspect).join(', ')}) is not supported.  Use a block if you want more complicated behavior."
         end
 
-        as = as.first
+        as = as.first || :text
       end
 
       if as == :bool

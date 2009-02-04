@@ -16,7 +16,7 @@ describe ROXML::Definition do
       end
     end
 
-    describe "[]" do
+    describe "array reference" do
       it "[] means array of texts" do
         opts = ROXML::Definition.new(:authors, [])
         opts.array?.should be_true
@@ -113,68 +113,274 @@ describe ROXML::Definition do
       end
     end
   end
-  
-  describe "options" do
-    describe ":from" do
-      describe "attribute reference", :shared => true do
-        it "should be interpreted as :attr" do
-          @opts.type.should == :attr
+
+  describe ":as" do
+    describe "=> :array" do
+      it "should be deprecated"
+    end
+
+    describe "=> []" do
+      it "should means array of texts" do
+        opts = ROXML::Definition.new(:authors, :as => [])
+        opts.array?.should be_true
+        opts.type.should == :text
+      end
+    end
+
+    describe "for block shorthand" do
+      describe "in literal array" do
+        before do
+          @opts = ROXML::Definition.new(:intarray, :as => [Integer])
         end
 
-        it "should strip '@' from name" do
-          @opts.name.should == 'attr_name'
+        it "should be detected as array reference" do
+          @opts.array?.should be_true
+        end
+
+        it "should be normal otherwise" do
+          @opts.type.should == :text
+          @opts.blocks.size.should == 1
         end
       end
 
-      context ":attr" do
-        before do
-          @opts = ROXML::Definition.new(:attr_name, :from => :attr)
-        end
-
-        it_should_behave_like "attribute reference"
+      it "should have no blocks without a shorthand" do
+        ROXML::Definition.new(:count).blocks.should be_empty
+        ROXML::Definition.new(:count, :as => :bogus).blocks.should be_empty
+        ROXML::Definition.new(:count, :as => :foat).blocks.should be_empty # misspelled
       end
 
-      context "@attribute_name" do
-        before do
-          @opts = ROXML::Definition.new(:doesntmatter, :from => '@attr_name')
+      describe ":as => Integer", :shared => true do
+        it "should translate empty strings to nil" do
+          @definition.blocks.first.call("").should be_nil
+          @definition.blocks.first.call(" ").should be_nil
         end
 
-        it_should_behave_like "attribute reference"
-        
-        describe "and with :attr" do
-          before do
-            @opts = ROXML::Definition.new(:doesntmatter, :attr, :from => '@attr_name')
+        it "should translate text to integers" do
+          @definition.blocks.first['3'].should == 3
+          @definition.blocks.first['792'].should == 792
+        end
+
+        it "should raise on non-integer values" do
+          proc { @definition.blocks.first['793.12'] }.should raise_error(ArgumentError)
+          proc { @definition.blocks.first['junk 11'] }.should raise_error(ArgumentError)
+          proc { @definition.blocks.first['11sttf'] }.should raise_error(ArgumentError)
+        end
+
+        context "when passed an array" do
+          it "should translate the array elements to integer" do
+            @definition.blocks.first.call(["792", "12", "328"]).should == [792, 12, 328]
+          end
+        end
+      end
+
+      describe "Integer" do
+        before do
+          @definition = ROXML::Definition.new(:intvalue, :as => Integer)
+          @definition_required = ROXML::Definition.new(:intvalue, :as => Integer, :required => true)
+        end
+
+        it_should_behave_like ":as => Integer"
+      end
+
+      describe ":integer" do
+        before do
+          @definition = ROXML::Definition.new(:intvalue, :as => :integer)
+          @definition_required = ROXML::Definition.new(:intvalue, :as => :integer, :required => true)
+        end
+
+        it_should_behave_like ":as => Integer"
+
+        it "should be deprecated"
+      end
+
+      describe ":as => Float", :shared => true do
+        it "should translate empty strings to nil" do
+          @definition.blocks.first.call("").should be_nil
+          @definition.blocks.first.call(" ").should be_nil
+        end
+
+        it "should translate text to float" do
+          @definition.blocks.first['3'].should == 3.0
+          @definition.blocks.first['12.7'].should == 12.7
+        end
+
+        it "should raise on non-float values" do
+          proc { @definition.blocks.first['junk 11.3'] }.should raise_error(ArgumentError)
+          proc { @definition.blocks.first['11.1sttf'] }.should raise_error(ArgumentError)
+        end
+
+        context "when passed an array" do
+          it "should translate the array elements to integer" do
+            @definition.blocks.first.call(["792.13", "240", "3.14"]).should == [792.13, 240.0, 3.14]
+          end
+        end
+      end
+
+      describe ":float" do
+        before do
+          @definition = ROXML::Definition.new(:floatvalue, :as => :float)
+        end
+
+        it_should_behave_like ":as => Float"
+
+        it "should be deprecated"
+      end
+
+      describe "Float" do
+        before do
+          @definition = ROXML::Definition.new(:floatvalue, :as => Float)
+        end
+
+        it_should_behave_like ":as => Float"
+      end
+
+      describe ":bool" do
+        it "should boolify individual values" do
+          ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("1").should be_true
+          ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("True").should be_true
+          ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("Yes").should be_true
+        end
+
+        context "when an array is passed in" do
+          it "should boolify arrays of values" do
+            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("0").should be_false
+            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("false").should be_false
+            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("nO").should be_false
+          end
+        end
+
+        context "when no value is detected" do
+          it "should return nil" do
+            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("junk").should be_nil
           end
 
-          it_should_behave_like "attribute reference"
-          it "should be deprecated"
+          context "when a literal block is available" do
+            it "should pass the value itself to the block"
+          end
         end
       end
 
-      describe ":content" do
-        it "should be recognized" do
-          ROXML::Definition.new(:author, :from => :content).content?.should == true
+      describe "Time" do
+        it "should return nil on empty string" do
+          ROXML::Definition.new(:floatvalue, :as => Time).blocks.first.call("  ").should be_nil
         end
 
-        it "should be equivalent to :from => '.'" do
-          ROXML::Definition.new(:author, :from => '.').content?.should == true
+        it "should return a time version of the string" do
+          ROXML::Definition.new(:datevalue, :as => Time).blocks.first.call("12:31am").min.should == 31
         end
+
+        context "when passed an array of values" do
+          it "should timify all of them" do
+            ROXML::Definition.new(:datevalue, :as => Time).blocks.first.call(["12:31am", "3:00pm", "11:59pm"]).map(&:min).should == [31, 0, 59]
+          end
+        end
+      end
+
+      describe "Date" do
+        it "should return nil on empty string" do
+          ROXML::Definition.new(:floatvalue, :as => Date).blocks.first.call("  ").should be_nil
+        end
+
+        it "should return a time version of the string" do
+          ROXML::Definition.new(:datevalue, :as => Date).blocks.first.call("September 3rd, 1970").to_s == "1970-09-03"
+        end
+
+        context "when passed an array of values" do
+          it "should timify all of them" do
+            ROXML::Definition.new(:datevalue, :as => Date).blocks.first.call(["September 3rd, 1970", "1776-07-04"]).map(&:to_s).should == ["1970-09-03", "1776-07-04"]
+          end
+        end
+      end
+
+      describe "DateTime" do
+        it "should return nil on empty string" do
+          ROXML::Definition.new(:floatvalue, :as => DateTime).blocks.first.call("  ").should be_nil
+        end
+
+        it "should return a time version of the string" do
+          ROXML::Definition.new(:datevalue, :as => DateTime).blocks.first.call("12:05pm, September 3rd, 1970").to_s == "1970-09-03T12:05:00+00:00"
+        end
+
+        context "when passed an array of values" do
+          it "should timify all of them" do
+            ROXML::Definition.new(:datevalue, :as => DateTime).blocks.first.call(["12:05pm, September 3rd, 1970", "3:00pm, May 22, 1700"]).map(&:to_s).should == ["1970-09-03T12:05:00+00:00", "1700-05-22T15:00:00+00:00"]
+          end
+        end
+      end
+
+      it "should prohibit multiple shorthands" do
+        proc { ROXML::Definition.new(:count, :as => [Float, Integer]) }.should raise_error(ArgumentError)
+      end
+
+      it "should stack block shorthands with explicit blocks" do
+        ROXML::Definition.new(:count, :as => Integer) {|val| val.to_i }.blocks.size.should == 2
+        ROXML::Definition.new(:count, :as => Float) {|val| val.object_id }.blocks.size.should == 2
+      end
+    end
+  end
+
+  describe ":from" do
+    describe "attribute reference", :shared => true do
+      it "should be interpreted as :attr" do
+        @opts.type.should == :attr
+      end
+
+      it "should strip '@' from name" do
+        @opts.name.should == 'attr_name'
       end
     end
 
-    describe ":in" do
-      context "as xpath" do
-        it "should pass through as wrapper" do
-          ROXML::Definition.new(:manufacturer, :in => './').wrapper.should == './'
-        end
+    context ":attr" do
+      before do
+        @opts = ROXML::Definition.new(:attr_name, :from => :attr)
       end
 
-      context "as xpath" do
-        it "should pass through as wrapper" do
-          ROXML::Definition.new(:manufacturer, :in => 'wrapper').wrapper.should == 'wrapper'
+      it_should_behave_like "attribute reference"
+    end
+
+    context "@attribute_name" do
+      before do
+        @opts = ROXML::Definition.new(:doesntmatter, :from => '@attr_name')
+      end
+
+      it_should_behave_like "attribute reference"
+
+      describe "and with :attr" do
+        before do
+          @opts = ROXML::Definition.new(:doesntmatter, :attr, :from => '@attr_name')
         end
+
+        it_should_behave_like "attribute reference"
+        it "should be deprecated"
       end
     end
+
+    describe ":content" do
+      it "should be recognized" do
+        ROXML::Definition.new(:author, :from => :content).content?.should == true
+      end
+
+      it "should be equivalent to :from => '.'" do
+        ROXML::Definition.new(:author, :from => '.').content?.should == true
+      end
+    end
+  end
+
+  describe ":in" do
+    context "as xpath" do
+      it "should pass through as wrapper" do
+        ROXML::Definition.new(:manufacturer, :in => './').wrapper.should == './'
+      end
+    end
+
+    context "as xpath" do
+      it "should pass through as wrapper" do
+        ROXML::Definition.new(:manufacturer, :in => 'wrapper').wrapper.should == 'wrapper'
+      end
+    end
+  end
+
+  describe "options" do
 
     describe "boolean option", :shared => true do
       it "should be recognized" do
@@ -215,204 +421,6 @@ describe ROXML::Definition do
       end
 
       it_should_behave_like "boolean option"
-    end
-
-
-    describe ":as" do
-      describe "=> :array" do
-        it "should be deprecated"
-      end
-
-      describe "for block shorthand" do
-        describe "in literal array" do
-          before do
-            @opts = ROXML::Definition.new(:intarray, :as => [Integer])
-          end
-
-          it "should be detected as array reference" do
-            @opts.array?.should be_true
-          end
-
-          it "should be normal otherwise" do
-            @opts.type.should == :text
-            @opts.blocks.size.should == 1
-          end
-        end
-
-        it "should have no blocks without a shorthand" do
-          ROXML::Definition.new(:count).blocks.should be_empty
-          ROXML::Definition.new(:count, :as => :bogus).blocks.should be_empty
-          ROXML::Definition.new(:count, :as => :foat).blocks.should be_empty # misspelled
-        end
-
-        describe ":as => Integer", :shared => true do
-          it "should translate empty strings to nil" do
-            @definition.blocks.first.call("").should be_nil
-            @definition.blocks.first.call(" ").should be_nil
-          end
-          
-          it "should translate text to integers" do
-            @definition.blocks.first['3'].should == 3
-            @definition.blocks.first['792'].should == 792
-          end
-
-          it "should raise on non-integer values" do
-            proc { @definition.blocks.first['793.12'] }.should raise_error(ArgumentError)
-            proc { @definition.blocks.first['junk 11'] }.should raise_error(ArgumentError)
-            proc { @definition.blocks.first['11sttf'] }.should raise_error(ArgumentError)
-          end
-
-          context "when passed an array" do
-            it "should translate the array elements to integer" do
-              @definition.blocks.first.call(["792", "12", "328"]).should == [792, 12, 328]
-            end
-          end
-        end
-
-        describe "Integer" do
-          before do
-            @definition = ROXML::Definition.new(:intvalue, :as => Integer)
-            @definition_required = ROXML::Definition.new(:intvalue, :as => Integer, :required => true)
-          end
-
-          it_should_behave_like ":as => Integer"
-        end
-
-        describe "Integer" do
-          before do
-            @definition = ROXML::Definition.new(:intvalue, :as => :integer)
-            @definition_required = ROXML::Definition.new(:intvalue, :as => :integer, :required => true)
-          end
-
-          it_should_behave_like ":as => Integer"
-
-          it "should be deprecated"
-        end
-
-        describe ":as => Float", :shared => true do
-          it "should translate empty strings to nil" do
-            @definition.blocks.first.call("").should be_nil
-            @definition.blocks.first.call(" ").should be_nil
-          end
-
-          it "should translate text to float" do
-            @definition.blocks.first['3'].should == 3.0
-            @definition.blocks.first['12.7'].should == 12.7
-          end
-
-          it "should raise on non-float values" do
-            proc { @definition.blocks.first['junk 11.3'] }.should raise_error(ArgumentError)
-            proc { @definition.blocks.first['11.1sttf'] }.should raise_error(ArgumentError)
-          end
-
-          context "when passed an array" do
-            it "should translate the array elements to integer" do
-              @definition.blocks.first.call(["792.13", "240", "3.14"]).should == [792.13, 240.0, 3.14]
-            end
-          end
-        end
-
-        describe ":float" do
-          before do
-            @definition = ROXML::Definition.new(:floatvalue, :as => :float)
-          end
-
-          it_should_behave_like ":as => Float"
-
-          it "should be deprecated"
-        end
-
-        describe "Float" do
-          before do
-            @definition = ROXML::Definition.new(:floatvalue, :as => Float)
-          end
-
-          it_should_behave_like ":as => Float"
-        end
-
-        describe ":bool" do
-          it "should boolify individual values" do
-            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("1").should be_true
-            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("True").should be_true
-            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("Yes").should be_true
-          end
-
-          context "when an array is passed in" do
-            it "should boolify arrays of values" do
-              ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("0").should be_false
-              ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("false").should be_false
-              ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("nO").should be_false
-            end
-          end
-
-          context "when no value is detected" do
-            it "should return nil" do
-              ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("junk").should be_nil
-            end
-            
-            context "when a literal block is available" do
-              it "should pass the value itself to the block"
-            end
-          end
-        end
-
-        describe "Time" do
-          it "should return nil on empty string" do
-            ROXML::Definition.new(:floatvalue, :as => Time).blocks.first.call("  ").should be_nil
-          end
-
-          it "should return a time version of the string" do
-            ROXML::Definition.new(:datevalue, :as => Time).blocks.first.call("12:31am").min.should == 31
-          end
-
-          context "when passed an array of values" do
-            it "should timify all of them" do
-              ROXML::Definition.new(:datevalue, :as => Time).blocks.first.call(["12:31am", "3:00pm", "11:59pm"]).map(&:min).should == [31, 0, 59]
-            end
-          end
-        end
-
-        describe "Date" do
-          it "should return nil on empty string" do
-            ROXML::Definition.new(:floatvalue, :as => Date).blocks.first.call("  ").should be_nil
-          end
-
-          it "should return a time version of the string" do
-            ROXML::Definition.new(:datevalue, :as => Date).blocks.first.call("September 3rd, 1970").to_s == "1970-09-03"
-          end
-
-          context "when passed an array of values" do
-            it "should timify all of them" do
-              ROXML::Definition.new(:datevalue, :as => Date).blocks.first.call(["September 3rd, 1970", "1776-07-04"]).map(&:to_s).should == ["1970-09-03", "1776-07-04"]
-            end
-          end
-        end
-
-        describe "DateTime" do
-          it "should return nil on empty string" do
-            ROXML::Definition.new(:floatvalue, :as => DateTime).blocks.first.call("  ").should be_nil
-          end
-
-          it "should return a time version of the string" do
-            ROXML::Definition.new(:datevalue, :as => DateTime).blocks.first.call("12:05pm, September 3rd, 1970").to_s == "1970-09-03T12:05:00+00:00"
-          end
-
-          context "when passed an array of values" do
-            it "should timify all of them" do
-              ROXML::Definition.new(:datevalue, :as => DateTime).blocks.first.call(["12:05pm, September 3rd, 1970", "3:00pm, May 22, 1700"]).map(&:to_s).should == ["1970-09-03T12:05:00+00:00", "1700-05-22T15:00:00+00:00"]
-            end
-          end
-        end
-
-        it "should prohibit multiple shorthands" do
-          proc { ROXML::Definition.new(:count, :as => [Float, Integer]) }.should raise_error(ArgumentError)
-        end
-
-        it "should stack block shorthands with explicit blocks" do
-          ROXML::Definition.new(:count, :as => Integer) {|val| val.to_i }.blocks.size.should == 2
-          ROXML::Definition.new(:count, :as => Float) {|val| val.object_id }.blocks.size.should == 2
-        end
-      end
     end
   end
 end

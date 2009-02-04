@@ -230,7 +230,7 @@ module ROXML
 
     def extract_from_as(opts, entry, message)
       # remove with deprecateds...
-      if result = [*opts[:as]].delete(entry)
+      if [*opts[:as]].include?(entry)
         ActiveSupport::Deprecation.warn ":as => #{entry.inspect} is deprecated. #{message}"
         if opts[:as] == entry
           opts[:as] = nil
@@ -250,6 +250,7 @@ module ROXML
           @array = true
           return type.first || :text
         elsif type.is_a? Hash
+          ActiveSupport::Deprecation.warn "Hash declarations should be passed as the :as parameter, for future release."
           return HashDefinition.new(type)
         elsif type == :content
           ActiveSupport::Deprecation.warn ":content as a type declaration is deprecated.  Use :from => '.' or :from => :content instead"
@@ -270,12 +271,16 @@ module ROXML
                              "an options hash, with the type and options optional"
       end
 
+      if opts[:as].is_a?(Hash)
+        return HashDefinition.new(opts[:as])
+      end
+
       # type options
       if types.one?
         opts[:from] = opts.delete(types.first)
         if opts[:from] == :content
           opts[:from] = 'content'
-          ActiveSupport::Deprecation.warn ":content is now a reserved as an alias for '.'. Use 'content' instead"
+          ActiveSupport::Deprecation.warn ":content is now a reserved as an alias for '.'. Use the string 'content' instead"
         end
         types.first
       elsif types.empty?

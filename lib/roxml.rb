@@ -241,72 +241,6 @@ module ROXML # :nodoc:
       # Also, any type may be passed via an array to indicate that multiple instances
       # of the object should be returned as an array.
       #
-      # === Hash
-      # Somewhere between the simplicity of a :text/:attr mapping, and the complexity of
-      # a full Object/Type mapping, lies the Hash mapping.  It serves in the case where you have
-      # a collection of key-value pairs represented in your xml.  You create a hash declaration by
-      # passing a hash mapping as the type argument.  A few examples:
-      #
-      # ==== Hash of :attrs
-      # For xml such as this:
-      #
-      #    <dictionary>
-      #      <definitions>
-      #        <definition dt="quaquaversally"
-      #                    dd="adjective: (of a geological formation) sloping downward from the center in all directions." />
-      #        <definition dt="tergiversate"
-      #                    dd="To use evasions or ambiguities; equivocate." />
-      #      </definitions>
-      #    </dictionary>
-      #
-      # You can use the :attrs key in you has with a [:key, :value] name array:
-      #
-      #    xml_reader :definitions, {:attrs => ['dt', 'dd']}, :in => :definitions
-      #
-      # ==== Hash of :texts
-      # For xml such as this:
-      #
-      #    <dictionary>
-      #      <definition>
-      #        <word/>
-      #        <meaning/>
-      #      </definition>
-      #      <definition>
-      #        <word/>
-      #        <meaning/>
-      #      </definition>
-      #    </dictionary>
-      #
-      # You can individually declare your key and value names:
-      #    xml_reader :definitions, {:key => 'word',
-      #                              :value => 'meaning'}
-      #
-      # ==== Hash of :content &c.
-      # For xml such as this:
-      #
-      #    <dictionary>
-      #      <definition word="quaquaversally">adjective: (of a geological formation) sloping downward from the center in all directions.</definition>
-      #      <definition word="tergiversate">To use evasions or ambiguities; equivocate.</definition>
-      #    </dictionary>
-      #
-      # You can individually declare the key and value, but with the attr, you need to provide both the type
-      # and name of that type (i.e. {:attr => :word}), because omitting the type will result in ROXML
-      # defaulting to :text
-      #    xml_reader :definitions, {:key => {:attr => 'word'},
-      #                              :value => :content}
-      #
-      # ==== Hash of :name &c.
-      # For xml such as this:
-      #
-      #    <dictionary>
-      #      <quaquaversally>adjective: (of a geological formation) sloping downward from the center in all directions.</quaquaversally>
-      #      <tergiversate>To use evasions or ambiguities; equivocate.</tergiversate>
-      #    </dictionary>
-      #
-      # You can pick up the node names (e.g. quaquaversally) using the :name keyword:
-      #    xml_reader :definitions, {:key => :name,
-      #                              :value => :content}
-      #
       # === Other ROXML Class
       # Declares an accessor that represents another ROXML class as child XML element
       # (one-to-one or composition) or array of child elements (one-to-many or
@@ -364,7 +298,7 @@ module ROXML # :nodoc:
       #
       # == Options
       # === :as
-      #
+      # ==== Basic Types: Integer, Float, Date, Time or DateTime
       # Allows you to specify one of several basic types to return the value as.  For example
       #
       #  xml_reader :count, :as => Integer
@@ -383,6 +317,72 @@ module ROXML # :nodoc:
       # Even an array of :text nodes can be specified with :as => []
       #
       #   xml_reader :quotes, :as => []
+      #
+      # ==== Hash
+      # Somewhere between the simplicity of a :text/:attr mapping, and the complexity of
+      # a full Object/Type mapping, lies the Hash mapping.  It serves in the case where you have
+      # a collection of key-value pairs represented in your xml.  You create a hash declaration by
+      # passing a hash mapping as the type argument.  A few examples:
+      #
+      # ===== Hash of :attrs
+      # For xml such as this:
+      #
+      #    <dictionary>
+      #      <definitions>
+      #        <definition dt="quaquaversally"
+      #                    dd="adjective: (of a geological formation) sloping downward from the center in all directions." />
+      #        <definition dt="tergiversate"
+      #                    dd="To use evasions or ambiguities; equivocate." />
+      #      </definitions>
+      #    </dictionary>
+      #
+      # You can use the :attrs key in you has with a [:key, :value] name array:
+      #
+      #    xml_reader :definitions, :as => {:attrs => ['dt', 'dd']}, :in => :definitions
+      #
+      # ===== Hash of :texts
+      # For xml such as this:
+      #
+      #    <dictionary>
+      #      <definition>
+      #        <word/>
+      #        <meaning/>
+      #      </definition>
+      #      <definition>
+      #        <word/>
+      #        <meaning/>
+      #      </definition>
+      #    </dictionary>
+      #
+      # You can individually declare your key and value names:
+      #    xml_reader :definitions, :as => {:key => 'word',
+      #                                     :value => 'meaning'}
+      #
+      # ===== Hash of :content &c.
+      # For xml such as this:
+      #
+      #    <dictionary>
+      #      <definition word="quaquaversally">adjective: (of a geological formation) sloping downward from the center in all directions.</definition>
+      #      <definition word="tergiversate">To use evasions or ambiguities; equivocate.</definition>
+      #    </dictionary>
+      #
+      # You can individually declare the key and value, but with the attr, you need to provide both the type
+      # and name of that type (i.e. {:attr => :word}), because omitting the type will result in ROXML
+      # defaulting to :text
+      #    xml_reader :definitions, :as => {:key => {:attr => 'word'},
+      #                                     :value => :content}
+      #
+      # ===== Hash of :name &c.
+      # For xml such as this:
+      #
+      #    <dictionary>
+      #      <quaquaversally>adjective: (of a geological formation) sloping downward from the center in all directions.</quaquaversally>
+      #      <tergiversate>To use evasions or ambiguities; equivocate.</tergiversate>
+      #    </dictionary>
+      #
+      # You can pick up the node names (e.g. quaquaversally) using the :name keyword:
+      #    xml_reader :definitions, :as => {:key => :name,
+      #                                     :value => :content}
       #
       # === :from
       # The name by which the xml value will be found, either an attribute or tag name in XML.

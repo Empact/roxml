@@ -8,12 +8,29 @@ describe ROXML::Definition do
     end
   end
 
+  describe "hash options declaration", :shared => true do
+    it "should represent a hash" do
+      @opts.hash?.should be_true
+    end
+
+    it "should have hash definition" do
+      {@opts.hash.key.type => @opts.hash.key.name}.should == @hash_args[:key]
+      {@opts.hash.value.type => @opts.hash.value.name}.should == @hash_args[:value]
+    end
+
+    it "should not represent an array" do
+      @opts.array?.should be_false
+    end
+  end
+
   describe "types" do
     describe ":content" do
       it "should be recognized" do
         ROXML::Definition.new(:author).content?.should be_false
         ROXML::Definition.new(:author, :content).content?.should be_true
       end
+
+      it "should be deprecated"
     end
 
     describe "array reference" do
@@ -43,21 +60,6 @@ describe ROXML::Definition do
     end
 
     describe "{}" do
-      describe "hash options declaration", :shared => true do
-        it "should represent a hash" do
-          @opts.hash?.should be_true
-        end
-
-        it "should have hash definition" do
-          {@opts.hash.key.type => @opts.hash.key.name}.should == @hash_args[:key]
-          {@opts.hash.value.type => @opts.hash.value.name}.should == @hash_args[:value]
-        end
-
-        it "should not represent an array" do
-          @opts.array?.should be_false
-        end
-      end
-
       describe "hash with attr key and text val" do
         before do
           @opts = ROXML::Definition.new(:attributes, {:key => {:attr => :name},
@@ -124,6 +126,62 @@ describe ROXML::Definition do
         opts = ROXML::Definition.new(:authors, :as => [])
         opts.array?.should be_true
         opts.type.should == :text
+      end
+    end
+
+    describe "=> {}" do
+      describe "hash with attr key and text val" do
+        before do
+          @opts = ROXML::Definition.new(:attributes, :as => {:key => {:attr => :name},
+                                                             :value => :value})
+          @hash_args = {:key => {:attr => 'name'},
+                        :value => {:text => 'value'}}
+        end
+
+        it_should_behave_like "hash options declaration"
+      end
+
+      describe "hash with String class for type" do
+        before do
+          @opts = ROXML::Definition.new(:attributes, :as => {:key => {String => 'name'},
+                                                             :value => {String => 'value'}})
+          @hash_args = {:key => {:text => 'name'}, :value => {:text => 'value'}}
+        end
+
+        it_should_behave_like "hash options declaration"
+      end
+
+      describe "hash with attr key and content val" do
+        before do
+          @opts = ROXML::Definition.new(:attributes, :as => {:key => {:attr => :name},
+                                                             :value => :content})
+          @hash_args = {:key => {:attr => 'name'}, :value => {:text => '.'}}
+        end
+
+        it_should_behave_like "hash options declaration"
+      end
+
+      describe "hash of attrs" do
+        before do
+          @hash_args = {:key => {:attr => 'name'}, :value => {:attr => 'value'}}
+          @opts = ROXML::Definition.new(:attributes, :as => {:attrs => [:name, :value]})
+        end
+
+        it_should_behave_like "hash options declaration"
+
+        describe "with options" do
+          before do
+            @hash_args = {:key => {:attr => 'dt'}, :value => {:attr => 'dd'}}
+            @opts = ROXML::Definition.new(:definitions, :as => {:attrs => [:dt, :dd]},
+                                    :in => 'definitions')
+          end
+
+          it_should_behave_like "hash options declaration"
+
+          it "should not interfere with options" do
+            @opts.wrapper.should == 'definitions'
+          end
+        end
       end
     end
 

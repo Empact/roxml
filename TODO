@@ -4,31 +4,6 @@ v 2.5
  * Test out compatibility with ActiveRecord such that it's easy
    to have both xml & database-sourced objects
 
- * provide an overridable extension point for the #to_xml-ing of
-   values.  This would enable easy accommodation of non-standard formats.
-   For example, formatting a number with leading zeros.
-
- * Ensure (perhaps optionally) that references are unambiguous. That is error/warn
-   a singular specification has multiple possible node references
-
- * Automatically use Date or DateTime for accessors ending in '_on' and '_at', respectively
-
- * Add xml_in helper to share :in declarations between several attributes. E.g.:
-
-     xml_reader :count, :in => 'Attributes', :as => Integer
-     xml_reader :something_else, :in => 'Attributes', :as => Date
-
-  becomes:
-
-    xml_in 'Attributes' do |xml|
-      xml.reader  :count, :as => Integer
-      xml.reader  :something_else, :as => Date
-    end
-
- * :self => true for sending method_missing to this attribute?
-
- * :attributes extensions ala HappyMapper?
-
 v 3.0
  * remove deprecated functionality
 
@@ -52,12 +27,38 @@ v 3.0
 
      xml_reader :count, :size, :number, :as => Integer, :from => :attr
 
- * Commandeer #parse to use opposite #from_xml, but in an unrooted, collection-friendly fashion,
-   ala HappyMapper's parse
+ * Consider class_inheritable_attribute rather than superclass.try stuff.
+
+ * Do some benchmarking
+
+v 3.1
 
  * Back with http://xml-object.rubyforge.org/doc/ to minimize need for specifications?
 
+ * Commandeer #parse to use opposite #from_xml, but in an unrooted, collection-friendly fashion,
+   ala HappyMapper's parse
+
+v 3.x
+
+ * :self => true for sending method_missing to this attribute?
+
+ * :attributes extensions ala HappyMapper?
+
+ * Add xml_attrs helper to share :in declarations between several attributes. E.g.:
+
+     xml_reader :count, :in => 'Attributes', :as => Integer
+     xml_reader :something_else, :in => 'Attributes', :as => Date
+
+  becomes:
+
+    xml_attrs :in => 'Attributes' do |xml|
+      xml.reader  :count, :as => Integer
+      xml.reader  :something_else, :as => Date
+    end
+
+ * Ensure (perhaps optionally) that references are unambiguous. That is error/warn
+   a singular specification has multiple possible node references
+
  * Use lazy evaluation to minimize parsing time for large files
 
- * Consider class_inheritable_attribute rather than superclass.try stuff.
 

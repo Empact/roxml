@@ -13,15 +13,20 @@ module ROXML
   module XML
     class Node
       def self.from(data)
-        if data.is_a?(XML::Node)
+        case data
+        when XML::Node
           data
-        elsif data.is_a?(File) || data.is_a?(IO)
+        when XML::Document
+          data.root
+        when File, IO
           Parser.parse_io(data).root
-        elsif (defined?(URI) && data.is_a?(URI::Generic)) ||
-              (defined?(Pathname) && data.is_a?(Pathname))
-          Parser.parse_file(data.to_s).root
         else
-          Parser.parse(data).root
+          if (defined?(URI) && data.is_a?(URI::Generic)) ||
+             (defined?(Pathname) && data.is_a?(Pathname))
+            Parser.parse_file(data.to_s).root
+          else
+            Parser.parse(data).root
+          end
         end
       end
     end

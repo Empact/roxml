@@ -36,11 +36,6 @@ module ROXML
       end
     end
 
-    def default
-      @default ||= @opts.default || (@opts.array? ? Array.new : nil)
-      @default.duplicable? ? @default.dup : @default
-    end
-
     def value_in(xml)
       value = fetch_value(xml)
       freeze(apply_blocks(value))

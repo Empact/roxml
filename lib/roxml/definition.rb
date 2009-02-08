@@ -99,8 +99,10 @@ module ROXML
     end
 
     def default
-      @default ||= [] if array?
-      @default ||= {} if hash?
+      if @default.nil?
+        @default = [] if array?
+        @default = {} if hash?
+      end
       @default.duplicable? ? @default.dup : @default
     end
 

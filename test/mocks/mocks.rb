@@ -238,8 +238,15 @@ end
 class Person
   include ROXML
 
-  xml_reader :age, :attr, :else => 21
+  xml_accessor :age, :attr, :else => 21
   xml_accessor :name, :content, :else => 'Unknown'
+
+  def self.blank
+    returning new do |instance|
+      instance.age = 21
+      instance.name = 'Unknown'
+    end
+  end
 end
 
 class PersonWithMother
@@ -263,5 +270,5 @@ class PersonWithMotherOrMissing
 
   xml_reader :age, :attr, :else => 21
   xml_reader :name, :else => 'Anonymous'
-  xml_reader :mother, PersonWithMotherOrMissing, :else => Person.new
+  xml_reader :mother, PersonWithMotherOrMissing, :else => Person.blank
 end

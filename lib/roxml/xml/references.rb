@@ -38,6 +38,8 @@ module ROXML
 
     def value_in(xml)
       value = fetch_value(xml)
+      value = default if value.nil?
+
       freeze(apply_blocks(value))
     end
 

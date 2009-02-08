@@ -57,7 +57,7 @@ class TestXMLObject < Test::Unit::TestCase
     book_one.isbn = "9781843549161"
     book_one.title = "Anathem"
     book_one.description = "A new title from Neal Stephenson"
-    book_one.contributors << contrib
+    book_one.contributors = [contrib]
 
     # this book should be completely empty
     book_two = WriteableBookWithContributors.new
@@ -65,7 +65,7 @@ class TestXMLObject < Test::Unit::TestCase
     assert_equal(nil, book_two.isbn)
     assert_equal(nil, book_two.title)
     assert_equal(nil, book_two.description)
-    assert_equal(0, book_two.contributors.size)
+    assert_equal(nil, book_two.contributors)
   end
 
   # Test XML object containing one other XML object (one-to-one)

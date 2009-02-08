@@ -157,4 +157,29 @@ class TestDefinition < Test::Unit::TestCase
     assert_equal "manufacturer", opts.name
     assert_equal "./", opts.wrapper
   end
+
+  def test_default_works
+    opts = ROXML::Definition.new(:missing, :else => true)
+    assert_equal true, opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
+  end
+
+  def test_default_works_for_arrays
+    opts = ROXML::Definition.new(:missing, :as => :array)
+    assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
+  end
+
+  def test_default_works_for_recursive_objects
+    opts = ROXML::Definition.new(:notmissing, RecursiveObject, :else => false)
+    assert_equal false, opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
+  end
+end
+
+class RecursiveObject
+  include ROXML
+
+  xml_reader :next, RecursiveObject, :else => true
+end
+
+class RoxmlObject
+  include ROXML
 end

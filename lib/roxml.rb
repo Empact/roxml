@@ -491,12 +491,7 @@ module ROXML # :nodoc:
         @roxml_attrs << attr
 
         define_method(attr.accessor) do
-          result = instance_variable_get("@#{attr.variable_name}")
-          if result.nil?
-            result = attr.default
-            instance_variable_set("@#{attr.variable_name}", result)
-          end
-          result
+          instance_variable_get("@#{attr.variable_name}")
         end
 
         if writable && !instance_methods.include?("#{attr.accessor}=")

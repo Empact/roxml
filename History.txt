@@ -1,3 +1,9 @@
+== ???
+
+ * 1 breaking change
+
+  * :else option only applies to instances created via .from_xml
+
 == 2.4.3 (February 1, 2009)
 
 * 1 bug fix

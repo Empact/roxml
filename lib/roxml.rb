@@ -576,13 +576,15 @@ module ROXML # :nodoc:
           end.map {|attr| attr.to_ref(self).value_in(xml) }
           new(*args)
         else
-          returning allocate do |inst|
+          returning new(*initialization_args) do |inst|
             roxml_attrs.each do |attr|
               inst.instance_variable_set("@#{attr.variable_name}", attr.to_ref(inst).value_in(xml))
             end
-            inst.send(:xml_initialize, *initialization_args)
+            inst.after_parse if method_defined?(:after_parse)
           end
         end
+      rescue ArgumentError => e
+        raise e, e.message + " for class #{self}"
       end
 
       # Deprecated in favor of #from_xml

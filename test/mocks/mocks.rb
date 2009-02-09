@@ -71,19 +71,16 @@ class Measurement
   include ROXML
 
   xml_reader :units, :attr
-  xml_reader :value, :content
+  xml_reader :value, :content, :as => Float
 
-  def xml_initialize
-    initialize(value, units)
-  end
-
-  def initialize(value, units = 'pixels')
+  def initialize(value = 0, units = 'pixels')
     @value = Float(value)
     @units = units.to_s
-    if @units.starts_with? 'hundredths-'
-      @value /= 100
-      @units = @units.split('hundredths-')[1]
-    end
+    normalize_hundredths
+  end
+
+  def after_parse
+    normalize_hundredths
   end
 
   def to_s
@@ -92,6 +89,14 @@ class Measurement
 
   def ==(other)
     other.units == @units && other.value == @value
+  end
+
+private
+  def normalize_hundredths
+    if @units.starts_with? 'hundredths-'
+      @value /= 100
+      @units = @units.split('hundredths-')[1]
+    end
   end
 end
 

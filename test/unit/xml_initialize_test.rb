@@ -7,7 +7,6 @@ class BookWithXmlInitialize < BookWithDepth
     @created_at = created_at
     @creator = creator
   end
-  alias_method :xml_initialize, :initialize
 end
 
 class TestXMLInitialize < Test::Unit::TestCase
@@ -32,8 +31,8 @@ class TestXMLInitialize < Test::Unit::TestCase
   end
 
   def test_initialize_fails_on_missing_required_arg
-    assert_raises(ArgumentError) do
-      b = BookWithXmlInitialize.from_xml(fixture(:book_with_depth))
+    assert_raise ArgumentError do
+      BookWithXmlInitialize.from_xml(fixture(:book_with_depth))
     end
   end
 

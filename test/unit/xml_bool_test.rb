@@ -106,5 +106,17 @@ class TestXMLBool < Test::Unit::TestCase
     end
   end
 
+  def test_writable_references_properly_handle_punctuation
+    klass = Class.new do
+      include ROXML
+      xml_accessor :punctuation?
+    end
+
+    instance = klass.from_xml("<xml><punctuation>True</punctuation></xml>")
+    assert_equal true, instance.punctuation?
+    instance.punctuation = false
+    assert_equal false, instance.punctuation?
+  end
+
   to_xml_test XmlBool => BOOL_XML
 end

@@ -494,8 +494,8 @@ module ROXML # :nodoc:
           instance_variable_get("@#{attr.variable_name}")
         end
 
-        if writable && !instance_methods.include?("#{attr.accessor}=")
-          attr_writer(attr.accessor)
+        if writable && !instance_methods.include?("#{attr.variable_name}=")
+          attr_writer(attr.variable_name)
         end
       end
     end

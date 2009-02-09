@@ -1,8 +1,12 @@
 == ???
 
- * 1 breaking change
+* 1 breaking change
 
-  * :else option only applies to instances created via .from_xml
+   * :else option only applies to instances created via .from_xml
+
+* 1 bug fix
+
+   * xml_accessor now properly handles punctuation, such that the writer appears without '?' for boolean attributes
 
 == 2.4.3 (February 1, 2009)
 

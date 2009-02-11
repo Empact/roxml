@@ -29,11 +29,11 @@
   * Use literal [] around your regular object type, rather than :as => :array
   * Use :from => :content rather than the :content object declaration type
   * Specifying an unknown symbol or Class for :as will raise in 3.0
-  * Specifying :as with anything other than a type argument e.g. Float, [Date],
+  * Specifying :as with anything other than a type argument e.g. :bool, Float, [Date],
     will not be supported in 3.0
   * Use :from => :attr or :from => '@attribute_name' rather than the :attr
     object declaration type
-  * Passing a hash type declaration outside the :as parameter is deprecated
+  * Passing any type declaration outside the :as parameter is deprecated
 
 * 1 bug fix
 

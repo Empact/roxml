@@ -247,6 +247,7 @@ module ROXML
       if args.one? && types.empty?
         type = args.first
         if type.is_a? Array
+          ActiveSupport::Deprecation.warn "Array declarations should be passed as the :as parameter, for future release."
           @array = true
           return type.first || :text
         elsif type.is_a? Hash

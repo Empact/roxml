@@ -175,9 +175,10 @@ module ROXML # :nodoc:
         (@roxml_naming_convention || superclass.try(:roxml_naming_convention)).freeze
       end
 
-      # Declares an accesser to a certain xml element, whether an attribute, a node,
-      # or a typed collection of nodes.  Typically you should call xml_reader or xml_accessor
-      # rather than calling this method directly, but the instructions below apply to both.
+      # Declares a reference to a certain xml element, whether an attribute, a node,
+      # or a typed collection of nodes.  This method does not add a corresponding accessor
+      # to the object.  For that behavior see the similar methods:
+      #  .xml_reader and .xml_accessor.
       #
       # == Sym Option
       # [sym]   Symbol representing the name of the accessor.
@@ -441,16 +442,19 @@ module ROXML # :nodoc:
       # [:required] If true, throws RequiredElementMissing when the element isn't present
       # [:frozen] If true, all results are frozen (using #freeze) at parse-time.
       #
-      def xml_reference(writable, sym, type_and_or_opts = :text, opts = nil, &block)
-        opts = Definition.new(sym, *[type_and_or_opts, opts].compact, &block)
-
-        add_accessor(opts, writable)
+      def xml_attr(sym, type_and_or_opts = :text, opts = nil, &block)
+        returning Definition.new(sym, *[type_and_or_opts, opts].compact, &block) do |attr|
+          if roxml_attrs.map(&:accessor).include? attr.accessor
+            raise "Accessor #{attr.accessor} is already defined as XML accessor in class #{self.name}"
+          end
+          @roxml_attrs << attr
+        end
       end
 
       def xml(sym, writable = false, type_and_or_opts = :text, opts = nil, &block) #:nodoc:
-        xml_reference(writable, sym, type_and_or_opts, opts, &block)
+        send(writable ? :xml_accessor : :xml_reader, sym, type_and_or_opts, opts, &block)
       end
-      deprecate :xml => :xml_reference
+      deprecate :xml => "use xml_attr, xml_reader, or xml_accessor instead"
 
       # Declares a read-only xml reference. See xml for details.
       #
@@ -458,7 +462,8 @@ module ROXML # :nodoc:
       # its value can be modified indirectly via methods.  For more complete
       # protection, consider the :frozen option.
       def xml_reader(sym, type_and_or_opts = :text, opts = nil, &block)
-        xml_reference false, sym, type_and_or_opts, opts, &block
+        attr = xml_attr sym, type_and_or_opts, opts, &block
+        add_reader(attr)
       end
 
       # Declares a writable xml reference. See xml for details.
@@ -467,7 +472,9 @@ module ROXML # :nodoc:
       # you can use the :frozen option to prevent its value from being
       # modified indirectly via methods.
       def xml_accessor(sym, type_and_or_opts = :text, opts = nil, &block)
-        xml_reference true, sym, type_and_or_opts, opts, &block
+        attr = xml_attr sym, type_and_or_opts, opts, &block
+        add_reader(attr)
+        attr_writer(attr.variable_name)
       end
 
       # This method is deprecated, please use xml_initialize instead
@@ -484,18 +491,9 @@ module ROXML # :nodoc:
       deprecate :xml_construct => :xml_initialize
 
     private
-      def add_accessor(attr, writable)
-        if roxml_attrs.map(&:accessor).include? attr.accessor
-          raise "Accessor #{attr.accessor} is already defined as XML accessor in class #{self.name}"
-        end
-        @roxml_attrs << attr
-
+      def add_reader(attr)
         define_method(attr.accessor) do
           instance_variable_get("@#{attr.variable_name}")
-        end
-
-        if writable && !instance_methods.include?("#{attr.variable_name}=")
-          attr_writer(attr.variable_name)
         end
       end
     end
@@ -578,7 +576,11 @@ module ROXML # :nodoc:
         else
           returning new(*initialization_args) do |inst|
             roxml_attrs.each do |attr|
-              inst.instance_variable_set("@#{attr.variable_name}", attr.to_ref(inst).value_in(xml))
+              value = attr.to_ref(inst).value_in(xml)
+              setter = :"#{attr.variable_name}="
+              inst.respond_to?(setter) \
+                ? inst.send(setter, value) \
+                : inst.instance_variable_set("@#{attr.variable_name}", value)
             end
             inst.after_parse if method_defined?(:after_parse)
           end

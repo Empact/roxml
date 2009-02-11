@@ -1,0 +1,70 @@
+<route>
+<totalDist>11185.321521477119</totalDist>
+<totalHg>640</totalHg>
+<totalMins>235.75000000000003</totalMins>
+<lonlatx>357865</lonlatx>
+<lonlaty>271635</lonlaty>
+<grcenter>SH 71635 57865</grcenter>
+<waypoints>
+     <waypoint>
+         <isLeg>false</isLeg>
+         <lonlatx>357290</lonlatx>
+         <lonlaty>271650</lonlaty>
+         <gridReference>SH 71650 57290</gridReference>
+         <ascent>81</ascent>
+         <descent>220</descent>
+         <distance>0</distance>
+         <bearing>0</bearing>
+     </waypoint>
+     <waypoint>
+         <isLeg>false</isLeg>
+         <lonlatx>357260</lonlatx>
+         <lonlaty>274600</lonlaty>
+         <gridReference>SH 74600 57260</gridReference>
+         <ascent>275</ascent>
+         <descent>48</descent>
+         <distance>2950.152538429157</distance>
+         <bearing>91</bearing>
+     </waypoint>
+     <waypoint>
+         <isLeg>false</isLeg>
+         <lonlatx>359160</lonlatx>
+         <lonlaty>273330</lonlaty>
+         <gridReference>SH 73330 59160</gridReference>
+         <ascent>73</ascent>
+         <descent>170</descent>
+         <distance>2285.3664913969487</distance>
+         <bearing>326</bearing>
+     </waypoint>
+     <waypoint>
+         <isLeg>false</isLeg>
+         <lonlatx>359170</lonlatx>
+         <lonlaty>270050</lonlaty>
+         <gridReference>SH 70050 59170</gridReference>
+         <ascent>182</ascent>
+         <descent>172</descent>
+         <distance>3280.015243867016</distance>
+         <bearing>270</bearing>
+     </waypoint>
+     <waypoint>
+         <isLeg>false</isLeg>
+         <lonlatx>357470</lonlatx>
+         <lonlaty>269740</lonlaty>
+         <gridReference>SH 69740 57470</gridReference>
+         <ascent>29</ascent>
+         <descent>107</descent>
+         <distance>1728.0335644888382</distance>
+         <bearing>190</bearing>
+     </waypoint>
+     <waypoint>
+         <isLeg>false</isLeg>
+         <lonlatx>356840</lonlatx>
+         <lonlaty>270440</lonlaty>
+         <gridReference>SH 70440 56840</gridReference>
+         <ascent>640</ascent>
+         <descent>717</descent>
+         <distance>941.7536832951597</distance>
+         <bearing>132</bearing>
+     </waypoint>
+</waypoints>
+</route>

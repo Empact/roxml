@@ -129,13 +129,13 @@ module ROXML
 
     BLOCK_TO_FLOAT = lambda do |val|
       all(val) do |v|
-        Float(v) unless v.nil? || blank_string?(v)
+        Float(v) unless v.blank?
       end
     end
 
     BLOCK_TO_INT = lambda do |val|
       all(val) do |v|
-        Integer(v) unless v.nil? || blank_string?(v)
+        Integer(v) unless v.blank?
       end
     end
 
@@ -150,10 +150,6 @@ module ROXML
       end
     end
 
-    def self.blank_string?(value)
-      value.is_a?(String) && value.blank?
-    end
-
     BLOCK_SHORTHANDS = {
       :integer => BLOCK_TO_INT, # deprecated
       Integer  => BLOCK_TO_INT,
@@ -161,27 +157,27 @@ module ROXML
       Float    => BLOCK_TO_FLOAT,
       Fixnum   => lambda do |val|
         all(val) do |v|
-          v.to_i unless v.nil? || blank_string?(v)
+          v.to_i unless v.blank?
         end
       end,
       BigDecimal => lambda do |val|
         all(val) do |v|
-          BigDecimal.new(v) unless v.nil? || blank_string?(v)
+          BigDecimal.new(v) unless v.blank?
         end
       end,
       Date     => lambda do |val|
         if defined?(Date)
-          all(val) {|v| Date.parse(v) unless blank_string?(v) }
+          all(val) {|v| Date.parse(v) unless v.blank? }
         end
       end,
       DateTime => lambda do |val|
         if defined?(DateTime)
-          all(val) {|v| DateTime.parse(v) unless blank_string?(v) }
+          all(val) {|v| DateTime.parse(v) unless v.blank? }
         end
       end,
       Time     => lambda do |val|
         if defined?(Time)
-          all(val) {|v| Time.parse(v) unless blank_string?(v) }
+          all(val) {|v| Time.parse(v) unless v.blank? }
         end
       end,
 

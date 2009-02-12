@@ -1,5 +1,7 @@
 require File.join(File.dirname(__FILE__), 'hash_definition')
 
+require "bigdecimal"
+
 class Module
   def bool_attr_reader(*attrs)
     attrs.each do |attr|
@@ -125,6 +127,12 @@ module ROXML
       array ? results : results.first
     end
 
+    BLOCK_TO_DECIMAL = lambda do |val|
+      all(val) do |v|
+        BigDecimal.new(v) unless v.nil? || blank_string?(v)
+      end
+    end
+
     BLOCK_TO_FLOAT = lambda do |val|
       all(val) do |v|
         Float(v) unless blank_string?(v)
@@ -157,6 +165,7 @@ module ROXML
       Integer  => BLOCK_TO_INT,
       :float   => BLOCK_TO_FLOAT, # deprecated
       Float    => BLOCK_TO_FLOAT,
+      BigDecimal => BLOCK_TO_DECIMAL,
       Date     => lambda do |val|
         if defined?(Date)
           all(val) {|v| Date.parse(v) unless blank_string?(v) }

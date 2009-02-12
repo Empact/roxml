@@ -292,6 +292,39 @@ describe ROXML::Definition do
         it_should_behave_like ":as => Float"
       end
 
+      describe ":as => BigDecimal", :shared => true do
+        it "should translate empty strings to nil" do
+          @definition.blocks.first.call(nil).should be_nil
+          @definition.blocks.first.call("").should be_nil
+          @definition.blocks.first.call(" ").should be_nil
+        end
+
+        it "should translate text to decimal numbers" do
+          @definition.blocks.first['3'].should == BigDecimal.new("3.0")
+          @definition.blocks.first['0.3'].should == BigDecimal.new("0.3")
+        end
+
+        it "should extract what it can, and fall back to 0" do
+          @definition.blocks.first['junk 11'].should eql(BigDecimal.new("0"))
+          @definition.blocks.first['11sttf'].should eql(BigDecimal.new("11.0"))
+        end
+
+        context "when passed an array" do
+          it "should translate the array elements to integer" do
+            @definition.blocks.first.call(["12.1", "328.2"]).should == [BigDecimal.new("12.1"), BigDecimal.new("328.2")]
+          end
+        end
+      end
+
+      describe "BigDecimal" do
+        before do
+          @definition = ROXML::Definition.new(:decimalvalue, :as => BigDecimal)
+          @definition_required = ROXML::Definition.new(:decimalvalue, :as => BigDecimal, :required => true)
+        end
+
+        it_should_behave_like ":as => BigDecimal"
+      end
+
       describe ":bool" do
         it "should boolify individual values" do
           ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("1").should be_true

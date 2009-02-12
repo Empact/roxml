@@ -21,7 +21,7 @@ module PITA
   class ItemSearchResponse < Base
     xml_reader :total_results, :as => Integer, :in => 'Items'
     xml_reader :total_pages, :as => Integer, :in => 'Items'
-    xml_reader :items, [Item]
+    xml_reader :items, :as => [Item]
   end
 end
 

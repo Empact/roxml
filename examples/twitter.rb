@@ -27,11 +27,11 @@ class Status
 	xml_reader :in_reply_to_status_id, :as => Integer
 	xml_reader :in_reply_to_user_id, :as => Integer
 	xml_reader :favorited?
-	xml_reader :user, User
+	xml_reader :user, :as => User
 end
 
 class Statuses
   include ROXML
 
-  xml_reader :statuses, [Status]
+  xml_reader :statuses, :as => [Status]
 end

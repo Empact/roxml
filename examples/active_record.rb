@@ -37,7 +37,7 @@ class Route < ActiveRecord::Base
   xml_attr :lonlaty
   xml_attr :grcenter
 
-  xml_attr :waypoints, [Waypoint], :in => "waypoints"
+  xml_attr :waypoints, :as => [Waypoint], :in => "waypoints"
 end
 
 # do a quick pseudo migration.  This should only get executed on the first run

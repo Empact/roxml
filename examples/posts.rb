@@ -16,7 +16,7 @@ end
 class Posts
   include ROXML
 
-  xml_reader :posts, [Post]
+  xml_reader :posts, :as => [Post]
 end
 
 unless defined?(Spec)

@@ -15,7 +15,7 @@ class WeatherObservation < Base
 end
 
 class Weather < Base
-  xml_reader :observation, WeatherObservation, :required => true
+  xml_reader :observation, :as => WeatherObservation, :required => true
 end
 
 unless defined?(Spec)

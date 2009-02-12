@@ -207,7 +207,7 @@ describe ROXML::Definition do
         ROXML::Definition.new(:count, :as => :foat).blocks.should be_empty # misspelled
       end
 
-      describe ":as => Integer", :shared => true do
+      describe "block shorthand type declaration", :shared => true do
         it "should translate nil to nil" do
           @definition.blocks.first.call(nil).should be_nil
         end
@@ -216,6 +216,10 @@ describe ROXML::Definition do
           @definition.blocks.first.call("").should be_nil
           @definition.blocks.first.call(" ").should be_nil
         end
+      end
+
+      describe ":as => Integer", :shared => true do
+        it_should_behave_like "block shorthand type declaration"
 
         it "should translate text to integers" do
           @definition.blocks.first['3'].should == 3
@@ -239,7 +243,6 @@ describe ROXML::Definition do
       describe "Integer" do
         before do
           @definition = ROXML::Definition.new(:intvalue, :as => Integer)
-          @definition_required = ROXML::Definition.new(:intvalue, :as => Integer, :required => true)
         end
 
         it_should_behave_like ":as => Integer"
@@ -248,7 +251,6 @@ describe ROXML::Definition do
       describe ":integer" do
         before do
           @definition = ROXML::Definition.new(:intvalue, :as => :integer)
-          @definition_required = ROXML::Definition.new(:intvalue, :as => :integer, :required => true)
         end
 
         it_should_behave_like ":as => Integer"
@@ -257,14 +259,7 @@ describe ROXML::Definition do
       end
 
       describe ":as => Float", :shared => true do
-        it "should translate nil to nil" do
-          @definition.blocks.first.call(nil).should be_nil
-        end
-
-        it "should translate empty strings to nil" do
-          @definition.blocks.first.call("").should be_nil
-          @definition.blocks.first.call(" ").should be_nil
-        end
+        it_should_behave_like "block shorthand type declaration"
 
         it "should translate text to float" do
           @definition.blocks.first['3'].should == 3.0
@@ -301,12 +296,12 @@ describe ROXML::Definition do
         it_should_behave_like ":as => Float"
       end
 
-      describe ":as => BigDecimal", :shared => true do
-        it "should translate empty strings to nil" do
-          @definition.blocks.first.call(nil).should be_nil
-          @definition.blocks.first.call("").should be_nil
-          @definition.blocks.first.call(" ").should be_nil
+      describe "BigDecimal" do
+        before do
+          @definition = ROXML::Definition.new(:decimalvalue, :as => BigDecimal)
         end
+
+        it_should_behave_like "block shorthand type declaration"
 
         it "should translate text to decimal numbers" do
           @definition.blocks.first['3'].should == BigDecimal.new("3.0")
@@ -325,12 +320,12 @@ describe ROXML::Definition do
         end
       end
 
-      describe ":as => Fixnum", :shared => true do
-        it "should translate empty strings to nil" do
-          @definition.blocks.first.call(nil).should be_nil
-          @definition.blocks.first.call("").should be_nil
-          @definition.blocks.first.call(" ").should be_nil
+      describe "Fixnum" do
+        before do
+          @definition = ROXML::Definition.new(:fixnumvalue, :as => Fixnum)
         end
+
+        it_should_behave_like "block shorthand type declaration"
 
         it "should translate text to integers" do
           @definition.blocks.first['3'].should == 3
@@ -350,24 +345,6 @@ describe ROXML::Definition do
             @definition.blocks.first.call(["792", "12", "328"]).should == [792, 12, 328]
           end
         end
-      end
-
-      describe "BigDecimal" do
-        before do
-          @definition = ROXML::Definition.new(:decimalvalue, :as => BigDecimal)
-          @definition_required = ROXML::Definition.new(:decimalvalue, :as => BigDecimal, :required => true)
-        end
-
-        it_should_behave_like ":as => BigDecimal"
-      end
-
-      describe "Fixnum" do
-        before do
-          @definition = ROXML::Definition.new(:fixnumvalue, :as => Fixnum)
-          @definition_required = ROXML::Definition.new(:fixnumvalue, :as => Fixnum, :required => true)
-        end
-
-        it_should_behave_like ":as => Fixnum"
       end
 
       describe ":bool" do

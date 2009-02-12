@@ -208,6 +208,10 @@ describe ROXML::Definition do
       end
 
       describe ":as => Integer", :shared => true do
+        it "should translate nil to nil" do
+          @definition.blocks.first.call(nil).should be_nil
+        end
+
         it "should translate empty strings to nil" do
           @definition.blocks.first.call("").should be_nil
           @definition.blocks.first.call(" ").should be_nil
@@ -252,6 +256,10 @@ describe ROXML::Definition do
       end
 
       describe ":as => Float", :shared => true do
+        it "should translate nil to nil" do
+          @definition.blocks.first.call(nil).should be_nil
+        end
+
         it "should translate empty strings to nil" do
           @definition.blocks.first.call("").should be_nil
           @definition.blocks.first.call(" ").should be_nil

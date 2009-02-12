@@ -197,7 +197,9 @@ module ROXML
         as = (block ? :bool_combined : :bool_standalone)
       end
       as = BLOCK_SHORTHANDS.fetch(as) do
-        ActiveSupport::Deprecation.warn "#{as.inspect} is not a valid type declaration. ROXML will raise in this case in version 3.0" unless as.nil?
+        unless as.try(:include?, ROXML) || as.try(:first).try(:include?, ROXML)
+          ActiveSupport::Deprecation.warn "#{as.inspect} is not a valid type declaration. ROXML will raise in this case in version 3.0" unless as.nil?
+        end
         nil
       end
       [as, block].compact
@@ -276,6 +278,9 @@ module ROXML
         return HashDefinition.new(opts[:as])
       elsif opts[:as].try(:include?, ROXML)
         return opts[:as]
+      elsif opts[:as].is_a?(Array) && opts[:as].first.try(:include?, ROXML)
+        @array = true
+        return opts[:as].first
       end
 
       # type options

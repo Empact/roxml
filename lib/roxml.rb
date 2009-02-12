@@ -460,7 +460,7 @@ module ROXML # :nodoc:
       # [:frozen] If true, all results are frozen (using #freeze) at parse-time.
       # [:cdata[ True for values which should be input from or output as cdata elements
       #
-      def xml_attr(sym, type_and_or_opts = :text, opts = nil, &block)
+      def xml_attr(sym, type_and_or_opts = nil, opts = nil, &block)
         returning Definition.new(sym, *[type_and_or_opts, opts].compact, &block) do |attr|
           if roxml_attrs.map(&:accessor).include? attr.accessor
             raise "Accessor #{attr.accessor} is already defined as XML accessor in class #{self.name}"
@@ -469,7 +469,7 @@ module ROXML # :nodoc:
         end
       end
 
-      def xml(sym, writable = false, type_and_or_opts = :text, opts = nil, &block) #:nodoc:
+      def xml(sym, writable = false, type_and_or_opts = nil, opts = nil, &block) #:nodoc:
         send(writable ? :xml_accessor : :xml_reader, sym, type_and_or_opts, opts, &block)
       end
       deprecate :xml => "use xml_attr, xml_reader, or xml_accessor instead"
@@ -479,7 +479,7 @@ module ROXML # :nodoc:
       # Note that while xml_reader does not create a setter for this attribute,
       # its value can be modified indirectly via methods.  For more complete
       # protection, consider the :frozen option.
-      def xml_reader(sym, type_and_or_opts = :text, opts = nil, &block)
+      def xml_reader(sym, type_and_or_opts = nil, opts = nil, &block)
         attr = xml_attr sym, type_and_or_opts, opts, &block
         add_reader(attr)
       end
@@ -489,7 +489,7 @@ module ROXML # :nodoc:
       # Note that while xml_accessor does create a setter for this attribute,
       # you can use the :frozen option to prevent its value from being
       # modified indirectly via methods.
-      def xml_accessor(sym, type_and_or_opts = :text, opts = nil, &block)
+      def xml_accessor(sym, type_and_or_opts = nil, opts = nil, &block)
         attr = xml_attr sym, type_and_or_opts, opts, &block
         add_reader(attr)
         attr_writer(attr.variable_name)

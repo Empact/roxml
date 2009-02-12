@@ -127,18 +127,6 @@ module ROXML
       array ? results : results.first
     end
 
-    BLOCK_TO_DECIMAL = lambda do |val|
-      all(val) do |v|
-        BigDecimal.new(v) unless v.nil? || blank_string?(v)
-      end
-    end
-
-    BLOCK_TO_FIXNUM = lambda do |val|
-      all(val) do |v|
-        v.to_i unless v.nil? || blank_string?(v)
-      end
-    end
-
     BLOCK_TO_FLOAT = lambda do |val|
       all(val) do |v|
         Float(v) unless v.nil? || blank_string?(v)
@@ -169,10 +157,18 @@ module ROXML
     BLOCK_SHORTHANDS = {
       :integer => BLOCK_TO_INT, # deprecated
       Integer  => BLOCK_TO_INT,
-      Fixnum   => BLOCK_TO_FIXNUM,
       :float   => BLOCK_TO_FLOAT, # deprecated
       Float    => BLOCK_TO_FLOAT,
-      BigDecimal => BLOCK_TO_DECIMAL,
+      Fixnum   => lambda do |val|
+        all(val) do |v|
+          v.to_i unless v.nil? || blank_string?(v)
+        end
+      end,
+      BigDecimal => lambda do |val|
+        all(val) do |v|
+          BigDecimal.new(v) unless v.nil? || blank_string?(v)
+        end
+      end,
       Date     => lambda do |val|
         if defined?(Date)
           all(val) {|v| Date.parse(v) unless blank_string?(v) }

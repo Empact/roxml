@@ -1,9 +1,5 @@
 Planned:
 
-v 2.5
- * Test out compatibility with ActiveRecord such that it's easy
-   to have both xml & database-sourced objects
-
 v 3.0
  * remove deprecated functionality
 

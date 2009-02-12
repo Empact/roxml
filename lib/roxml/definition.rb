@@ -210,7 +210,6 @@ module ROXML
         opts = {}
       end
 
-      opts.reverse_merge!(:as => nil, :in => nil)
       @default = opts.delete(:else)
       @to_xml = opts.delete(:to_xml)
       @name_explicit = opts.has_key?(:from)
@@ -263,6 +262,7 @@ module ROXML
           opts[:from] = opts[:from].nil? ? :attr : "@#{opts[:from]}"
           return :attr
         else
+          ActiveSupport::Deprecation.warn "Type declarations should be passed as the :as parameter, for future release."
           return type
         end
       end
@@ -274,6 +274,8 @@ module ROXML
 
       if opts[:as].is_a?(Hash)
         return HashDefinition.new(opts[:as])
+      elsif opts[:as].try(:include?, ROXML)
+        return opts[:as]
       end
 
       # type options

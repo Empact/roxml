@@ -205,6 +205,13 @@ class TestDefinition < Test::Unit::TestCase
     end
   end
 
+  def test_as_supports_generic_roxml_types
+    assert_equal RoxmlObject, ROXML::Definition.new(:type, :as => RoxmlObject).type
+    assert_deprecated do
+      assert_equal RoxmlObject, ROXML::Definition.new(:type, RoxmlObject).type
+    end
+  end
+
   def test_default_works
     opts = ROXML::Definition.new(:missing, :else => true)
     assert_equal true, opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))

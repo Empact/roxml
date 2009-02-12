@@ -223,6 +223,7 @@ describe ROXML::Definition do
         end
 
         it "should raise on non-integer values" do
+          proc { @definition.blocks.first['08'] }.should raise_error(ArgumentError)
           proc { @definition.blocks.first['793.12'] }.should raise_error(ArgumentError)
           proc { @definition.blocks.first['junk 11'] }.should raise_error(ArgumentError)
           proc { @definition.blocks.first['11sttf'] }.should raise_error(ArgumentError)
@@ -324,6 +325,33 @@ describe ROXML::Definition do
         end
       end
 
+      describe ":as => Fixnum", :shared => true do
+        it "should translate empty strings to nil" do
+          @definition.blocks.first.call(nil).should be_nil
+          @definition.blocks.first.call("").should be_nil
+          @definition.blocks.first.call(" ").should be_nil
+        end
+
+        it "should translate text to integers" do
+          @definition.blocks.first['3'].should == 3
+          @definition.blocks.first['792'].should == 792
+          @definition.blocks.first['08'].should == 8
+          @definition.blocks.first['279.23'].should == 279
+        end
+
+        it "should extract whatever is possible and fall back to 0" do
+          @definition.blocks.first['junk 11'].should eql(0)
+          @definition.blocks.first['.?sttf'].should eql(0)
+          @definition.blocks.first['11sttf'].should eql(11)
+        end
+
+        context "when passed an array" do
+          it "should translate the array elements to integer" do
+            @definition.blocks.first.call(["792", "12", "328"]).should == [792, 12, 328]
+          end
+        end
+      end
+
       describe "BigDecimal" do
         before do
           @definition = ROXML::Definition.new(:decimalvalue, :as => BigDecimal)
@@ -331,6 +359,15 @@ describe ROXML::Definition do
         end
 
         it_should_behave_like ":as => BigDecimal"
+      end
+
+      describe "Fixnum" do
+        before do
+          @definition = ROXML::Definition.new(:fixnumvalue, :as => Fixnum)
+          @definition_required = ROXML::Definition.new(:fixnumvalue, :as => Fixnum, :required => true)
+        end
+
+        it_should_behave_like ":as => Fixnum"
       end
 
       describe ":bool" do

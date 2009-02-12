@@ -238,7 +238,7 @@ class TestDefinition < Test::Unit::TestCase
   end
 
   def test_default_works_for_recursive_objects
-    opts = ROXML::Definition.new(:notmissing, RecursiveObject, :else => false)
+    opts = ROXML::Definition.new(:missing, :as => RecursiveObject, :else => false)
     assert_equal false, opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
   end
 
@@ -274,6 +274,18 @@ class TestDefinition < Test::Unit::TestCase
       opts = ROXML::Definition.new(:author, :attr)
       assert_equal 'author', opts.name
       assert_equal :attr, opts.type
+    end
+  end
+
+  def test_name_ending_with_on_warns_of_coming_date_default
+    assert_deprecated do
+      assert_equal :text, ROXML::Definition.new(:created_at).type
+    end
+  end
+
+  def test_name_ending_with_at_warns_of_coming_datetime_default
+    assert_deprecated do
+      assert_equal :text, ROXML::Definition.new(:created_on).type
     end
   end
 end

@@ -24,7 +24,7 @@
    * .xml_accessor will overwrite the setter for this variable if it has already been defined.  Use .xml_reader or .xml_attr,
      or define your writer later, if this is not the behavior you want.
 
-* 7 deprecations
+* 9 deprecations
 
   * Use :cdata => true rather than :as => :cdata
   * Use literal [] around your regular object type, rather than :as => :array
@@ -35,6 +35,8 @@
   * Use :from => :attr or :from => '@attribute_name' rather than the :attr
     object declaration type
   * Passing any type declaration outside the :as parameter is deprecated
+  * In 3.0, attributes ending in _on and _at will default to :as => Date and DateTime, respectively,
+    rather than :text
 
 * 1 bug fix
 

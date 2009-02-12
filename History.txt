@@ -2,7 +2,7 @@
 
 * 2 major enhancements
 
-   * support for mapping ActiveRecord classes.  See the example.
+   * support for mapping ActiveRecord classes.  See examples/active_record.rb.
    * .from_xml will now use the setter for the declared variable, is one is available,
      rather than directly setting the instance variable
 
@@ -18,8 +18,7 @@
 * 3 breaking changes
 
    * :else option only applies to instances created via .from_xml
-   * On .from_xml, #initialize is now called with the .from_xml before extracting attributes from the xml.
-     The initialization_args argument of .from_xml is now passed to #initialize, rather than the old #xml_initialize method
+   * On .from_xml, #initialize is now called with the *initialization_args before extracting attributes from the xml.
    * #xml_initialize has been replaced with the #after_parse callback, which takes no arguments.
    * .xml_accessor will overwrite the setter for this variable if it has already been defined.  Use .xml_reader or .xml_attr,
      or define your writer later, if this is not the behavior you want.

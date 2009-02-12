@@ -69,8 +69,9 @@ module ROXML # :nodoc:
       # #xml_initialize may be written to take arguments, in which case extra arguments
       # from from_xml will be passed into the function.
       #
-      def xml_initialize
+      def xml_initialize # :nodoc:
       end
+      deprecate :xml_initialize => :after_parse
     end
 
     module Conversions
@@ -177,8 +178,7 @@ module ROXML # :nodoc:
 
       # Declares a reference to a certain xml element, whether an attribute, a node,
       # or a typed collection of nodes.  This method does not add a corresponding accessor
-      # to the object.  For that behavior see the similar methods:
-      #  .xml_reader and .xml_accessor.
+      # to the object.  For that behavior see the similar methods: .xml_reader and .xml_accessor.
       #
       # == Sym Option
       # [sym]   Symbol representing the name of the accessor.
@@ -235,53 +235,6 @@ module ROXML # :nodoc:
       #  }).strange?
       #  => DUNNO
       #
-      # == Type options
-      # All type arguments may be used as the type argument to indicate just type,
-      # or used as :from, pointing to a xml name to indicate both type and attribute name.
-      # Also, any type may be passed via an array to indicate that multiple instances
-      # of the object should be returned as an array.
-      #
-      # === Other ROXML Class
-      # Declares an accessor that represents another ROXML class as child XML element
-      # (one-to-one or composition) or array of child elements (one-to-many or
-      # aggregation) of this type. Default is one-to-one. For one-to-many, simply pass the class
-      # as the only element in an array.
-      #
-      # Composition example:
-      #  <book>
-      #   <publisher>
-      #     <name>Pragmatic Bookshelf</name>
-      #   </publisher>
-      #  </book>
-      #
-      # Can be mapped using the following code:
-      #   class Book
-      #     xml_reader :publisher, Publisher
-      #   end
-      #
-      # Aggregation example:
-      #  <library>
-      #   <books>
-      #    <book/>
-      #    <book/>
-      #   </books>
-      #  </library>
-      #
-      # Can be mapped using the following code:
-      #  class Library
-      #    xml_reader :books, [Book], :in => "books"
-      #  end
-      #
-      # If you don't have the <books> tag to wrap around the list of <book> tags:
-      #  <library>
-      #   <name>Ruby books</name>
-      #   <book/>
-      #   <book/>
-      #  </library>
-      #
-      # You can skip the wrapper argument:
-      #    xml_reader :books, [Book]
-      #
       # == Blocks
       # You may also pass a block which manipulates the associated parsed value.
       #
@@ -317,6 +270,47 @@ module ROXML # :nodoc:
       # Even an array of :text nodes can be specified with :as => []
       #
       #   xml_reader :quotes, :as => []
+      #
+      # === Other ROXML Class
+      # Declares an accessor that represents another ROXML class as child XML element
+      # (one-to-one or composition) or array of child elements (one-to-many or
+      # aggregation) of this type. Default is one-to-one. For one-to-many, simply pass the class
+      # as the only element in an array.
+      #
+      # Composition example:
+      #  <book>
+      #   <publisher>
+      #     <name>Pragmatic Bookshelf</name>
+      #   </publisher>
+      #  </book>
+      #
+      # Can be mapped using the following code:
+      #   class Book
+      #     xml_reader :publisher, :as => Publisher
+      #   end
+      #
+      # Aggregation example:
+      #  <library>
+      #   <books>
+      #    <book/>
+      #    <book/>
+      #   </books>
+      #  </library>
+      #
+      # Can be mapped using the following code:
+      #  class Library
+      #    xml_reader :books, :as => [Book], :in => "books"
+      #  end
+      #
+      # If you don't have the <books> tag to wrap around the list of <book> tags:
+      #  <library>
+      #   <name>Ruby books</name>
+      #   <book/>
+      #   <book/>
+      #  </library>
+      #
+      # You can skip the wrapper argument:
+      #    xml_reader :books, :as => [Book]
       #
       # ==== Hash
       # Somewhere between the simplicity of a :text/:attr mapping, and the complexity of
@@ -416,7 +410,7 @@ module ROXML # :nodoc:
       # To map:
       #  <book ISBN="0974514055" title="Programming Ruby: the pragmatic programmers' guide" />
       #
-      # === :from => :text
+      # ==== :from => :text
       # The default source, if none is specified, this means the accessor
       # represents a text node from XML.  This is documented for completeness
       # only.  You should just leave this option off when you want the default behavior,
@@ -454,11 +448,12 @@ module ROXML # :nodoc:
       #  </library>
       #
       # === Other Options
-      # [:in] An optional name of a wrapping tag for this XML accessor
-      # [:else] Default value for attribute, if missing
+      # [:in] An optional name of a wrapping tag for this XML accessor.
+      #       This can include other xpath values, which will be joined with :from with a '/'
+      # [:else] Default value for attribute, if missing from the xml on .from_xml
       # [:required] If true, throws RequiredElementMissing when the element isn't present
       # [:frozen] If true, all results are frozen (using #freeze) at parse-time.
-      # [:cdata[ True for values which should be input from or output as cdata elements
+      # [:cdata] True for values which should be input from or output as cdata elements
       #
       def xml_attr(sym, type_and_or_opts = nil, opts = nil, &block)
         returning Definition.new(sym, *[type_and_or_opts, opts].compact, &block) do |attr|
@@ -474,7 +469,7 @@ module ROXML # :nodoc:
       end
       deprecate :xml => "use xml_attr, xml_reader, or xml_accessor instead"
 
-      # Declares a read-only xml reference. See xml for details.
+      # Declares a read-only xml reference. See xml_attr for details.
       #
       # Note that while xml_reader does not create a setter for this attribute,
       # its value can be modified indirectly via methods.  For more complete
@@ -484,7 +479,7 @@ module ROXML # :nodoc:
         add_reader(attr)
       end
 
-      # Declares a writable xml reference. See xml for details.
+      # Declares a writable xml reference. See xml_attr for details.
       #
       # Note that while xml_accessor does create a setter for this attribute,
       # you can use the :frozen option to prevent its value from being
@@ -570,7 +565,7 @@ module ROXML # :nodoc:
       # Creates a new Ruby object from XML using mapping information
       # annotated in the class.
       #
-      # The input data is either an XML::Node or a String representing
+      # The input data is either an XML::Node, String, Pathname, or File representing
       # the XML document.
       #
       # Example
@@ -579,7 +574,9 @@ module ROXML # :nodoc:
       #  book = Book.from_xml("<book><name>Beyond Java</name></book>")
       #
       # _initialization_args_ passed into from_xml will be passed into
-      # the object #xml_initialize method.
+      # the object's .new, prior to populating the xml_attrs.
+      #
+      # After the instatiation and xml population
       #
       # See also: xml_initialize
       #

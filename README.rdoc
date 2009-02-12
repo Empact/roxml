@@ -24,7 +24,7 @@ ROXML, you can annotate the Ruby classes as follows:
     include ROXML
 
     xml_accessor :name, :from => "NAME", :cdata => true
-    xml_accessor :books, [Book], :in => "books"
+    xml_accessor :books, :as => [Book]
   end
 
 To create a library and put a number of books in it we could run the following code:
@@ -66,7 +66,7 @@ can be mapped using the following code:
     include ROXML
 
     xml_name :book
-    xml_reader :publisher, Publisher
+    xml_reader :publisher, :as => Publisher
   end
 
 Note: In the above example, _xml_name_ annotation tells ROXML to set the element
@@ -78,21 +78,23 @@ in this case.
 Extending the above examples, say you want to parse a book's page count and have it available as an Integer.
 In such a case, you can extend any object with a block to manipulate it's value at parse time.  For example:
 
-  class Child
+  class Dog
     include ROXML
 
-    xml_reader :age, :from => :attr do |val|
-      Integer(val)
-    end
+    xml_reader(:age, :from => '@human_years', :as => Integer) {|years| years * 7 }
   end
 
 The result of the block above is stored, rather than the actual value parsed from the document.
 
 == Construction
 
-Complicated initialization may require action on multiple attributes of an object.  As such, you can
-define method xml_initialize to perform initialization after instantiation and parsing, including
-causing your ROXML object to call its own constructor, as in the following:
+Object lifecycle is as follows: .from_xml is called with option initialization_args.  .new,
+and thus #initialize, is called with those same args.  Then the object is populated
+with the attribute values from xml.  Then the #after_parse callback is called, with no arguments.
+In it you can ensure that your object initialization is complete, including initialization which
+requires more than one variable in concert.
+
+E.g.:
 
   class Measurement
     include ROXML
@@ -100,12 +102,17 @@ causing your ROXML object to call its own constructor, as in the following:
     xml_reader :units, :from => :attr
     xml_reader :value, :from => :content
 
-    def xml_initialize
-      # xml attributes of self are already valid
-      initialize(value, units)
+    def initialize(value = 0, units = 'meters')
+      to_metric
     end
 
-    def initialize(value, units)
+  private
+    def after_parse
+      # xml attributes of self are already valid
+      to_metric
+    end
+
+    def to_metric
       # translate units & value into metric, for example
     end
   end

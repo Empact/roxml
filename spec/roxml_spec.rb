@@ -339,7 +339,7 @@ describe ROXML, "inheritance" do
       @child.title.should == "The PickAxe"
       @child.description.should == "Probably the best Ruby book out there"
       @child.author.should == 'David Thomas, Andrew Hunt, Dave Thomas'
-      @child.pages.should == 0
+      @child.pages.should == nil
     end
     
     it "should not include its child's attributes" do

@@ -6,6 +6,11 @@ require 'active_support/version'
 module ActiveSupport # :nodoc:all
   module Deprecation
     class << self
+      def warn_with_internals_exclusion(message = nil, callstack = caller)
+        warn_without_internals_exclusion(message, callstack.reject {|line| line.include?('/roxml/lib/')})
+      end
+      alias_method_chain :warn, :internals_exclusion
+
       if VERSION::MAJOR <= 2 && VERSION::MINOR <= 1
         def deprecation_message(callstack, message = nil)
           message ||= "You are using deprecated behavior which will be removed from the next major or minor release"

@@ -135,13 +135,13 @@ module ROXML
 
     BLOCK_TO_FLOAT = lambda do |val|
       all(val) do |v|
-        Float(v) unless blank_string?(v)
+        Float(v) unless v.nil? || blank_string?(v)
       end
     end
 
     BLOCK_TO_INT = lambda do |val|
       all(val) do |v|
-        Integer(v) unless blank_string?(v)
+        Integer(v) unless v.nil? || blank_string?(v)
       end
     end
 

@@ -600,7 +600,7 @@ module ROXML # :nodoc:
                 ? inst.send(setter, value) \
                 : inst.instance_variable_set("@#{attr.variable_name}", value)
             end
-            inst.after_parse if method_defined?(:after_parse)
+            inst.try(:after_parse)
           end
         end
       rescue ArgumentError => e

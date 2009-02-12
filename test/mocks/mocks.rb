@@ -79,10 +79,6 @@ class Measurement
     normalize_hundredths
   end
 
-  def after_parse
-    normalize_hundredths
-  end
-
   def to_s
     "#{value} #{units}"
   end
@@ -92,6 +88,10 @@ class Measurement
   end
 
 private
+  def after_parse
+    normalize_hundredths
+  end
+
   def normalize_hundredths
     if @units.starts_with? 'hundredths-'
       @value /= 100

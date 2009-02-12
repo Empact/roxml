@@ -293,10 +293,6 @@ describe ROXML, "inheritance" do
       normalize_hundredths
     end
 
-    def after_parse
-      normalize_hundredths
-    end
-
     def to_s
       "#{value} #{units}"
     end
@@ -306,6 +302,10 @@ describe ROXML, "inheritance" do
     end
 
   private
+    def after_parse
+      normalize_hundredths
+    end
+
     def normalize_hundredths
       if @units.starts_with? 'hundredths-'
         @value /= 100

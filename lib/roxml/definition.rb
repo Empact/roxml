@@ -1,7 +1,5 @@
 require File.join(File.dirname(__FILE__), 'hash_definition')
 
-require "bigdecimal"
-
 class Module
   def bool_attr_reader(*attrs)
     attrs.each do |attr|
@@ -149,8 +147,9 @@ module ROXML
         default
       end
     end
-
-    BLOCK_SHORTHANDS = {
+    
+    CORE_BLOCK_SHORTHANDS = {
+      # Core Shorthands
       :integer => BLOCK_TO_INT, # deprecated
       Integer  => BLOCK_TO_INT,
       :float   => BLOCK_TO_FLOAT, # deprecated
@@ -160,25 +159,8 @@ module ROXML
           v.to_i unless v.blank?
         end
       end,
-      BigDecimal => lambda do |val|
-        all(val) do |v|
-          BigDecimal.new(v) unless v.blank?
-        end
-      end,
-      Date     => lambda do |val|
-        if defined?(Date)
-          all(val) {|v| Date.parse(v) unless v.blank? }
-        end
-      end,
-      DateTime => lambda do |val|
-        if defined?(DateTime)
-          all(val) {|v| DateTime.parse(v) unless v.blank? }
-        end
-      end,
       Time     => lambda do |val|
-        if defined?(Time)
-          all(val) {|v| Time.parse(v) unless v.blank? }
-        end
+        all(val) {|v| Time.parse(v) unless v.blank? }
       end,
 
       :bool    => nil,
@@ -193,6 +175,30 @@ module ROXML
         end
       end
     }
+
+    def self.block_shorthands
+      # dynamically load these shorthands at class definition time, but
+      # only if they're already availbable
+      returning CORE_BLOCK_SHORTHANDS do |blocks|
+        blocks.reverse_merge!(BigDecimal => lambda do |val|
+          all(val) do |v|
+            BigDecimal.new(v) unless v.blank?
+          end
+        end) if defined?(BigDecimal)
+
+        blocks.reverse_merge!(DateTime => lambda do |val|
+          if defined?(DateTime)
+            all(val) {|v| DateTime.parse(v) unless v.blank? }
+          end
+        end) if defined?(DateTime)
+
+        blocks.reverse_merge!(Date => lambda do |val|
+          if defined?(Date)
+            all(val) {|v| Date.parse(v) unless v.blank? }
+          end
+        end) if defined?(Date)
+      end
+    end
 
     def collect_blocks(block, as)
       ActiveSupport::Deprecation.warn ":as => :float is deprecated.  Use :as => Float instead" if as == :float
@@ -211,7 +217,7 @@ module ROXML
         # to bool, we need to be able to pass it to the user-provided block
         as = (block ? :bool_combined : :bool_standalone)
       end
-      as = BLOCK_SHORTHANDS.fetch(as) do
+      as = self.class.block_shorthands.fetch(as) do
         unless as.try(:include?, ROXML) || as.try(:first).try(:include?, ROXML)
           ActiveSupport::Deprecation.warn "#{as.inspect} is not a valid type declaration. ROXML will raise in this case in version 3.0" unless as.nil?
         end

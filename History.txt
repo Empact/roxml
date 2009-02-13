@@ -6,7 +6,7 @@
    * .from_xml will now use the setter for the declared variable, is one is available,
      rather than directly setting the instance variable
 
-* 4 minor enhancements
+* 5 minor enhancements
 
    * .xml_attr declaration declares neither a reader nor a writer.  With it you're left to your own devices.
    * You can use literal [] for the [:text] object type declaration,
@@ -14,6 +14,7 @@
    * You can use [] with your :as declarations. e.g. :as => [Float] is
      equivalent to the old :as => [Float, :array]
    * Show the actual call point of a deprecation, rather than some internal path
+   * Add support for BigDecimal and Fixnum as block shorthands [James Healy]
 
 * 3 breaking changes
 

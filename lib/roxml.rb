@@ -251,7 +251,7 @@ module ROXML # :nodoc:
       #
       # == Options
       # === :as
-      # ==== Basic Types: Integer, Float, Date, Time or DateTime
+      # ==== Basic Types
       # Allows you to specify one of several basic types to return the value as.  For example
       #
       #  xml_reader :count, :as => Integer
@@ -260,8 +260,8 @@ module ROXML # :nodoc:
       #
       #  xml_reader(:count) {|val| Integer(val) unless val.empty? }
       #
-      # Such block shorthands for Integer, Float, Date, Time or DateTime are currently available,
-      # but only for non-Hash declarations.
+      # Such block shorthands for Integer, Float, Fixnum, BigDecimal, Date, Time, and DateTime
+      # are currently available, but only for non-Hash declarations.
       #
       # To reference many elements, put the desired type in a literal array. e.g.:
       #

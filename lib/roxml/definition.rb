@@ -209,7 +209,7 @@ module ROXML
           raise ArgumentError, "multiple :as types (#{as.map(&:inspect).join(', ')}) is not supported.  Use a block if you want more complicated behavior."
         end
 
-        as = as.first || :text
+        as = as.first
       end
 
       if as == :bool
@@ -218,7 +218,7 @@ module ROXML
         as = (block ? :bool_combined : :bool_standalone)
       end
       as = self.class.block_shorthands.fetch(as) do
-        unless as.try(:include?, ROXML) || as.try(:first).try(:include?, ROXML)
+        unless as.try(:include?, ROXML) || as.try(:first).try(:include?, ROXML) || (as.is_a?(Hash) && !(as.keys & HASH_KEYS).empty?)
           ActiveSupport::Deprecation.warn "#{as.inspect} is not a valid type declaration. ROXML will raise in this case in version 3.0" unless as.nil?
         end
         nil

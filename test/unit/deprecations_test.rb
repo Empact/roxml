@@ -66,4 +66,19 @@ class TestDefinition < Test::Unit::TestCase
       assert_equal :attr, opts.type
     end
   end
+
+  def test_as_array_not_deprecated
+    assert_not_deprecated do
+      opts = ROXML::Definition.new(:name, :as => [])
+      assert_equal :text, opts.type
+      assert opts.array?
+    end
+  end
+
+  def test_as_hash_not_deprecated
+    assert_not_deprecated do
+      opts = ROXML::Definition.new(:name, :as => {:attrs => [:dt, :dd]})
+      assert opts.hash?
+    end
+  end
 end

@@ -6,7 +6,7 @@
    * .from_xml will now use the setter for the declared variable, is one is available,
      rather than directly setting the instance variable
 
-* 5 minor enhancements
+* 6 minor enhancements
 
    * .xml_attr declaration declares neither a reader nor a writer.  With it you're left to your own devices.
    * You can use literal [] for the [:text] object type declaration,
@@ -18,7 +18,7 @@
    * Update libxml support to 0.9.6, and add it as a dependency, to ensure correct versioning, and
      as it's an order of magnitude faster than rexml
 
-* 3 breaking changes
+* 4 breaking changes
 
    * :else option only applies to instances created via .from_xml
    * On .from_xml, #initialize is now called with the *initialization_args before extracting attributes from the xml.

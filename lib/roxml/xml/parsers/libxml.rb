@@ -10,9 +10,9 @@ module ROXML
     module NamespacedSearch
       def search(xpath)
         begin
-          if default_namespace && !xpath.include?(':')
+          if namespaces.default && !xpath.include?(':')
             find(namespaced(xpath),
-                 in_default_namespace(default_namespace.href))
+                 in_default_namespace(namespaces.default.href))
           else
             find(xpath)
           end
@@ -41,16 +41,11 @@ module ROXML
       include NamespacedSearch
 
     private
-      delegate :default_namespace, :to => :root
+      delegate :namespaces, :to => :root
     end
 
     class Node
       include NamespacedSearch
-
-    private
-      def default_namespace
-        @default_namespace ||= namespaces.default
-      end
     end
 
     class Parser

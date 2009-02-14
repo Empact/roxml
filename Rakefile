@@ -16,7 +16,8 @@ $hoe = Hoe.new('roxml', ROXML::VERSION) do |p|
   p.changes              = File.read("History.txt").split(/^==/)[1].strip
   p.rubyforge_name       = p.name
   p.extra_deps         = [
-   ['activesupport','>= 2.1.0']
+   ['activesupport','>= 2.1.0'],
+   ['libxml-ruby', '>= 0.8.6']
   ]
   p.extra_dev_deps = [
     ['newgem', ">= #{::Newgem::VERSION}"]

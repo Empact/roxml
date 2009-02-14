@@ -5,6 +5,7 @@ module ROXML
     Document = LibXML::XML::Document
     Node = LibXML::XML::Node
     Parser = LibXML::XML::Parser
+    Error = LibXML::XML::Error
 
     module NamespacedSearch
       def search(xpath)
@@ -48,7 +49,7 @@ module ROXML
 
     private
       def default_namespace
-        @default_namespace ||= namespace && namespace.find {|n| n.to_s.nil? }
+        @default_namespace ||= namespaces.default
       end
     end
 

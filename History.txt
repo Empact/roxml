@@ -15,6 +15,8 @@
      equivalent to the old :as => [Float, :array]
    * Show the actual call point of a deprecation, rather than some internal path
    * Add support for BigDecimal and Fixnum as block shorthands [James Healy]
+   * Update libxml support to 0.9.6, and add it as a dependency, to ensure correct versioning, and
+     as it's an order of magnitude faster than rexml
 
 * 3 breaking changes
 

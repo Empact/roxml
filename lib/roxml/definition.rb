@@ -235,7 +235,7 @@ module ROXML
 
       @default = opts.delete(:else)
       @to_xml = opts.delete(:to_xml)
-      @name_explicit = opts.has_key?(:from)
+      @name_explicit = opts.has_key?(:from) && opts[:from].is_a?(String)
       @cdata = opts.delete(:cdata)
       @required = opts.delete(:required)
       @frozen = opts.delete(:frozen)

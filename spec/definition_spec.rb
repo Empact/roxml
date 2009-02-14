@@ -6,6 +6,11 @@ describe ROXML::Definition do
       ROXML::Definition.new(:element, :from => 'somewhere').name_explicit?.should be_true
       ROXML::Definition.new(:element).name_explicit?.should be_false
     end
+
+    it "should not consider name proxies as explicit" do
+      ROXML::Definition.new(:element, :from => :attr).name_explicit?.should be_false
+      ROXML::Definition.new(:element, :from => :content).name_explicit?.should be_false
+    end
   end
 
   describe "hash options declaration", :shared => true do

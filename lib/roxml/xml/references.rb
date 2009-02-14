@@ -49,7 +49,6 @@ module ROXML
 
     def conventionize(what)
       if !what.blank? && @instance.try(:class).try(:roxml_naming_convention).respond_to?(:call)
-        require 'uri'
         URI.unescape(@instance.class.roxml_naming_convention.call(URI.escape(what, /\/|::/)))
       else
         what

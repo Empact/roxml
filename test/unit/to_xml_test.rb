@@ -73,7 +73,7 @@ class BookWithOctalPages
   include ROXML
 
   xml_accessor :pages_with_to_xml_proc, :as => Integer, :to_xml => proc {|val| sprintf("%#o", val) }, :required => true
-  xml_accessor :pages_with_type, OctalInteger, :required => true
+  xml_accessor :pages_with_type, :as => OctalInteger, :required => true
 end
 
 class TestToXmlWithOverriddenOutput < Test::Unit::TestCase

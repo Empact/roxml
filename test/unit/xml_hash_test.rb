@@ -3,7 +3,7 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 class BookWithContributorHash
   include ROXML
 
-  xml_reader :contributors, {:key => {:attr => 'role'},
+  xml_reader :contributors, :as => {:key => {:attr => 'role'},
                              :value => 'name'}
 end
 
@@ -30,7 +30,7 @@ class TestXMLHash < Test::Unit::TestCase
       Class.new do
         include ROXML
 
-        xml_reader :object_key_to_text, {:key => BookWithContributorHash,
+        xml_reader :object_key_to_text, :as => {:key => BookWithContributorHash,
                                          :value => 'text_node'}
       end
     end
@@ -41,7 +41,7 @@ class TestXMLHash < Test::Unit::TestCase
       Class.new do
         include ROXML
 
-        xml_reader :key_to_object_value, {:key => {:attr => 'text_node'},
+        xml_reader :key_to_object_value, :as => {:key => {:attr => 'text_node'},
                                           :value => BookWithContributorHash}
       end
     end
@@ -93,7 +93,7 @@ class TestXMLHash < Test::Unit::TestCase
     dict = Class.new do
       include ROXML
 
-      xml_reader :missing_hash, {:key => :name, :value => :content}, :in => 'EmptyDictionary'
+      xml_reader :missing_hash, :as => {:key => :name, :value => :content}, :in => 'EmptyDictionary'
     end
 
     assert_equal({}, dict.from_xml(%{

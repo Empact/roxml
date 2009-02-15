@@ -15,7 +15,7 @@ end
 class Numerology
   include ROXML
 
-  xml_reader :predictions, {:attrs => ['number', 'meaning']} do |k, v|
+  xml_reader :predictions, :as => {:attrs => ['number', 'meaning']} do |k, v|
     [Integer(k), v]
   end
 end
@@ -41,7 +41,7 @@ class Book
   xml_reader :title
   xml_reader :description, :cdata => true
   xml_reader :author
-  xml_accessor :pages, :text => 'pagecount', :as => Integer
+  xml_accessor :pages, :from => 'pagecount', :as => Integer
 end
 
 class BookWithRequired
@@ -49,8 +49,8 @@ class BookWithRequired
 
   xml_accessor :isbn, :from => '@ISBN', :required => true
   xml_reader :title, :required => true
-  xml_reader :contributors, [Contributor], :in => 'contributor_array', :required => true
-  xml_reader :contributor_hash, {:attrs => ['role', 'name']},
+  xml_reader :contributors, :as => [Contributor], :in => 'contributor_array', :required => true
+  xml_reader :contributor_hash, :as => {:attrs => ['role', 'name']},
                                 :from => 'contributor', :in => 'contributor_hash', :required => true
 end
 
@@ -107,7 +107,7 @@ class BookWithDepth
   xml_reader :title
   xml_reader :description, :cdata => true
   xml_reader :author
-  xml_reader :depth, Measurement
+  xml_reader :depth, :as => Measurement
 end
 
 class Author
@@ -124,7 +124,7 @@ class BookWithAuthors
   xml_reader :isbn, :from => '@ISBN'
   xml_reader :title
   xml_reader :description, :cdata => true
-  xml_reader :authors, []
+  xml_reader :authors, :as => []
 end
 
 class BookWithAuthorTextAttribute
@@ -134,7 +134,7 @@ class BookWithAuthorTextAttribute
   xml_reader :isbn, :from => '@ISBN'
   xml_reader :title
   xml_reader :description, :cdata => true
-  xml_reader :author, Author
+  xml_reader :author, :as => Author
 end
 
 class BookWithContributions
@@ -144,7 +144,7 @@ class BookWithContributions
   xml_reader :isbn, :from => :attr
   xml_reader :title
   xml_reader :description
-  xml_reader :contributions, [Contributor], :from => 'contributor', :in => "contributions"
+  xml_reader :contributions, :as => [Contributor], :from => 'contributor', :in => "contributions"
 end
 
 class BookWithContributors
@@ -154,7 +154,7 @@ class BookWithContributors
   xml_reader :isbn, :from => :attr
   xml_reader :title
   xml_reader :description
-  xml_reader :contributors, [Contributor]
+  xml_reader :contributors, :as => [Contributor]
 end
 
 class WriteableBookWithContributors
@@ -164,7 +164,7 @@ class WriteableBookWithContributors
   xml_accessor :isbn, :from => :attr
   xml_accessor :title
   xml_accessor :description
-  xml_accessor :contributors, [Contributor]
+  xml_accessor :contributors, :as => [Contributor]
 end
 
 class NamelessBook
@@ -173,7 +173,7 @@ class NamelessBook
   xml_reader :isbn, :from => :attr
   xml_reader :title
   xml_reader :description
-  xml_reader :contributors, [Contributor]
+  xml_reader :contributors, :as => [Contributor]
 end
 
 class Publisher
@@ -189,7 +189,7 @@ class BookWithPublisher
   xml_reader :isbn, :from => :attr
   xml_reader :title
   xml_reader :description
-  xml_reader :publisher, Publisher
+  xml_reader :publisher, :as => Publisher
 end
 
 class BookPair
@@ -199,14 +199,14 @@ class BookPair
   xml_reader :title
   xml_reader :description
   xml_reader :author
-  xml_reader :book, Book
+  xml_reader :book, :as => Book
 end
 
 class Library
   include ROXML
 
   xml_reader :name
-  xml_reader :books, [BookWithContributions]
+  xml_reader :books, :as => [BookWithContributions]
 end
 
 class UppercaseLibrary
@@ -214,14 +214,14 @@ class UppercaseLibrary
 
   xml_name :library
   xml_reader :name, :from => 'NAME'
-  xml_reader :books, [BookWithContributions], :from => 'BOOK'
+  xml_reader :books, :as => [BookWithContributions], :from => 'BOOK'
 end
 
 class LibraryWithBooksOfUnderivableName
   include ROXML
 
   xml_accessor :name
-  xml_reader :novels, [NamelessBook]
+  xml_reader :novels, :as => [NamelessBook]
 end
 
 class NodeWithNameConflicts
@@ -259,7 +259,7 @@ class PersonWithMother
 
   xml_name :person
   xml_reader :name
-  xml_reader :mother, PersonWithMother, :from => 'mother'
+  xml_reader :mother, :as => PersonWithMother, :from => 'mother'
 end
 
 class PersonWithGuardedMother
@@ -267,7 +267,7 @@ class PersonWithGuardedMother
 
   xml_name :person
   xml_reader :name
-  xml_reader :mother, PersonWithGuardedMother, :from => :person, :in => :mother
+  xml_reader :mother, :as => PersonWithGuardedMother, :from => :person, :in => :mother
 end
 
 class PersonWithMotherOrMissing
@@ -275,5 +275,5 @@ class PersonWithMotherOrMissing
 
   xml_reader :age, :from => :attr, :else => 21
   xml_reader :name, :else => 'Anonymous'
-  xml_reader :mother, PersonWithMotherOrMissing, :else => Person.blank
+  xml_reader :mother,:as => PersonWithMotherOrMissing, :else => Person.blank
 end

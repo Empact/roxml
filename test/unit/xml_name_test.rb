@@ -24,28 +24,28 @@ class ParentOfNamedChild
   include ROXML
 
   xml_name :parent
-  xml_accessor :child_accessor_name, NamedChild
+  xml_accessor :child_accessor_name, :as => NamedChild
 end
 
 class ParentOfNamedChildWithFrom
   include ROXML
 
   xml_name :parent
-  xml_accessor :child_accessor_name, NamedChild, :from => 'child_from_name'
+  xml_accessor :child_accessor_name, :as => NamedChild, :from => 'child_from_name'
 end
 
 class ParentOfUnnamedChild
   include ROXML
 
   xml_name :parent
-  xml_accessor :child_accessor_name, Child
+  xml_accessor :child_accessor_name, :as => Child
 end
 
 class ParentOfUnnamedChildWithFrom
   include ROXML
 
   xml_name :parent
-  xml_accessor :child_accessor_name, Child, :from => 'child_from_name'
+  xml_accessor :child_accessor_name,:as => Child, :from => 'child_from_name'
 end
 
 class TestXMLName < Test::Unit::TestCase

@@ -13,7 +13,7 @@ end
 class CartHolder
   include ROXML
 
-  xml_reader :cart, EmptyCart, :required => true
+  xml_reader :cart, :as => EmptyCart, :required => true
 end
 
 class TestXMLObject < Test::Unit::TestCase
@@ -120,19 +120,19 @@ class TestXMLObject < Test::Unit::TestCase
     include ROXML
 
     xml_reader :name, :from => 'node_name'
-    xml_reader :nodes, [Node]
+    xml_reader :nodes, :as => [Node]
   end
 
   class Taxonomy
     include ROXML
 
     xml_reader :name, :from => 'taxonomy_name'
-    xml_reader :nodes, [Node]
+    xml_reader :nodes, :as => [Node]
   end
 
   class Taxonomies
     include ROXML
-    xml_reader :taxonomies, [Taxonomy]
+    xml_reader :taxonomies, :as => [Taxonomy]
   end
 
   def test_more_recursion

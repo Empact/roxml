@@ -53,8 +53,8 @@ describe ROXML, "#xml" do
     xml_name :book
     xml_reader :isbn, :from => :attr
     xml_reader :title
-    xml_reader :description, DescriptionReadonly
-    xml_reader :contributions, [Contributor], :from => 'contributor', :in => "contributions"
+    xml_reader :description, :as => DescriptionReadonly
+    xml_reader :contributions, :as => [Contributor], :from => 'contributor', :in => "contributions"
   end
 
   class BookWithContributionsReadonly
@@ -63,8 +63,8 @@ describe ROXML, "#xml" do
     xml_name :book
     xml_reader :isbn, :from => :attr, :frozen => true
     xml_reader :title, :frozen => true
-    xml_reader :description, DescriptionReadonly, :frozen => true
-    xml_reader :contributions, [Contributor], :from => 'contributor', :in => "contributions", :frozen => true
+    xml_reader :description, :as => DescriptionReadonly, :frozen => true
+    xml_reader :contributions, :as => [Contributor], :from => 'contributor', :in => "contributions", :frozen => true
   end
 
   before do
@@ -106,7 +106,7 @@ describe ROXML, "#xml" do
       include ROXML
 
       xml_accessor :pages_with_as, :as => Integer, :to_xml => proc {|val| sprintf("%#o", val) }, :required => true
-      xml_accessor :pages_with_type, OctalInteger, :required => true
+      xml_accessor :pages_with_type, :as => OctalInteger, :required => true
     end
 
     #      to_xml_test :book_with_octal_pages
@@ -148,7 +148,7 @@ describe ROXML, "#xml" do
       class BookWithOctalPagesType
         include ROXML
 
-        xml_accessor :pages, OctalInteger, :required => true
+        xml_accessor :pages, :as => OctalInteger, :required => true
       end
 
       it "should apply filtering on input" do
@@ -216,7 +216,7 @@ describe ROXML, "#xml" do
         xml_reader :isbn, :from => :attr
         xml_reader :title
         xml_reader :description
-        xml_reader :contributors, [Contributor]
+        xml_reader :contributors, :as => [Contributor]
       end
 
       it "should look for elements :in the plural of name" do
@@ -239,7 +239,7 @@ describe ROXML, "#xml" do
       include ROXML
 
       xml_name :dictionary
-      xml_reader :definitions, {:key => :name,
+      xml_reader :definitions, :as => {:key => :name,
                                 :value => :content}, :in => :definitions
     end
 
@@ -247,7 +247,7 @@ describe ROXML, "#xml" do
       include ROXML
 
       xml_name :dictionary
-      xml_reader :definitions, {:key => :name,
+      xml_reader :definitions, :as => {:key => :name,
                                 :value => :content}, :in => :definitions, :frozen => true
     end
 
@@ -315,7 +315,7 @@ describe ROXML, "inheritance" do
   end
 
   class InheritedBookWithDepth < Book
-    xml_reader :depth, Measurement
+    xml_reader :depth, :as => Measurement
   end
 
   before do

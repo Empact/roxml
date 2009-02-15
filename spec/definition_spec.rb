@@ -134,6 +134,20 @@ describe ROXML::Definition do
       end
     end
 
+    describe "=> NonRoxmlClass" do
+      it "should fail with a warning"
+    end
+
+    describe "=> [NonRoxmlClass]" do
+      it "should fail with a warning"
+
+      it "currently defaults to an array of :text" do
+        opts = ROXML::Definition.new(:authors, :as => [Hash])
+        opts.array?.should be_true
+        opts.type.should == :text
+      end
+    end
+
     describe "=> {}" do
       describe "hash with attr key and text val" do
         before do

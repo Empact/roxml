@@ -1,7 +1,7 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class InheritedBookWithDepth < Book
-  xml_reader :depth, Measurement
+  xml_reader :depth, :as => Measurement
 end
 
 class BookWithXmlInitialize < BookWithDepth

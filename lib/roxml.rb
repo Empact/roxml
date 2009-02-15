@@ -401,12 +401,15 @@ module ROXML # :nodoc:
       # [:frozen] If true, all results are frozen (using #freeze) at parse-time.
       # [:cdata] True for values which should be input from or output as cdata elements
       #
-      def xml_attr(sym, type_and_or_opts = nil, opts = nil, &block)
-        returning Definition.new(sym, *[type_and_or_opts, opts].compact, &block) do |attr|
-          if roxml_attrs.map(&:accessor).include? attr.accessor
-            raise "Accessor #{attr.accessor} is already defined as XML accessor in class #{self.name}"
+      def xml_attr(*syms, &block)
+        opts = syms.extract_options!
+        syms.map do |sym|
+          returning Definition.new(sym, opts, &block) do |attr|
+            if roxml_attrs.map(&:accessor).include? attr.accessor
+              raise "Accessor #{attr.accessor} is already defined as XML accessor in class #{self.name}"
+            end
+            @roxml_attrs << attr
           end
-          @roxml_attrs << attr
         end
       end
 
@@ -415,9 +418,10 @@ module ROXML # :nodoc:
       # Note that while xml_reader does not create a setter for this attribute,
       # its value can be modified indirectly via methods.  For more complete
       # protection, consider the :frozen option.
-      def xml_reader(sym, type_and_or_opts = nil, opts = nil, &block)
-        attr = xml_attr sym, type_and_or_opts, opts, &block
-        add_reader(attr)
+      def xml_reader(*syms, &block)
+        xml_attr(*syms, &block).each do |attr|
+          add_reader(attr)
+        end
       end
 
       # Declares a writable xml reference. See xml_attr for details.
@@ -425,10 +429,11 @@ module ROXML # :nodoc:
       # Note that while xml_accessor does create a setter for this attribute,
       # you can use the :frozen option to prevent its value from being
       # modified indirectly via methods.
-      def xml_accessor(sym, type_and_or_opts = nil, opts = nil, &block)
-        attr = xml_attr sym, type_and_or_opts, opts, &block
-        add_reader(attr)
-        attr_writer(attr.variable_name)
+      def xml_accessor(*syms, &block)
+        xml_attr(*syms, &block).each do |attr|
+          add_reader(attr)
+          attr_writer(attr.variable_name)
+        end
       end
 
     private

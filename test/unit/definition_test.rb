@@ -9,27 +9,21 @@ class TestDefinition < Test::Unit::TestCase
   end
 
   def test_text_in_array_means_as_array_for_text
-    opts = ROXML::Definition.new(:authors, [:text])
+    opts = ROXML::Definition.new(:authors, :as => [:text])
     assert opts.array?
     assert_equal :text, opts.type
   end
 
   def test_empty_array_means_as_array_for_text
-    opts = ROXML::Definition.new(:authors, [])
+    opts = ROXML::Definition.new(:authors, :as => [])
     assert opts.array?
     assert_equal :text, opts.type
   end
 
   def test_attr_in_array_means_as_array_for_attr
-    opts = ROXML::Definition.new(:authors, [:attr])
+    opts = ROXML::Definition.new(:authors, :as => [], :from => :attr)
     assert opts.array?
     assert_equal :attr, opts.type
-  end
-
-  def test_object_in_array_means_as_array_for_object
-    opts = ROXML::Definition.new(:authors, [Hash])
-    assert opts.array?
-    assert_equal Hash, opts.type
   end
 
   def test_literal_as_array_is_deprecated
@@ -214,9 +208,6 @@ class TestDefinition < Test::Unit::TestCase
 
   def test_as_supports_generic_roxml_types_in_arrays
     assert_equal RoxmlObject, ROXML::Definition.new(:types, :as => [RoxmlObject]).type
-    assert_deprecated do
-      assert_equal RoxmlObject, ROXML::Definition.new(:types, [RoxmlObject]).type
-    end
   end
 
   def test_default_works
@@ -227,10 +218,6 @@ class TestDefinition < Test::Unit::TestCase
   def test_default_works_for_arrays
     opts = ROXML::Definition.new(:missing, :as => [])
     assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
-    assert_deprecated do
-      opts = ROXML::Definition.new(:missing, [])
-      assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
-    end
     assert_deprecated do
       opts = ROXML::Definition.new(:missing, :as => :array)
       assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
@@ -293,7 +280,7 @@ end
 class RecursiveObject
   include ROXML
 
-  xml_reader :next, RecursiveObject, :else => true
+  xml_reader :next, :as => RecursiveObject, :else => true
 end
 
 class RoxmlObject

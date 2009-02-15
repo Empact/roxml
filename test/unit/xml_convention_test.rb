@@ -54,7 +54,7 @@ class BookCase
   include ROXML
 
   xml_reader :book_count, :as => Integer, :required => true
-  xml_reader :big_books, [:text], :required => true
+  xml_reader :big_books, :as => [:text], :required => true
 end
 
 class BookCaseCamelCase < BookCase
@@ -88,7 +88,7 @@ class ParentBookCaseDefault
   include ROXML
 
   xml_reader :book_count, :as => Integer, :required => true
-  xml_reader :big_books, [:text], :required => true
+  xml_reader :big_books, :as => [:text], :required => true
 end
 
 class InheritedBookCaseDefault < ParentBookCaseDefault

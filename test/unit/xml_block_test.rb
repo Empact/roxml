@@ -3,13 +3,13 @@ require File.join(File.dirname(__FILE__), '..', 'test_helper')
 class ArrayWithBlockShorthand
   include ROXML
 
-  xml_reader :array, [:text], :from => 'number', :as => Integer
+  xml_reader :array, :as => [Integer], :from => 'number'
 end
 
 class ArrayWithBlock
   include ROXML
 
-  xml_reader :array, [:text], :from => 'number' do |arr|
+  xml_reader :array, :as => [], :from => 'number' do |arr|
     arr.map(&:to_i).reverse
   end
 end

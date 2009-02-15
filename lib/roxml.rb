@@ -15,67 +15,11 @@ module ROXML # :nodoc:
                 ClassMethods::Declarations,
                 ClassMethods::Operations
     base.class_eval do
-      include InstanceMethods::Accessors,
-              InstanceMethods::Construction,
-              InstanceMethods::Conversions
+      include InstanceMethods::Conversions
     end
   end
 
   module InstanceMethods # :nodoc:
-    # Instance method equivalents of the Class method accessors
-    module Accessors # :nodoc:all
-      # Provides access to ROXML::ClassMethods::Accessors::tag_name directly from an instance of a ROXML class
-      def tag_name
-        self.class.tag_name
-      end
-      deprecate :tag_name => 'use class.tag_name instead'
-
-      # Provides access to ROXML::ClassMethods::Accessors::tag_refs directly from an instance of a ROXML class
-      def tag_refs
-        self.class.tag_refs_without_deprecation
-      end
-      deprecate :tag_refs => :roxml_attrs
-    end
-
-    module Construction
-      # xml_initialize is called at the end of the #from_xml operation on objects
-      # where xml_construct is not in place. Override xml_initialize in order to establish
-      # post-import behavior.  For example, you can use xml_initialize to map xml attribute
-      # values into the object standard initialize function, thus enabling a ROXML object
-      # to freely be either xml-backed or instantiated directly via #new.
-      # An example of this follows:
-      #
-      #  class Measurement
-      #    include ROXML
-      #
-      #    xml_reader :units, :from => :attr
-      #    xml_reader :value, :from => :content
-      #
-      #    def xml_initialize
-      #      # the object is instantiated, and all xml attributes are imported
-      #      # and available, i.e., value and units below are the same value and units
-      #      # found in the xml via the xml_reader declarations above.
-      #      initialize(value, units)
-      #    end
-      #
-      #    def initialize(value, units = 'pixels')
-      #      @value = Float(value)
-      #      @units = units.to_s
-      #      if @units.starts_with? 'hundredths-'
-      #        @value /= 100
-      #        @units = @units.split('hundredths-')[1]
-      #      end
-      #    end
-      #  end
-      #
-      # #xml_initialize may be written to take arguments, in which case extra arguments
-      # from from_xml will be passed into the function.
-      #
-      def xml_initialize # :nodoc:
-      end
-      deprecate :xml_initialize => :after_parse
-    end
-
     module Conversions
       # Returns a LibXML::XML::Node or a REXML::Element representing this object
       def to_xml(name = nil)

@@ -110,13 +110,6 @@ class TestXMLName < Test::Unit::TestCase
     assert_equal 'meaning', DictionaryOfTexts.roxml_attrs.first.hash.value.name
   end
 
-  def test_xml_name_query_is_deprecated
-    # This query should go when the XML_NAME_WARNING stuff goes
-    assert_deprecated do
-      NamedChild.xml_name?
-    end
-  end
-
   def test_xml_name_should_not_be_conventionalized_if_explicitly_set
     reference = ROXML::XMLTextRef.new(ROXML::Definition.new(:name, :from => 'georss:name'), WrapModule::InstanceStandin.new)
     assert_equal "georss:name", reference.name

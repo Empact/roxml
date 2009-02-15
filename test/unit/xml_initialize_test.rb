@@ -14,10 +14,6 @@ class BookWithXmlInitialize < BookWithDepth
 end
 
 class TestXMLInitialize < Test::Unit::TestCase
-  def test_xml_construct_not_in_use
-    assert Measurement.xml_construction_args_without_deprecation.empty?
-  end
-
   def test_initialize_is_run
     m = Measurement.from_xml('<measurement units="hundredths-meters">1130</measurement>')
     assert_equal 11.3, m.value

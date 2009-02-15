@@ -410,11 +410,6 @@ module ROXML # :nodoc:
         end
       end
 
-      def xml(sym, writable = false, type_and_or_opts = nil, opts = nil, &block) #:nodoc:
-        send(writable ? :xml_accessor : :xml_reader, sym, type_and_or_opts, opts, &block)
-      end
-      deprecate :xml => "use xml_attr, xml_reader, or xml_accessor instead"
-
       # Declares a read-only xml reference. See xml_attr for details.
       #
       # Note that while xml_reader does not create a setter for this attribute,
@@ -436,19 +431,6 @@ module ROXML # :nodoc:
         attr_writer(attr.variable_name)
       end
 
-      # This method is deprecated, please use xml_initialize instead
-      def xml_construct(*args) # :nodoc:
-        present_tags = tag_refs_without_deprecation.map(&:accessor)
-        missing_tags = args - present_tags
-        unless missing_tags.empty?
-          raise ArgumentError, "All construction tags must be declared first using xml, " +
-                               "xml_reader, or xml_accessor. #{missing_tags.join(', ')} is missing. " +
-                               "#{present_tags.join(', ')} are declared."
-        end
-        @xml_construction_args = args
-      end
-      deprecate :xml_construct => :xml_initialize
-
     private
       def add_reader(attr)
         define_method(attr.accessor) do
@@ -458,17 +440,6 @@ module ROXML # :nodoc:
     end
 
     module Accessors
-      def xml_construction_args # :nodoc:
-        @xml_construction_args ||= []
-      end
-      deprecate :xml_construction_args
-
-      # A helper which enables us to detect when the xml_name has been explicitly set
-      def xml_name? #:nodoc:
-        @roxml_tag_name
-      end
-      deprecate :xml_name?
-
       # Returns the tag name (also known as xml_name) of the class.
       # If no tag name is set with xml_name method, returns default class name
       # in lowercase.
@@ -499,11 +470,6 @@ module ROXML # :nodoc:
         @roxml_attrs ||= []
         (@roxml_attrs + (superclass.try(:roxml_attrs) || [])).freeze
       end
-
-      def tag_refs # :nodoc:
-        roxml_attrs.map {|a| a.to_ref(nil) }
-      end
-      deprecate :tag_refs => :roxml_attrs
     end
 
     module Operations
@@ -529,32 +495,19 @@ module ROXML # :nodoc:
       def from_xml(data, *initialization_args)
         xml = XML::Node.from(data)
 
-        unless xml_construction_args_without_deprecation.empty?
-          args = xml_construction_args_without_deprecation.map do |arg|
-             roxml_attrs.find {|attr| attr.accessor == arg }
-          end.map {|attr| attr.to_ref(self).value_in(xml) }
-          new(*args)
-        else
-          returning new(*initialization_args) do |inst|
-            roxml_attrs.each do |attr|
-              value = attr.to_ref(inst).value_in(xml)
-              setter = :"#{attr.variable_name}="
-              inst.respond_to?(setter) \
-                ? inst.send(setter, value) \
-                : inst.instance_variable_set("@#{attr.variable_name}", value)
-            end
-            inst.try(:after_parse)
+        returning new(*initialization_args) do |inst|
+          roxml_attrs.each do |attr|
+            value = attr.to_ref(inst).value_in(xml)
+            setter = :"#{attr.variable_name}="
+            inst.respond_to?(setter) \
+              ? inst.send(setter, value) \
+              : inst.instance_variable_set("@#{attr.variable_name}", value)
           end
+          inst.try(:after_parse)
         end
       rescue ArgumentError => e
         raise e, e.message + " for class #{self}"
       end
-
-      # Deprecated in favor of #from_xml
-      def parse(data) # :nodoc:
-        from_xml(data)
-      end
-      deprecate :parse => :from_xml
     end
   end
 end

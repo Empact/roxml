@@ -1,14 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class TestDefinition < Test::Unit::TestCase
-  def test_tag_refs_is_deprecated
-    assert_deprecated do
-      Class.new do
-        include ROXML
-      end.tag_refs
-    end
-  end
-
   def test_literal_as_array_is_deprecated
     assert_deprecated do
       assert ROXML::Definition.new(:authors, :as => :array).array?

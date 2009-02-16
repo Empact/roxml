@@ -276,7 +276,7 @@ describe ROXML, "inheritance" do
 
     xml_accessor :isbn, :from => '@ISBN'
     xml_reader :title
-    xml_reader :description, :as => :cdata
+    xml_reader :description, :cdata => true
     xml_reader :author
     xml_accessor :pages, :from => 'pagecount', :as => Integer
   end

@@ -181,15 +181,6 @@ class TestDefinition < Test::Unit::TestCase
     assert ROXML::Definition.new(:manufacturer, :cdata => true).cdata?
   end
 
-  def test_as_cdata_is_deprecated
-    assert_deprecated do
-      assert ROXML::Definition.new(:manufacturer, :as => :cdata).cdata?
-    end
-    assert_deprecated do
-      assert ROXML::Definition.new(:manufacturer, :as => [Integer, :cdata]).cdata?
-    end
-  end
-
   def test_as_supports_generic_roxml_types
     assert_equal RoxmlObject, ROXML::Definition.new(:type, :as => RoxmlObject).type
   end

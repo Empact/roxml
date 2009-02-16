@@ -16,15 +16,6 @@ class TestDefinition < Test::Unit::TestCase
     end
   end
 
-  def test_as_cdata_is_deprecated
-    assert_deprecated do
-      assert ROXML::Definition.new(:manufacturer, :as => :cdata).cdata?
-    end
-    assert_deprecated do
-      assert ROXML::Definition.new(:manufacturer, :as => [Integer, :cdata]).cdata?
-    end
-  end
-
   def test_as_array_not_deprecated
     assert_not_deprecated do
       opts = ROXML::Definition.new(:name, :as => [])

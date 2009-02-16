@@ -13,114 +13,6 @@ describe ROXML::Definition do
     end
   end
 
-  describe "hash options declaration", :shared => true do
-    it "should represent a hash" do
-      @opts.hash?.should be_true
-    end
-
-    it "should have hash definition" do
-      {@opts.hash.key.type => @opts.hash.key.name}.should == @hash_args[:key]
-      {@opts.hash.value.type => @opts.hash.value.name}.should == @hash_args[:value]
-    end
-
-    it "should not represent an array" do
-      @opts.array?.should be_false
-    end
-  end
-
-  describe "types" do
-    describe ":content" do
-      it "should be recognized" do
-        ROXML::Definition.new(:author).content?.should be_false
-        ROXML::Definition.new(:author, :content).content?.should be_true
-      end
-
-      it "should be deprecated"
-    end
-
-    describe "array reference" do
-      it "[] means array of texts" do
-        opts = ROXML::Definition.new(:authors, [])
-        opts.array?.should be_true
-        opts.type.should == :text
-      end
-
-      it "[:text] means array of texts" do
-        opts = ROXML::Definition.new(:authors, [:text])
-        opts.array?.should be_true
-        opts.type.should == :text
-      end
-
-      it "[:attr] means array of attrs" do
-        opts = ROXML::Definition.new(:authors, [:attr])
-        opts.array?.should be_true
-        opts.type.should == :attr
-      end
-
-      it "[Object] means array of objects" do
-        opts = ROXML::Definition.new(:authors, [Hash])
-        opts.array?.should be_true
-        opts.type.should == Hash
-      end
-    end
-
-    describe "{}" do
-      describe "hash with attr key and text val" do
-        before do
-          @opts = ROXML::Definition.new(:attributes, {:key => {:attr => :name},
-                                         :value => :value})
-          @hash_args = {:key => {:attr => 'name'},
-                        :value => {:text => 'value'}}
-        end
-
-        it_should_behave_like "hash options declaration"
-      end
-
-      describe "hash with String class for type" do
-        before do
-          @opts = ROXML::Definition.new(:attributes, {:key => {String => 'name'},
-                                         :value => {String => 'value'}})
-          @hash_args = {:key => {:text => 'name'}, :value => {:text => 'value'}}
-        end
-
-        it_should_behave_like "hash options declaration"
-      end
-
-      describe "hash with attr key and content val" do
-        before do
-          @opts = ROXML::Definition.new(:attributes, {:key => {:attr => :name},
-                                         :value => :content})
-          @hash_args = {:key => {:attr => 'name'}, :value => {:text => '.'}}
-        end
-
-        it_should_behave_like "hash options declaration"
-      end
-
-      describe "hash of attrs" do
-        before do
-          @hash_args = {:key => {:attr => 'name'}, :value => {:attr => 'value'}}
-          @opts = ROXML::Definition.new(:attributes, {:attrs => [:name, :value]})
-        end
-
-        it_should_behave_like "hash options declaration"
-
-        describe "with options" do
-          before do
-            @hash_args = {:key => {:attr => 'dt'}, :value => {:attr => 'dd'}}
-            @opts = ROXML::Definition.new(:definitions, {:attrs => [:dt, :dd]},
-                                    :in => 'definitions')
-          end
-
-          it_should_behave_like "hash options declaration"
-
-          it "should not interfere with options" do
-            @opts.wrapper.should == 'definitions'
-          end
-        end
-      end
-    end
-  end
-
   describe ":as" do
     describe "=> :array" do
       it "should be deprecated"
@@ -134,21 +26,66 @@ describe ROXML::Definition do
       end
     end
 
+    describe "=> RoxmlClass" do
+      class RoxmlClass
+        include ROXML
+      end
+
+      it "should store type" do
+        opts = ROXML::Definition.new(:name, :as => RoxmlClass)
+        opts.type.should == RoxmlClass
+      end
+    end
+
+    describe "=> NonRoxmlClassWithFromXmlDefined" do
+      class OctalInteger
+        def self.from_xml(val)
+          new(Integer(val.content))
+        end
+      end
+
+      it "should accept type" do
+        opts = ROXML::Definition.new(:name, :as => OctalInteger)
+        opts.type.should == OctalInteger
+      end
+    end
+
     describe "=> NonRoxmlClass" do
       it "should fail with a warning"
+
+      it "currently defaults to :text" do
+        opts = ROXML::Definition.new(:authors, :as => Module)
+        opts.array?.should be_false
+        opts.type.should == :text
+      end
     end
 
     describe "=> [NonRoxmlClass]" do
       it "should fail with a warning"
 
       it "currently defaults to an array of :text" do
-        opts = ROXML::Definition.new(:authors, :as => [Hash])
+        opts = ROXML::Definition.new(:authors, :as => [Module])
         opts.array?.should be_true
         opts.type.should == :text
       end
     end
 
     describe "=> {}" do
+      describe "hash options declaration", :shared => true do
+        it "should represent a hash" do
+          @opts.hash?.should be_true
+        end
+
+        it "should have hash definition" do
+          {@opts.hash.key.type => @opts.hash.key.name}.should == @hash_args[:key]
+          {@opts.hash.value.type => @opts.hash.value.name}.should == @hash_args[:value]
+        end
+
+        it "should not represent an array" do
+          @opts.array?.should be_false
+        end
+      end
+
       describe "hash with attr key and text val" do
         before do
           @opts = ROXML::Definition.new(:attributes, :as => {:key => {:attr => :name},
@@ -237,7 +174,11 @@ describe ROXML::Definition do
         end
       end
 
-      describe ":as => Integer", :shared => true do
+      describe "Integer" do
+        before do
+          @definition = ROXML::Definition.new(:intvalue, :as => Integer)
+        end
+
         it_should_behave_like "block shorthand type declaration"
 
         it "should translate text to integers" do
@@ -259,25 +200,11 @@ describe ROXML::Definition do
         end
       end
 
-      describe "Integer" do
+      describe "Float" do
         before do
-          @definition = ROXML::Definition.new(:intvalue, :as => Integer)
+          @definition = ROXML::Definition.new(:floatvalue, :as => Float)
         end
 
-        it_should_behave_like ":as => Integer"
-      end
-
-      describe ":integer" do
-        before do
-          @definition = ROXML::Definition.new(:intvalue, :as => :integer)
-        end
-
-        it_should_behave_like ":as => Integer"
-
-        it "should be deprecated"
-      end
-
-      describe ":as => Float", :shared => true do
         it_should_behave_like "block shorthand type declaration"
 
         it "should translate text to float" do
@@ -295,24 +222,6 @@ describe ROXML::Definition do
             @definition.blocks.first.call(["792.13", "240", "3.14"]).should == [792.13, 240.0, 3.14]
           end
         end
-      end
-
-      describe ":float" do
-        before do
-          @definition = ROXML::Definition.new(:floatvalue, :as => :float)
-        end
-
-        it_should_behave_like ":as => Float"
-
-        it "should be deprecated"
-      end
-
-      describe "Float" do
-        before do
-          @definition = ROXML::Definition.new(:floatvalue, :as => Float)
-        end
-
-        it_should_behave_like ":as => Float"
       end
 
       describe "BigDecimal" do
@@ -476,19 +385,11 @@ describe ROXML::Definition do
       end
 
       it_should_behave_like "attribute reference"
-
-      describe "and with :attr" do
-        before do
-          @opts = ROXML::Definition.new(:doesntmatter, :attr, :from => '@attr_name')
-        end
-
-        it_should_behave_like "attribute reference"
-        it "should be deprecated"
-      end
     end
 
     describe ":content" do
       it "should be recognized" do
+        ROXML::Definition.new(:author).content?.should be_false
         ROXML::Definition.new(:author, :from => :content).content?.should == true
       end
 
@@ -516,13 +417,13 @@ describe ROXML::Definition do
 
     describe "boolean option", :shared => true do
       it "should be recognized" do
-        ROXML::Definition.new(:author, :content, @option => true).respond_to?(:"#{@option}?")
-        ROXML::Definition.new(:author, :content, @option => true).send(:"#{@option}?").should be_true
-        ROXML::Definition.new(:author, :content, @option => false).send(:"#{@option}?").should be_false
+        ROXML::Definition.new(:author, :from => :content, @option => true).respond_to?(:"#{@option}?")
+        ROXML::Definition.new(:author, :from => :content, @option => true).send(:"#{@option}?").should be_true
+        ROXML::Definition.new(:author, :from => :content, @option => false).send(:"#{@option}?").should be_false
       end
 
       it "should default to false" do
-        ROXML::Definition.new(:author, :content).send(:"#{@option}?").should be_false
+        ROXML::Definition.new(:author, :from => :content).send(:"#{@option}?").should be_false
       end
     end
 
@@ -534,8 +435,8 @@ describe ROXML::Definition do
       it_should_behave_like "boolean option"
 
       it "should not be allowed together with :else" do
-        proc { ROXML::Definition.new(:author, :content, :required => true, :else => 'Johnny') }.should raise_error(ArgumentError)
-        proc { ROXML::Definition.new(:author, :content, :required => false, :else => 'Johnny') }.should_not raise_error
+        proc { ROXML::Definition.new(:author, :from => :content, :required => true, :else => 'Johnny') }.should raise_error(ArgumentError)
+        proc { ROXML::Definition.new(:author, :from => :content, :required => false, :else => 'Johnny') }.should_not raise_error
       end
     end
 

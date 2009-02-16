@@ -16,46 +16,12 @@ class TestDefinition < Test::Unit::TestCase
     end
   end
 
-  def test_symbol_shorthands_are_deprecated
-    assert_deprecated do
-      ROXML::Definition.new(:junk, :as => :integer)
-    end
-    assert_deprecated do
-      ROXML::Definition.new(:junk, :as => :float)
-    end
-  end
-  
   def test_as_cdata_is_deprecated
     assert_deprecated do
       assert ROXML::Definition.new(:manufacturer, :as => :cdata).cdata?
     end
     assert_deprecated do
       assert ROXML::Definition.new(:manufacturer, :as => [Integer, :cdata]).cdata?
-    end
-  end
-
-  def test_content_is_a_recognized_type
-    assert_deprecated do
-      opts = ROXML::Definition.new(:author, :content)
-      assert opts.content?
-      assert_equal '.', opts.name
-      assert_equal :text, opts.type
-    end
-  end
-
-  def test_content_symbol_as_target_is_translated_to_string
-    assert_deprecated do
-      opts = ROXML::Definition.new(:content, :attr => :content)
-      assert_equal 'content', opts.name
-      assert_equal :attr, opts.type
-    end
-  end
-
-  def test_attr_is_a_recognized_type
-    assert_deprecated do
-      opts = ROXML::Definition.new(:author, :attr)
-      assert_equal 'author', opts.name
-      assert_equal :attr, opts.type
     end
   end
 

@@ -1,6 +1,5 @@
 module ROXML
   HASH_KEYS = [:attrs, :key, :value].freeze
-  TYPE_KEYS = [:attr, :text, :hash, :content].freeze
 
   class HashDefinition # :nodoc:
     attr_reader :key, :value
@@ -12,11 +11,11 @@ module ROXML
       end
 
       if opts.has_key? :attrs
-        @key   = to_hash_args(opts, :attr, opts[:attrs][0])
-        @value = to_hash_args(opts, :attr, opts[:attrs][1])
+        @key   = to_hash_args(opts, :from => "@#{opts[:attrs][0]}")
+        @value = to_hash_args(opts, :from => "@#{opts[:attrs][1]}")
       else
-        @key = to_hash_args opts, *fetch_element(opts, :key)
-        @value = to_hash_args opts, *fetch_element(opts, :value)
+        @key = to_hash_args opts, fetch_element(opts, :key)
+        @value = to_hash_args opts, fetch_element(opts, :value)
       end
     end
 
@@ -26,25 +25,23 @@ module ROXML
       when Hash
         raise ArgumentError, "Hash #{what} is over-specified: #{opts[what].inspect}" unless opts[what].keys.one?
         type = opts[what].keys.first
-        [type, opts[what][type]]
+        {:from => opts[what][type], :as => type}
       when :content
-        [:text, '.']
+        {:from => '.'}
       when :name
-        [:name, '*']
-      when String
-        [:text, opts[what]]
-      when Symbol
-        [:text, opts[what]]
+        {:from => '*'}
+      when String, Symbol
+        {:from => opts[what]}
       else
         raise ArgumentError, "unrecognized hash parameter: #{what} => #{opts[what]}"
       end
     end
 
-    def to_hash_args(args, type, name)
+    def to_hash_args(args, opts)
       args = [args] unless args.is_a? Array
 
       if args.one? && !(args.first.keys & HASH_KEYS).empty?
-        Definition.new(name, type => name)
+        Definition.new(opts[:from], opts)
       else
         opts = args.extract_options!
         raise opts.inspect

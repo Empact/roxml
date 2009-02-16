@@ -10,11 +10,11 @@ class XmlBool
 
   xml_name 'xml_bool'
   xml_reader :true_from_TRUE?, :to_xml => PROC_TRUE
-  xml_reader :false_from_FALSE?, :text => 'text_for_FALSE', :to_xml => PROC_TRUE
+  xml_reader :false_from_FALSE?, :from => 'text_for_FALSE', :to_xml => PROC_TRUE
   xml_reader :true_from_one?, :from => '@attr_for_one', :to_xml => PROC_1
-  xml_reader :false_from_zero?, :text => 'text_for_zero', :in => 'container', :to_xml => PROC_1
+  xml_reader :false_from_zero?, :from => 'text_for_zero', :in => 'container', :to_xml => PROC_1
   xml_reader :true_from_True?, :from => '@attr_for_True', :in => 'container', :to_xml => PROC_True
-  xml_reader :false_from_False?, :text => 'false_from_cdata_False', :cdata => true, :to_xml => PROC_True
+  xml_reader :false_from_False?, :from => 'false_from_cdata_False', :cdata => true, :to_xml => PROC_True
   xml_reader :true_from_true?, :to_xml => PROC_true
   xml_reader :false_from_false?, :to_xml => PROC_true
   xml_reader :missing?

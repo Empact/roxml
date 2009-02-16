@@ -9,6 +9,7 @@ class Array #:nodoc:
 end
 
 require 'active_support/core_ext/hash/reverse_merge'
+require 'active_support/core_ext/hash/keys'
 require 'active_support/core_ext/module/delegation'
 require 'active_support/core_ext/module/aliasing'
 require 'active_support/core_ext/module/attribute_accessors'
@@ -26,6 +27,7 @@ class Module #:nodoc:
 end
 
 class Hash #:nodoc:
+  include ActiveSupport::CoreExtensions::Hash::Keys
   include ActiveSupport::CoreExtensions::Hash::ReverseMerge
 end
 

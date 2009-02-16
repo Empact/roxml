@@ -55,32 +55,32 @@ class TestDefinition < Test::Unit::TestCase
   end
 
   def test_hash_of_attrs
-    opts = ROXML::Definition.new(:attributes, {:attrs => [:name, :value]})
-    assert_hash(opts, :attr => 'name', :attr => 'value')
+    opts = ROXML::Definition.new(:attributes, :as => {:attrs => [:name, :value]})
+    assert_hash(opts, :from => '@name', :from => '@value')
   end
 
   def test_hash_with_attr_key_and_text_val
-    opts = ROXML::Definition.new(:attributes, {:key => {:attr => :name},
+    opts = ROXML::Definition.new(:attributes, :as => {:key => {:attr => :name},
                                          :value => :value})
-    assert_hash(opts, :attr => 'name', :text => 'value')
+    assert_hash(opts, :from => '@name', :text => 'value')
   end
 
   def test_hash_with_string_class_for_type
-    opts = ROXML::Definition.new(:attributes, {:key => {String => 'name'},
+    opts = ROXML::Definition.new(:attributes, :as => {:key => {String => 'name'},
                                          :value => {String => 'value'}})
     assert_hash(opts, :text => 'name', :text => 'value')
   end
 
   def test_hash_with_attr_key_and_content_val
-    opts = ROXML::Definition.new(:attributes, {:key => {:attr => :name},
+    opts = ROXML::Definition.new(:attributes, :as => {:key => {:attr => :name},
                                          :value => :content})
-    assert_hash(opts, :attr => 'name', :text => '.')
+    assert_hash(opts, :from => '@name', :text => '.')
   end
 
   def test_hash_with_options
-    opts = ROXML::Definition.new(:definitions, {:attrs => [:dt, :dd]},
+    opts = ROXML::Definition.new(:definitions, :as => {:attrs => [:dt, :dd]},
                            :in => :definitions, :from => 'definition')
-    assert_hash(opts, :attr => 'dt', :attr => 'dd')
+    assert_hash(opts, :from => '@dt', :from => '@dd')
     assert_equal 'definition', opts.hash.wrapper
   end
 
@@ -125,15 +125,6 @@ class TestDefinition < Test::Unit::TestCase
   def test_stacked_blocks
     assert_equal 2, ROXML::Definition.new(:count, :as => Integer) {|val| val.to_i }.blocks.size
     assert_equal 2, ROXML::Definition.new(:count, :as => Float) {|val| val.object_id }.blocks.size
-  end
-
-  def test_symbol_shorthands_are_deprecated
-    assert_deprecated do
-      ROXML::Definition.new(:junk, :as => :integer)
-    end
-    assert_deprecated do
-      ROXML::Definition.new(:junk, :as => :float)
-    end
   end
 
   def test_block_shorthand_supports_bool
@@ -201,9 +192,6 @@ class TestDefinition < Test::Unit::TestCase
 
   def test_as_supports_generic_roxml_types
     assert_equal RoxmlObject, ROXML::Definition.new(:type, :as => RoxmlObject).type
-    assert_deprecated do
-      assert_equal RoxmlObject, ROXML::Definition.new(:type, RoxmlObject).type
-    end
   end
 
   def test_as_supports_generic_roxml_types_in_arrays
@@ -235,20 +223,16 @@ class TestDefinition < Test::Unit::TestCase
   end
 
   def test_content_is_a_recognized_type
-    assert_deprecated do
-      opts = ROXML::Definition.new(:author, :content)
-      assert opts.content?
-      assert_equal '.', opts.name
-      assert_equal :text, opts.type
-    end
+    opts = ROXML::Definition.new(:author, :from => :content)
+    assert opts.content?
+    assert_equal '.', opts.name
+    assert_equal :text, opts.type
   end
 
   def test_content_symbol_as_target_is_translated_to_string
-    assert_deprecated do
-      opts = ROXML::Definition.new(:content, :attr => :content)
-      assert_equal 'content', opts.name
-      assert_equal :attr, opts.type
-    end
+    opts = ROXML::Definition.new(:content, :from => :attr)
+    assert_equal 'content', opts.name
+    assert_equal :attr, opts.type
   end
 
   def test_attr_is_accepted_as_from
@@ -257,11 +241,9 @@ class TestDefinition < Test::Unit::TestCase
   end
 
   def test_attr_is_a_recognized_type
-    assert_deprecated do
-      opts = ROXML::Definition.new(:author, :attr)
-      assert_equal 'author', opts.name
-      assert_equal :attr, opts.type
-    end
+    opts = ROXML::Definition.new(:author, :from => :attr)
+    assert_equal 'author', opts.name
+    assert_equal :attr, opts.type
   end
 
   def test_name_ending_with_on_warns_of_coming_date_default
@@ -289,7 +271,7 @@ end
 
 class HashDefinitionTest < Test::Unit::TestCase
   def test_content_detected_as_from
-    opts = ROXML::Definition.new(:hash, {:key => :content, :value => :name})
+    opts = ROXML::Definition.new(:hash, :as => {:key => :content, :value => :name})
     assert_equal '.', opts.hash.key.name
     assert_equal :text, opts.hash.key.type
   end

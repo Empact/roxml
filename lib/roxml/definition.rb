@@ -15,7 +15,22 @@ module ROXML
     attr_reader :name, :type, :wrapper, :hash, :blocks, :accessor, :to_xml
     bool_attr_reader :name_explicit, :array, :cdata, :required, :frozen
 
-    def initialize(sym, *args, &block)
+    def initialize(sym, opts = {}, &block)
+      opts.assert_valid_keys(:from, :in, :as, :else, :required, :frozen, :cdata, :to_xml)
+      @default = opts.delete(:else)
+      @to_xml = opts.delete(:to_xml)
+      @name_explicit = opts.has_key?(:from) && opts[:from].is_a?(String)
+      @cdata = opts.delete(:cdata)
+      @required = opts.delete(:required)
+      @frozen = opts.delete(:frozen)
+      @wrapper = opts.delete(:in)
+
+      @cdata ||= extract_from_as(opts, :cdata, "Please use :cdata => true")
+
+      if opts[:as].is_a?(Array) && opts[:as].size > 1
+        ActiveSupport::Deprecation.warn ":as should point to a single item. #{opts[:as].join(', ')} should be declared some other way."
+      end
+
       @accessor = sym
       if @accessor.to_s.ends_with?('_on')
         ActiveSupport::Deprecation.warn "In 3.0, attributes with names ending with _on will default to Date type, rather than :text"
@@ -24,7 +39,6 @@ module ROXML
         ActiveSupport::Deprecation.warn "In 3.0, attributes with names ending with _at will default to DateTime type, rather than :text"
       end
 
-      opts = extract_options!(args)
       opts[:as] ||= :bool if @accessor.to_s.ends_with?('?')
 
       @array = opts[:as].is_a?(Array) || extract_from_as(opts, :array, "Please use [] around your usual type declaration")
@@ -34,7 +48,7 @@ module ROXML
         raise ArgumentError, "There is no 'readonly' option. You probably mean to use :frozen => true"
       end
 
-      @type = extract_type(args, opts)
+      @type = extract_type(opts[:as])
       if @type.try(:roxml_tag_name)
         # "WARNING: As of 2.3, a breaking change has been in the naming of sub-objects. " +
         # "ROXML now considers the xml_name of the sub-object before falling back to the accessor name of the parent. " +
@@ -112,18 +126,6 @@ module ROXML
       array ? results : results.first
     end
 
-    BLOCK_TO_FLOAT = lambda do |val|
-      all(val) do |v|
-        Float(v) unless v.blank?
-      end
-    end
-
-    BLOCK_TO_INT = lambda do |val|
-      all(val) do |v|
-        Integer(v) unless v.blank?
-      end
-    end
-
     def self.fetch_bool(value, default)
       value = value.try(:downcase)
       if %w{true yes 1}.include? value
@@ -137,10 +139,16 @@ module ROXML
     
     CORE_BLOCK_SHORTHANDS = {
       # Core Shorthands
-      :integer => BLOCK_TO_INT, # deprecated
-      Integer  => BLOCK_TO_INT,
-      :float   => BLOCK_TO_FLOAT, # deprecated
-      Float    => BLOCK_TO_FLOAT,
+      Integer  => lambda do |val|
+        all(val) do |v|
+          Integer(v) unless v.blank?
+        end
+      end,
+      Float    => lambda do |val|
+        all(val) do |v|
+          Float(v) unless v.blank?
+        end
+      end,
       Fixnum   => lambda do |val|
         all(val) do |v|
           v.to_i unless v.blank?
@@ -188,9 +196,6 @@ module ROXML
     end
 
     def collect_blocks(block, as)
-      ActiveSupport::Deprecation.warn ":as => :float is deprecated.  Use :as => Float instead" if as == :float
-      ActiveSupport::Deprecation.warn ":as => :integer is deprecated.  Use :as => Integer instead" if as == :integer
-
       if as.is_a?(Array)
         unless as.one? || as.empty?
           raise ArgumentError, "multiple :as types (#{as.map(&:inspect).join(', ')}) is not supported.  Use a block if you want more complicated behavior."
@@ -205,36 +210,12 @@ module ROXML
         as = (block ? :bool_combined : :bool_standalone)
       end
       as = self.class.block_shorthands.fetch(as) do
-        unless as.try(:include?, ROXML) || as.try(:first).try(:include?, ROXML) || (as.is_a?(Hash) && !(as.keys & HASH_KEYS).empty?)
+        unless as.respond_to?(:from_xml) || as.try(:first).respond_to?(:from_xml) || (as.is_a?(Hash) && !(as.keys & HASH_KEYS).empty?)
           ActiveSupport::Deprecation.warn "#{as.inspect} is not a valid type declaration. ROXML will raise in this case in version 3.0" unless as.nil?
         end
         nil
       end
       [as, block].compact
-    end
-
-    def extract_options!(args)
-      opts = args.extract_options!
-      unless (opts.keys & HASH_KEYS).empty?
-        args.push(opts)
-        opts = {}
-      end
-
-      @default = opts.delete(:else)
-      @to_xml = opts.delete(:to_xml)
-      @name_explicit = opts.has_key?(:from) && opts[:from].is_a?(String)
-      @cdata = opts.delete(:cdata)
-      @required = opts.delete(:required)
-      @frozen = opts.delete(:frozen)
-      @wrapper = opts.delete(:in)
-
-      @cdata ||= extract_from_as(opts, :cdata, "Please use :cdata => true")
-
-      if opts[:as].is_a?(Array) && opts[:as].size > 1
-        ActiveSupport::Deprecation.warn ":as should point to a single item. #{opts[:as].join(', ')} should be declared some other way."
-      end
-
-      opts
     end
 
     def extract_from_as(opts, entry, message)
@@ -250,59 +231,16 @@ module ROXML
       end
     end
 
-    def extract_type(args, opts)
-      types = (opts.keys & TYPE_KEYS)
-      # type arg
-      if args.one? && types.empty?
-        type = args.first
-        if type.is_a? Array
-          ActiveSupport::Deprecation.warn "Array declarations should be passed as the :as parameter, for future release."
-          @array = true
-          return type.first || :text
-        elsif type.is_a? Hash
-          ActiveSupport::Deprecation.warn "Hash declarations should be passed as the :as parameter, for future release."
-          return HashDefinition.new(type)
-        elsif type == :content
-          ActiveSupport::Deprecation.warn ":content as a type declaration is deprecated.  Use :from => '.' or :from => :content instead"
-          opts[:from] = :content
-          return :text
-        elsif type == :attr
-          ActiveSupport::Deprecation.warn ":attr as a type declaration is deprecated.  Use :from => '@attr_name' or :from => :attr instead"
-          opts[:from].sub!('@', '') if opts[:from].to_s.starts_with?('@') # this is added back next line...
-          opts[:from] = opts[:from].nil? ? :attr : "@#{opts[:from]}"
-          return :attr
-        else
-          ActiveSupport::Deprecation.warn "Type declarations should be passed as the :as parameter, for future release."
-          return type
-        end
-      end
-
-      unless args.empty?
-        raise ArgumentError, "too many arguments (#{(args + types).join(', ')}).  Should be name, type, and " +
-                             "an options hash, with the type and options optional"
-      end
-
-      if opts[:as].is_a?(Hash)
-        return HashDefinition.new(opts[:as])
-      elsif opts[:as].try(:include?, ROXML)
-        return opts[:as]
-      elsif opts[:as].is_a?(Array) && opts[:as].first.try(:include?, ROXML)
+    def extract_type(as)
+      if as.is_a?(Hash)
+        return HashDefinition.new(as)
+      elsif as.respond_to?(:from_xml)
+        return as
+      elsif as.is_a?(Array) && as.first.respond_to?(:from_xml)
         @array = true
-        return opts[:as].first
-      end
-
-      # type options
-      if types.one?
-        opts[:from] = opts.delete(types.first)
-        if opts[:from] == :content
-          opts[:from] = 'content'
-          ActiveSupport::Deprecation.warn ":content is now a reserved as an alias for '.'. Use the string 'content' instead"
-        end
-        types.first
-      elsif types.empty?
-        :text
+        return as.first
       else
-        raise ArgumentError, "more than one type option specified: #{types.join(', ')}"
+        :text
       end
     end
   end

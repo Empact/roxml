@@ -274,11 +274,11 @@ describe ROXML, "inheritance" do
   class Book
     include ROXML
 
-    xml_accessor :isbn, :attr => 'ISBN'
+    xml_accessor :isbn, :from => '@ISBN'
     xml_reader :title
     xml_reader :description, :as => :cdata
     xml_reader :author
-    xml_accessor :pages, :text => 'pagecount', :as => Integer
+    xml_accessor :pages, :from => 'pagecount', :as => Integer
   end
 
   class Measurement
@@ -362,7 +362,7 @@ describe ROXML, "inheritance" do
 
     it "should include parent's attributes added after declaration" do
       Book.class_eval do
-        xml_reader :publisher, :require => true
+        xml_reader :publisher, :required => true
       end
 
       book = InheritedBookWithDepth.from_xml(@book_xml)

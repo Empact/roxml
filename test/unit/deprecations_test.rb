@@ -1,12 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
 class TestDefinition < Test::Unit::TestCase
-  def test_literal_as_array_is_deprecated
-    assert_deprecated do
-      assert ROXML::Definition.new(:authors, :as => :array).array?
-    end
-  end
-
   def test_no_block_shorthand_means_no_block
     assert_deprecated do
       assert ROXML::Definition.new(:count, :as => :intager).blocks.empty?

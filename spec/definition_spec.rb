@@ -14,10 +14,6 @@ describe ROXML::Definition do
   end
 
   describe ":as" do
-    describe "=> :array" do
-      it "should be deprecated"
-    end
-
     describe "=> []" do
       it "should means array of texts" do
         opts = ROXML::Definition.new(:authors, :as => [])

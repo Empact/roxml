@@ -26,12 +26,6 @@ class TestDefinition < Test::Unit::TestCase
     assert_equal :attr, opts.type
   end
 
-  def test_literal_as_array_is_deprecated
-    assert_deprecated do
-      assert ROXML::Definition.new(:authors, :as => :array).array?
-    end
-  end
-
   def test_block_shorthand_in_array_means_array
     opts = ROXML::Definition.new(:intarray, :as => [Integer])
     assert opts.array?
@@ -197,10 +191,6 @@ class TestDefinition < Test::Unit::TestCase
   def test_default_works_for_arrays
     opts = ROXML::Definition.new(:missing, :as => [])
     assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
-    assert_deprecated do
-      opts = ROXML::Definition.new(:missing, :as => :array)
-      assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
-    end
   end
 
   def test_default_works_for_recursive_objects

@@ -39,7 +39,7 @@ module ROXML
 
       opts[:as] ||= :bool if @accessor.to_s.ends_with?('?')
 
-      @array = opts[:as].is_a?(Array) || extract_from_as(opts, :array, "Please use [] around your usual type declaration")
+      @array = opts[:as].is_a?(Array)
       @blocks = collect_blocks(block, opts[:as])
 
       if opts.has_key?(:readonly)
@@ -214,19 +214,6 @@ module ROXML
         nil
       end
       [as, block].compact
-    end
-
-    def extract_from_as(opts, entry, message)
-      # remove with deprecateds...
-      if [*opts[:as]].include?(entry)
-        ActiveSupport::Deprecation.warn ":as => #{entry.inspect} is deprecated. #{message}"
-        if opts[:as] == entry
-          opts[:as] = nil
-        else
-          opts[:as].delete(entry)
-        end
-        true
-      end
     end
 
     def extract_type(as)

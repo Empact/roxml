@@ -1,3 +1,12 @@
+== 3.0
+
+* 2 major enhancement
+  * Remove deprecated functionality
+  * Error on any unrecognized options
+
+* 1 minor enhancement
+  * Include 't' and 'f' in the list of possible boolean values, since rails uses them
+
 == ???
 
 * 2 major enhancements

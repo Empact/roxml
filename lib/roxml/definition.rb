@@ -126,9 +126,9 @@ module ROXML
 
     def self.fetch_bool(value, default)
       value = value.try(:downcase)
-      if %w{true yes 1}.include? value
+      if %w{true yes 1 t}.include? value
         true
-      elsif %w{false no 0}.include? value
+      elsif %w{false no 0 f}.include? value
         false
       else
         default

@@ -3,6 +3,9 @@
 * 2 major enhancement
   * Remove deprecated functionality
   * Error on any unrecognized options
+  * Normalize hash declaration syntax:
+    * for :key => '@string', string is taken to be the :from argument
+    * for :key => {:from => '@string', :as => Type}, the arguments are just the same as a regular declaration
 
 * 1 minor enhancement
   * Include 't' and 'f' in the list of possible boolean values, since rails uses them

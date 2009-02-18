@@ -60,8 +60,8 @@ class TestDefinition < Test::Unit::TestCase
   end
 
   def test_hash_with_string_class_for_type
-    opts = ROXML::Definition.new(:attributes, :as => {:key => {String => 'name'},
-                                         :value => {String => 'value'}})
+    opts = ROXML::Definition.new(:attributes, :as => {:key => 'name',
+                                         :value => 'value'})
     assert_hash(opts, :text => 'name', :text => 'value')
   end
 

@@ -19,7 +19,7 @@ class DictionaryOfMixeds
   include ROXML
 
   xml_name :dictionary
-  xml_reader :definitions, :as => {:key => {:attr => :word},
+  xml_reader :definitions, :as => {:key => '@word',
                             :value => :content}
 end
 
@@ -51,6 +51,6 @@ class DictionaryOfAttrNameClashes
   include ROXML
 
   xml_name :dictionary
-  xml_reader :definitions, :as => {:key => {:attr => :name},
+  xml_reader :definitions, :as => {:key => '@name',
                             :value => 'content'}, :from => :definition
 end

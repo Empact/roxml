@@ -95,8 +95,8 @@ describe ROXML::Definition do
 
       describe "hash with String class for type" do
         before do
-          @opts = ROXML::Definition.new(:attributes, :as => {:key => {String => 'name'},
-                                                             :value => {String => 'value'}})
+          @opts = ROXML::Definition.new(:attributes, :as => {:key => 'name',
+                                                             :value => 'value'})
           @hash_args = {:key => {:text => 'name'}, :value => {:text => 'value'}}
         end
 

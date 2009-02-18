@@ -50,13 +50,13 @@ class TestDefinition < Test::Unit::TestCase
 
   def test_hash_of_attrs
     opts = ROXML::Definition.new(:attributes, :as => {:attrs => [:name, :value]})
-    assert_hash(opts, :from => '@name', :from => '@value')
+    assert_hash(opts, :attr => 'name', :attr => 'value')
   end
 
   def test_hash_with_attr_key_and_text_val
-    opts = ROXML::Definition.new(:attributes, :as => {:key => {:attr => :name},
+    opts = ROXML::Definition.new(:attributes, :as => {:key => '@name',
                                          :value => :value})
-    assert_hash(opts, :from => '@name', :text => 'value')
+    assert_hash(opts, :attr => 'name', :text => 'value')
   end
 
   def test_hash_with_string_class_for_type
@@ -66,15 +66,15 @@ class TestDefinition < Test::Unit::TestCase
   end
 
   def test_hash_with_attr_key_and_content_val
-    opts = ROXML::Definition.new(:attributes, :as => {:key => {:attr => :name},
+    opts = ROXML::Definition.new(:attributes, :as => {:key => '@name',
                                          :value => :content})
-    assert_hash(opts, :from => '@name', :text => '.')
+    assert_hash(opts, :attr => 'name', :text => '.')
   end
 
   def test_hash_with_options
     opts = ROXML::Definition.new(:definitions, :as => {:attrs => [:dt, :dd]},
                            :in => :definitions, :from => 'definition')
-    assert_hash(opts, :from => '@dt', :from => '@dd')
+    assert_hash(opts, :attr => 'dt', :attr => 'dd')
     assert_equal 'definition', opts.hash.wrapper
   end
 

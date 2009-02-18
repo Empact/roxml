@@ -84,8 +84,8 @@ describe ROXML::Definition do
 
       describe "hash with attr key and text val" do
         before do
-          @opts = ROXML::Definition.new(:attributes, :as => {:key => {:attr => :name},
-                                                             :value => :value})
+          @opts = ROXML::Definition.new(:attributes, :as => {:key => '@name',
+                                                             :value => 'value'})
           @hash_args = {:key => {:attr => 'name'},
                         :value => {:text => 'value'}}
         end
@@ -105,7 +105,7 @@ describe ROXML::Definition do
 
       describe "hash with attr key and content val" do
         before do
-          @opts = ROXML::Definition.new(:attributes, :as => {:key => {:attr => :name},
+          @opts = ROXML::Definition.new(:attributes, :as => {:key => '@name',
                                                              :value => :content})
           @hash_args = {:key => {:attr => 'name'}, :value => {:text => '.'}}
         end

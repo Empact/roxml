@@ -56,7 +56,9 @@ module ROXML
       end
 
       if opts[:from] == :content
-        opts[:from] = '.' 
+        opts[:from] = '.'
+      elsif opts[:from] == :name
+        opts[:from] = '*'
       elsif opts[:from] == :attr
         @type = :attr
         opts[:from] = nil

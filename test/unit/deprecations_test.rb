@@ -24,4 +24,10 @@ class TestDefinition < Test::Unit::TestCase
       assert opts.hash?
     end
   end
+
+  def test_as_object_with_from_xml_not_deprecated
+    assert_not_deprecated do
+      ROXML::Definition.new(:name, :as => OctalInteger)
+    end
+  end
 end

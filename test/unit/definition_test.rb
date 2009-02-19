@@ -8,12 +8,6 @@ class TestDefinition < Test::Unit::TestCase
                        opts.hash.value.type => opts.hash.value.name}
   end
 
-  def test_text_in_array_means_as_array_for_text
-    opts = ROXML::Definition.new(:authors, :as => [:text])
-    assert opts.array?
-    assert_equal :text, opts.type
-  end
-
   def test_empty_array_means_as_array_for_text
     opts = ROXML::Definition.new(:authors, :as => [])
     assert opts.array?

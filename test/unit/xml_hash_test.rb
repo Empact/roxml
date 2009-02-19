@@ -103,4 +103,22 @@ class TestXMLHash < Test::Unit::TestCase
       </dict>
     }).missing_hash)
   end
+
+  def test_as_hash_of_type_keys_deprecated
+    assert_deprecated do
+      opts = ROXML::Definition.new(:name, :as => {:key => :name, :value => {OctalInteger => 'value'}})
+      assert opts.hash?
+      assert_equal OctalInteger, opts.hash.value.type
+      assert_equal 'value', opts.hash.value.name
+    end
+  end
+
+  def test_as_hash_of_as_type_not_deprecated
+    assert_not_deprecated do
+      opts = ROXML::Definition.new(:name, :as => {:key => :name, :value => {:from => 'value', :as => OctalInteger}})
+      assert opts.hash?
+      assert_equal OctalInteger, opts.hash.value.type
+      assert_equal 'value', opts.hash.value.name
+    end
+  end
 end

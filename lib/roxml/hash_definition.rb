@@ -13,11 +13,11 @@ module ROXML
 
       if opts.has_key? :attrs
         ActiveSupport::Deprecation.warn(":as => {:attrs} is going away in 3.0.  Use explicit :key and :value instead.")
-        @key   = to_hash_args(opts, :attr, opts[:attrs][0])
-        @value = to_hash_args(opts, :attr, opts[:attrs][1])
+        @key   = to_hash_args(opts, :from => "@#{opts[:attrs][0]}")
+        @value = to_hash_args(opts, :from => "@#{opts[:attrs][1]}")
       else
-        @key = to_hash_args opts, *fetch_element(opts, :key)
-        @value = to_hash_args opts, *fetch_element(opts, :value)
+        @key = to_hash_args opts, fetch_element(opts, :key)
+        @value = to_hash_args opts, fetch_element(opts, :value)
       end
     end
 
@@ -25,27 +25,32 @@ module ROXML
     def fetch_element(opts, what)
       case opts[what]
       when Hash
-        raise ArgumentError, "Hash #{what} is over-specified: #{opts[what].inspect}" unless opts[what].keys.one?
-        type = opts[what].keys.first
-        [type, opts[what][type]]
-      when :content
-        [:text, '.']
-      when :name
-        [:name, '*']
-      when String
-        [:text, opts[what]]
-      when Symbol
-        [:text, opts[what]]
+        if opts[what].keys.one?
+          ActiveSupport::Deprecation.warn(":as => {:key => {Type => 'name'} ... } is going away in 3.0.  Use explicit :key => {:from => 'name', :as => Type} instead.")
+          type = opts[what].keys.first
+          case type
+          when :attr
+            {:from => "@#{opts[what][type]}"}
+          when :text
+            {:from => opts[what][type]}
+          else
+            {:as => type, :from => opts[what][type]}
+          end
+        else
+          opts[what]
+        end
+      when String, Symbol
+        {:from => opts[what]}
       else
         raise ArgumentError, "unrecognized hash parameter: #{what} => #{opts[what]}"
       end
     end
 
-    def to_hash_args(args, type, name)
+    def to_hash_args(args, opts)
       args = [args] unless args.is_a? Array
 
       if args.one? && !(args.first.keys & HASH_KEYS).empty?
-        Definition.new(name, type => name)
+        Definition.new(nil, opts)
       else
         opts = args.extract_options!
         raise opts.inspect

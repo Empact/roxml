@@ -39,7 +39,8 @@
   * Passing any type declaration outside the :as parameter is deprecated
   * In 3.0, attributes ending in _on and _at will default to :as => Date and DateTime, respectively,
     rather than :text
-  * Deprecated hash :attrs declaration syntax
+  * Deprecated hash :attrs declaration syntax in favor of {:key => '@attr1', :value => '@attr2'}
+  * Deprecated hash {Type => 'name'} declaration syntax in favor of {:as => Type, :from => 'name}
 
 * bug fixes
 

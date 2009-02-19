@@ -56,7 +56,9 @@ module ROXML
       end
 
       if opts[:from] == :content
-        opts[:from] = '.' 
+        opts[:from] = '.'
+      elsif opts[:from] == :name
+        opts[:from] = '*'
       elsif opts[:from] == :attr
         @type = :attr
         opts[:from] = nil
@@ -297,9 +299,9 @@ module ROXML
 
       if opts[:as].is_a?(Hash)
         return HashDefinition.new(opts[:as])
-      elsif opts[:as].try(:include?, ROXML)
+      elsif opts[:as].respond_to?(:from_xml)
         return opts[:as]
-      elsif opts[:as].is_a?(Array) && opts[:as].first.try(:include?, ROXML)
+      elsif opts[:as].is_a?(Array) && opts[:as].first.respond_to?(:from_xml)
         @array = true
         return opts[:as].first
       end

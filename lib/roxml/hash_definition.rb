@@ -12,6 +12,7 @@ module ROXML
       end
 
       if opts.has_key? :attrs
+        ActiveSupport::Deprecation.warn(":as => {:attrs} is going away in 3.0.  Use explicit :key and :value instead.")
         @key   = to_hash_args(opts, :attr, opts[:attrs][0])
         @value = to_hash_args(opts, :attr, opts[:attrs][1])
       else

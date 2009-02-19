@@ -320,22 +320,6 @@ module ROXML # :nodoc:
       # a collection of key-value pairs represented in your xml.  You create a hash declaration by
       # passing a hash mapping as the type argument.  A few examples:
       #
-      # ===== Hash of :attrs
-      # For xml such as this:
-      #
-      #    <dictionary>
-      #      <definitions>
-      #        <definition dt="quaquaversally"
-      #                    dd="adjective: (of a geological formation) sloping downward from the center in all directions." />
-      #        <definition dt="tergiversate"
-      #                    dd="To use evasions or ambiguities; equivocate." />
-      #      </definitions>
-      #    </dictionary>
-      #
-      # You can use the :attrs key in you has with a [:key, :value] name array:
-      #
-      #    xml_reader :definitions, :as => {:attrs => ['dt', 'dd']}, :in => :definitions
-      #
       # ===== Hash of :texts
       # For xml such as this:
       #

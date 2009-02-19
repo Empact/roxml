@@ -1,12 +1,12 @@
 == ???
 
-* 2 major enhancements
+* major enhancements
 
    * support for mapping ActiveRecord classes.  See examples/active_record.rb.
    * .from_xml will now use the setter for the declared variable, is one is available,
      rather than directly setting the instance variable
 
-* 6 minor enhancements
+* minor enhancements
 
    * .xml_attr declaration declares neither a reader nor a writer.  With it you're left to your own devices.
    * You can use literal [] for the [:text] object type declaration,
@@ -18,7 +18,7 @@
    * Update libxml support to 0.9.6, and add it as a dependency, to ensure correct versioning, and
      as it's an order of magnitude faster than rexml
 
-* 4 breaking changes
+* breaking changes
 
    * :else option only applies to instances created via .from_xml
    * On .from_xml, #initialize is now called with the *initialization_args before extracting attributes from the xml.
@@ -26,7 +26,7 @@
    * .xml_accessor will overwrite the setter for this variable if it has already been defined.  Use .xml_reader or .xml_attr,
      or define your writer later, if this is not the behavior you want.
 
-* 9 deprecations
+* deprecations
 
   * Use :cdata => true rather than :as => :cdata
   * Use literal [] around your regular object type, rather than :as => :array
@@ -39,8 +39,9 @@
   * Passing any type declaration outside the :as parameter is deprecated
   * In 3.0, attributes ending in _on and _at will default to :as => Date and DateTime, respectively,
     rather than :text
+  * Deprecated hash :attrs declaration syntax
 
-* 1 bug fix
+* bug fixes
 
    * xml_accessor now properly handles punctuation, such that the writer appears without '?' for boolean attributes
 

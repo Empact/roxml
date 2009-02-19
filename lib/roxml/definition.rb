@@ -43,10 +43,6 @@ module ROXML
       @array = opts[:as].is_a?(Array)
       @blocks = collect_blocks(block, opts[:as])
 
-      if opts.has_key?(:readonly)
-        raise ArgumentError, "There is no 'readonly' option. You probably mean to use :frozen => true"
-      end
-
       @type = extract_type(opts[:as])
       if @type.try(:roxml_tag_name)
         # "WARNING: As of 2.3, a breaking change has been in the naming of sub-objects. " +

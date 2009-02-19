@@ -16,7 +16,8 @@ module ROXML
     bool_attr_reader :name_explicit, :array, :cdata, :required, :frozen
 
     def initialize(sym, opts = {}, &block)
-      opts.assert_valid_keys(:from, :in, :as, :else, :required, :frozen, :cdata, :to_xml)
+      opts.assert_valid_keys(:from, :in, :as,
+                             :else, :required, :frozen, :cdata, :to_xml)
       @default = opts.delete(:else)
       @to_xml = opts.delete(:to_xml)
       @name_explicit = opts.has_key?(:from) && opts[:from].is_a?(String)
@@ -59,6 +60,8 @@ module ROXML
       elsif opts[:from] == :attr
         @type = :attr
         opts[:from] = nil
+      elsif opts[:from] == :name
+        opts[:from] = '*'
       elsif opts[:from].to_s.starts_with?('@')
         @type = :attr
         opts[:from].sub!('@', '')
@@ -208,7 +211,7 @@ module ROXML
         as = (block ? :bool_combined : :bool_standalone)
       end
       as = self.class.block_shorthands.fetch(as) do
-        unless as.respond_to?(:from_xml) || as.try(:first).respond_to?(:from_xml) || (as.is_a?(Hash) && !(as.keys & HASH_KEYS).empty?)
+        unless as.respond_to?(:from_xml) || as.try(:first).respond_to?(:from_xml) || (as.is_a?(Hash) && !(as.keys & [:key, :value]).empty?)
           ActiveSupport::Deprecation.warn "#{as.inspect} is not a valid type declaration. ROXML will raise in this case in version 3.0" unless as.nil?
         end
         nil

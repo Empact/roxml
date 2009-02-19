@@ -1,14 +1,17 @@
 == 3.0
 
-* 2 major enhancement
-  * Remove deprecated functionality
+* major enhancements
+
+  * Remove previously deprecated functionality
   * Error on any unrecognized options
   * Normalize hash declaration syntax:
     * for :key => '@string', string is taken to be the :from argument
     * for :key => {:from => '@string', :as => Type}, the arguments are just the same as a regular declaration
 
-* 1 minor enhancement
+* minor enhancements
+
   * Include 't' and 'f' in the list of possible boolean values, since rails uses them
+  * Remove :attrs hash syntax.  Not particularly helpful & somewhat obfuscatory.  Use :key, :value instead.
 
 == ???
 

@@ -1,27 +1,17 @@
 module ROXML
-  HASH_KEYS = [:attrs, :key, :value].freeze
-
   class HashDefinition # :nodoc:
     attr_reader :key, :value
     attr_accessor :wrapper
 
     def initialize(opts)
-      unless (invalid_keys = opts.keys - HASH_KEYS).empty?
-        raise ArgumentError, "Invalid Hash description keys: #{invalid_keys.join(', ')}"
-      end
+      opts.assert_valid_keys(:key, :value)
 
-      if attrs = opts.delete(:attrs)
-        opts = {
-          :key => {:from => "@#{attrs[0]}"},
-          :value => {:from => "@#{attrs[1]}"}
-        }
-      end
-      @key = Definition.new(nil, fetch_element(opts, :key))
-      @value = Definition.new(nil, fetch_element(opts, :value))
+      @key = Definition.new(nil, to_definition_options(opts, :key))
+      @value = Definition.new(nil, to_definition_options(opts, :value))
     end
 
   private
-    def fetch_element(opts, what)
+    def to_definition_options(opts, what)
       case opts[what]
       when Hash
         opts[what]

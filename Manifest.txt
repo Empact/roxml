@@ -89,7 +89,6 @@ test/unit/to_xml_test.rb
 test/unit/xml_attribute_test.rb
 test/unit/xml_block_test.rb
 test/unit/xml_bool_test.rb
-test/unit/xml_construct_test.rb
 test/unit/xml_convention_test.rb
 test/unit/xml_hash_test.rb
 test/unit/xml_initialize_test.rb

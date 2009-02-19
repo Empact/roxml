@@ -49,7 +49,7 @@ class TestDefinition < Test::Unit::TestCase
   end
 
   def test_hash_of_attrs
-    opts = ROXML::Definition.new(:attributes, :as => {:attrs => [:name, :value]})
+    opts = ROXML::Definition.new(:attributes, :as => {:key => '@name', :value => '@value'})
     assert_hash(opts, :attr => 'name', :attr => 'value')
   end
 
@@ -72,7 +72,7 @@ class TestDefinition < Test::Unit::TestCase
   end
 
   def test_hash_with_options
-    opts = ROXML::Definition.new(:definitions, :as => {:attrs => [:dt, :dd]},
+    opts = ROXML::Definition.new(:definitions, :as => {:key => '@dt', :value => '@dd'},
                            :in => :definitions, :from => 'definition')
     assert_hash(opts, :attr => 'dt', :attr => 'dd')
     assert_equal 'definition', opts.hash.wrapper

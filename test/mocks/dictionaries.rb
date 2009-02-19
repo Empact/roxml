@@ -4,7 +4,8 @@ class DictionaryOfAttrs
   include ROXML
 
   xml_name :dictionary
-  xml_reader :definitions, :as => {:attrs => [:dt, :dd]}, :in => :definitions
+  xml_reader :definitions, :as => {:key => '@dt',
+                                   :value => '@dd'}, :in => :definitions
 end
 
 class DictionaryOfTexts

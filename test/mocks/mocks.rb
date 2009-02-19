@@ -15,7 +15,7 @@ end
 class Numerology
   include ROXML
 
-  xml_reader :predictions, :as => {:attrs => ['number', 'meaning']} do |k, v|
+  xml_reader :predictions, :as => {:key => '@number', :value => '@meaning'} do |k, v|
     [Integer(k), v]
   end
 end
@@ -50,7 +50,7 @@ class BookWithRequired
   xml_accessor :isbn, :from => '@ISBN', :required => true
   xml_reader :title, :required => true
   xml_reader :contributors, :as => [Contributor], :in => 'contributor_array', :required => true
-  xml_reader :contributor_hash, :as => {:attrs => ['role', 'name']},
+  xml_reader :contributor_hash, :as => {:key => '@role', :value => '@name'},
                                 :from => 'contributor', :in => 'contributor_hash', :required => true
 end
 

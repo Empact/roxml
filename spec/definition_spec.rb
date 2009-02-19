@@ -113,27 +113,14 @@ describe ROXML::Definition do
         it_should_behave_like "hash options declaration"
       end
 
-      describe "hash of attrs" do
+      describe "hash with names as keys and content vals" do
         before do
-          @hash_args = {:key => {:attr => 'name'}, :value => {:attr => 'value'}}
-          @opts = ROXML::Definition.new(:attributes, :as => {:attrs => [:name, :value]})
+          @opts = ROXML::Definition.new(:attributes, :as => {:key => :name,
+                                                             :value => :content})
+          @hash_args = {:key => {:text => '*'}, :value => {:text => '.'}}
         end
 
         it_should_behave_like "hash options declaration"
-
-        describe "with options" do
-          before do
-            @hash_args = {:key => {:attr => 'dt'}, :value => {:attr => 'dd'}}
-            @opts = ROXML::Definition.new(:definitions, :as => {:attrs => [:dt, :dd]},
-                                    :in => 'definitions')
-          end
-
-          it_should_behave_like "hash options declaration"
-
-          it "should not interfere with options" do
-            @opts.wrapper.should == 'definitions'
-          end
-        end
       end
     end
 

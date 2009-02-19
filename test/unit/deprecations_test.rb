@@ -20,7 +20,7 @@ class TestDefinition < Test::Unit::TestCase
 
   def test_as_hash_not_deprecated
     assert_not_deprecated do
-      opts = ROXML::Definition.new(:name, :as => {:attrs => [:dt, :dd]})
+      opts = ROXML::Definition.new(:name, :as => {:key => '@dt', :value => '@dd'})
       assert opts.hash?
     end
   end

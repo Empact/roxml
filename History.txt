@@ -5,6 +5,8 @@
    * support for mapping ActiveRecord classes.  See examples/active_record.rb.
    * .from_xml will now use the setter for the declared variable, if one is available,
      rather than directly setting the instance variable
+   * All declaration type arguments are now supported via the :as parameter.  Other uses are deprecated.
+   * All xml source path arguments are now supported via the :from parameter.  Other uses are deprecated.
 
 * minor enhancements
 
@@ -46,6 +48,7 @@
 
    * xml_accessor now properly handles punctuation, such that the writer appears without '?' for boolean attributes
    * text node contents are no longer truncated when '&' are present in the contents
+   * When using :as => Integer or Float, don't raise on missing element [James Healy]
 
 == 2.4.3 (February 1, 2009)
 

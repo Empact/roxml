@@ -1,11 +1,11 @@
 <person>
-  <name>Ben Franklin</name>
+  <name>Ben &quot;Benji&quot; Franklin</name>
   <mother>
     <person>
-      <name>Abiah Folger</name>
+      <name>Abiah &apos;Abby&apos; Folger</name>
       <mother>
         <person>
-          <name>Madeup Mother</name>
+          <name>Madeup Mother &lt; the third &gt;</name>
         </person>
       </mother>
     </person>

@@ -192,7 +192,7 @@ module ROXML
       if cdata?
         dest.child_add(XML::Node.new_cdata(value.to_s.to_utf))
       else
-        dest.content = value.to_s.to_utf
+        dest.content = CGI.escapeHTML(value.to_s.to_utf)
       end
     end
   end

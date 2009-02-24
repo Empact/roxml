@@ -1,4 +1,4 @@
-== 3.0
+== 3.0 ???
 
 * major enhancements
 
@@ -13,13 +13,16 @@
   * Include 't' and 'f' in the list of possible boolean values, since rails uses them
   * Remove :attrs hash syntax.  Not particularly helpful & somewhat obfuscatory.  Use :key, :value instead.
 
-== ???
+== 2.5.0 (February 24, 2009)
 
 * major enhancements
 
    * support for mapping ActiveRecord classes.  See examples/active_record.rb.
-   * .from_xml will now use the setter for the declared variable, is one is available,
+   * .from_xml will now use the setter for the declared variable, if one is available,
      rather than directly setting the instance variable
+   * All declaration type arguments are now supported via the :as parameter, e.g. :as => [MyType].  Other uses are deprecated.
+   * All xml source path arguments are now supported via the :from and :in parameters, e.g. :from => :attr or :from => '@MyAttr'.  Other uses are deprecated.
+   * All other options are presented separately, e.g. :cdata => true rather than :as => :cdata.  Other uses are deprecated.
 
 * minor enhancements
 
@@ -60,6 +63,8 @@
 * bug fixes
 
    * xml_accessor now properly handles punctuation, such that the writer appears without '?' for boolean attributes
+   * text node contents are no longer truncated when '&' are present in the contents
+   * When using :as => Integer or Float, don't raise on missing element [James Healy]
 
 == 2.4.3 (February 1, 2009)
 

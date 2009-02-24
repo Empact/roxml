@@ -8,7 +8,7 @@ require 'uri'
 end
 
 module ROXML # :nodoc:
-  VERSION = '2.4.3'
+  VERSION = '2.5.0'
 
   def self.included(base) # :nodoc:
     base.extend ClassMethods::Accessors,
@@ -213,7 +213,7 @@ module ROXML # :nodoc:
       #
       #   xml_reader :counts, :as => [Integer]
       #
-      # Even an array of :text nodes can be specified with :as => []
+      # Even an array of text nodes can be specified with :as => []
       #
       #   xml_reader :quotes, :as => []
       #
@@ -264,7 +264,7 @@ module ROXML # :nodoc:
       # a collection of key-value pairs represented in your xml.  You create a hash declaration by
       # passing a hash mapping as the type argument.  A few examples:
       #
-      # ===== Hash of :texts
+      # ===== Hash of element contents
       # For xml such as this:
       #
       #    <dictionary>

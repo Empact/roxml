@@ -1,5 +1,9 @@
 require File.dirname(__FILE__) + '/spec_helper.rb'
 
+class RoxmlObject
+  include ROXML
+end
+
 describe ROXML::Definition do
   describe "#name_explicit?" do
     it "should indicate whether from option is present" do
@@ -63,6 +67,15 @@ describe ROXML::Definition do
         opts = ROXML::Definition.new(:authors, :as => [Module])
         opts.array?.should be_true
         opts.type.should == :text
+      end
+
+      it "should unescape xml entities" do
+        ROXML::Definition.new(:questions, :as => []).to_ref(RoxmlObject.new).value_in(%{
+          <xml>
+            <question>&quot;Wickard &amp; Filburn&quot; &gt;</question>
+            <question> &lt; McCulloch &amp; Maryland?</question>
+          </xml>
+        }).should == ["\"Wickard & Filburn\" >", "< McCulloch & Maryland?"]
       end
     end
 
@@ -352,6 +365,12 @@ describe ROXML::Definition do
       it "should strip '@' from name" do
         @opts.name.should == 'attr_name'
       end
+
+      it "should unescape xml entities" do
+        @opts.to_ref(RoxmlObject.new).value_in(%{
+          <question attr_name="&quot;Wickard &amp; Filburn&quot; &gt; / &lt; McCulloch &amp; Marryland?" />
+        }).should == "\"Wickard & Filburn\" > / < McCulloch & Marryland?"
+      end
     end
 
     context ":attr" do
@@ -364,7 +383,7 @@ describe ROXML::Definition do
 
     context "@attribute_name" do
       before do
-        @opts = ROXML::Definition.new(:doesntmatter, :from => '@attr_name')
+        @opts = ROXML::Definition.new(:attr_name, :from => '@attr_name')
       end
 
       it_should_behave_like "attribute reference"

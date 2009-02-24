@@ -179,9 +179,9 @@ HERE
 
   def test_with_guarded_recursion
     p = PersonWithGuardedMother.from_xml(fixture(:person_with_guarded_mothers))
-    assert_equal 'Ben Franklin', p.name
-    assert_equal 'Abiah Folger', p.mother.name
-    assert_equal 'Madeup Mother', p.mother.mother.name
+    assert_equal 'Ben "Benji" Franklin', p.name
+    assert_equal 'Abiah \'Abby\' Folger', p.mother.name
+    assert_equal 'Madeup Mother < the third >', p.mother.mother.name
     assert_equal nil, p.mother.mother.mother
   end
 

@@ -5,6 +5,9 @@ class TestXMLText < Test::Unit::TestCase
   def test_valid_simple
     book = Book.from_xml(fixture(:book_valid))
     assert_equal("The PickAxe", book.title)
+    assert_equal("David Thomas, Andrew Hunt & Dave Thomas", book.author)
+
+    assert_equal xml_fixture(:book_valid).to_s.gsub("\n", ''), book.to_xml.to_s.gsub("\n", '')
   end
 
   def test_without_needed_from

@@ -8,7 +8,7 @@ require 'uri'
 end
 
 module ROXML # :nodoc:
-  VERSION = '2.4.3'
+  VERSION = '2.5.0'
 
   def self.included(base) # :nodoc:
     base.extend ClassMethods::Accessors,

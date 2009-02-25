@@ -17,6 +17,7 @@ module ROXML
             self
           end
         end
+        deprecate :to_utf
 
         #
         # Convert this string to iso-8850-1
@@ -29,12 +30,10 @@ module ROXML
             self
           end
         end
+        deprecate :to_latin
       end
     end
   end
-end
-
-class Object
 end
 
 class String

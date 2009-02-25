@@ -44,6 +44,7 @@
     rather than :text
   * Deprecated hash :attrs declaration syntax in favor of {:key => '@attr1', :value => '@attr2'}
   * Deprecated hash {Type => 'name'} declaration syntax in favor of {:as => Type, :from => 'name}
+  * Deprecated String#to_utf and #to_latin.
 
 * bug fixes
 

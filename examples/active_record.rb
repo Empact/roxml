@@ -3,9 +3,10 @@ require File.expand_path(File.dirname(__FILE__) + '/../spec/spec_helper')
 require 'sqlite3'
 require 'activerecord'
 
+DB_PATH = File.join(File.dirname(__FILE__), 'active_record.sqlite3')
 ActiveRecord::Base.establish_connection(
   :adapter  => 'sqlite3',
-  :database => "examples/active_record/active_record.sqlite3"
+  :database => DB_PATH
 )
 
 class Waypoint < ActiveRecord::Base

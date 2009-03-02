@@ -10,11 +10,6 @@ module ROXML
         def new_cdata(content)
           REXML::CData.new(content)
         end
-
-        def new(name)
-          name = name.id2name if name.is_a? Symbol
-          REXML::Element.new(name)
-        end
       end
 
       alias_attribute :content, :text

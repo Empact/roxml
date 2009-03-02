@@ -89,7 +89,7 @@ module ROXML
       if child = xml.children.find {|c| c.name == wrapper }
        return child
       end
-      xml.child_add(XML::Node.new(wrapper))
+      xml.child_add(XML::Node.new(wrapper.to_s))
     end
 
     def nodes_in(xml)

@@ -20,7 +20,9 @@ $hoe = Hoe.new('roxml', ROXML::VERSION) do |p|
    ['libxml-ruby', '>= 0.8.6']
   ]
   p.extra_dev_deps = [
-    ['newgem', ">= #{::Newgem::VERSION}"]
+    ['newgem', ">= #{::Newgem::VERSION}"],
+    ['sqlite3-ruby', '>= 1.2.4' ],
+    ['activerecord', '>= 2.2.2' ]
   ]
 
   p.summary = "Ruby Object to XML mapping library"

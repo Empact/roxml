@@ -1,4 +1,4 @@
-spec/examples/library.xml
+spec/**/*.xml
 build
 doc
 Rake.config

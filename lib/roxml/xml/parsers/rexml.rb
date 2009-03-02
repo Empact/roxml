@@ -73,10 +73,10 @@ module ROXML
         add(node)
       end
 
-      def save(destination)
+      def save(destination, opts = {:formatter => REXML::Formatters::Default.new})
         self << REXML::XMLDecl.new unless xml_decl != REXML::XMLDecl.default # always output xml declaration
         File.open(destination, "w") do |f|
-          REXML::Formatters::Default.new.write(self, f)
+          opts[:formatter].write(self, f)
         end
       end
     end

@@ -41,9 +41,9 @@ To create a library and put a number of books in it we could run the following c
 
 To save this information to an XML file:
 
-  File.open("library.xml", "w") do |f|
-    REXML::Formatters::Default.new.write(lib.to_xml, f)
-  end
+  doc = ROXML::XML::Document.new
+  doc.root = lib.to_xml
+  doc.save("library.xml")
 
 To later populate the library object from the XML file:
 

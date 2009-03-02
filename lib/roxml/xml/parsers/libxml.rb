@@ -53,6 +53,11 @@ module ROXML
         end
         alias_method_chain :new, :entity_escaping
       end
+
+      alias_method :set_libxml_content, :content=
+      def content=(string)
+        set_libxml_content(string.gsub('&', '&amp;'))
+      end
     end
 
     class Parser

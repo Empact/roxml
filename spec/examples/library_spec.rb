@@ -17,23 +17,24 @@ describe Library do
 
   describe "#to_xml" do
     it "should contain the expected information" do
-      @lib.to_xml.to_s.should == %{<library><NAME><![CDATA[Favorite Books]]></NAME><novel ISBN='0201710897'><title>The PickAxe</title><description><![CDATA[Best Ruby book out there!]]></description><author>David Thomas, Andrew Hunt, Dave Thomas</author><publisher><name>Addison Wesley Longman, Inc.</name></publisher></novel></library>}
+      @lib.to_xml.should == ROXML::XML::Parser.parse(%{<library><NAME><![CDATA[Favorite Books]]></NAME><novel ISBN='0201710897'><title>The PickAxe</title><description><![CDATA[Best Ruby book out there!]]></description><author>David Thomas, Andrew Hunt, Dave Thomas</author><publisher><name>Addison Wesley Longman, Inc.</name></publisher></novel></library>}).root
     end
 
     context "when written to a file" do
       before :all do
-        File.open("library.xml", "w") do |f|
-          REXML::Formatters::Default.new.write(@lib.to_xml, f)
-        end
+        @doc = ROXML::XML::Document.new
+        @doc.root = @lib.to_xml
+        @doc.save("spec/examples/library.xml")
       end
 
       it "should be contain the expected xml" do
-        File.read("library.xml").should == %{<library><NAME><![CDATA[Favorite Books]]></NAME><novel ISBN='0201710897'><title>The PickAxe</title><description><![CDATA[Best Ruby book out there!]]></description><author>David Thomas, Andrew Hunt, Dave Thomas</author><publisher><name>Addison Wesley Longman, Inc.</name></publisher></novel></library>}
+        ROXML::XML::Parser.parse(File.read("spec/examples/library.xml")).to_s.should == ROXML::XML::Parser.parse(%{<?xml version="1.0"?><library><NAME><![CDATA[Favorite Books]]></NAME><novel ISBN='0201710897'><title>The PickAxe</title><description><![CDATA[Best Ruby book out there!]]></description><author>David Thomas, Andrew Hunt, Dave Thomas</author><publisher><name>Addison Wesley Longman, Inc.</name></publisher></novel></library>}).to_s
       end
 
       it "should be re-parsable via .from_xml" do
-        lib = Library.from_xml(File.read("library.xml"))
-        lib.should == @lib
+        File.open("spec/examples/library.xml") do |file|
+          Library.from_xml(file).should == @lib
+        end
       end
     end
   end

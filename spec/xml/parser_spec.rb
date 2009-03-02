@@ -33,11 +33,15 @@ end
 
 describe ROXML::XML::Document do
   describe "#save" do
-    it "should defer to existing XMLDecl" do
-      @doc = ROXML::XML::Document.new
-      @doc << REXML::XMLDecl.new('1.1')
-      @doc.save('spec/xml/decl_test.xml')
-      ROXML::XML::Parser.parse(File.read('spec/xml/decl_test.xml')).to_s.should == ROXML::XML::Parser.parse(%{<?xml version="1.1"?>}).to_s
+    context "with rexml parser" do
+      it "should defer to existing XMLDecl" do
+        if ROXML::XML_PARSER == 'rexml'
+          @doc = ROXML::XML::Document.new
+          @doc << REXML::XMLDecl.new('1.1')
+          @doc.save('spec/xml/decl_test.xml')
+          ROXML::XML::Parser.parse(File.read('spec/xml/decl_test.xml')).to_s.should == ROXML::XML::Parser.parse(%{<?xml version="1.1"?>}).to_s
+        end
+      end
     end
   end
 end

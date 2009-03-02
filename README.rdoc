@@ -99,10 +99,14 @@ The result of the block above is stored, rather than the actual value parsed fro
 
 == Construction
 
-Object life-cycle is as follows: .from_xml is called with option initialization_args.  .new,
-and thus #initialize, is called with those same args.  Then the object is populated
-with the attribute values from xml.  Then the #after_parse callback is called, with no arguments.
-In it you can ensure that your object initialization is complete, including initialization which
+Object life-cycle is as follows: .from_xml is called with a first argument representing the xml
+in file, string, or path form, and with optional initialization_args following.
+
+Firt .new and thus #initialize, is called with those same initialization_args, or no args if none
+are present.  Then the object is populated with the attribute values from xml.  Then the
+#after_parse callback is called, with no arguments.
+
+In #after_parse you can ensure that your object initialization is complete, including initialization which
 requires more than one variable in concert.
 
 E.g.:

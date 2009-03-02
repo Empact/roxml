@@ -72,6 +72,13 @@ module ROXML
         raise ArgumentError, "Root is already defined" if root
         add(node)
       end
+
+      def save(destination)
+        self << REXML::XMLDecl.new # always output xml declaration
+        File.open(destination, "w") do |f|
+          REXML::Formatters::Default.new.write(self, f)
+        end
+      end
     end
   end
 end

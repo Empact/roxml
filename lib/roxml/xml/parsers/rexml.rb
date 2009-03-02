@@ -5,15 +5,19 @@ module ROXML
     Document = REXML::Document
     Node = REXML::Element
 
+    module Error
+      def self.reset_handler
+        # noop
+      end
+    end
+    [REXML::ParseException, REXML::UndefinedNamespaceException, REXML::Validation::ValidationException].each do |exception|
+      exception.send(:include, Error)
+    end
+
     class Node
       class << self
         def new_cdata(content)
           REXML::CData.new(content)
-        end
-
-        def new(name)
-          name = name.id2name if name.is_a? Symbol
-          REXML::Element.new(name)
         end
       end
 
@@ -67,6 +71,13 @@ module ROXML
       def root=(node)
         raise ArgumentError, "Root is already defined" if root
         add(node)
+      end
+
+      def save(destination, opts = {:formatter => REXML::Formatters::Default.new})
+        self << REXML::XMLDecl.new unless xml_decl != REXML::XMLDecl.default # always output xml declaration
+        File.open(destination, "w") do |f|
+          opts[:formatter].write(self, f)
+        end
       end
     end
   end

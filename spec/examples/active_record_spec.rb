@@ -6,11 +6,8 @@ describe ROXML, "under ActiveRecord" do
     @route = Route.from_xml(xml_for('active_record'))
   end
 
-  after(:all) do
-    db = File.dirname(__FILE__) + "/../../examples/active_record/active_record.sqlite3"
-    if File.exists?(db)
-      FileUtils.rm(db)
-    end
+  before(:all) do
+    FileUtils.rm(DB_PATH) if File.exists?(DB_PATH)
   end
 
   it "should be parsed" do

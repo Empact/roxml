@@ -13,6 +13,17 @@
   * Include 't' and 'f' in the list of possible boolean values, since rails uses them
   * Remove :attrs hash syntax.  Not particularly helpful & somewhat obfuscatory.  Use :key, :value instead.
 
+== 2.5.1 (March 2, 2009)
+
+* minor enhancements
+
+   * Add Document#save to REXML support, complete with XMLDecl output
+
+* bug fixes
+
+   * rexml support has been fixed
+   * the first example in the readme was broken and has been fixed
+
 == 2.5.0 (February 24, 2009)
 
 * major enhancements
@@ -59,6 +70,7 @@
     rather than :text
   * Deprecated hash :attrs declaration syntax in favor of {:key => '@attr1', :value => '@attr2'}
   * Deprecated hash {Type => 'name'} declaration syntax in favor of {:as => Type, :from => 'name}
+  * Deprecated String#to_utf and #to_latin.
 
 * bug fixes
 

@@ -25,7 +25,7 @@ def to_xml_test(*names)
 
       dict = klass.from_xml(xml)
       xml = remove_children(xml)
-      assert_equal xml, dict.to_xml
+      assert_equal xml.to_s, dict.to_xml.to_s
     end
   end
 end

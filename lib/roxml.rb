@@ -8,7 +8,7 @@ require 'uri'
 end
 
 module ROXML # :nodoc:
-  VERSION = '2.5.0'
+  VERSION = '2.5.1'
 
   def self.included(base) # :nodoc:
     base.extend ClassMethods::Accessors,
@@ -23,7 +23,7 @@ module ROXML # :nodoc:
     module Conversions
       # Returns a LibXML::XML::Node or a REXML::Element representing this object
       def to_xml(name = nil)
-        returning XML::Node.new(name || self.class.tag_name) do |root|
+        returning XML::Node.new((name || self.class.tag_name).to_s) do |root|
           self.class.roxml_attrs.each do |attr|
             ref = attr.to_ref(self)
             v = ref.to_xml

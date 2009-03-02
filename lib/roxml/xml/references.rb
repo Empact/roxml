@@ -89,7 +89,7 @@ module ROXML
       if child = xml.children.find {|c| c.name == wrapper }
        return child
       end
-      xml.child_add(XML::Node.new(wrapper))
+      xml.child_add(XML::Node.new(wrapper.to_s))
     end
 
     def nodes_in(xml)
@@ -120,7 +120,7 @@ module ROXML
     # Updates the attribute in the given XML block to
     # the value provided.
     def write_xml(xml, value)
-      xml.attributes[name] = value.to_s.to_utf
+      xml.attributes[name] = value.to_s.to_utf_without_deprecation
     end
 
     def fetch_value(xml)
@@ -179,7 +179,7 @@ module ROXML
         nodes_in(xml) do |nodes|
           if array?
             nodes.collect do |e|
-              e.content.strip.to_latin
+              e.content.strip.to_latin_without_deprecation
             end
           else
             nodes.first.content
@@ -190,9 +190,9 @@ module ROXML
 
     def add(dest, value)
       if cdata?
-        dest.child_add(XML::Node.new_cdata(value.to_s.to_utf))
+        dest.child_add(XML::Node.new_cdata(value.to_s.to_utf_without_deprecation))
       else
-        dest.content = CGI.escapeHTML(value.to_s.to_utf)
+        dest.content = value.to_s.to_utf_without_deprecation
       end
     end
   end

@@ -14,36 +14,36 @@ ROXML, you can annotate the Ruby classes as follows:
   class Book
     include ROXML
 
-    xml_reader :isbn, :from => "@ISBN" # attribute with name 'ISBN'
-    xml_reader :title
-    xml_reader :description, :cdata => true  # text node with cdata protection
-    xml_reader :author
+    xml_accessor :isbn, :from => "@ISBN" # attribute with name 'ISBN'
+    xml_accessor :title
+    xml_accessor :description, :cdata => true  # text node with cdata protection
+    xml_accessor :author
   end
 
   class Library
     include ROXML
 
     xml_accessor :name, :from => "NAME", :cdata => true
-    xml_accessor :books, :as => [Book]
+    xml_accessor :books, :as => [Book] # by default roxml searches for books for in <book> child nodes, then, if none are present, in ./books/book children
   end
 
 To create a library and put a number of books in it we could run the following code:
 
-  book = Book.new()
+  book = Book.new
   book.isbn = "0201710897"
   book.title = "The PickAxe"
   book.description = "Best Ruby book out there!"
   book.author = "David Thomas, Andrew Hunt, Dave Thomas"
 
-  lib = Library.new()
+  lib = Library.new
   lib.name = "Favorite Books"
-  lib << book
+  lib.books = [book]
 
 To save this information to an XML file:
 
-  File.open("library.xml", "w") do |f|
-    lib.to_xml.write(f, 0)
-  end
+  doc = ROXML::XML::Document.new
+  doc.root = lib.to_xml
+  doc.save("library.xml")
 
 To later populate the library object from the XML file:
 
@@ -62,11 +62,22 @@ you would add a reference to another ROXML class. For example:
 
 can be mapped using the following code:
 
+  class Publisher
+    include ROXML
+
+    xml_accessor :name
+
+    # other important functionality
+  end
+
   class BookWithPublisher
     include ROXML
 
-    xml_name :book
+    xml_name 'book'
     xml_reader :publisher, :as => Publisher
+
+    #  or, alternatively, if no class is needed to hang functionality on:
+    # xml_reader :publisher, :from => 'name', :in => 'publisher'
   end
 
 Note: In the above example, _xml_name_ annotation tells ROXML to set the element
@@ -88,10 +99,14 @@ The result of the block above is stored, rather than the actual value parsed fro
 
 == Construction
 
-Object lifecycle is as follows: .from_xml is called with option initialization_args.  .new,
-and thus #initialize, is called with those same args.  Then the object is populated
-with the attribute values from xml.  Then the #after_parse callback is called, with no arguments.
-In it you can ensure that your object initialization is complete, including initialization which
+Object life-cycle is as follows: .from_xml is called with a first argument representing the xml
+in file, string, or path form, and with optional initialization_args following.
+
+Firt .new and thus #initialize, is called with those same initialization_args, or no args if none
+are present.  Then the object is populated with the attribute values from xml.  Then the
+#after_parse callback is called, with no arguments.
+
+In #after_parse you can ensure that your object initialization is complete, including initialization which
 requires more than one variable in concert.
 
 E.g.:

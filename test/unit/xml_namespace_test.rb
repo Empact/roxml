@@ -34,6 +34,7 @@ class TestDefaultXMLNamespaces < Test::Unit::TestCase
     assert_equal "Yeah, content", xml.find_first('ns:node', 'ns:http://defaultnamespace.org').content
     assert_equal nil, xml.find_first('ns:node/subnode', 'ns:http://defaultnamespace.org')
     assert_equal "Another", xml.find_first('ns:node/ns:subnode', 'ns:http://defaultnamespace.org').content
+  rescue LoadError
   end
 end
 

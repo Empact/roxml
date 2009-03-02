@@ -1,8 +1,13 @@
-== ???
+== 2.5.1 (March 2, 2009)
+
+* minor enhancements
+
+   * Add Document#save to REXML support, complete with XMLDecl output
 
 * bug fixes
 
    * rexml support has been fixed
+   * the first example in the readme was broken and has been fixed
 
 == 2.5.0 (February 24, 2009)
 

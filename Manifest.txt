@@ -9,6 +9,7 @@ examples/active_record.rb
 examples/amazon.rb
 examples/current_weather.rb
 examples/dashed_elements.rb
+examples/library.rb
 examples/posts.rb
 examples/twitter.rb
 examples/xml/active_record.xml
@@ -38,6 +39,7 @@ spec/examples/active_record_spec.rb
 spec/examples/amazon_spec.rb
 spec/examples/current_weather_spec.rb
 spec/examples/dashed_elements_spec.rb
+spec/examples/library_spec.rb
 spec/examples/post_spec.rb
 spec/examples/twitter_spec.rb
 spec/roxml_spec.rb

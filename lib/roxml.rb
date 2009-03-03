@@ -485,9 +485,8 @@ module ROXML # :nodoc:
         returning new(*initialization_args) do |inst|
           roxml_attrs.each do |attr|
             value = attr.to_ref(inst).value_in(xml)
-            setter = :"#{attr.variable_name}="
-            inst.respond_to?(setter) \
-              ? inst.send(setter, value) \
+            inst.respond_to?(attr.setter) \
+              ? inst.send(attr.setter, value) \
               : inst.instance_variable_set("@#{attr.variable_name}", value)
           end
           inst.try(:after_parse)

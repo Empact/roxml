@@ -78,6 +78,10 @@ module ROXML
       accessor.to_s.chomp('?')
     end
 
+    def setter
+      :"#{variable_name}="
+    end
+
     def hash
       if hash?
         @type.wrapper ||= name

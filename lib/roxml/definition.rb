@@ -26,10 +26,6 @@ module ROXML
       @frozen = opts.delete(:frozen)
       @wrapper = opts.delete(:in)
 
-      if opts[:as].is_a?(Array) && opts[:as].size > 1
-        ActiveSupport::Deprecation.warn ":as should point to a single item. #{opts[:as].join(', ')} should be declared some other way."
-      end
-
       @accessor = sym.to_s
       opts[:as] ||=
         if @accessor.ends_with?('?')

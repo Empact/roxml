@@ -7,7 +7,7 @@ module ActiveSupport # :nodoc:all
   module Deprecation
     class << self
       def warn_with_internals_exclusion(message = nil, callstack = caller)
-        warn_without_internals_exclusion(message, callstack.reject {|line| line =~  /\/roxml(-[\d\.]+)?\/lib\// })
+        warn_without_internals_exclusion(message, callstack.reject {|line| line =~  /\/roxml(-[\d\.]+)?\/lib\// || line.include?('lib/roxml.rb') })
       end
       alias_method_chain :warn, :internals_exclusion
 

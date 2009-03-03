@@ -33,6 +33,22 @@ describe ROXML::Definition do
     end
   end
 
+  describe "Date reference", :shared => true do
+    it "should return nil on empty string" do
+      @subject.blocks.first.call("  ").should be_nil
+    end
+
+    it "should return a time version of the string" do
+      @subject.blocks.first.call("September 3rd, 1970").to_s == "1970-09-03"
+    end
+
+    context "when passed an array of values" do
+      it "should timify all of them" do
+        @subject.blocks.first.call(["September 3rd, 1970", "1776-07-04"]).map(&:to_s).should == ["1970-09-03", "1776-07-04"]
+      end
+    end
+  end
+
   describe "attr name" do
     context "when ending with '_at'" do
       context "and without an :as argument" do
@@ -40,6 +56,15 @@ describe ROXML::Definition do
           @subject = ROXML::Definition.new(:time_at)
         end
         it_should_behave_like "DateTime reference"
+      end
+    end
+
+    context "when ending with '_on'" do
+      context "and without an :as argument" do
+        before(:all) do
+          @subject = ROXML::Definition.new(:created_on)
+        end
+        it_should_behave_like "Date reference"
       end
     end
   end
@@ -341,19 +366,10 @@ describe ROXML::Definition do
       end
 
       describe "Date" do
-        it "should return nil on empty string" do
-          ROXML::Definition.new(:floatvalue, :as => Date).blocks.first.call("  ").should be_nil
+        before do
+          @subject = ROXML::Definition.new(:datevalue, :as => Date)
         end
-
-        it "should return a time version of the string" do
-          ROXML::Definition.new(:datevalue, :as => Date).blocks.first.call("September 3rd, 1970").to_s == "1970-09-03"
-        end
-
-        context "when passed an array of values" do
-          it "should timify all of them" do
-            ROXML::Definition.new(:datevalue, :as => Date).blocks.first.call(["September 3rd, 1970", "1776-07-04"]).map(&:to_s).should == ["1970-09-03", "1776-07-04"]
-          end
-        end
+        it_should_behave_like "Date reference"
       end
 
       describe "DateTime" do

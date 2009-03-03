@@ -35,7 +35,7 @@ module ROXML
         if @accessor.ends_with?('?')
           :bool
         elsif @accessor.ends_with?('_on')
-          ActiveSupport::Deprecation.warn "In 3.0, attributes with names ending with _on will default to Date type, rather than :text"
+          Date
         elsif @accessor.ends_with?('_at')
           DateTime
         end

@@ -21,7 +21,7 @@ class Status
   
   xml_reader :id, :as => Integer
   xml_reader :text
-	xml_reader :created_at, :as => Time
+	xml_reader :created_at # This defaults to :as => DateTime, due to the '_at'
 	xml_reader :source
 	xml_reader :truncated?
 	xml_reader :in_reply_to_status_id, :as => Integer

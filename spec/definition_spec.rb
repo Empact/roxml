@@ -17,6 +17,33 @@ describe ROXML::Definition do
     end
   end
 
+  describe "DateTime reference", :shared => true do
+    it "should return nil on empty string" do
+      @subject.blocks.first.call("  ").should be_nil
+    end
+
+    it "should return a time version of the string" do
+      @subject.blocks.first.call("12:05pm, September 3rd, 1970").to_s == "1970-09-03T12:05:00+00:00"
+    end
+
+    context "when passed an array of values" do
+      it "should timify all of them" do
+        @subject.blocks.first.call(["12:05pm, September 3rd, 1970", "3:00pm, May 22, 1700"]).map(&:to_s).should == ["1970-09-03T12:05:00+00:00", "1700-05-22T15:00:00+00:00"]
+      end
+    end
+  end
+
+  describe "attr name" do
+    context "when ending with '_at'" do
+      context "and without an :as argument" do
+        before(:all) do
+          @subject = ROXML::Definition.new(:time_at)
+        end
+        it_should_behave_like "DateTime reference"
+      end
+    end
+  end
+
   describe ":as" do
     describe "=> []" do
       it "should means array of texts" do
@@ -330,19 +357,10 @@ describe ROXML::Definition do
       end
 
       describe "DateTime" do
-        it "should return nil on empty string" do
-          ROXML::Definition.new(:floatvalue, :as => DateTime).blocks.first.call("  ").should be_nil
+        before do
+          @subject = ROXML::Definition.new(:datevalue, :as => DateTime)
         end
-
-        it "should return a time version of the string" do
-          ROXML::Definition.new(:datevalue, :as => DateTime).blocks.first.call("12:05pm, September 3rd, 1970").to_s == "1970-09-03T12:05:00+00:00"
-        end
-
-        context "when passed an array of values" do
-          it "should timify all of them" do
-            ROXML::Definition.new(:datevalue, :as => DateTime).blocks.first.call(["12:05pm, September 3rd, 1970", "3:00pm, May 22, 1700"]).map(&:to_s).should == ["1970-09-03T12:05:00+00:00", "1700-05-22T15:00:00+00:00"]
-          end
-        end
+        it_should_behave_like "DateTime reference"
       end
 
       it "should prohibit multiple shorthands" do

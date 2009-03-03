@@ -221,12 +221,6 @@ class TestDefinition < Test::Unit::TestCase
     assert_equal :attr, opts.type
   end
 
-  def test_name_ending_with_on_warns_of_coming_date_default
-    assert_deprecated do
-      assert_equal :text, ROXML::Definition.new(:created_at).type
-    end
-  end
-
   def test_name_ending_with_at_warns_of_coming_datetime_default
     assert_deprecated do
       assert_equal :text, ROXML::Definition.new(:created_on).type

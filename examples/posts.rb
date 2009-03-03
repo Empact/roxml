@@ -8,7 +8,7 @@ class Post
   xml_reader :hash, :from => :attr
   xml_reader :description, :from => :attr
   xml_reader :tag, :from => :attr
-  xml_reader :time, :from => :attr, :as => DateTime
+  xml_reader :created_at, :from => '@time'
   xml_reader :others, :from => :attr, :as => Integer
   xml_reader :extended, :from => :attr
 end

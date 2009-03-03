@@ -12,6 +12,7 @@
 
   * Include 't' and 'f' in the list of possible boolean values, since rails uses them
   * Remove :attrs hash syntax.  Not particularly helpful & somewhat obfuscatory.  Use :key, :value instead.
+  * Default attrs ending in '_at' to DateTime.  This can be overriden via :as
 
 == 2.5.1 (March 2, 2009)
 

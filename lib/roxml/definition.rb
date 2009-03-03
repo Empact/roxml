@@ -30,15 +30,15 @@ module ROXML
         ActiveSupport::Deprecation.warn ":as should point to a single item. #{opts[:as].join(', ')} should be declared some other way."
       end
 
-      @accessor = sym
-      if @accessor.to_s.ends_with?('_on')
-        ActiveSupport::Deprecation.warn "In 3.0, attributes with names ending with _on will default to Date type, rather than :text"
-      end
-      if @accessor.to_s.ends_with?('_at')
-        ActiveSupport::Deprecation.warn "In 3.0, attributes with names ending with _at will default to DateTime type, rather than :text"
-      end
-
-      opts[:as] ||= :bool if @accessor.to_s.ends_with?('?')
+      @accessor = sym.to_s
+      opts[:as] ||=
+        if @accessor.ends_with?('?')
+          :bool
+        elsif @accessor.ends_with?('_on')
+          ActiveSupport::Deprecation.warn "In 3.0, attributes with names ending with _on will default to Date type, rather than :text"
+        elsif @accessor.ends_with?('_at')
+          DateTime
+        end
 
       @array = opts[:as].is_a?(Array)
       @blocks = collect_blocks(block, opts[:as])

@@ -19,6 +19,6 @@ describe Post do
   end
 
   it "should extract time" do
-    @posts.each {|post| post.time.should be_an_instance_of(DateTime) }
+    @posts.each {|post| post.created_at.should be_an_instance_of(DateTime) }
   end
 end

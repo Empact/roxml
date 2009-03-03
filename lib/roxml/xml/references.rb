@@ -231,7 +231,7 @@ module ROXML
           super(kvp)
         end
       end
-      vals.to_hash if vals
+      to_hash(vals) if vals
     end
 
     def freeze(vals)
@@ -240,6 +240,17 @@ module ROXML
         vals.freeze
       else
         vals
+      end
+    end
+
+    def to_hash(array)
+      hash = array.inject({}) do |result, (k, v)|
+        result[k] ||= []
+        result[k] << v
+        result
+      end
+      hash.each_pair do |k, v|
+        hash[k] = v.first if v.one?
       end
     end
   end

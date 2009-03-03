@@ -46,7 +46,6 @@ spec/roxml_spec.rb
 spec/shared_specs.rb
 spec/spec.opts
 spec/spec_helper.rb
-spec/string_spec.rb
 spec/xml/parser_spec.rb
 tasks/rspec.rake
 tasks/test.rake

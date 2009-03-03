@@ -414,14 +414,14 @@ module ROXML # :nodoc:
       def xml_accessor(*syms, &block)
         xml_attr(*syms, &block).each do |attr|
           add_reader(attr)
-          attr_writer(attr.variable_name)
+          attr_writer(attr.attr_name)
         end
       end
 
     private
       def add_reader(attr)
         define_method(attr.accessor) do
-          instance_variable_get("@#{attr.variable_name}")
+          instance_variable_get(attr.instance_variable_name)
         end
       end
     end
@@ -487,7 +487,7 @@ module ROXML # :nodoc:
             value = attr.to_ref(inst).value_in(xml)
             inst.respond_to?(attr.setter) \
               ? inst.send(attr.setter, value) \
-              : inst.instance_variable_set("@#{attr.variable_name}", value)
+              : inst.instance_variable_set(attr.instance_variable_name, value)
           end
           inst.try(:after_parse)
         end

@@ -12,7 +12,7 @@ end
 
 module ROXML
   class Definition # :nodoc:
-    attr_reader :name, :type, :wrapper, :hash, :blocks, :accessor, :to_xml
+    attr_reader :name, :type, :wrapper, :hash, :blocks, :accessor, :to_xml, :attr_name
     bool_attr_reader :name_explicit, :array, :cdata, :required, :frozen
 
     def initialize(sym, opts = {}, &block)
@@ -65,7 +65,8 @@ module ROXML
         opts[:from].sub!('@', '')
       end
 
-      @name = (opts[:from] || variable_name).to_s
+      @attr_name = accessor.to_s.chomp('?')
+      @name = (opts[:from] || @attr_name).to_s
       @name = @name.singularize if hash? || array?
       if hash? && (hash.key.name? || hash.value.name?)
         @name = '*'
@@ -74,12 +75,12 @@ module ROXML
       raise ArgumentError, "Can't specify both :else default and :required" if required? && @default
     end
 
-    def variable_name
-      accessor.to_s.chomp('?')
+    def instance_variable_name
+      :"@#{attr_name}"
     end
 
     def setter
-      :"#{variable_name}="
+      :"#{attr_name}="
     end
 
     def hash

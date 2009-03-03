@@ -6,7 +6,7 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef # :nodoc:
-    delegate :required?, :array?, :blocks, :accessor, :variable_name, :default, :to => :opts
+    delegate :required?, :array?, :blocks, :accessor, :default, :to => :opts
 
     def initialize(opts, instance)
       @opts = opts

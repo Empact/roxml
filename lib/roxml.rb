@@ -11,25 +11,23 @@ module ROXML # :nodoc:
   VERSION = '2.5.1'
 
   def self.included(base) # :nodoc:
-    base.extend ClassMethods::Accessors,
-                ClassMethods::Declarations,
-                ClassMethods::Operations
     base.class_eval do
-      include InstanceMethods::Conversions
+      extend  ClassMethods::Accessors,
+              ClassMethods::Declarations,
+              ClassMethods::Operations
+      include InstanceMethods
     end
   end
 
   module InstanceMethods # :nodoc:
-    module Conversions
-      # Returns a LibXML::XML::Node or a REXML::Element representing this object
-      def to_xml(name = nil)
-        returning XML::Node.new((name || self.class.tag_name).to_s) do |root|
-          self.class.roxml_attrs.each do |attr|
-            ref = attr.to_ref(self)
-            v = ref.to_xml
-            unless v.nil?
-              ref.update_xml(root, v)
-            end
+    # Returns a LibXML::XML::Node or a REXML::Element representing this object
+    def to_xml(name = self.class.tag_name)
+      returning XML::Node.new(name.to_s) do |root|
+        self.class.roxml_attrs.each do |attr|
+          ref = attr.to_ref(self)
+          value = ref.to_xml
+          unless value.nil?
+            ref.update_xml(root, value)
           end
         end
       end

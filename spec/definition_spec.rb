@@ -49,6 +49,15 @@ describe ROXML::Definition do
     end
   end
 
+  it "should unescape xml entities" do
+    ROXML::Definition.new(:questions, :as => []).to_ref(RoxmlObject.new).value_in(%{
+      <xml>
+        <question>&quot;Wickard &amp; Filburn&quot; &gt;</question>
+        <question> &lt; McCulloch &amp; Maryland?</question>
+      </xml>
+    }).should == ["\"Wickard & Filburn\" >", "< McCulloch & Maryland?"]
+  end
+
   describe "attr name" do
     context "when ending with '_at'" do
       context "and without an :as argument" do
@@ -103,31 +112,14 @@ describe ROXML::Definition do
     end
 
     describe "=> NonRoxmlClass" do
-      it "should fail with a warning"
-
-      it "currently defaults to :text" do
-        opts = ROXML::Definition.new(:authors, :as => Module)
-        opts.array?.should be_false
-        opts.type.should == :text
+      it "should fail with a warning" do
+        proc { ROXML::Definition.new(:authors, :as => Module) }.should raise_error(ArgumentError)
       end
     end
 
     describe "=> [NonRoxmlClass]" do
-      it "should fail with a warning"
-
-      it "currently defaults to an array of :text" do
-        opts = ROXML::Definition.new(:authors, :as => [Module])
-        opts.array?.should be_true
-        opts.type.should == :text
-      end
-
-      it "should unescape xml entities" do
-        ROXML::Definition.new(:questions, :as => []).to_ref(RoxmlObject.new).value_in(%{
-          <xml>
-            <question>&quot;Wickard &amp; Filburn&quot; &gt;</question>
-            <question> &lt; McCulloch &amp; Maryland?</question>
-          </xml>
-        }).should == ["\"Wickard & Filburn\" >", "< McCulloch & Maryland?"]
+      it "should raise" do
+        proc { ROXML::Definition.new(:authors, :as => [Module]) }.should raise_error(ArgumentError)
       end
     end
 
@@ -207,8 +199,11 @@ describe ROXML::Definition do
 
       it "should have no blocks without a shorthand" do
         ROXML::Definition.new(:count).blocks.should be_empty
-        ROXML::Definition.new(:count, :as => :bogus).blocks.should be_empty
-        ROXML::Definition.new(:count, :as => :foat).blocks.should be_empty # misspelled
+      end
+
+      it "should raise on unknown :as" do
+        proc { ROXML::Definition.new(:count, :as => :bogus) }.should raise_error(ArgumentError)
+        proc { ROXML::Definition.new(:count, :as => :foat) }.should raise_error(ArgumentError)
       end
 
       describe "block shorthand type declaration", :shared => true do

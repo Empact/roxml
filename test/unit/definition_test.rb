@@ -74,12 +74,6 @@ class TestDefinition < Test::Unit::TestCase
 
   def test_no_block_shorthand_means_no_block
     assert ROXML::Definition.new(:count).blocks.empty?
-    assert_deprecated do
-      assert ROXML::Definition.new(:count, :as => :intager).blocks.empty?
-    end
-    assert_deprecated do
-      assert ROXML::Definition.new(:count, :as => :foat).blocks.empty?
-    end
   end
 
   def test_block_integer_shorthand

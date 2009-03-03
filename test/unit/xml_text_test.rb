@@ -28,7 +28,7 @@ class TestXMLText < Test::Unit::TestCase
     empty_array = Class.new do
       include ROXML
 
-      xml_reader :missing_array, :as => [:text], :from => 'missing'
+      xml_reader :missing_array, :as => [], :from => 'missing'
     end
 
     obj = empty_array.from_xml('<empty_array></empty_array>')

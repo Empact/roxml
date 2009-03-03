@@ -215,7 +215,7 @@ module ROXML
       end
       as = self.class.block_shorthands.fetch(as) do
         unless as.respond_to?(:from_xml) || as.try(:first).respond_to?(:from_xml) || (as.is_a?(Hash) && !(as.keys & [:key, :value]).empty?)
-          ActiveSupport::Deprecation.warn "#{as.inspect} is not a valid type declaration. ROXML will raise in this case in version 3.0" unless as.nil?
+          raise ArgumentError, "Invalid :as argument #{as}" unless as.nil?
         end
         nil
       end

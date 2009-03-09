@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-class TestXMLText < Test::Unit::TestCase
+class TestXMLText < ActiveSupport::TestCase
   # Test a simple mapping with no composition
   def test_valid_simple
     book = Book.from_xml(fixture(:book_valid))

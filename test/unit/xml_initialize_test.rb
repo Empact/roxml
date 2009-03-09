@@ -13,7 +13,7 @@ class BookWithXmlInitialize < BookWithDepth
   end
 end
 
-class TestXMLInitialize < Test::Unit::TestCase
+class TestXMLInitialize < ActiveSupport::TestCase
   def test_xml_construct_not_in_use
     assert Measurement.xml_construction_args_without_deprecation.empty?
   end

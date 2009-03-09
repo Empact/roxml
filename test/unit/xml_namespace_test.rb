@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-class TestDefaultXMLNamespaces < Test::Unit::TestCase
+class TestDefaultXMLNamespaces < ActiveSupport::TestCase
   def setup
     @book = BookWithContributions.from_xml(fixture(:book_with_default_namespace))
   end
@@ -47,7 +47,7 @@ class NamespaceyObject
   xml_reader :no_namespace, :from => 'no_namespace'
 end
 
-class TestXMLNamespaceDeclarations < Test::Unit::TestCase
+class TestXMLNamespaceDeclarations < ActiveSupport::TestCase
   def setup
     @instance = NamespaceyObject.from_xml(%{
       <aws:book xmlns:aws="http://www.aws.com/aws" xmlns:different="http://www.aws.com/different">

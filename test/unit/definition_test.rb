@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-class TestDefinition < Test::Unit::TestCase
+class TestDefinition < ActiveSupport::TestCase
   def assert_hash(opts, kvp)
     assert opts.hash?
     assert !opts.array?
@@ -300,7 +300,7 @@ class RoxmlObject
   include ROXML
 end
 
-class HashDefinitionTest < Test::Unit::TestCase
+class HashDefinitionTest < ActiveSupport::TestCase
   def test_content_detected_as_from
     opts = ROXML::Definition.new(:hash, {:key => :content, :value => :name})
     assert_equal '.', opts.hash.key.name

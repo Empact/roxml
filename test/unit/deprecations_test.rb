@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-class TestDefinition < Test::Unit::TestCase
+class TestDeprecation < ActiveSupport::TestCase
   def test_tag_refs_is_deprecated
     assert_deprecated do
       Class.new do

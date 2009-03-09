@@ -36,7 +36,7 @@ class InheritedBookWithDepthWithXmlConstruct < Book
   xml_reader :depth, MeasurementWithXmlConstruct
 end
 
-class TestXMLConstruct < Test::Unit::TestCase
+class TestXMLConstruct < ActiveSupport::TestCase
   def test_is_deprecated
     assert_deprecated do
       MeasurementWithXmlConstruct.xml_construction_args

@@ -45,7 +45,7 @@ module ROXML
       end
 
       @type = extract_type(args, opts)
-      if @type.try(:xml_name_without_deprecation?)
+      if @type.respond_to?(:xml_name_without_deprecation?) && @type.xml_name_without_deprecation?
         unless self.class.silence_xml_name_warning?
           warn "WARNING: As of 2.3, a breaking change has been in the naming of sub-objects. " +
                "ROXML now considers the xml_name of the sub-object before falling back to the accessor name of the parent. " +
@@ -140,7 +140,7 @@ module ROXML
     end
 
     def self.fetch_bool(value, default)
-      value = value.try(:downcase)
+      value = value.to_s.downcase
       if %w{true yes 1}.include? value
         true
       elsif %w{false no 0}.include? value
@@ -220,7 +220,7 @@ module ROXML
         as = (block ? :bool_combined : :bool_standalone)
       end
       as = self.class.block_shorthands.fetch(as) do
-        unless as.respond_to?(:from_xml) || as.try(:first).respond_to?(:from_xml) || (as.is_a?(Hash) && !(as.keys & HASH_KEYS).empty?)
+        unless as.respond_to?(:from_xml) || (as.respond_to?(:first) && as.first.respond_to?(:from_xml)) || (as.is_a?(Hash) && !(as.keys & [:key, :value]).empty?)
           ActiveSupport::Deprecation.warn "#{as.inspect} is not a valid type declaration. ROXML will raise in this case in version 3.0" unless as.nil?
         end
         nil

@@ -111,13 +111,19 @@ module ROXML # :nodoc:
       # but in this case an underscored version of the name is applied, for convenience.
       def xml_convention(to_proc_able = nil, &block)
         raise ArgumentError, "conventions are already set" if @roxml_naming_convention
-        raise ArgumentError, "only one conventions can be set" if to_proc_able.respond_to?(:to_proc) && block_given?
-        @roxml_naming_convention = to_proc_able.try(:to_proc)
-        @roxml_naming_convention = block if block_given?
+        @roxml_naming_convention =
+          if to_proc_able
+            raise ArgumentError, "only one conventions can be set" if block_given?
+            to_proc_able.to_proc
+          elsif block_given?
+            block
+          end
       end
 
       def roxml_naming_convention # :nodoc:
-        (@roxml_naming_convention || superclass.try(:roxml_naming_convention)).freeze
+        (@roxml_naming_convention || begin
+          superclass.roxml_naming_convention if superclass.respond_to?(:roxml_naming_convention)
+        end).freeze
       end
 
       # Declares a reference to a certain xml element, whether an attribute, a node,
@@ -444,18 +450,22 @@ module ROXML # :nodoc:
       end
 
       def roxml_tag_name # :nodoc:
-        @roxml_tag_name || superclass.try(:roxml_tag_name)
+        @roxml_tag_name || begin
+          superclass.roxml_tag_name if superclass.respond_to?(:roxml_tag_name)
+        end
       end
 
       def roxml_namespace # :nodoc:
-        @roxml_namespace || superclass.try(:roxml_namespace)
+        @roxml_namespace || begin
+          superclass.roxml_namespace if superclass.respond_to?(:roxml_namespace)
+        end
       end
 
       # Returns array of internal reference objects, such as attributes
       # and composed XML objects
       def roxml_attrs
         @roxml_attrs ||= []
-        (@roxml_attrs + (superclass.try(:roxml_attrs) || [])).freeze
+        (@roxml_attrs + (superclass.respond_to?(:roxml_attrs) ? superclass.roxml_attrs : [])).freeze
       end
     end
 
@@ -489,7 +499,7 @@ module ROXML # :nodoc:
               ? inst.send(attr.setter, value) \
               : inst.instance_variable_set(attr.instance_variable_name, value)
           end
-          inst.try(:after_parse)
+          inst.send(:after_parse) if inst.respond_to?(:after_parse, true)
         end
       rescue ArgumentError => e
         raise e, e.message + " for class #{self}"

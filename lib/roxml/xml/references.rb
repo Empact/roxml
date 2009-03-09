@@ -48,8 +48,9 @@ module ROXML
     attr_reader :opts
 
     def conventionize(what)
-      if !what.blank? && @instance.try(:class).try(:roxml_naming_convention).respond_to?(:call)
-        URI.unescape(@instance.class.roxml_naming_convention.call(URI.escape(what, /\/|::/)))
+      convention ||= @instance.class.respond_to?(:roxml_naming_convention) && @instance.class.roxml_naming_convention
+      if !what.blank? && convention.respond_to?(:call)
+        URI.unescape(convention.call(URI.escape(what, /\/|::/)))
       else
         what
       end

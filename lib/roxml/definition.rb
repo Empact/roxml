@@ -40,11 +40,11 @@ module ROXML
       @blocks = collect_blocks(block, opts[:as])
 
       @type = extract_type(opts[:as])
-      if @type.try(:roxml_tag_name)
+      if @type.respond_to?(:roxml_tag_name)
         # "WARNING: As of 2.3, a breaking change has been in the naming of sub-objects. " +
         # "ROXML now considers the xml_name of the sub-object before falling back to the accessor name of the parent. " +
         # "Use :from on the parent declaration to override this behavior. Set ROXML::SILENCE_XML_NAME_WARNING to avoid this message."
-        opts[:from] ||= @type.tag_name
+        opts[:from] ||= @type.roxml_tag_name
       end
 
       if opts[:from] == :content
@@ -127,7 +127,7 @@ module ROXML
     end
 
     def self.fetch_bool(value, default)
-      value = value.try(:downcase)
+      value = value.to_s.downcase
       if %w{true yes 1 t}.include? value
         true
       elsif %w{false no 0 f}.include? value
@@ -210,7 +210,7 @@ module ROXML
         as = (block ? :bool_combined : :bool_standalone)
       end
       as = self.class.block_shorthands.fetch(as) do
-        unless as.respond_to?(:from_xml) || as.try(:first).respond_to?(:from_xml) || (as.is_a?(Hash) && !(as.keys & [:key, :value]).empty?)
+        unless as.respond_to?(:from_xml) || (as.respond_to?(:first) && as.first.respond_to?(:from_xml)) || (as.is_a?(Hash) && !(as.keys & [:key, :value]).empty?)
           raise ArgumentError, "Invalid :as argument #{as}" unless as.nil?
         end
         nil

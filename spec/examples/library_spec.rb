@@ -22,13 +22,18 @@ describe Library do
 
     context "when written to a file" do
       before :all do
+        @path = "spec/examples/library.xml"
         @doc = ROXML::XML::Document.new
         @doc.root = @lib.to_xml
-        @doc.save("spec/examples/library.xml")
+        @doc.save(@path)
       end
 
-      it "should be contain the expected xml" do
-        ROXML::XML::Parser.parse(File.read("spec/examples/library.xml")).to_s.should == ROXML::XML::Parser.parse(%{<?xml version="1.0"?><library><NAME><![CDATA[Favorite Books]]></NAME><novel ISBN='0201710897'><title>The PickAxe</title><description><![CDATA[Best Ruby book out there!]]></description><author>David Thomas, Andrew Hunt, Dave Thomas</author><publisher><name>Addison Wesley Longman, Inc.</name></publisher></novel></library>}).to_s
+     after :all do
+       FileUtils.rm @path
+     end
+
+     it "should be contain the expected xml" do
+        ROXML::XML::Parser.parse(File.read(@path)).to_s.should == ROXML::XML::Parser.parse(%{<?xml version="1.0"?><library><NAME><![CDATA[Favorite Books]]></NAME><novel ISBN='0201710897'><title>The PickAxe</title><description><![CDATA[Best Ruby book out there!]]></description><author>David Thomas, Andrew Hunt, Dave Thomas</author><publisher><name>Addison Wesley Longman, Inc.</name></publisher></novel></library>}).to_s
       end
 
       it "should be re-parsable via .from_xml" do

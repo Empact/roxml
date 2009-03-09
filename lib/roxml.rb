@@ -388,6 +388,7 @@ module ROXML # :nodoc:
       # [:required] If true, throws RequiredElementMissing when the element isn't present
       # [:frozen] If true, all results are frozen (using #freeze) at parse-time.
       # [:cdata] true for values which should be input from or output as cdata elements
+      # [:to_xml] this proc is applied to the attributes value outputting the instance via #to_xml
       #
       def xml_attr(*syms, &block)
         opts = syms.extract_options!

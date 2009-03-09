@@ -21,7 +21,6 @@ examples/xml/twitter.xml
 lib/roxml.rb
 lib/roxml/definition.rb
 lib/roxml/extensions.rb
-lib/roxml/extensions/active_support.rb
 lib/roxml/extensions/array.rb
 lib/roxml/extensions/array/conversions.rb
 lib/roxml/extensions/deprecation.rb
@@ -82,7 +81,6 @@ test/fixtures/person_with_guarded_mothers.xml
 test/fixtures/person_with_mothers.xml
 test/mocks/dictionaries.rb
 test/mocks/mocks.rb
-test/release/dependencies_test.rb
 test/test_helper.rb
 test/unit/definition_test.rb
 test/unit/deprecations_test.rb

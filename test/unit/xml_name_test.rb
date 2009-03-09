@@ -48,7 +48,7 @@ class ParentOfUnnamedChildWithFrom
   xml_accessor :child_accessor_name,:as => Child, :from => 'child_from_name'
 end
 
-class TestXMLName < Test::Unit::TestCase
+class TestXMLName < ActiveSupport::TestCase
   def test_from_always_dominates_attribute_name_xml_name_or_not
     parent = ParentOfNamedChildWithFrom.new
     parent.child_accessor_name = Child.new

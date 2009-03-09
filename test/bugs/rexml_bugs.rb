@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-class RexmlBugs < Test::Unit::TestCase
+class RexmlBugs < ActiveSupport::TestCase
   def test_that_some_illegal_chars_are_parsed_without_complaint
     p "REXML ignores illegal ']]>' brackets in xml content"
     assert_nothing_raised do

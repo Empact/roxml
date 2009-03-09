@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-class TestXMLRequired < Test::Unit::TestCase
+class TestXMLRequired < ActiveSupport::TestCase
   def setup
     @full_book = <<BOOK
   <book ISBN="1234">

@@ -94,7 +94,7 @@ end
 class InheritedBookCaseDefault < ParentBookCaseDefault
 end
 
-class TestXMLConstruct < Test::Unit::TestCase
+class TestXMLConstruct < ActiveSupport::TestCase
   # TODO: Test convention applies to xml_name as well...
 
   def test_default_convention_is_underscore

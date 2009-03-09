@@ -14,7 +14,7 @@ class ArrayWithBlock
   end
 end
 
-class TestXMLBlocks < Test::Unit::TestCase
+class TestXMLBlocks < ActiveSupport::TestCase
   def test_block_is_applied
     muffins = Muffins.from_xml(fixture(:muffins))
 

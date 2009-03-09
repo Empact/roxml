@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-class TestXMLAttribute < Test::Unit::TestCase
+class TestXMLAttribute < ActiveSupport::TestCase
   def test_attr_from
     # :attr => *
     book = Book.from_xml(fixture(:book_text_with_attribute))

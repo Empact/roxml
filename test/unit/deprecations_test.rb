@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'test_helper')
 
-class TestDefinition < Test::Unit::TestCase
+class TestDeprecation < ActiveSupport::TestCase
   def test_as_array_not_deprecated
     assert_not_deprecated do
       opts = ROXML::Definition.new(:name, :as => [])

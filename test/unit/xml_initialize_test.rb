@@ -13,7 +13,7 @@ class BookWithXmlInitialize < BookWithDepth
   end
 end
 
-class TestXMLInitialize < Test::Unit::TestCase
+class TestXMLInitialize < ActiveSupport::TestCase
   def test_initialize_is_run
     m = Measurement.from_xml('<measurement units="hundredths-meters">1130</measurement>')
     assert_equal 11.3, m.value

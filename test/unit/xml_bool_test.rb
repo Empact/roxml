@@ -68,7 +68,7 @@ UNEXPECTED_VALUE_XML = %{
 }
 
 
-class TestXMLBool < Test::Unit::TestCase
+class TestXMLBool < ActiveSupport::TestCase
   def test_bool_results_for_various_inputs
     x = XmlBool.from_xml(BOOL_XML)
     assert_equal true, x.true_from_TRUE?

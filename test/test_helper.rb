@@ -1,4 +1,5 @@
 require "lib/roxml"
+require 'active_support/test_case'
 require 'test/mocks/mocks'
 require 'test/mocks/dictionaries'
 

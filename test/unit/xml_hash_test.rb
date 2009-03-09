@@ -7,7 +7,7 @@ class BookWithContributorHash
                              :value => 'name'}
 end
 
-class TestXMLHash < Test::Unit::TestCase
+class TestXMLHash < ActiveSupport::TestCase
   def setup
     @contents = {'quaquaversally' => 'adjective: (of a geological formation) sloping downward from the center in all directions.',
                  'tergiversate' => 'To use evasions or ambiguities; equivocate.'}

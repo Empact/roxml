@@ -15,6 +15,14 @@
   * Default attrs ending in '_at' to DateTime.  This can be overriden via :as
   * Default attrs ending in '_on' to Date.  This can be overriden via :as
 
+== 2.5.2 (March 12, 2009)
+
+* minor enhancements
+
+  * Remove dependency on an Object#try which conflicted with ActiveSupport 2.3's version
+  * Document the :to_xml option for attr references
+  * Require active_support directly,  as it's less brittle and plays nicer with other libraries
+
 == 2.5.1 (March 2, 2009)
 
 * minor enhancements

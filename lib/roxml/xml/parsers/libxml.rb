@@ -1,4 +1,5 @@
 require 'libxml'
+require 'cgi'
 
 module ROXML
   module XML # :nodoc:all

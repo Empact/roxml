@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Woosley", "Zak Mandhro", "Anders Engstrom", "Russ Olsen"]
-  s.date = %q{2009-03-12}
+  s.date = %q{2009-03-22}
   s.description = %q{ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML. Using simple annotations, it enables Ruby classes to be mapped to XML. ROXML takes care of the marshalling and unmarshalling of mapped attributes so that developers can focus on building first-class Ruby classes. As a result, ROXML simplifies the development of RESTful applications, Web Services, and XML-RPC.}
   s.email = %q{ben.woosley@gmail.com}
   s.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.rdoc"]
@@ -26,23 +26,23 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activesupport>, [">= 2.1.0"])
-      s.add_runtime_dependency(%q<libxml-ruby>, [">= 0.8.6"])
-      s.add_development_dependency(%q<newgem>, [">= 1.2.3"])
+      s.add_runtime_dependency(%q<libxml-ruby>, ["= 1.1.2"])
+      s.add_development_dependency(%q<newgem>, [">= 1.3.0"])
       s.add_development_dependency(%q<sqlite3-ruby>, [">= 1.2.4"])
       s.add_development_dependency(%q<activerecord>, [">= 2.2.2"])
       s.add_development_dependency(%q<hoe>, [">= 1.8.0"])
     else
       s.add_dependency(%q<activesupport>, [">= 2.1.0"])
-      s.add_dependency(%q<libxml-ruby>, [">= 0.8.6"])
-      s.add_dependency(%q<newgem>, [">= 1.2.3"])
+      s.add_dependency(%q<libxml-ruby>, ["= 1.1.2"])
+      s.add_dependency(%q<newgem>, [">= 1.3.0"])
       s.add_dependency(%q<sqlite3-ruby>, [">= 1.2.4"])
       s.add_dependency(%q<activerecord>, [">= 2.2.2"])
       s.add_dependency(%q<hoe>, [">= 1.8.0"])
     end
   else
     s.add_dependency(%q<activesupport>, [">= 2.1.0"])
-    s.add_dependency(%q<libxml-ruby>, [">= 0.8.6"])
-    s.add_dependency(%q<newgem>, [">= 1.2.3"])
+    s.add_dependency(%q<libxml-ruby>, ["= 1.1.2"])
+    s.add_dependency(%q<newgem>, [">= 1.3.0"])
     s.add_dependency(%q<sqlite3-ruby>, [">= 1.2.4"])
     s.add_dependency(%q<activerecord>, [">= 2.2.2"])
     s.add_dependency(%q<hoe>, [">= 1.8.0"])

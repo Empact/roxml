@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{roxml}
-  s.version = "2.5.2"
+  s.version = "2.5.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Woosley", "Zak Mandhro", "Anders Engstrom", "Russ Olsen"]
@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = %q{roxml}
   s.rubygems_version = %q{1.3.1}
   s.summary = %q{Ruby Object to XML mapping library}
-  s.test_files = ["test/unit/xml_convention_test.rb", "test/unit/xml_object_test.rb", "test/unit/xml_required_test.rb", "test/unit/xml_bool_test.rb", "test/unit/xml_name_test.rb", "test/unit/definition_test.rb", "test/unit/xml_namespace_test.rb", "test/unit/deprecations_test.rb", "test/unit/xml_text_test.rb", "test/unit/xml_block_test.rb", "test/unit/xml_attribute_test.rb", "test/unit/xml_initialize_test.rb", "test/unit/xml_hash_test.rb", "test/unit/to_xml_test.rb"]
+  s.test_files = ["test/unit/definition_test.rb", "test/unit/deprecations_test.rb", "test/unit/to_xml_test.rb", "test/unit/xml_attribute_test.rb", "test/unit/xml_block_test.rb", "test/unit/xml_bool_test.rb", "test/unit/xml_convention_test.rb", "test/unit/xml_hash_test.rb", "test/unit/xml_initialize_test.rb", "test/unit/xml_name_test.rb", "test/unit/xml_namespace_test.rb", "test/unit/xml_object_test.rb", "test/unit/xml_required_test.rb", "test/unit/xml_text_test.rb"]
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
@@ -26,14 +26,14 @@ Gem::Specification.new do |s|
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activesupport>, [">= 2.1.0"])
-      s.add_runtime_dependency(%q<libxml-ruby>, ["= 1.1.2"])
+      s.add_runtime_dependency(%q<libxml-ruby>, [">= 1.0.0"])
       s.add_development_dependency(%q<newgem>, [">= 1.3.0"])
       s.add_development_dependency(%q<sqlite3-ruby>, [">= 1.2.4"])
       s.add_development_dependency(%q<activerecord>, [">= 2.2.2"])
       s.add_development_dependency(%q<hoe>, [">= 1.8.0"])
     else
       s.add_dependency(%q<activesupport>, [">= 2.1.0"])
-      s.add_dependency(%q<libxml-ruby>, ["= 1.1.2"])
+      s.add_dependency(%q<libxml-ruby>, [">= 1.0.0"])
       s.add_dependency(%q<newgem>, [">= 1.3.0"])
       s.add_dependency(%q<sqlite3-ruby>, [">= 1.2.4"])
       s.add_dependency(%q<activerecord>, [">= 2.2.2"])
@@ -41,7 +41,7 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<activesupport>, [">= 2.1.0"])
-    s.add_dependency(%q<libxml-ruby>, ["= 1.1.2"])
+    s.add_dependency(%q<libxml-ruby>, [">= 1.0.0"])
     s.add_dependency(%q<newgem>, [">= 1.3.0"])
     s.add_dependency(%q<sqlite3-ruby>, [">= 1.2.4"])
     s.add_dependency(%q<activerecord>, [">= 2.2.2"])

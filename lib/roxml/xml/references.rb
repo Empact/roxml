@@ -90,7 +90,7 @@ module ROXML
       if child = xml.children.find {|c| c.name == wrapper }
        return child
       end
-      xml.child_add(XML::Node.new(wrapper.to_s))
+      xml.add_child(XML::Node.new(wrapper.to_s))
     end
 
     def nodes_in(xml)
@@ -154,10 +154,10 @@ module ROXML
         xml.name = value
       elsif array?
         value.each do |v|
-          add(xml.child_add(XML::Node.new(name)), v)
+          add(xml.add_child(XML::Node.new(name)), v)
         end
       else
-        add(xml.child_add(XML::Node.new(name)), value)
+        add(xml.add_child(XML::Node.new(name)), value)
       end
     end
 

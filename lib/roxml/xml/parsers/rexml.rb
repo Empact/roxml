@@ -31,7 +31,7 @@ module ROXML
         end
       end
 
-      def child_add(element)
+      def add_child(element)
         if element.is_a?(REXML::CData)
           REXML::CData.new(element, true, self)
         else

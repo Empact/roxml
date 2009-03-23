@@ -15,6 +15,12 @@
   * Default attrs ending in '_at' to DateTime.  This can be overriden via :as
   * Default attrs ending in '_on' to Date.  This can be overriden via :as
 
+== 2.5.3 (March 22, 2009)
+
+* minor enhancement
+
+  * Work around apparently unintentional breaking change in libxml-ruby 1.1.3
+
 == 2.5.2 (March 12, 2009)
 
 * minor enhancements

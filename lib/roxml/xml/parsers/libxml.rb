@@ -1,4 +1,5 @@
 require 'libxml'
+require 'cgi'
 
 module ROXML
   module XML # :nodoc:all
@@ -52,6 +53,12 @@ module ROXML
           new_without_entity_escaping(name, content && CGI.escapeHTML(content), namespace)
         end
         alias_method_chain :new, :entity_escaping
+      end
+
+      def add_child(child)
+        # libxml 1.1.3 changed child_add from returning child to returning self
+        self << child
+        child
       end
 
       alias_method :set_libxml_content, :content=

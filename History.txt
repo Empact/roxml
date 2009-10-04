@@ -15,6 +15,12 @@
   * Default attrs ending in '_at' to DateTime.  This can be overriden via :as
   * Default attrs ending in '_on' to Date.  This can be overriden via :as
 
+== 2.5.4 (October 4, 2009)
+
+* bug fix
+
+  * Rely on REXML's #add_child and LibXML's <<, rather than #child_add which had been removed from REXML and deprecated from LibXML
+
 == 2.5.3 (March 22, 2009)
 
 * minor enhancement

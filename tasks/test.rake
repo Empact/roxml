@@ -1,10 +1,13 @@
 # We need to override hoe's test task in order to support separate REXML & LibXML testing
 require  File.join(File.dirname(__FILE__), '../vendor/override_rake_task/lib/override_rake_task')
 
-Rake::TestTask.new(:bugs) do |t|
-  t.libs << 'test'
-  t.test_files = FileList['test/bugs/*_bugs.rb']
-  t.verbose = true
+
+
+require 'rake/testtask'
+Rake::TestTask.new(:bugs) do |test|
+  test.libs << 'lib' << 'test'
+  test.pattern = 'test/bugs/*_bugs.rb'
+  test.verbose = true
 end
 
 remove_task :test
@@ -15,7 +18,7 @@ task :test do
   end
   require 'lib/roxml'
   require 'rake/runtest'
-  Rake.run_tests $hoe.test_globs
+  Rake.run_tests 'test/unit/*_test.rb'
 end
 
 namespace :test do
@@ -37,6 +40,6 @@ namespace :test do
 
   desc "Runs tests under RCOV"
   task :rcov do
-    system "rcov -T --no-html -x '^/'  #{FileList[$hoe.test_globs]}"
+    system "rcov -T --no-html -x '^/'  #{FileList['test/unit/*_test.rb']}"
   end
 end

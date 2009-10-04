@@ -191,7 +191,7 @@ module ROXML
 
     def add(dest, value)
       if cdata?
-        dest.child_add(XML::Node.new_cdata(value.to_s))
+        dest.add_child(XML::Node.new_cdata(value.to_s))
       else
         dest.content = value.to_s
       end
@@ -212,7 +212,7 @@ module ROXML
     # the value provided.
     def write_xml(xml, value)
       value.each_pair do |k, v|
-        node = xml.child_add(XML::Node.new(hash.wrapper))
+        node = xml.add_child(XML::Node.new(hash.wrapper))
         @key.update_xml(node, k)
         @value.update_xml(node, v)
       end
@@ -265,14 +265,14 @@ module ROXML
     def write_xml(xml, value)
       if array?
         value.each do |v|
-          xml.child_add(v.to_xml(name))
+          xml.add_child(v.to_xml(name))
         end
       elsif value.is_a?(ROXML)
-        xml.child_add(value.to_xml(name))
+        xml.add_child(value.to_xml(name))
       else
         node = XML::Node.new(name)
         node.content = value.to_xml
-        xml.child_add(node)
+        xml.add_child(node)
       end
     end
 

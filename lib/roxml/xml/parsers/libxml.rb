@@ -24,13 +24,13 @@ module ROXML
 
     private
       def namespaced(xpath)
-        xpath.between('/') do |component|
+        xpath.split('/').map do |component|
           if component =~ /\w+/ && !component.include?(':') && !component.starts_with?('@')
             in_default_namespace(component)
           else
             component
           end
-        end
+        end.join('/')
       end
 
       def in_default_namespace(name)

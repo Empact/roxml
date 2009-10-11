@@ -19,6 +19,7 @@ module ROXML
         end
 
         def parse_file(path) #:nodoc:
+          path = path.sub('file:', '') if path.starts_with?('file:')
           parse(open(path))
         end
 

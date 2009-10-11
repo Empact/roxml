@@ -29,6 +29,14 @@ module ROXML
       end
     end
 
+    class Document
+      def save(path)
+        open(path, 'w') do |file|
+          file << serialize
+        end
+      end
+    end
+
     module NodeExtensions
       def search(xpath)
         super("./#{xpath}")

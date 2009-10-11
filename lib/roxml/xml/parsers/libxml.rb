@@ -49,6 +49,8 @@ module ROXML
           new_without_entity_escaping(name, content && CGI.escapeHTML(content), namespace)
         end
         alias_method_chain :new, :entity_escaping
+
+        alias :create :new
       end
 
       def add_child(child)

@@ -47,16 +47,13 @@ module ROXML
         def from(xml)
           Nokogiri::XML(xml)
         end
-        
-        def new(name, document = Document.new)
-          super
+
+        def create(name)
+          new(name, Document.new)
         end
       end
       include NodeExtensions
-
-      def remove!
-        remove
-      end
+      alias :remove! :remove
     end
   end
 end

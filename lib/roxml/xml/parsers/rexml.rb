@@ -15,6 +15,8 @@ module ROXML
         def new_cdata(content)
           REXML::CData.new(content)
         end
+        
+        alias :create :new
       end
 
       alias_attribute :content, :text

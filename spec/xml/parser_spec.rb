@@ -11,7 +11,7 @@ describe ROXML::XML::Parser do
   end
 
   it "should escape invalid characters on output to text node" do
-    node = ROXML::XML::Node.new("entities")
+    node = ROXML::XML::Node.create("entities")
     node.content = " < > ' \" & "
     if ROXML::XML_PARSER == 'libxml'
       node.to_s.should == "<entities> &lt; &gt; ' \" &amp; </entities>"
@@ -21,7 +21,7 @@ describe ROXML::XML::Parser do
   end
 
   it "should esape invalid characters for attribute name" do
-    node = ROXML::XML::Node.new("attr_holder")
+    node = ROXML::XML::Node.create("attr_holder")
     node.attributes["entities"] = "\"'<>&"
     if ROXML::XML_PARSER == 'libxml'
       node.to_s.should == %{<attr_holder entities="&quot;'&lt;&gt;&amp;"/>}

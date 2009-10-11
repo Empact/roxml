@@ -90,7 +90,7 @@ module ROXML
       if child = xml.children.find {|c| c.name == wrapper }
        return child
       end
-      xml.add_child(XML::Node.new(wrapper.to_s))
+      xml.add_child(XML::Node.create(wrapper.to_s))
     end
 
     def nodes_in(xml)
@@ -154,10 +154,10 @@ module ROXML
         xml.name = value
       elsif array?
         value.each do |v|
-          add(xml.add_child(XML::Node.new(name)), v)
+          add(xml.add_child(XML::Node.create(name)), v)
         end
       else
-        add(xml.add_child(XML::Node.new(name)), value)
+        add(xml.add_child(XML::Node.create(name)), value)
       end
     end
 
@@ -212,7 +212,7 @@ module ROXML
     # the value provided.
     def write_xml(xml, value)
       value.each_pair do |k, v|
-        node = xml.add_child(XML::Node.new(hash.wrapper))
+        node = xml.add_child(XML::Node.create(hash.wrapper))
         @key.update_xml(node, k)
         @value.update_xml(node, v)
       end
@@ -270,7 +270,7 @@ module ROXML
       elsif value.is_a?(ROXML)
         xml.add_child(value.to_xml(name))
       else
-        node = XML::Node.new(name)
+        node = XML::Node.create(name)
         node.content = value.to_xml
         xml.add_child(node)
       end

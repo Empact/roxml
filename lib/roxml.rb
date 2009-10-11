@@ -22,7 +22,7 @@ module ROXML # :nodoc:
   module InstanceMethods # :nodoc:
     # Returns a LibXML::XML::Node or a REXML::Element representing this object
     def to_xml(name = self.class.tag_name)
-      returning XML::Node.new(name.to_s) do |root|
+      XML::Node.new(name.to_s).tap do |root|
         self.class.roxml_attrs.each do |attr|
           ref = attr.to_ref(self)
           value = ref.to_xml
@@ -393,7 +393,7 @@ module ROXML # :nodoc:
       def xml_attr(*syms, &block)
         opts = syms.extract_options!
         syms.map do |sym|
-          returning Definition.new(sym, opts, &block) do |attr|
+          Definition.new(sym, opts, &block).tap do |attr|
             if roxml_attrs.map(&:accessor).include? attr.accessor
               raise "Accessor #{attr.accessor} is already defined as XML accessor in class #{self.name}"
             end
@@ -493,7 +493,7 @@ module ROXML # :nodoc:
       def from_xml(data, *initialization_args)
         xml = XML::Node.from(data)
 
-        returning new(*initialization_args) do |inst|
+        new(*initialization_args).tap do |inst|
           roxml_attrs.each do |attr|
             value = attr.to_ref(inst).value_in(xml)
             inst.respond_to?(attr.setter) \

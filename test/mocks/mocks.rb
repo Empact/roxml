@@ -247,7 +247,7 @@ class Person
   xml_accessor :name, :from => :content, :else => 'Unknown'
 
   def self.blank
-    returning new do |instance|
+    new.tap do |instance|
       instance.age = 21
       instance.name = 'Unknown'
     end

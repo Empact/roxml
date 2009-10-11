@@ -174,7 +174,7 @@ module ROXML
     def self.block_shorthands
       # dynamically load these shorthands at class definition time, but
       # only if they're already availbable
-      returning CORE_BLOCK_SHORTHANDS do |blocks|
+      CORE_BLOCK_SHORTHANDS.tap do |blocks|
         blocks.reverse_merge!(BigDecimal => lambda do |val|
           all(val) do |v|
             BigDecimal.new(v) unless v.blank?

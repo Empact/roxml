@@ -48,6 +48,10 @@ module ROXML
           Nokogiri::XML(xml)
         end
 
+        def new_cdata(content)
+          Nokogiri::XML::CDATA.new(Document.new, content)
+        end
+
         def create(name)
           new(name, Document.new)
         end

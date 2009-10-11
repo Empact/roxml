@@ -27,13 +27,21 @@ module ROXML
         end
       end
     end
-    
+
+    module NodeExtensions
+      def search(xpath)
+        super("./#{xpath}")
+      end
+    end
+
     class Element
+      include NodeExtensions
+
       def empty?
         children.empty?
       end
     end
-    
+
     class Node
       class << self
         def from(xml)
@@ -44,7 +52,8 @@ module ROXML
           super
         end
       end
-      
+      include NodeExtensions
+
       def remove!
         remove
       end

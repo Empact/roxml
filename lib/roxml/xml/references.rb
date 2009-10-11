@@ -62,7 +62,7 @@ module ROXML
 
     def apply_blocks(val)
       begin
-        blocks.apply_to(val)
+        blocks.inject(val) {|val, block| block.call(val) }
       rescue Exception => ex
         raise ex, "#{accessor}: #{ex.message}"
       end

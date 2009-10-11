@@ -29,11 +29,7 @@ module ROXML
     end
 
     def xpath_name
-      if !opts.name_explicit? && namespace = @instance.class.roxml_namespace
-        "#{namespace}:#{name}"
-      else
-        name
-      end
+      opts.name_explicit? ? name : namespacify(name)
     end
 
     def value_in(xml)
@@ -56,8 +52,16 @@ module ROXML
       end
     end
 
+    def namespacify(what)
+      if what.present? && namespace = @instance.class.roxml_namespace
+        "#{namespace}:#{what}"
+      else
+        what
+      end
+    end
+
     def wrapper
-      conventionize(opts.wrapper)
+      namespacify(conventionize(opts.wrapper))
     end
 
     def apply_blocks(val)
@@ -82,7 +86,7 @@ module ROXML
     end
 
     def auto_xpath
-      "#{conventionize(opts.name.pluralize)}/#{xpath_name}" if array?
+      "#{namespacify(conventionize(opts.name.pluralize))}/#{xpath_name}" if array?
     end
 
     def wrap(xml)

@@ -23,7 +23,7 @@ module ROXML
         end
 
         def parse_io(stream) #:nodoc:
-          parse(path)
+          parse(stream)
         end
       end
     end

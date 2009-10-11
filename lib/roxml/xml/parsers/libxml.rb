@@ -10,15 +10,11 @@ module ROXML
 
     module NamespacedSearch
       def search(xpath)
-        begin
-          if namespaces.default && !xpath.include?(':')
-            find(namespaced(xpath),
-                 in_default_namespace(namespaces.default.href))
-          else
-            find(xpath)
-          end
-        rescue Exception => ex
-          raise ex, xpath
+        if namespaces.default && !xpath.include?(':')
+          find(namespaced(xpath),
+               in_default_namespace(namespaces.default.href))
+        else
+          find(xpath)
         end
       end
 

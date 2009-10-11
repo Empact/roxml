@@ -24,11 +24,7 @@ module ROXML
       alias_attribute :content, :text
 
       def search(xpath)
-        begin
-          REXML::XPath.match(self, xpath)
-        rescue Exception => ex
-          raise ex, xpath
-        end
+        REXML::XPath.match(self, xpath)
       end
 
       def add_child(element)

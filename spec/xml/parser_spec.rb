@@ -13,20 +13,26 @@ describe ROXML::XML::Parser do
   it "should escape invalid characters on output to text node" do
     node = ROXML::XML::Node.create("entities")
     node.content = " < > ' \" & "
-    if ROXML::XML_PARSER == 'libxml'
+    case ROXML::XML_PARSER
+    when 'libxml', 'nokogiri'
       node.to_s.should == "<entities> &lt; &gt; ' \" &amp; </entities>"
-    else
+    when 'rexml'
       node.to_s.should == "<entities> &lt; &gt; &apos; &quot; &amp; </entities>"
+    else
+      raise "Unrecognized Parser"
     end
   end
 
   it "should esape invalid characters for attribute name" do
     node = ROXML::XML::Node.create("attr_holder")
     node.attributes["entities"] = "\"'<>&"
-    if ROXML::XML_PARSER == 'libxml'
+    case ROXML::XML_PARSER
+    when 'libxml', 'nokogiri'
       node.to_s.should == %{<attr_holder entities="&quot;'&lt;&gt;&amp;"/>}
-    else
+    when 'rexml'
       node.to_s.should == %{<attr_holder entities='&quot;&apos;&lt;&gt;&amp;'/>}
+    else
+      raise "Unrecognized Parser"
     end
   end
 end

@@ -32,6 +32,10 @@ module ROXML
       def search(xpath)
         super("./#{xpath}")
       end
+      
+      def attributes
+        self
+      end
     end
 
     class Element

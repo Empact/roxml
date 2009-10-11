@@ -1,9 +1,5 @@
 require 'rake'
 
-module Enumerable
-  undef_method(:one?)
-end if [].respond_to?(:one?)
-
 ENV['RUBY_FLAGS'] = '-W1'
 
 require File.expand_path(File.dirname(__FILE__) + '/lib/roxml')

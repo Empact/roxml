@@ -17,7 +17,7 @@ def fixture_path(name)
 end
 
 def to_xml_test(*names)
-  names = names.first if names.one? && names.first.is_a?(Hash)
+  names = names.first if names.size == 1 && names.first.is_a?(Hash)
   names.each do |name, xml_name|
     xml_name ||= name
 

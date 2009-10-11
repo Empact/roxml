@@ -197,7 +197,7 @@ module ROXML
 
     def collect_blocks(block, as)
       if as.is_a?(Array)
-        unless as.one? || as.empty?
+        if as.size > 1
           raise ArgumentError, "multiple :as types (#{as.map(&:inspect).join(', ')}) is not supported.  Use a block if you want more complicated behavior."
         end
 

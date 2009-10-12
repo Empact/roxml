@@ -11,7 +11,9 @@ $LOAD_PATH.unshift(LOAD_PATH) unless
   $LOAD_PATH.include?(LOAD_PATH) || $LOAD_PATH.include?(File.expand_path(LOAD_PATH))
 require 'roxml'
 
-require File.join(File.dirname(__FILE__), 'shared_specs')
+if defined?(Spec)
+  require File.join(File.dirname(__FILE__), 'shared_specs')
+end
 
 def example(name)
   DIR.join("examples/#{name}.rb")

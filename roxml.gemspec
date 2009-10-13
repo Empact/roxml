@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{roxml}
-  s.version = "2.5.3"
+  s.version = "2.5.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Woosley", "Zak Mandhro", "Anders Engstrom", "Russ Olsen"]
-  s.date = %q{2009-10-04}
+  s.date = %q{2009-10-12}
   s.description = %q{ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML.
 Using simple annotations, it enables Ruby classes to be mapped to XML. ROXML takes care
 of the marshalling and unmarshalling of mapped attributes so that developers can focus on
@@ -19,7 +19,6 @@ RESTful applications, Web Services, and XML-RPC.
   s.email = %q{ben.woosley@gmail.com}
   s.extra_rdoc_files = [
     "History.txt",
-     "Manifest.txt",
      "README.rdoc"
   ]
   s.files = [
@@ -27,18 +26,17 @@ RESTful applications, Web Services, and XML-RPC.
      ".gitmodules",
      "History.txt",
      "MIT-LICENSE",
-     "Manifest.txt",
      "README.rdoc",
      "Rakefile",
      "TODO",
      "VERSION",
      "config/website.yml",
-     "examples/active_record.rb",
      "examples/amazon.rb",
      "examples/current_weather.rb",
      "examples/dashed_elements.rb",
      "examples/library.rb",
      "examples/posts.rb",
+     "examples/rails.rb",
      "examples/twitter.rb",
      "examples/xml/active_record.xml",
      "examples/xml/amazon.xml",
@@ -48,13 +46,6 @@ RESTful applications, Web Services, and XML-RPC.
      "examples/xml/twitter.xml",
      "lib/roxml.rb",
      "lib/roxml/definition.rb",
-     "lib/roxml/extensions.rb",
-     "lib/roxml/extensions/array.rb",
-     "lib/roxml/extensions/array/conversions.rb",
-     "lib/roxml/extensions/deprecation.rb",
-     "lib/roxml/extensions/string.rb",
-     "lib/roxml/extensions/string/conversions.rb",
-     "lib/roxml/extensions/string/iterators.rb",
      "lib/roxml/hash_definition.rb",
      "lib/roxml/xml.rb",
      "lib/roxml/xml/parsers/libxml.rb",
@@ -110,6 +101,7 @@ RESTful applications, Web Services, and XML-RPC.
      "test/fixtures/person_with_mothers.xml",
      "test/mocks/dictionaries.rb",
      "test/mocks/mocks.rb",
+     "test/support/fixtures.rb",
      "test/test_helper.rb",
      "test/unit/definition_test.rb",
      "test/unit/deprecations_test.rb",
@@ -149,6 +141,7 @@ RESTful applications, Web Services, and XML-RPC.
      "test/bugs/rexml_bugs.rb",
      "test/mocks/dictionaries.rb",
      "test/mocks/mocks.rb",
+     "test/support/fixtures.rb",
      "test/test_helper.rb",
      "test/unit/definition_test.rb",
      "test/unit/deprecations_test.rb",
@@ -164,12 +157,12 @@ RESTful applications, Web Services, and XML-RPC.
      "test/unit/xml_object_test.rb",
      "test/unit/xml_required_test.rb",
      "test/unit/xml_text_test.rb",
-     "examples/active_record.rb",
      "examples/amazon.rb",
      "examples/current_weather.rb",
      "examples/dashed_elements.rb",
      "examples/library.rb",
      "examples/posts.rb",
+     "examples/rails.rb",
      "examples/twitter.rb"
   ]
 

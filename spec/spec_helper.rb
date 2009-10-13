@@ -2,10 +2,7 @@ require 'rubygems'
 require 'pathname'
 
 DIR = Pathname.new(__FILE__ + '../..').expand_path.dirname
-LOAD_PATH = DIR.join('lib').to_s
-$LOAD_PATH.unshift(LOAD_PATH) unless
-  $LOAD_PATH.include?(LOAD_PATH) || $LOAD_PATH.include?(File.expand_path(LOAD_PATH))
-require 'roxml'
+require 'lib/roxml'
 
 if defined?(Spec)
   require File.join(File.dirname(__FILE__), 'shared_specs')

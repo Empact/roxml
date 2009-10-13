@@ -2,18 +2,7 @@ require 'rubygems'
 require 'active_support/test_case'
 require 'test/mocks/mocks'
 require 'test/mocks/dictionaries'
-
-def fixture(name)
-  File.read(fixture_path(name))
-end
-
-def xml_fixture(name)
-  ROXML::XML::Parser.parse_file(fixture_path(name)).root
-end
-
-def fixture_path(name)
-  "test/fixtures/#{name}.xml"
-end
+require 'test/support/fixtures'
 
 def to_xml_test(*names)
   names = names.first if names.size == 1 && names.first.is_a?(Hash)

@@ -2,8 +2,9 @@ $LOAD_PATH.unshift(File.dirname(__FILE__)) unless
   $LOAD_PATH.include?(File.dirname(__FILE__)) || $LOAD_PATH.include?(File.expand_path(File.dirname(__FILE__)))
 
 require 'uri'
+require 'active_support'
 
-%w(extensions definition xml).each do |file|
+%w(definition xml).each do |file|
   require File.join('roxml', file)
 end
 

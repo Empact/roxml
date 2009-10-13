@@ -51,7 +51,7 @@
 
 * major enhancements
 
-   * support for mapping ActiveRecord classes.  See examples/active_record.rb.
+   * support for mapping ActiveRecord classes.  See examples/rails.rb.
    * .from_xml will now use the setter for the declared variable, if one is available,
      rather than directly setting the instance variable
    * All declaration type arguments are now supported via the :as parameter, e.g. :as => [MyType].  Other uses are deprecated.

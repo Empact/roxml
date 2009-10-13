@@ -1,5 +1,5 @@
 require 'spec/spec_helper'
-require example('amazon')
+require 'examples/amazon'
 
 describe PITA::ItemSearchResponse do
   before do

@@ -1,5 +1,5 @@
 require 'spec/spec_helper'
-require example('current_weather')
+require 'examples/current_weather'
 
 describe Weather do
   before do

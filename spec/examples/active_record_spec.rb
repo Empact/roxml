@@ -1,5 +1,5 @@
 require 'spec/spec_helper'
-require example('active_record')
+require 'examples/rails'
 
 describe ROXML, "under ActiveRecord" do
   before do

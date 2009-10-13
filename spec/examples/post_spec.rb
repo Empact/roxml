@@ -1,5 +1,5 @@
 require 'spec/spec_helper'
-require example('posts')
+require 'examples/posts'
 
 describe Post do
   before do

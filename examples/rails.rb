@@ -3,7 +3,7 @@ require 'spec/spec_helper'
 require 'sqlite3'
 require 'activerecord'
 
-DB_PATH = 'spec/examples/active_record.sqlite3'
+DB_PATH = 'spec/examples/rails.sqlite3'
 ActiveRecord::Base.establish_connection(
   :adapter  => 'sqlite3',
   :database => DB_PATH

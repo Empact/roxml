@@ -1,5 +1,5 @@
 require 'spec/spec_helper'
-require example('twitter')
+require 'examples/twitter'
 
 describe Statuses do
   describe Status do

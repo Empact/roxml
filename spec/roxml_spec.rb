@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/spec_helper.rb'
+require 'spec/spec_helper'
 
 describe ROXML, "#from_xml" do
   describe "from_xml call", :shared => true do

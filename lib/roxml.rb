@@ -9,7 +9,7 @@ require 'active_support'
 end
 
 module ROXML # :nodoc:
-  VERSION = '2.5.3'
+  VERSION = '2.5.4'
 
   def self.included(base) # :nodoc:
     base.class_eval do

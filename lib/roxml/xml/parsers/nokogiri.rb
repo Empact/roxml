@@ -57,10 +57,6 @@ module ROXML
 
     class Node
       class << self
-        def from(xml)
-          Nokogiri::XML(xml)
-        end
-
         def new_cdata(content)
           Nokogiri::XML::CDATA.new(Document.new, content)
         end

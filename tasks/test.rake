@@ -7,7 +7,6 @@ end
 
 desc "Test ROXML using the default parser selection behavior"
 task :test do
-  require 'lib/roxml'
   require 'rake/runtest'
   Rake.run_tests 'test/unit/*_test.rb'
 end

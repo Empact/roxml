@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'test_helper')
+require 'test/test_helper'
 
 class RexmlBugs < ActiveSupport::TestCase
   def test_that_some_illegal_chars_are_parsed_without_complaint

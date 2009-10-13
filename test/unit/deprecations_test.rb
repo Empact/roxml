@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'test_helper')
+require 'test/test_helper'
 
 class TestDeprecation < ActiveSupport::TestCase
   def test_as_array_not_deprecated

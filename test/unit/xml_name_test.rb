@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'test_helper')
+require 'test/test_helper'
 
 #      Parent        |    Child
 #  :from  | no :from |

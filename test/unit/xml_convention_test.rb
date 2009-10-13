@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'test_helper')
+require 'test/test_helper'
 
 XML_CAMELLOWER = %{
   <bookCase name="Jonas' Books">

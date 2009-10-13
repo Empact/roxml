@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'test_helper')
+require 'test/test_helper'
 
 class TestHashToXml < ActiveSupport::TestCase
   to_xml_test :dictionary_of_attrs,
@@ -33,7 +33,7 @@ class TestToXmlWithDefaults < ActiveSupport::TestCase
     dict = Person.from_xml(fixture(:nameless_ageless_youth))
 
     xml = '<person age="21">Unknown</person>'
-    assert_equal ROXML::XML::Parser.parse(xml).root, dict.to_xml
+    assert_equal ROXML::XML::Parser.parse(xml).root.to_s, dict.to_xml.to_s
   end
 end
 

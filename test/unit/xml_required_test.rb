@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'test_helper')
+require 'test/test_helper'
 
 class TestXMLRequired < ActiveSupport::TestCase
   def setup
@@ -70,7 +70,8 @@ BOOK
 
   def test_required_throws_on_attr_absence
     assert_raise ROXML::RequiredElementMissing do
-      BookWithRequired.from_xml(@book_missing_attr)    end
+      BookWithRequired.from_xml(@book_missing_attr)
+    end
   end
 
   def test_required_throws_on_text_absence

@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'test_helper')
+require 'test/test_helper'
 
 PROC_TRUE = proc {|val| val ? 'TRUE' : 'FALSE'}
 PROC_True = proc {|val| val ? 'True' : 'False'}

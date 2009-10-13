@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), '..', 'test_helper')
+require 'test/test_helper'
 
 class TestXMLText < ActiveSupport::TestCase
   # Test a simple mapping with no composition

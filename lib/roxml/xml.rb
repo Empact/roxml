@@ -12,7 +12,7 @@ WARNING
     end
   end
 
-  require File.join(File.dirname(__FILE__), 'xml/parsers', XML_PARSER)
+  require File.join('lib/roxml/xml/parsers', XML_PARSER)
 
   module XML
     class Node
@@ -37,4 +37,4 @@ WARNING
   end
 end
 
-require File.join(File.dirname(__FILE__), 'xml/references')
+require 'lib/roxml/xml/references'

@@ -1,4 +1,4 @@
-require File.join(File.dirname(__FILE__), 'hash_definition')
+require 'lib/roxml/hash_definition'
 
 class Module
   def bool_attr_reader(*attrs)

@@ -5,11 +5,7 @@ module ROXML
     Document = REXML::Document
     Node = REXML::Element
 
-    module Error
-      def self.reset_handler
-        # noop
-      end
-    end
+    module Error; end
     [REXML::ParseException, REXML::UndefinedNamespaceException, REXML::Validation::ValidationException].each do |exception|
       exception.send(:include, Error)
     end

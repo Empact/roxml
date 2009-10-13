@@ -1,19 +1,17 @@
 module ROXML
   unless const_defined? 'XML_PARSER'
-    preferred_parsers = %w[nokogiri libxml]
-    parser = preferred_parsers.shift
+    PREFERRED_PARSERS = %w[nokogiri libxml].freeze
+    parsers = PREFERRED_PARSERS.dup
     begin
-      require parser
-      XML_PARSER = parser # :nodoc:
+      require parsers.first
+      XML_PARSER = parsers.first # :nodoc:
     rescue LoadError
-      if preferred_parsers.present?
-        parser = preferred_parsers.shift
+      if parsers.size > 1
+        parsers.shift
         retry
       else
-        warn <<-WARNING
-ROXML is unable to locate libxml on your system, and so is falling back to
-the much slower REXML.  It's best to check this out and get libxml working if possible.
-WARNING
+        parsers_sentence = PREFERRED_PARSERS.to_sentence(:two_words_connector => ' or ', :last_word_connector => ', or ')
+        warn %{ROXML is unable to locate #{parsers_sentence} on your system, and so is falling back to the much slower REXML.  It's best to check this out and get #{parsers_sentence} working if possible.}
         XML_PARSER = 'rexml' # :nodoc:
       end
     end

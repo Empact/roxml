@@ -15,6 +15,7 @@
   * Default attrs ending in '_at' to DateTime.  This can be overriden via :as
   * Default attrs ending in '_on' to Date.  This can be overriden via :as
   * Don't require rubygems within the library
+  * Don't mess with the load path
 
 == 2.5.4 (October 4, 2009)
 

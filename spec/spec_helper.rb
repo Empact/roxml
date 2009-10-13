@@ -1,10 +1,6 @@
 require 'rubygems'
 require 'pathname'
 
-module ROXML
-  SILENCE_XML_NAME_WARNING = true
-end
-
 DIR = Pathname.new(__FILE__ + '../..').expand_path.dirname
 LOAD_PATH = DIR.join('lib').to_s
 $LOAD_PATH.unshift(LOAD_PATH) unless

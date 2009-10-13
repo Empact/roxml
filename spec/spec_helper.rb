@@ -5,7 +5,7 @@ DIR = Pathname.new(__FILE__ + '../..').expand_path.dirname
 require 'lib/roxml'
 
 if defined?(Spec)
-  require File.join(File.dirname(__FILE__), 'shared_specs')
+  require 'spec/shared_specs'
 end
 
 def example(name)

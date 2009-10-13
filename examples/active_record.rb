@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
-require File.expand_path(File.dirname(__FILE__) + '/../spec/spec_helper')
+require 'spec/spec_helper'
 require 'sqlite3'
 require 'activerecord'
 
-DB_PATH = File.join(File.dirname(__FILE__), 'active_record.sqlite3')
+DB_PATH = 'spec/examples/active_record.sqlite3'
 ActiveRecord::Base.establish_connection(
   :adapter  => 'sqlite3',
   :database => DB_PATH

@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec/spec_helper'
 require example('library')
 
 describe Library do
@@ -17,7 +17,7 @@ describe Library do
 
   describe "#to_xml" do
     it "should contain the expected information" do
-      @lib.to_xml.should == ROXML::XML::Parser.parse(%{<library><NAME><![CDATA[Favorite Books]]></NAME><novel ISBN='0201710897'><title>The PickAxe</title><description><![CDATA[Best Ruby book out there!]]></description><author>David Thomas, Andrew Hunt, Dave Thomas</author><publisher><name>Addison Wesley Longman, Inc.</name></publisher></novel></library>}).root
+      @lib.to_xml.to_s.should == ROXML::XML::Parser.parse(%{<library><NAME><![CDATA[Favorite Books]]></NAME><novel ISBN='0201710897'><title>The PickAxe</title><description><![CDATA[Best Ruby book out there!]]></description><author>David Thomas, Andrew Hunt, Dave Thomas</author><publisher><name>Addison Wesley Longman, Inc.</name></publisher></novel></library>}).root.to_s
     end
 
     context "when written to a file" do

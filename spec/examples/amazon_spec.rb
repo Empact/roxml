@@ -1,4 +1,4 @@
-require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
+require 'spec/spec_helper'
 require example('amazon')
 
 describe PITA::ItemSearchResponse do
@@ -21,6 +21,7 @@ describe PITA::ItemSearchResponse do
   describe "#items" do
     it "should return a collection of items" do
       @response.items.should be_an_instance_of(Array)
+      @response.items.size.should > 0
       @response.items.each {|item| item.should be_an_instance_of(PITA::Item) }
     end
 

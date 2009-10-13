@@ -6,11 +6,7 @@ module ROXML
     Element = Nokogiri::XML::Element
     Node = Nokogiri::XML::Node
 
-    module Error
-      def self.reset_handler
-        # noop
-      end
-    end
+    module Error; end
 
     class Parser
       class << self

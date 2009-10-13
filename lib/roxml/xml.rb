@@ -1,14 +1,16 @@
 module ROXML
   unless const_defined? 'XML_PARSER'
+    preferred_parsers = %w[nokogiri libxml]
+    parser = preferred_parsers.shift
     begin
-      require 'nokogiri'
-      XML_PARSER = 'nokogiri'
-    rescue
-      begin
-        require 'libxml'
-        XML_PARSER = 'libxml' # :nodoc:
-      rescue LoadError
-        warn <<WARNING
+      require parser
+      XML_PARSER = parser # :nodoc:
+    rescue LoadError
+      if preferred_parsers.present?
+        parser = preferred_parsers.shift
+        retry
+      else
+        warn <<-WARNING
 ROXML is unable to locate libxml on your system, and so is falling back to
 the much slower REXML.  It's best to check this out and get libxml working if possible.
 WARNING

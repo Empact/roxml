@@ -1,8 +1,3 @@
-# We need to override hoe's test task in order to support separate REXML & LibXML testing
-require  File.join(File.dirname(__FILE__), '../vendor/override_rake_task/lib/override_rake_task')
-
-
-
 require 'rake/testtask'
 Rake::TestTask.new(:bugs) do |test|
   test.libs << 'lib' << 'test'
@@ -10,7 +5,6 @@ Rake::TestTask.new(:bugs) do |test|
   test.verbose = true
 end
 
-remove_task :test
 desc "Test ROXML using the default parser selection behavior"
 task :test do
   require 'lib/roxml'

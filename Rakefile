@@ -2,8 +2,6 @@ require 'rake'
 
 ENV['RUBY_FLAGS'] = '-W1'
 
-require File.expand_path(File.dirname(__FILE__) + '/lib/roxml')
-
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
 require 'jeweler'

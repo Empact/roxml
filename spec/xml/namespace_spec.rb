@@ -85,7 +85,7 @@ describe ROXML, "with namespaces" do
 
       context "and an explicit :namespace" do
         it "should use the explicit namespace" do
-          @instance.default_namespace_with_namespaceless_from_and_namespace_false.should == 'explicit namespace node'
+          @instance.default_namespace_with_namespaceless_from_and_explicit_namespace.should == 'explicit namespace node'
         end
       end
     end
@@ -118,6 +118,7 @@ describe ROXML, "with namespaces" do
     before do
       @instance = DefaultNamespaceyObject.from_xml(%{
         <book xmlns:namespacey="http://www.aws.com/aws" xmlns:default_declared="http://www.aws.com/default" xmlns:explicit="http://www.aws.com/different">
+          <default_declared:default_namespace>default namespace node</default_declared:default_namespace>
           <namespacey:with_namespacey_from>namespacey node</namespacey:with_namespacey_from>
           <explicit:with_namespaceless_from>explicit namespace node</explicit:with_namespaceless_from>
           <with_namespaceless_from>namespaceless node</with_namespaceless_from>
@@ -150,12 +151,13 @@ describe ROXML, "with namespaces" do
     before do
       @instance = XmlDefaultNamespaceyObject.from_xml(%{
         <book xmlns="http://www.aws.com/xml_default" xmlns:namespacey="http://www.aws.com/aws" xmlns:default_declared="http://www.aws.com/default" xmlns:explicit="http://www.aws.com/different">
+          <default_namespace>default namespace node</default_namespace>
           <namespacey:with_namespacey_from>namespacey node</namespacey:with_namespacey_from>
           <explicit:with_namespaceless_from>explicit namespace node</explicit:with_namespaceless_from>
-          <with_namespaceless_from>namespaceless node</with_namespaceless_from>
-          <default_declared:with_namespaceless_from>default namespace node</default_declared:with_namespaceless_from>
+          <with_namespaceless_from xmlns="">namespaceless node</with_namespaceless_from>
+          <with_namespaceless_from>default namespace node</with_namespaceless_from>
           <explicit:default_and_explicit_namespace>explicit namespace node</explicit:default_and_explicit_namespace>
-          <default_namespace_with_namespace_false>namespaceless node</default_namespace_with_namespace_false>
+          <default_namespace_with_namespace_false xmlns="">namespaceless node</default_namespace_with_namespace_false>
         </book>
       })
     end

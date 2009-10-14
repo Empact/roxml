@@ -5,7 +5,7 @@ require 'lib/roxml/definition'
 require 'lib/roxml/xml'
 
 module ROXML # :nodoc:
-  VERSION = '2.5.4'
+  VERSION = '3.0.0'
 
   def self.included(base) # :nodoc:
     base.class_eval do

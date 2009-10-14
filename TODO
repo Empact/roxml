@@ -1,62 +1,39 @@
 Planned:
 
-v 3.0
- * remove deprecated functionality
-
- * Automatically use Date or DateTime for accessors ending in '_on' and '_at', respectively
-
- * Clarify API via seperation of concerns.  :as for Type, :from and :in for location,
-   All other options as named options, e.g. :cdata => true rather than :as => :cdata.
-   A few not so great examples...:
-
-     xml_reader :some_objce, MyObject
-     xml_reader :size, :attr, :as => Integer
-     xml_reader :count, :attr, :as => Integer
-
-   become:
-
-     xml_reader :some_object, :as => MyObject
-     xml_reader :count, :size, :as => Integer, :from => :attr
-
-   This will significantly simplify the internals and will also cleanly split
-   element type, location, name and options, for a more predictable API.
-
-   It also enables multiple declarations on a single call, ala attr_*
-
-     xml_reader :count, :size, :number, :as => Integer, :from => :attr
-
- * Consider class_inheritable_attribute rather than superclass.try stuff.
-
- * Do some benchmarking
-
 v 3.1
 
- * Back with http://xml-object.rubyforge.org/doc/ to minimize need for specifications?
+  * Add xml_namespaces to allow declaration of distinct prefx/url namespace pairs
 
- * Commandeer #parse to use opposite #from_xml, but in an unrooted, collection-friendly fashion,
+  * Consider class_inheritable_attribute rather than superclass.try stuff.
+
+  * Do some benchmarking
+
+  * Back with http://xml-object.rubyforge.org/doc/ to minimize need for specifications?
+
+  * Commandeer #parse to use opposite #from_xml, but in an unrooted, collection-friendly fashion,
    ala HappyMapper's parse
 
 v 3.x
 
- * :self => true for sending method_missing to this attribute?
+  * :self => true for sending method_missing to this attribute?
 
- * :attributes extensions ala HappyMapper?
+  * :attributes extensions ala HappyMapper?
 
- * Add xml_attrs helper to share :in declarations between several attributes. E.g.:
+  * Add xml_attrs helper to share :in declarations between several attributes. E.g.:
 
      xml_reader :count, :in => 'Attributes', :as => Integer
      xml_reader :something_else, :in => 'Attributes', :as => Date
 
-  becomes:
+    becomes:
 
     xml_attrs :in => 'Attributes' do |xml|
       xml.reader  :count, :as => Integer
       xml.reader  :something_else, :as => Date
     end
 
- * Ensure (perhaps optionally) that references are unambiguous. That is error/warn
+  * Ensure (perhaps optionally) that references are unambiguous. That is error/warn
    a singular specification has multiple possible node references
 
- * Use lazy evaluation to minimize parsing time for large files
+  * Use lazy evaluation to minimize parsing time for large files
 
 

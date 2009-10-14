@@ -1,4 +1,4 @@
-== 3.0 ???
+== 3.0 (October 14, 2009)
 
 * major enhancements
 

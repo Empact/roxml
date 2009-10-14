@@ -62,7 +62,7 @@ module ROXML # :nodoc:
       #
       #   xml_reader :default_namespace
       #   xml_reader :different_namespace, :from => 'different:namespace'
-      #   xml_reader :no_namespace, :from => ':no_namespace'
+      #   xml_reader :no_namespace, :from => 'no_namespace', :namespace => false
       #  end
       #
       # <aws:book xmlns:aws="http://www.aws.com/aws" xmlns:different="http://www.aws.com/different">
@@ -348,11 +348,11 @@ module ROXML # :nodoc:
       # as in the examples below.
       #
       # :text is equivalent to :from => accessor_name, and you should specify the
-      # actual node name if it differs, as in the case of :author below.
+      # actual node name (and, optionally, a namespace) if it differs, as in the case of :author below.
       #
       # Example:
       #  class Book
-      #    xml_reader :author, :from => 'Author
+      #    xml_reader :author, :from => 'Author'
       #    xml_accessor :description, :cdata => true
       #    xml_reader :title
       #  end
@@ -386,6 +386,7 @@ module ROXML # :nodoc:
       # [:frozen] If true, all results are frozen (using #freeze) at parse-time.
       # [:cdata] true for values which should be input from or output as cdata elements
       # [:to_xml] this proc is applied to the attributes value outputting the instance via #to_xml
+      # [:namespace] (false) disables or (string) overrides the default namespace declared with xml_namespace
       #
       def xml_attr(*syms, &block)
         opts = syms.extract_options!

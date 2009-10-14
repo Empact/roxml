@@ -15,7 +15,7 @@ module ROXML
   end
 
   class Definition # :nodoc:
-    attr_reader :name, :type, :wrapper, :hash, :blocks, :accessor, :to_xml, :attr_name
+    attr_reader :name, :type, :wrapper, :hash, :blocks, :accessor, :to_xml, :attr_name, :namespace
     bool_attr_reader :name_explicit, :array, :cdata, :required, :frozen
 
     def initialize(sym, opts = {}, &block)

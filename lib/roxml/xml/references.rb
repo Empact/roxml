@@ -53,8 +53,10 @@ module ROXML
     end
 
     def namespacify(what)
+      return "#{opts.namespace}:#{what}" if opts.namespace
+
       namespace = @instance.class.roxml_namespace || @default_namespace
-      if namespace && what.present? && !what.include?(':')
+      if namespace && what.present? && !what.include?(':') && (opts.namespace != false)
         "#{namespace}:#{what}"
       else
         what

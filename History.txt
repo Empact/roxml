@@ -2,7 +2,7 @@
 
 * major enhancements
 
-  * Add Nokogiri
+  * Add Nokogiri support
   * Remove previously deprecated functionality
   * Remove REXML support
   * Error on any unrecognized options

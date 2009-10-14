@@ -11,12 +11,15 @@ class Module
 end
 
 module ROXML
+  class ContradictoryNamespaces < StandardError
+  end
+
   class Definition # :nodoc:
     attr_reader :name, :type, :wrapper, :hash, :blocks, :accessor, :to_xml, :attr_name
     bool_attr_reader :name_explicit, :array, :cdata, :required, :frozen
 
     def initialize(sym, opts = {}, &block)
-      opts.assert_valid_keys(:from, :in, :as,
+      opts.assert_valid_keys(:from, :in, :as, :namespace,
                              :else, :required, :frozen, :cdata, :to_xml)
       @default = opts.delete(:else)
       @to_xml = opts.delete(:to_xml)
@@ -25,6 +28,7 @@ module ROXML
       @required = opts.delete(:required)
       @frozen = opts.delete(:frozen)
       @wrapper = opts.delete(:in)
+      @namespace = opts.delete(:namespace)
 
       @accessor = sym.to_s
       opts[:as] ||=
@@ -64,6 +68,7 @@ module ROXML
       if hash? && (hash.key.name? || hash.value.name?)
         @name = '*'
       end
+      raise ContradictoryNamespaces if @name.include?(':') && (@namespace.present? || @namespace == false)
 
       raise ArgumentError, "Can't specify both :else default and :required" if required? && @default
     end

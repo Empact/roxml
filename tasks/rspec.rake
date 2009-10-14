@@ -11,8 +11,8 @@ namespace :spec do
     desc "Spec ROXML under the #{parser} parser"
     Spec::Rake::SpecTask.new(parser) do |spec|
       spec.libs << 'lib' << 'spec' << 'examples'
-      spec.spec_opts = ['--options', "spec/spec.opts", "spec/support/#{parser}.rb"]
-      spec.spec_files = FileList['spec/**/*_spec.rb']
+      spec.spec_opts = ['--options=spec/spec.opts']
+      spec.spec_files = ["spec/support/#{parser}.rb"] + FileList['spec/**/*_spec.rb']
     end
   end
 end

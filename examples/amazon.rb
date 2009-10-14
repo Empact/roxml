@@ -15,7 +15,7 @@ module PITA
     xml_reader :manufacturer, :in => 'ItemAttributes'
     # this is the only xml_reader that exists in a different namespace, so it
     # must be explicitly specified
-    xml_reader :point, :from => 'georss:point'
+    xml_reader :point, :namespace => 'georss'
   end
 
   class ItemSearchResponse < Base

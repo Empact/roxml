@@ -6,10 +6,9 @@ For more information visit:
     http://empact.github.com/roxml/
     http://rubyforge.org/projects/roxml/
 
-Progress on this project is (more or less) tracked at:
+Please submit bugs here:
 
-    http://www.pivotaltracker.com/project/4109
-
+    http://github.com/Empact/roxml/issues
 
 =Quick Start Guide
 
@@ -94,6 +93,10 @@ Note: In the above example, _xml_name_ annotation tells ROXML to set the element
 name to "book" for mapping to XML. The default is XML element name is the class name in lowercase; "bookwithpublisher"
 in this case.
 
+=== Namespace Support
+
+Namespaces are supported via the xml_namespace declaration and the :from and :namespace attr options.  See spec/xml/namespace_spec.rb for usage.
+
 == Manipulation
 
 Extending the above examples, say you want to parse a book's page count and have it available as an Integer.
@@ -147,11 +150,11 @@ which may be used via _new_ construction as well as _from_xml_ construction.
 
 == Selecting a parser
 
-By default, ROXML will use LibXML if it is available, or otherwise REXML.  If you'd like to
+By default, ROXML will use Nokogiri if it is available, followed by LibXML or REXML.  If you'd like to
 explicitly require one or the other, you may do the following:
 
   module ROXML
-    XML_PARSER = 'libxml' # or 'rexml'
+    XML_PARSER = 'nokogiri' # or 'libxml' or 'rexml'
   end
   require 'roxml'
 

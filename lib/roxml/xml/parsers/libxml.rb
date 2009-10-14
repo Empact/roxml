@@ -10,9 +10,8 @@ module ROXML
 
     module NamespacedSearch
       def search(xpath)
-        if namespaces.default && !xpath.include?(':')
-          find(namespaced(xpath),
-               in_default_namespace(namespaces.default.href))
+        if namespaces.default
+          find(xpath, in_default_namespace(namespaces.default.href))
         else
           find(xpath)
         end
@@ -30,7 +29,7 @@ module ROXML
       end
 
       def in_default_namespace(name)
-        "roxmldefaultnamespace:#{name}"
+        "xmlns:#{name}"
       end
     end
 
@@ -54,7 +53,8 @@ module ROXML
       end
 
       def default_namespace
-        doc.namespaces.default.try(:prefix)
+        default = doc.namespaces.default
+        default.prefix || 'xmlns' if default
       end
 
       def add_child(child)

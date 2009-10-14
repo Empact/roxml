@@ -6,7 +6,7 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef # :nodoc:
-    delegate :required?, :array?, :blocks, :accessor, :default, :to => :opts
+    delegate :required?, :array?, :blocks, :accessor, :default, :wrapper, :to => :opts
 
     def initialize(opts, instance)
       @opts = opts
@@ -60,10 +60,6 @@ module ROXML
       end
     end
 
-    def wrapper
-      namespacify(conventionize(opts.wrapper))
-    end
-
     def apply_blocks(val)
       begin
         blocks.inject(val) {|val, block| block.call(val) }
@@ -82,7 +78,7 @@ module ROXML
     end
 
     def xpath
-      wrapper ? "#{wrapper}/#{xpath_name}" : xpath_name.to_s
+      opts.wrapper ? "#{opts.wrapper}/#{xpath_name}" : xpath_name.to_s
     end
 
     def auto_xpath

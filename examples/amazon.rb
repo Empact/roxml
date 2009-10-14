@@ -7,21 +7,20 @@ module PITA
   class Base
     include ROXML
     xml_convention :camelcase
-    xml_namespace :xmlns
   end
 
   class Item < Base
-    xml_reader :asin, :from => 'xmlns:ASIN'
-    xml_reader :detail_page_url, :from => 'xmlns:DetailPageURL'
-    xml_reader :manufacturer, :in => 'xmlns:ItemAttributes'
+    xml_reader :asin, :from => 'ASIN'
+    xml_reader :detail_page_url, :from => 'DetailPageURL'
+    xml_reader :manufacturer, :in => 'ItemAttributes'
     # this is the only xml_reader that exists in a different namespace, so it
     # must be explicitly specified
     xml_reader :point, :from => 'georss:point'
   end
 
   class ItemSearchResponse < Base
-    xml_reader :total_results, :as => Integer, :in => 'xmlns:Items'
-    xml_reader :total_pages, :as => Integer, :in => 'xmlns:Items'
+    xml_reader :total_results, :as => Integer, :in => 'Items'
+    xml_reader :total_pages, :as => Integer, :in => 'Items'
     xml_reader :items, :as => [Item]
   end
 end

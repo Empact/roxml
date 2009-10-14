@@ -37,9 +37,13 @@ module ROXML
       def search(xpath)
         super("./#{xpath}")
       end
-      
+
       def attributes
         self
+      end
+
+      def default_namespace
+        'xmlns' if document.root.namespaces['xmlns']
       end
     end
 

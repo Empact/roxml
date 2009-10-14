@@ -29,7 +29,7 @@ module ROXML
     end
 
     def xpath_name
-      opts.name_explicit? ? name : namespacify(name)
+      namespacify(name)
     end
 
     def value_in(xml)
@@ -53,7 +53,8 @@ module ROXML
     end
 
     def namespacify(what)
-      if what.present? && namespace = @instance.class.roxml_namespace
+      namespace = @instance.class.roxml_namespace || @default_namespace
+      if namespace && what.present? && !what.include?(':')
         "#{namespace}:#{what}"
       else
         what
@@ -78,7 +79,7 @@ module ROXML
     end
 
     def xpath
-      opts.wrapper ? "#{opts.wrapper}/#{xpath_name}" : xpath_name.to_s
+      opts.wrapper ? "#{namespacify(opts.wrapper)}/#{xpath_name}" : xpath_name.to_s
     end
 
     def auto_xpath
@@ -94,6 +95,7 @@ module ROXML
     end
 
     def nodes_in(xml)
+      @default_namespace = xml.default_namespace
       vals = xml.search(xpath)
 
       if (opts.hash? || opts.array?) && vals.empty? && !wrapper && auto_xpath

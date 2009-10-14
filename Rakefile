@@ -33,6 +33,9 @@ end
 Dir['tasks/**/*.rake'].each { |t| load t }
 
 task :default => [:test, :spec]
+task :rexml => ['test:rexml', 'spec:rexml']
+task :libxml => ['test:libxml', 'spec:libxml']
+task :nokogiri => ['test:nokogiri', 'spec:nokogiri']
 
 # $hoe = Hoe.new('roxml', ROXML::VERSION) do |p|
 #   p.changes              = File.read("History.txt").split(/^==/)[1].strip

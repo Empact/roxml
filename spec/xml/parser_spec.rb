@@ -15,41 +15,12 @@ describe ROXML::XML::Parser do
   it "should escape invalid characters on output to text node" do
     node = ROXML::XML::Node.create("entities")
     node.content = " < > ' \" & "
-    case ROXML::XML_PARSER
-    when 'libxml', 'nokogiri'
-      node.to_s.should == "<entities> &lt; &gt; ' \" &amp; </entities>"
-    when 'rexml'
-      node.to_s.should == "<entities> &lt; &gt; &apos; &quot; &amp; </entities>"
-    else
-      raise "Unrecognized Parser"
-    end
+    node.to_s.should == "<entities> &lt; &gt; ' \" &amp; </entities>"
   end
 
   it "should esape invalid characters for attribute name" do
     node = ROXML::XML::Node.create("attr_holder")
     node.attributes["entities"] = "\"'<>&"
-    case ROXML::XML_PARSER
-    when 'libxml', 'nokogiri'
-      node.to_s.should == %{<attr_holder entities="&quot;'&lt;&gt;&amp;"/>}
-    when 'rexml'
-      node.to_s.should == %{<attr_holder entities='&quot;&apos;&lt;&gt;&amp;'/>}
-    else
-      raise "Unrecognized Parser"
-    end
-  end
-end
-
-describe ROXML::XML::Document do
-  describe "#save" do
-    context "with rexml parser" do
-      it "should defer to existing XMLDecl" do
-        if ROXML::XML_PARSER == 'rexml'
-          @doc = ROXML::XML::Document.new
-          @doc << REXML::XMLDecl.new('1.1')
-          @doc.save('spec/xml/decl_test.xml')
-          ROXML::XML::Parser.parse(File.read('spec/xml/decl_test.xml')).to_s.should == ROXML::XML::Parser.parse(%{<?xml version="1.1"?>}).to_s
-        end
-      end
-    end
+    node.to_s.should == %{<attr_holder entities="&quot;'&lt;&gt;&amp;"/>}
   end
 end

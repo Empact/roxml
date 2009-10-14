@@ -17,14 +17,6 @@ class TestDefaultXMLNamespaces < ActiveSupport::TestCase
     end
   end
 
-  def test_that_rexml_follows_nameless_default_namespace
-    require 'rexml/document'
-    xml = REXML::Document.new(
-      '<container xmlns="http://fakenamespace.org"><node>Yeah, content</node></container>')
-
-    assert_equal "Yeah, content", xml.root.get_elements('node').first.text
-  end
-
   def test_default_namespace_on_root_node_should_be_found
     require 'libxml'
     xml = LibXML::XML::Parser.string(

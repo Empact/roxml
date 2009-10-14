@@ -33,7 +33,7 @@ end
 Dir['tasks/**/*.rake'].each { |t| load t }
 
 task :default => [:test, :spec]
-task :rexml => ['test:rexml', 'spec:rexml']
+task :all => [:libxml, :nokogiri]
 task :libxml => ['test:libxml', 'spec:libxml']
 task :nokogiri => ['test:nokogiri', 'spec:nokogiri']
 

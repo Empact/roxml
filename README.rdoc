@@ -150,11 +150,11 @@ which may be used via _new_ construction as well as _from_xml_ construction.
 
 == Selecting a parser
 
-By default, ROXML will use Nokogiri if it is available, followed by LibXML or REXML.  If you'd like to
+By default, ROXML will use Nokogiri if it is available, followed by LibXML.  If you'd like to
 explicitly require one or the other, you may do the following:
 
   module ROXML
-    XML_PARSER = 'nokogiri' # or 'libxml' or 'rexml'
+    XML_PARSER = 'nokogiri' # or 'libxml'
   end
   require 'roxml'
 

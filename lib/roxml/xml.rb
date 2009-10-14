@@ -10,9 +10,7 @@ module ROXML
         parsers.shift
         retry
       else
-        parsers_sentence = PREFERRED_PARSERS.to_sentence(:two_words_connector => ' or ', :last_word_connector => ', or ')
-        warn %{ROXML is unable to locate #{parsers_sentence} on your system, and so is falling back to the much slower REXML.  It's best to check this out and get #{parsers_sentence} working if possible.}
-        XML_PARSER = 'rexml' # :nodoc:
+        raise "Could not load either nokogiri or libxml"
       end
     end
   end

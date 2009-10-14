@@ -17,7 +17,7 @@ module ROXML # :nodoc:
   end
 
   module InstanceMethods # :nodoc:
-    # Returns a LibXML::XML::Node or a REXML::Element representing this object
+    # Returns an XML object representing this object
     def to_xml(name = self.class.tag_name)
       XML::Node.create(name.to_s).tap do |root|
         self.class.roxml_attrs.each do |attr|

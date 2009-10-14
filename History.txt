@@ -2,7 +2,9 @@
 
 * major enhancements
 
+  * Add Nokogiri
   * Remove previously deprecated functionality
+  * Remove REXML support
   * Error on any unrecognized options
   * Normalize hash declaration syntax:
     * for :key => '@string', string is taken to be the :from argument

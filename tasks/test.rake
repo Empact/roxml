@@ -28,14 +28,6 @@ namespace :test do
     Rake::Task["test"].invoke
   end
 
-  desc "Test ROXML under the REXML parser"
-  task :rexml do
-    module ROXML
-      XML_PARSER = 'rexml'
-    end
-    Rake::Task["test"].invoke
-  end
-
   desc "Runs tests under RCOV"
   task :rcov do
     system "rcov -T --no-html -x '^/'  #{FileList['test/unit/*_test.rb']}"

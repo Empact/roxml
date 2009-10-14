@@ -7,7 +7,7 @@ Spec::Rake::SpecTask.new(:spec) do |spec|
 end
 
 namespace :spec do
-  [:rexml, :libxml, :nokogiri].each do |parser|
+  [:libxml, :nokogiri].each do |parser|
     desc "Spec ROXML under the #{parser} parser"
     Spec::Rake::SpecTask.new(parser) do |spec|
       spec.libs << 'lib' << 'spec' << 'examples'

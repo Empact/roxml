@@ -53,6 +53,10 @@ module ROXML
         alias :create :new
       end
 
+      def default_namespace
+        doc.namespaces.default.try(:prefix)
+      end
+
       def add_child(child)
         # libxml 1.1.3 changed child_add from returning child to returning self
         self << child

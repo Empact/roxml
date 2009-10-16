@@ -1,9 +1,5 @@
 require 'spec/spec_helper'
 
-class RoxmlObject
-  include ROXML
-end
-
 describe ROXML::Definition do
   describe "#name_explicit?" do
     it "should indicate whether from option is present" do

@@ -13,7 +13,11 @@ module ROXML
         if namespaces.default
           roxml_namespaces = {:xmlns => namespaces.default.href}.merge(roxml_namespaces)
         end
-        find(xpath, roxml_namespaces.map {|prefix, href| [prefix, href].join(':') })
+        if roxml_namespaces.present?
+          find(xpath, roxml_namespaces.map {|prefix, href| [prefix, href].join(':') })
+        else
+          find(xpath)
+        end
       end
 
     private

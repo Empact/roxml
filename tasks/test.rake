@@ -15,7 +15,7 @@ namespace :test do
   desc "Test ROXML under the Nokogiri parser"
   task :nokogiri do
     module ROXML
-      XML_PARSER = 'libxml'
+      XML_PARSER = 'nokogiri'
     end
     Rake::Task["test"].invoke
   end

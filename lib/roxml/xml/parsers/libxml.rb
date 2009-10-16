@@ -34,6 +34,11 @@ module ROXML
 
     class Document
       include NamespacedSearch
+      
+      def default_namespace
+        default = namespaces.default
+        default.prefix || 'xmlns' if default
+      end
 
     private
       delegate :namespaces, :to => :root
@@ -52,8 +57,7 @@ module ROXML
       end
 
       def default_namespace
-        default = doc.namespaces.default
-        default.prefix || 'xmlns' if default
+        doc.default_namespace
       end
 
       def add_child(child)

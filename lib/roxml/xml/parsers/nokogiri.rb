@@ -31,6 +31,10 @@ module ROXML
           file << serialize
         end
       end
+
+      def default_namespace
+        'xmlns' if root.namespaces['xmlns']
+      end
     end
 
     module NodeExtensions
@@ -44,7 +48,7 @@ module ROXML
       end
 
       def default_namespace
-        'xmlns' if document.root.namespaces['xmlns']
+        document.default_namespace
       end
     end
 

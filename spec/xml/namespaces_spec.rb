@@ -13,8 +13,7 @@ describe ROXML, "#xml_namespaces" do
    end
 
   before do
-     @xml = %{
-       <?xml version="1.0"?>
+     @xml = %{<?xml version="1.0"?>
        <inventory xmlns="http://alicesautosupply.example.com/" xmlns:bike="http://bobsbikes.example.com">
         <tire name="super slick racing tire" />
         <tire name="all weather tire" />

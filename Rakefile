@@ -29,6 +29,10 @@ EOF
   gem.add_development_dependency "sqlite3-ruby", '>= 1.2.4'
   gem.add_development_dependency "activerecord", '>= 2.2.2'
 end
+Jeweler::GemcutterTasks.new
+Jeweler::RubyforgeTasks.new do |rubyforge|
+  rubyforge.doc_task = "rdoc"
+end
 
 Dir['tasks/**/*.rake'].each { |t| load t }
 

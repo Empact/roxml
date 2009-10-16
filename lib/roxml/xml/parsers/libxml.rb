@@ -9,7 +9,7 @@ module ROXML
     Error = LibXML::XML::Error
 
     module NamespacedSearch
-      def search(xpath, roxml_namespaces)
+      def search(xpath, roxml_namespaces = {})
         if namespaces.default
           roxml_namespaces = {:xmlns => namespaces.default.href}.merge(roxml_namespaces)
         end

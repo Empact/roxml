@@ -13,8 +13,8 @@ module ROXML
       @instance = instance
     end
 
-    def to_xml
-      val = @instance.__send__(accessor)
+    def to_xml(instance)
+      val = instance.__send__(accessor)
       opts.to_xml.respond_to?(:call) ? opts.to_xml.call(val) : val
     end
 

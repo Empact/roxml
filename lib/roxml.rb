@@ -22,7 +22,7 @@ module ROXML # :nodoc:
       XML::Node.create(name.to_s).tap do |root|
         self.class.roxml_attrs.each do |attr|
           ref = attr.to_ref(self)
-          value = ref.to_xml
+          value = ref.to_xml(self)
           unless value.nil?
             ref.update_xml(root, value)
           end

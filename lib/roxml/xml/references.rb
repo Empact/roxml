@@ -108,8 +108,12 @@ module ROXML
       if vals.empty?
         raise RequiredElementMissing, "#{name} from #{xml} for #{accessor}" if required?
         default
+      elsif array?
+        vals.map do |val|
+          yield val
+        end
       else
-        yield(vals)
+        yield(vals.first)
       end
     end
   end
@@ -129,8 +133,8 @@ module ROXML
     end
 
     def fetch_value(xml)
-      nodes_in(xml) do |nodes|
-        nodes.first.value
+      nodes_in(xml) do |node|
+        node.value
       end
     end
 
@@ -181,14 +185,8 @@ module ROXML
           value
         end
       else
-        nodes_in(xml) do |nodes|
-          if array?
-            nodes.collect do |e|
-              e.content.strip
-            end
-          else
-            nodes.first.content
-          end
+        nodes_in(xml) do |node|
+          node.content.strip
         end
       end
     end
@@ -223,10 +221,8 @@ module ROXML
     end
 
     def fetch_value(xml)
-      nodes_in(xml) do |nodes|
-        nodes.collect do |e|
-          [@key.value_in(e), @value.value_in(e)]
-        end
+      nodes_in(xml) do |node|
+        [@key.value_in(node), @value.value_in(node)]
       end
     end
 
@@ -281,22 +277,12 @@ module ROXML
     end
 
     def fetch_value(xml)
-      nodes_in(xml) do |nodes|
-        unless array?
-          instantiate(nodes.first)
+      nodes_in(xml) do |node|
+        if type.respond_to? :from_xml
+          type.from_xml(node)
         else
-          nodes.collect do |e|
-            instantiate(e)
-          end
+          type.new(node)
         end
-      end
-    end
-
-    def instantiate(elem)
-      if type.respond_to? :from_xml
-        type.from_xml(elem)
-      else
-        type.new(elem)
       end
     end
   end

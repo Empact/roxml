@@ -74,6 +74,44 @@ module ROXML # :nodoc:
       def xml_namespace(namespace)
         @roxml_namespace = namespace.to_s
       end
+      
+      # Sets up a mapping of namespace prefixes to hrefs, to be used by this class.
+      # These namespace prefixes are independent of what appears in the xml, only
+      # the namespace hrefs themselves need to match
+      #
+      # Example:
+      #  class Tires
+      #    include ROXML
+      #
+      #    xml_namespaces \
+      #      :bobsbike => 'http://bobsbikes.example.com',
+      #      :alicesauto => 'http://alicesautosupply.example.com/'
+      #
+      #    xml_reader :bike_tires, :as => [], :from => '@name', :in => 'bobsbike:tire'
+      #    xml_reader :car_tires, :as => [], :from => '@name', :in => 'alicesauto:tire'
+      #  end
+      #
+      #  >> xml = %{
+      #    <?xml version="1.0"?>
+      #    <inventory xmlns="http://alicesautosupply.example.com/" xmlns:bike="http://bobsbikes.example.com">
+      #     <tire name="super slick racing tire" />
+      #     <tire name="all weather tire" />
+      #     <bike:tire name="skinny street" />
+      #    </inventory>
+      #  }
+      #  >> Tires.from_xml(xml).bike_tires
+      #  => ['skinny street']
+      #
+      def xml_namespaces(namespaces)
+        @roxml_namespaces = namespaces.inject({}) do |all, (prefix, href)|
+          all[prefix.to_s] = href.to_s
+          all
+        end
+      end
+
+      def roxml_namespaces # :nodoc:
+        @roxml_namespaces || {}
+      end
 
       # Most xml documents have a consistent naming convention, for example, the node and
       # and attribute names might appear in CamelCase. xml_convention enables you to adapt

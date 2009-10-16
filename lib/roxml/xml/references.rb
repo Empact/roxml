@@ -98,10 +98,10 @@ module ROXML
 
     def nodes_in(xml)
       @default_namespace = xml.default_namespace
-      vals = xml.search(xpath)
+      vals = xml.search(xpath, @instance.class.roxml_namespaces)
 
       if (opts.hash? || opts.array?) && vals.empty? && !wrapper && auto_xpath
-        vals = xml.search(auto_xpath)
+        vals = xml.search(auto_xpath, @instance.class.roxml_namespaces)
         @auto_vals = !vals.empty?
       end
 

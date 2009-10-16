@@ -9,27 +9,22 @@ module ROXML
     Error = LibXML::XML::Error
 
     module NamespacedSearch
-      def search(xpath)
+      def search(xpath, roxml_namespaces)
         if namespaces.default
-          find(xpath, in_default_namespace(namespaces.default.href))
-        else
-          find(xpath)
+          roxml_namespaces = {:xmlns => namespaces.default.href}.merge(roxml_namespaces)
         end
+        find(xpath, roxml_namespaces.map {|prefix, href| [prefix, href].join(':') })
       end
 
     private
       def namespaced(xpath)
         xpath.split('/').map do |component|
           if component =~ /\w+/ && !component.include?(':') && !component.starts_with?('@')
-            in_default_namespace(component)
+            "xmlns:#{component}"
           else
             component
           end
         end.join('/')
-      end
-
-      def in_default_namespace(name)
-        "xmlns:#{name}"
       end
     end
 

@@ -1,5 +1,9 @@
 == 3.1 (On Github)
 
+* major enhancements
+
+  * Add support for registering XML namespace prefixes via the xml_namespaces method
+
 * bug fix
 
   * References to arrays of attributes were only returning the first.  No more.

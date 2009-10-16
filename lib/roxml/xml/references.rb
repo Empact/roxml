@@ -88,6 +88,10 @@ module ROXML
       "#{namespacify(conventionize(opts.name.pluralize))}/#{xpath_name}" if array?
     end
 
+    def several?
+      array?
+    end
+
     def wrap(xml)
       return xml if !wrapper || xml.name == wrapper
       if child = xml.children.find {|c| c.name == wrapper }
@@ -100,7 +104,7 @@ module ROXML
       @default_namespace = xml.default_namespace
       vals = xml.search(xpath, @instance.class.roxml_namespaces)
 
-      if (opts.hash? || opts.array?) && vals.empty? && !wrapper && auto_xpath
+      if several? && vals.empty? && !wrapper && auto_xpath
         vals = xml.search(auto_xpath, @instance.class.roxml_namespaces)
         @auto_vals = !vals.empty?
       end
@@ -108,7 +112,7 @@ module ROXML
       if vals.empty?
         raise RequiredElementMissing, "#{name} from #{xml} for #{accessor}" if required?
         default
-      elsif array?
+      elsif several?
         vals.map do |val|
           yield val
         end
@@ -207,6 +211,10 @@ module ROXML
       super(opts, inst)
       @key = opts.hash.key.to_ref(inst)
       @value = opts.hash.value.to_ref(inst)
+    end
+
+    def several?
+      true
     end
 
   private

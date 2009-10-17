@@ -28,6 +28,11 @@ namespace :test do
     Rake::Task["test"].invoke
   end
 
+  task :load do
+    `ruby test/load_test.rb`
+    puts "Load Success!" if $?.success?
+  end
+
   desc "Runs tests under RCOV"
   task :rcov do
     system "rcov -T --no-html -x '^/'  #{FileList['test/unit/*_test.rb']}"

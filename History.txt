@@ -1,3 +1,9 @@
+== 3.1.1 (October 17, 2009)
+
+* bug fix
+
+  * Fix bad load paths
+
 == 3.1 (October 16, 2009)
 
 * major enhancements

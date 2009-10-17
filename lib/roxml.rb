@@ -1,8 +1,8 @@
 require 'uri'
 require 'active_support'
 
-require 'lib/roxml/definition'
-require 'lib/roxml/xml'
+require 'roxml/definition'
+require 'roxml/xml'
 
 module ROXML # :nodoc:
   VERSION = '3.1.0'

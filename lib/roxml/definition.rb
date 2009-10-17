@@ -1,4 +1,4 @@
-require 'lib/roxml/hash_definition'
+require 'roxml/hash_definition'
 
 class Module
   def bool_attr_reader(*attrs)

@@ -15,7 +15,7 @@ module ROXML
     end
   end
 
-  require File.join('lib/roxml/xml/parsers', XML_PARSER)
+  require File.join('roxml/xml/parsers', XML_PARSER)
 
   module XML
     class Node
@@ -40,4 +40,4 @@ module ROXML
   end
 end
 
-require 'lib/roxml/xml/references'
+require 'roxml/xml/references'

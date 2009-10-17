@@ -1,17 +1,14 @@
 module ROXML
+  PARSERS = %w[nokogiri libxml].freeze
   unless const_defined? 'XML_PARSER'
-    PREFERRED_PARSERS = %w[nokogiri libxml].freeze
-    parsers = PREFERRED_PARSERS.dup
+    parsers = PARSERS.dup
     begin
       require parsers.first
       XML_PARSER = parsers.first # :nodoc:
     rescue LoadError
-      if parsers.size > 1
-        parsers.shift
-        retry
-      else
-        raise "Could not load either nokogiri or libxml"
-      end
+      parsers.shift
+      retry unless parsers.empty?
+      raise "Could not load a parser. Tried #{PARSERS.to_sentence}"
     end
   end
 

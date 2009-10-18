@@ -54,6 +54,14 @@ describe ROXML::Definition do
     }).should == ["\"Wickard & Filburn\" >", " < McCulloch & Maryland?"]
   end
 
+  it "should unescape utf characters in xml" do
+    ROXML::Definition.new(:questions, :as => []).to_ref(RoxmlObject.new).value_in(%{
+      <xml>
+        <question>ROXML\342\204\242</question>
+      </xml>
+    }).should == ["ROXML™"]
+  end
+
   describe "attr name" do
     context "when ending with '_at'" do
       context "and without an :as argument" do

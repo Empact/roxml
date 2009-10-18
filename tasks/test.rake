@@ -1,10 +1,4 @@
 require 'rake/testtask'
-Rake::TestTask.new(:bugs) do |test|
-  test.libs << 'lib' << 'test'
-  test.pattern = 'test/bugs/*_bugs.rb'
-  test.verbose = true
-end
-
 desc "Test ROXML using the default parser selection behavior"
 task :test do
   require 'rake/runtest'

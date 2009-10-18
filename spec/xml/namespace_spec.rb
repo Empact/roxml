@@ -1,28 +1,11 @@
 require 'spec/spec_helper.rb'
 
 describe ROXML, "with namespaces" do
-  context "when an included namespace is not defined in the xml" do
-    context "where the missing namespace is the default" do
-      it "should raise"
 
-      context "but the namespace is declared in the body" do
-        it "should succeed"
-      end
     end
-    
-    context "where the missing namespace is included in a namespacey from" do
-      it "should raise"
 
-      context "but the namespace is declared in the body" do
-        it "should succeed"
-      end
     end
-    
-    context "where the missing namespace is included in an explicit :namespace" do
-      it "should raise"
 
-      context "but the namespace is declared in the body" do
-        it "should succeed"
       end
     end
   end

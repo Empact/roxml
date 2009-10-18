@@ -2,23 +2,22 @@ require 'rake/testtask'
 desc "Test ROXML using the default parser selection behavior"
 task :test do
   require 'rake/runtest'
+  $LOAD_PATH << 'lib'
   Rake.run_tests 'test/unit/*_test.rb'
 end
 
 namespace :test do
   desc "Test ROXML under the Nokogiri parser"
   task :nokogiri do
-    module ROXML
-      XML_PARSER = 'nokogiri'
-    end
+    $LOAD_PATH << 'spec'
+    require 'spec/support/nokogiri'
     Rake::Task["test"].invoke
   end
 
    desc "Test ROXML under the LibXML parser"
   task :libxml do
-    module ROXML
-      XML_PARSER = 'libxml'
-    end
+    $LOAD_PATH << 'spec'
+    require 'spec/support/libxml'
     Rake::Task["test"].invoke
   end
 

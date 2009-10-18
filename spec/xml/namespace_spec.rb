@@ -1,15 +1,61 @@
 require 'spec/spec_helper.rb'
 
 describe ROXML, "with namespaces" do
-
+  describe "for writing" do
+    before do
+      @xml = <<EOS
+    <?xml version="1.0" encoding="UTF-8"?>
+    <gronk:VApp name="My new vApp" status="1" href="https://vcloud.example.com/vapp/833" type="application/vnd.vmware.vcloud.vapp+xml" xmlns:vmw="http://foo.example.com" xmlns:gronk="http://gronk.example.com">
+      <gronk:NetworkConfig name="Network 1">
+        <vmw:FenceMode>allowInOut</vmw:FenceMode>
+        <vmw:Dhcp>true</vmw:Dhcp>
+        <gronk:errors>
+          <gronk:error>OhNo!</gronk:error>
+          <gronk:error>Another!</gronk:error>
+        </gronk:errors>
+      </gronk:NetworkConfig>
+      <foo />
+      <bar>
+        gronk
+      </bar>
+    </gronk:VApp>
+EOS
     end
 
+    class NetworkConfig
+      include ROXML
+      xml_namespace :gronk
+
+      xml_name 'NetworkConfig'
+      xml_reader    :name, :from => '@name'
+      xml_reader    :errors, :as => []
+      xml_accessor  :fence_mode, :from => 'vmw:FenceMode'
+      xml_accessor  :dhcp?, :from => 'vmw:Dhcp'
     end
 
+    class VApp
+      include ROXML
+      xml_namespace :gronk
+
+      xml_name "VApp"
+      xml_reader    :name,    :from => '@name'
+      xml_reader    :status,  :from => '@status'
+      xml_reader    :href,    :from => '@href'
+      xml_reader    :type,    :from => '@type'
+      xml_accessor  :foo,     :from => 'foo', :namespace => false
+      xml_accessor  :bar,     :from => 'bar', :namespace => false
+      xml_accessor  :network_configs, :as => [NetworkConfig], :namespace => :gronk
+    end
+
+    describe "#to_xml" do
+      it "should reproduce the input xml" do
+        output = ROXML::XML::Document.new
+        output.root = VApp.from_xml(@xml).to_xml
+        output.should == ROXML::XML::Parser.parse(@xml)
       end
     end
   end
-  
+
   describe "roxml namespacey declaration", :shared => true do
     context "with a namespacey :from" do
       context "and an explicit :namespace" do

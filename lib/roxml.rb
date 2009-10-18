@@ -13,6 +13,8 @@ module ROXML # :nodoc:
               ClassMethods::Declarations,
               ClassMethods::Operations
       include InstanceMethods
+
+      attr_accessor :roxml_references
     end
   end
 
@@ -21,8 +23,10 @@ module ROXML # :nodoc:
     def to_xml(params = {})
       params.reverse_merge!(:name => self.class.tag_name, :namespace => self.class.roxml_namespace)
       XML::Node.create([params[:namespace], params[:name]].compact.join(':')).tap do |root|
-        self.class.roxml_attrs.each do |attr|
-          ref = attr.to_ref(self)
+        refs = (self.roxml_references.present? \
+          ? self.roxml_references \
+          : self.class.roxml_attrs.map {|attr| attr.to_ref(self) })
+        refs.each do |ref|
           value = ref.to_xml(self)
           unless value.nil?
             ref.update_xml(root, value)
@@ -531,11 +535,13 @@ module ROXML # :nodoc:
         xml = XML::Node.from(data)
 
         new(*initialization_args).tap do |inst|
-          roxml_attrs.each do |attr|
-            value = attr.to_ref(inst).value_in(xml)
-            inst.respond_to?(attr.setter) \
-              ? inst.send(attr.setter, value) \
-              : inst.instance_variable_set(attr.instance_variable_name, value)
+          inst.roxml_references = roxml_attrs.map {|attr| attr.to_ref(inst) }
+
+          inst.roxml_references.each do |ref|
+            value = ref.value_in(xml)
+            inst.respond_to?(ref.opts.setter) \
+              ? inst.send(ref.opts.setter, value) \
+              : inst.instance_variable_set(ref.opts.instance_variable_name, value)
           end
           inst.send(:after_parse) if inst.respond_to?(:after_parse, true)
         end

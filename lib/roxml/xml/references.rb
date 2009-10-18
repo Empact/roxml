@@ -6,6 +6,7 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef # :nodoc:
+    attr_reader :opts
     delegate :required?, :array?, :blocks, :accessor, :default, :wrapper, :to => :opts
 
     def initialize(opts, instance)
@@ -41,8 +42,6 @@ module ROXML
     end
 
   private
-    attr_reader :opts
-
     def conventionize(what)
       convention ||= @instance.class.respond_to?(:roxml_naming_convention) && @instance.class.roxml_naming_convention
       if !what.blank? && convention.respond_to?(:call)
@@ -84,8 +83,12 @@ module ROXML
       opts.wrapper ? "#{namespacify(opts.wrapper)}/#{xpath_name}" : xpath_name.to_s
     end
 
+    def auto_wrapper
+      namespacify(conventionize(opts.name.pluralize))
+    end
+
     def auto_xpath
-      "#{namespacify(conventionize(opts.name.pluralize))}/#{xpath_name}" if array?
+      "#{auto_wrapper}/#{xpath_name}" if array?
     end
 
     def several?
@@ -93,11 +96,13 @@ module ROXML
     end
 
     def wrap(xml)
-      return xml if !wrapper || xml.name == wrapper
-      if child = xml.children.find {|c| c.name == wrapper }
+      wrap_with = @auto_vals ? auto_wrapper : wrapper
+
+      return xml if !wrap_with || xml.name == wrap_with
+      if child = xml.children.find {|c| c.name == wrap_with }
        return child
       end
-      xml.add_child(XML::Node.create(wrapper.to_s))
+      xml.add_child(XML::Node.create(wrap_with.to_s))
     end
 
     def nodes_in(xml)

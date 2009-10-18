@@ -1,8 +1,10 @@
 == 3.1.2 (?)
 
-* bug fix
+* bug fixes
 
   * Include namespaces in xml output
+  * Fix that auto-wrapped collections weren't output with their wrappers
+    (which requires introducing the roxml_references accessor on the instance)
 
 == 3.1.1 (October 17, 2009)
 

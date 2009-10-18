@@ -18,8 +18,9 @@ module ROXML # :nodoc:
 
   module InstanceMethods # :nodoc:
     # Returns an XML object representing this object
-    def to_xml(name = self.class.tag_name)
-      XML::Node.create(name.to_s).tap do |root|
+    def to_xml(params = {})
+      params.reverse_merge!(:name => self.class.tag_name, :namespace => self.class.roxml_namespace)
+      XML::Node.create([params[:namespace], params[:name]].compact.join(':')).tap do |root|
         self.class.roxml_attrs.each do |attr|
           ref = attr.to_ref(self)
           value = ref.to_xml(self)

@@ -4,21 +4,21 @@ describe ROXML, "with namespaces" do
   describe "for writing" do
     before do
       @xml = <<EOS
-    <?xml version="1.0" encoding="UTF-8"?>
-    <gronk:VApp name="My new vApp" status="1" href="https://vcloud.example.com/vapp/833" type="application/vnd.vmware.vcloud.vapp+xml" xmlns:vmw="http://foo.example.com" xmlns:gronk="http://gronk.example.com">
-      <gronk:NetworkConfig name="Network 1">
-        <vmw:FenceMode>allowInOut</vmw:FenceMode>
-        <vmw:Dhcp>true</vmw:Dhcp>
-        <gronk:errors>
-          <gronk:error>OhNo!</gronk:error>
-          <gronk:error>Another!</gronk:error>
-        </gronk:errors>
-      </gronk:NetworkConfig>
-      <foo />
-      <bar>
-        gronk
-      </bar>
-    </gronk:VApp>
+<?xml version="1.0" encoding="UTF-8"?>
+<gronk:VApp name="My new vApp" status="1" href="https://vcloud.example.com/vapp/833" type="application/vnd.vmware.vcloud.vapp+xml" xmlns:vmw="http://foo.example.com" xmlns:gronk="http://gronk.example.com">
+  <gronk:NetworkConfig name="Network 1">
+    <vmw:FenceMode>allowInOut</vmw:FenceMode>
+    <vmw:Dhcp>true</vmw:Dhcp>
+    <gronk:errors>
+      <gronk:error>OhNo!</gronk:error>
+      <gronk:error>Another!</gronk:error>
+    </gronk:errors>
+  </gronk:NetworkConfig>
+  <foo />
+  <bar>
+    gronk
+  </bar>
+</gronk:VApp>
 EOS
     end
 

@@ -166,10 +166,10 @@ module ROXML
         xml.name = value
       elsif array?
         value.each do |v|
-          add(xml.add_child(XML::Node.create(name)), v)
+          add(xml.add_child(XML::Node.create(xpath_name)), v)
         end
       else
-        add(xml.add_child(XML::Node.create(name)), value)
+        add(xml.add_child(XML::Node.create(xpath_name)), value)
       end
     end
 
@@ -271,14 +271,15 @@ module ROXML
     # Updates the composed XML object in the given XML block to
     # the value provided.
     def write_xml(xml, value)
+      params = {:name => name, :namespace => opts.namespace}
       if array?
         value.each do |v|
-          xml.add_child(v.to_xml(name))
+          xml.add_child(v.to_xml(params))
         end
       elsif value.is_a?(ROXML)
-        xml.add_child(value.to_xml(name))
+        xml.add_child(value.to_xml(params))
       else
-        node = XML::Node.create(name)
+        node = XML::Node.create(xpath_name)
         node.content = value.to_xml
         xml.add_child(node)
       end

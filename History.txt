@@ -1,5 +1,9 @@
 == 3.1.2 (?)
 
+* minor enhancements
+
+  * Retain whitespace in element contents, but still default on blank (rather than entirely empty) elements
+
 * bug fixes
 
   * Include namespaces in xml output

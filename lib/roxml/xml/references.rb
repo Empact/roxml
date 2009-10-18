@@ -182,12 +182,12 @@ module ROXML
       if content? || name?
         value =
           if content?
-            xml.content.to_s.strip
+            xml.content.to_s
           elsif name?
             xml.name
           end
 
-        if value.empty?
+        if value.blank?
           raise RequiredElementMissing, "#{name} from #{xml} for #{accessor}" if required?
           default
         else
@@ -195,7 +195,7 @@ module ROXML
         end
       else
         nodes_in(xml) do |node|
-          node.content.strip
+          node.content
         end
       end
     end

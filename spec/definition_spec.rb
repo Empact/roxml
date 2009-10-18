@@ -51,7 +51,7 @@ describe ROXML::Definition do
         <question>&quot;Wickard &amp; Filburn&quot; &gt;</question>
         <question> &lt; McCulloch &amp; Maryland?</question>
       </xml>
-    }).should == ["\"Wickard & Filburn\" >", "< McCulloch & Maryland?"]
+    }).should == ["\"Wickard & Filburn\" >", " < McCulloch & Maryland?"]
   end
 
   describe "attr name" do

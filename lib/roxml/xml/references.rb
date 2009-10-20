@@ -52,14 +52,12 @@ module ROXML
     end
 
     def namespacify(what)
-      return "#{opts.namespace}:#{what}" if opts.namespace
-
-      namespace = @instance.class.roxml_namespace || @default_namespace
-      if namespace && what.present? && !what.include?(':') && (opts.namespace != false)
-        "#{namespace}:#{what}"
-      else
-        what
+      if what.present? && !what.include?(':') && opts.namespace != false
+        [opts.namespace, @instance.class.roxml_namespace, @default_namespace].each do |namespace|
+          return opts.namespace == '*' ? "*[local-name()='#{what}']" : "#{namespace}:#{what}" if namespace
+        end
       end
+      what
     end
 
     def apply_blocks(val)

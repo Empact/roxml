@@ -1,3 +1,10 @@
+== 3.1.3 (?)
+
+* minor enhancements
+
+  * Add support for local-name() reference reading via :namespace => '*'
+    (ala http://techrageo.us/2008/11/01/wildcard-namespaces-in-xpath/)
+
 == 3.1.2 (October 18, 2009)
 
 * minor enhancements

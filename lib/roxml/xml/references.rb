@@ -23,12 +23,6 @@ module ROXML
       opts.to_xml.respond_to?(:call) ? opts.to_xml.call(val) : val
     end
 
-    def update_xml(xml, value)
-      returning wrap(xml) do |xml|
-        write_xml(xml, value)
-      end
-    end
-
     def name
       opts.name_explicit? ? opts.name : conventionize(opts.name)
     end
@@ -97,11 +91,11 @@ module ROXML
       array?
     end
 
-    def wrap(xml)
+    def wrap(xml, opts = {:always_create => false})
       wrap_with = @auto_vals ? auto_wrapper : wrapper
 
       return xml if !wrap_with || xml.name == wrap_with
-      if child = xml.children.find {|c| c.name == wrap_with }
+      if !opts[:always_create] && (child = xml.children.find {|c| c.name == wrap_with })
        return child
       end
       xml.add_child(XML::Node.create(wrap_with.to_s))
@@ -136,13 +130,23 @@ module ROXML
   #   XMLTextRef
   #  </element>
   class XMLAttributeRef < XMLRef # :nodoc:
-  private
     # Updates the attribute in the given XML block to
     # the value provided.
-    def write_xml(xml, value)
-      xml.attributes[name] = value.to_s
+    def update_xml(xml, values)
+      if array?
+        values.each do |value|
+          wrap(xml, :always_create => true).tap do |node|
+            node.attributes[name] = value.to_s
+          end
+        end
+      else
+        wrap(xml).tap do |xml|
+          xml.attributes[name] = values.to_s
+        end
+      end
     end
 
+  private
     def fetch_value(xml)
       nodes_in(xml) do |node|
         node.value
@@ -163,23 +167,25 @@ module ROXML
   class XMLTextRef < XMLRef # :nodoc:
     delegate :cdata?, :content?, :name?, :to => :opts
 
-  private
     # Updates the text in the given _xml_ block to
     # the _value_ provided.
-    def write_xml(xml, value)
-      if content?
-        add(xml, value)
-      elsif name?
-        xml.name = value
-      elsif array?
-        value.each do |v|
-          add(xml.add_child(XML::Node.create(xpath_name)), v)
+    def update_xml(xml, value)
+      wrap(xml).tap do |xml|
+        if content?
+          add(xml, value)
+        elsif name?
+          xml.name = value
+        elsif array?
+          value.each do |v|
+            add(xml.add_child(XML::Node.create(xpath_name)), v)
+          end
+        else
+          add(xml.add_child(XML::Node.create(xpath_name)), value)
         end
-      else
-        add(xml.add_child(XML::Node.create(xpath_name)), value)
       end
     end
 
+  private
     def fetch_value(xml)
       if content? || name?
         value =
@@ -224,17 +230,19 @@ module ROXML
       true
     end
 
-  private
     # Updates the composed XML object in the given XML block to
     # the value provided.
-    def write_xml(xml, value)
-      value.each_pair do |k, v|
-        node = xml.add_child(XML::Node.create(hash.wrapper))
-        @key.update_xml(node, k)
-        @value.update_xml(node, v)
+    def update_xml(xml, value)
+      wrap(xml).tap do |xml|
+        value.each_pair do |k, v|
+          node = xml.add_child(XML::Node.create(hash.wrapper))
+          @key.update_xml(node, k)
+          @value.update_xml(node, v)
+        end
       end
     end
 
+  private
     def fetch_value(xml)
       nodes_in(xml) do |node|
         [@key.value_in(node), @value.value_in(node)]
@@ -274,24 +282,26 @@ module ROXML
   class XMLObjectRef < XMLTextRef # :nodoc:
     delegate :type, :to => :opts
 
-  private
     # Updates the composed XML object in the given XML block to
     # the value provided.
-    def write_xml(xml, value)
-      params = {:name => name, :namespace => opts.namespace}
-      if array?
-        value.each do |v|
-          xml.add_child(v.to_xml(params))
+    def update_xml(xml, value)
+      wrap(xml).tap do |xml|
+        params = {:name => name, :namespace => opts.namespace}
+        if array?
+          value.each do |v|
+            xml.add_child(v.to_xml(params))
+          end
+        elsif value.is_a?(ROXML)
+          xml.add_child(value.to_xml(params))
+        else
+          node = XML::Node.create(xpath_name)
+          node.content = value.to_xml
+          xml.add_child(node)
         end
-      elsif value.is_a?(ROXML)
-        xml.add_child(value.to_xml(params))
-      else
-        node = XML::Node.create(xpath_name)
-        node.content = value.to_xml
-        xml.add_child(node)
       end
     end
 
+  private
     def fetch_value(xml)
       nodes_in(xml) do |node|
         if type.respond_to? :from_xml

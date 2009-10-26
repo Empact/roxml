@@ -3,12 +3,11 @@ require 'spec/spec_helper'
 describe ROXML::XMLAttributeRef do
   before do
     @xml = ROXML::XML::Parser.parse %(
-    <myxml>
-      <node name="first" />
-      <node name="second" />
-      <node name="third" />
-    </myxml>
-    )
+<myxml>
+  <node name="first" />
+  <node name="second" />
+  <node name="third" />
+</myxml>)
   end
   
   context "plain vanilla" do
@@ -31,6 +30,10 @@ describe ROXML::XMLAttributeRef do
       @ref.value_in(@xml).should == ["first", "second", "third"]
     end
 
-    it "should output all instances"
+    it "should output all instances" do
+      xml = ROXML::XML::Node.create('myxml')
+      @ref.update_xml(xml, ["first", "second", "third"])
+      xml.to_s.squeeze(' ').should == @xml.root.to_s.squeeze(' ')
+    end
   end
 end

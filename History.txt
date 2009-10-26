@@ -5,6 +5,11 @@
   * Add support for local-name() reference reading via :namespace => '*'
     (ala http://techrageo.us/2008/11/01/wildcard-namespaces-in-xpath/)
 
+* bug fixes
+
+  * attributes collected :as => [] were previously output improperly,
+    as a single attribute on a single node
+
 == 3.1.2 (October 18, 2009)
 
 * minor enhancements

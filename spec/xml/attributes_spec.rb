@@ -17,7 +17,7 @@ describe ROXML::XMLAttributeRef do
     end
 
     it "should return one instance" do
-      @ref.send(:fetch_value, @xml).should == "first"
+      @ref.value_in(@xml).should == "first"
     end
     it "should output one instance"
   end
@@ -28,7 +28,7 @@ describe ROXML::XMLAttributeRef do
     end
 
     it "should collect all instances" do
-      @ref.send(:fetch_value, @xml).should == ["first", "second", "third"]
+      @ref.value_in(@xml).should == ["first", "second", "third"]
     end
 
     it "should output all instances"

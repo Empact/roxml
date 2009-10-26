@@ -7,11 +7,15 @@ module ROXML
   #
   class XMLRef # :nodoc:
     attr_reader :opts
-    delegate :required?, :array?, :blocks, :accessor, :default, :wrapper, :to => :opts
+    delegate :required?, :array?, :accessor, :default, :wrapper, :to => :opts
 
     def initialize(opts, instance)
       @opts = opts
       @instance = instance
+    end
+
+    def blocks
+      opts.blocks || []
     end
 
     def to_xml(instance)

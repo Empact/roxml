@@ -4,26 +4,26 @@ class TestDefinition < ActiveSupport::TestCase
   def assert_hash(opts, kvp)
     assert opts.hash?
     assert !opts.array?
-    assert_equal kvp, {opts.hash.key.type => opts.hash.key.name,
-                       opts.hash.value.type => opts.hash.value.name}
+    assert_equal kvp, {opts.hash.key.sought_type => opts.hash.key.name,
+                       opts.hash.value.sought_type => opts.hash.value.name}
   end
 
   def test_empty_array_means_as_array_for_text
     opts = ROXML::Definition.new(:authors, :as => [])
     assert opts.array?
-    assert_equal :text, opts.type
+    assert_equal :text, opts.sought_type
   end
 
   def test_attr_in_array_means_as_array_for_attr
     opts = ROXML::Definition.new(:authors, :as => [], :from => :attr)
     assert opts.array?
-    assert_equal :attr, opts.type
+    assert_equal :attr, opts.sought_type
   end
 
   def test_block_shorthand_in_array_means_array
     opts = ROXML::Definition.new(:intarray, :as => [Integer])
     assert opts.array?
-    assert_equal :text, opts.type
+    assert_equal :text, opts.sought_type
     assert 1, opts.blocks.size
   end
 
@@ -87,13 +87,13 @@ class TestDefinition < ActiveSupport::TestCase
   def test_from_attr_is_supported
     opts = ROXML::Definition.new(:count, :from => :attr)
     assert_equal "count", opts.name
-    assert_equal :attr, opts.type
+    assert_equal :attr, opts.sought_type
   end
 
   def test_from_at_name_is_supported
     opts = ROXML::Definition.new(:count, :from => "@COUNT")
     assert_equal "COUNT", opts.name
-    assert_equal :attr, opts.type
+    assert_equal :attr, opts.sought_type
   end
 
   def test_multiple_shorthands_raises
@@ -164,11 +164,11 @@ class TestDefinition < ActiveSupport::TestCase
   end
 
   def test_as_supports_generic_roxml_types
-    assert_equal RoxmlObject, ROXML::Definition.new(:type, :as => RoxmlObject).type
+    assert_equal RoxmlObject, ROXML::Definition.new(:type, :as => RoxmlObject).sought_type
   end
 
   def test_as_supports_generic_roxml_types_in_arrays
-    assert_equal RoxmlObject, ROXML::Definition.new(:types, :as => [RoxmlObject]).type
+    assert_equal RoxmlObject, ROXML::Definition.new(:types, :as => [RoxmlObject]).sought_type
   end
 
   def test_default_works
@@ -195,24 +195,24 @@ class TestDefinition < ActiveSupport::TestCase
     opts = ROXML::Definition.new(:author, :from => :content)
     assert opts.content?
     assert_equal '.', opts.name
-    assert_equal :text, opts.type
+    assert_equal :text, opts.sought_type
   end
 
   def test_content_symbol_as_target_is_translated_to_string
     opts = ROXML::Definition.new(:content, :from => :attr)
     assert_equal 'content', opts.name
-    assert_equal :attr, opts.type
+    assert_equal :attr, opts.sought_type
   end
 
   def test_attr_is_accepted_as_from
-    assert_equal :attr, ROXML::Definition.new(:author, :from => :attr).type
-    assert_equal :attr, ROXML::Definition.new(:author, :from => '@author').type
+    assert_equal :attr, ROXML::Definition.new(:author, :from => :attr).sought_type
+    assert_equal :attr, ROXML::Definition.new(:author, :from => '@author').sought_type
   end
 
   def test_attr_is_a_recognized_type
     opts = ROXML::Definition.new(:author, :from => :attr)
     assert_equal 'author', opts.name
-    assert_equal :attr, opts.type
+    assert_equal :attr, opts.sought_type
   end
 end
 
@@ -230,6 +230,6 @@ class HashDefinitionTest < ActiveSupport::TestCase
   def test_content_detected_as_from
     opts = ROXML::Definition.new(:hash, :as => {:key => :content, :value => :name})
     assert_equal '.', opts.hash.key.name
-    assert_equal :text, opts.hash.key.type
+    assert_equal :text, opts.hash.key.sought_type
   end
 end

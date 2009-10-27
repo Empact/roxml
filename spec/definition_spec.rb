@@ -87,7 +87,7 @@ describe ROXML::Definition do
       it "should means array of texts" do
         opts = ROXML::Definition.new(:authors, :as => [])
         opts.array?.should be_true
-        opts.type.should == :text
+        opts.sought_type.should == :text
       end
     end
 
@@ -98,7 +98,7 @@ describe ROXML::Definition do
 
       it "should store type" do
         opts = ROXML::Definition.new(:name, :as => RoxmlClass)
-        opts.type.should == RoxmlClass
+        opts.sought_type.should == RoxmlClass
       end
     end
 
@@ -111,7 +111,7 @@ describe ROXML::Definition do
 
       it "should accept type" do
         opts = ROXML::Definition.new(:name, :as => OctalInteger)
-        opts.type.should == OctalInteger
+        opts.sought_type.should == OctalInteger
       end
     end
 
@@ -134,8 +134,8 @@ describe ROXML::Definition do
         end
 
         it "should have hash definition" do
-          {@opts.hash.key.type => @opts.hash.key.name}.should == @hash_args[:key]
-          {@opts.hash.value.type => @opts.hash.value.name}.should == @hash_args[:value]
+          {@opts.hash.key.sought_type => @opts.hash.key.name}.should == @hash_args[:key]
+          {@opts.hash.value.sought_type => @opts.hash.value.name}.should == @hash_args[:value]
         end
 
         it "should not represent an array" do
@@ -196,7 +196,7 @@ describe ROXML::Definition do
         end
 
         it "should be normal otherwise" do
-          @opts.type.should == :text
+          @opts.sought_type.should == :text
           @opts.blocks.size.should == 1
         end
       end
@@ -392,7 +392,7 @@ describe ROXML::Definition do
   describe ":from" do
     describe "attribute reference", :shared => true do
       it "should be interpreted as :attr" do
-        @opts.type.should == :attr
+        @opts.sought_type.should == :attr
       end
 
       it "should strip '@' from name" do

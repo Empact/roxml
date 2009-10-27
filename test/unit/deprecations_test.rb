@@ -4,7 +4,7 @@ class TestDeprecation < ActiveSupport::TestCase
   def test_as_array_not_deprecated
     assert_not_deprecated do
       opts = ROXML::Definition.new(:name, :as => [])
-      assert_equal :text, opts.type
+      assert_equal :text, opts.sought_type
       assert opts.array?
     end
   end

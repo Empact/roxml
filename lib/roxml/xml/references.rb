@@ -280,7 +280,7 @@ module ROXML
   end
 
   class XMLObjectRef < XMLTextRef # :nodoc:
-    delegate :type, :to => :opts
+    delegate :sought_type, :to => :opts
 
     # Updates the composed XML object in the given XML block to
     # the value provided.
@@ -304,10 +304,10 @@ module ROXML
   private
     def fetch_value(xml)
       nodes_in(xml) do |node|
-        if type.respond_to? :from_xml
-          type.from_xml(node)
+        if sought_type.respond_to? :from_xml
+          sought_type.from_xml(node)
         else
-          type.new(node)
+          sought_type.new(node)
         end
       end
     end

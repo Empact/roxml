@@ -108,7 +108,7 @@ class TestXMLHash < ActiveSupport::TestCase
     assert_not_deprecated do
       opts = ROXML::Definition.new(:name, :as => {:key => :name, :value => {:from => 'value', :as => OctalInteger}})
       assert opts.hash?
-      assert_equal OctalInteger, opts.hash.value.type
+      assert_equal OctalInteger, opts.hash.value.sought_type
       assert_equal 'value', opts.hash.value.name
     end
   end

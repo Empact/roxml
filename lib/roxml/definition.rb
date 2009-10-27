@@ -15,7 +15,7 @@ module ROXML
   end
 
   class Definition # :nodoc:
-    attr_reader :name, :type, :wrapper, :hash, :blocks, :accessor, :to_xml, :attr_name, :namespace
+    attr_reader :name, :sought_type, :wrapper, :hash, :blocks, :accessor, :to_xml, :attr_name, :namespace
     bool_attr_reader :name_explicit, :array, :cdata, :required, :frozen
 
     def initialize(sym, opts = {}, &block)
@@ -43,9 +43,9 @@ module ROXML
       @array = opts[:as].is_a?(Array)
       @blocks = collect_blocks(block, opts[:as])
 
-      @type = extract_type(opts[:as])
-      if @type.respond_to?(:roxml_tag_name)
-        opts[:from] ||= @type.roxml_tag_name
+      @sought_type = extract_type(opts[:as])
+      if @sought_type.respond_to?(:roxml_tag_name)
+        opts[:from] ||= @sought_type.roxml_tag_name
       end
 
       if opts[:from] == :content
@@ -53,12 +53,12 @@ module ROXML
       elsif opts[:from] == :name
         opts[:from] = '*'
       elsif opts[:from] == :attr
-        @type = :attr
+        @sought_type = :attr
         opts[:from] = nil
       elsif opts[:from] == :name
         opts[:from] = '*'
       elsif opts[:from].to_s.starts_with?('@')
-        @type = :attr
+        @sought_type = :attr
         opts[:from].sub!('@', '')
       end
 
@@ -83,13 +83,13 @@ module ROXML
 
     def hash
       if hash?
-        @type.wrapper ||= name
-        @type
+        @sought_type.wrapper ||= name
+        @sought_type
       end
     end
 
     def hash?
-      @type.is_a?(HashDefinition)
+      @sought_type.is_a?(HashDefinition)
     end
 
     def name?
@@ -109,11 +109,11 @@ module ROXML
     end
 
     def to_ref(inst)
-      case type
+      case sought_type
       when :attr          then XMLAttributeRef
       when :text          then XMLTextRef
       when HashDefinition then XMLHashRef
-      when Symbol         then raise ArgumentError, "Invalid type argument #{type}"
+      when Symbol         then raise ArgumentError, "Invalid type argument #{sought_type}"
       else                     XMLObjectRef
       end.new(self, inst)
     end

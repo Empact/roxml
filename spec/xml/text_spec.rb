@@ -1,18 +1,20 @@
 require 'spec/spec_helper'
 
-describe ROXML::XMLAttributeRef do
+describe ROXML::XMLTextRef do
   before do
     @xml = ROXML::XML::Parser.parse %(
 <myxml>
-  <node name="first" />
-  <node name="second" />
-  <node name="third" />
+  <node>
+    <name>first</name>
+    <name>second</name>
+    <name>third</name>
+  </node>
 </myxml>)
   end
 
   context "plain vanilla" do
     before do
-      @ref = ROXML::XMLAttributeRef.new(OpenStruct.new(:name => 'name', :wrapper => 'node', :array? => false), RoxmlObject.new)
+      @ref = ROXML::XMLTextRef.new(OpenStruct.new(:name => 'name', :wrapper => 'node', :array? => false), RoxmlObject.new)
     end
 
     it "should return one instance" do
@@ -23,7 +25,7 @@ describe ROXML::XMLAttributeRef do
   
   context "with :as => []" do
     before do
-      @ref = ROXML::XMLAttributeRef.new(OpenStruct.new(:name => 'name', :wrapper => 'node', :array? => true), RoxmlObject.new)
+      @ref = ROXML::XMLTextRef.new(OpenStruct.new(:name => 'name', :wrapper => 'node', :array? => true), RoxmlObject.new)
     end
 
     it "should collect all instances" do
@@ -40,29 +42,27 @@ describe ROXML::XMLAttributeRef do
   context "when the namespaces are different" do
     before do
       @xml = ROXML::XML::Parser.parse %(
-      <document>
       <myxml xmlns="http://example.com/three" xmlns:one="http://example.com/one" xmlns:two="http://example.com/two">
-        <one:node name="first" />
-        <two:node name="second" />
-        <node name="third" />
-      </myxml>
-      </document>
-      )
+        <node>
+          <one:name>first</one:name>
+          <two:name>second</two:name>
+          <name>third</name>
+        </node>
+      </myxml>)
     end
 
     context "with :namespace => '*'" do
       before do
-        @ref = ROXML::XMLAttributeRef.new(OpenStruct.new(:name => 'name', :wrapper => 'node', :array? => true, :namespace => '*'), RoxmlObject.new)
+        @ref = ROXML::XMLTextRef.new(OpenStruct.new(:name => 'name', :wrapper => 'node', :array? => true, :namespace => '*'), RoxmlObject.new)
       end
 
       it "should collect all instances" do
-        pending "Test bug?"
         @ref.value_in(@xml).should == ["first", "second", "third"]
       end
 
       it "should output all instances with namespaces" do
         pending "Full namespace write support"
-        xml = ROXML::XML::Node.create('result')
+        xml = ROXML::XML::Node.create('myxml')
         @ref.update_xml(xml, ["first", "second", "third"])
         xml.should == @xml.root
       end

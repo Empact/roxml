@@ -95,7 +95,9 @@ in this case.
 
 === Namespace Support
 
-Namespaces are supported via the xml_namespace declaration and the :from and :namespace attr options.  See spec/xml/namespace_spec.rb for usage.
+Namespaced nodes are supported via the xml_namespace and xml_namespaces declarations and the :from and :namespace attr options.  See spec/xml/namespace_spec.rb for usage.
+
+Note that ROXML does not currently support outputting namespaced nodes.  This is planned for a future version.
 
 == Manipulation
 

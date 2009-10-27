@@ -2,6 +2,8 @@ Planned:
 
 v 3.2
 
+  * Support outputting namespaced attrs
+
   * Consider class_inheritable_attribute rather than superclass.try stuff.
 
   * Do some benchmarking

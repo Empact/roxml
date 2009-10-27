@@ -51,6 +51,7 @@ EOS
       it "should reproduce the input xml" do
         output = ROXML::XML::Document.new
         output.root = VApp.from_xml(@xml).to_xml
+        pending "Full namespace write support"
         output.should == ROXML::XML::Parser.parse(@xml)
       end
     end

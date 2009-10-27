@@ -9,6 +9,8 @@
 
   * attributes collected :as => [] were previously output improperly,
     as a single attribute on a single node
+  * don't output crazy, context-less namespaces and local-name xpaths
+    when trying to output namespaced attributes
 
 == 3.1.2 (October 18, 2009)
 

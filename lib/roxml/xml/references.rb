@@ -177,10 +177,10 @@ module ROXML
           xml.name = value
         elsif array?
           value.each do |v|
-            add(xml.add_child(XML::Node.create(xpath_name)), v)
+            add(xml.add_child(XML::Node.create(name)), v)
           end
         else
-          add(xml.add_child(XML::Node.create(xpath_name)), value)
+          add(xml.add_child(XML::Node.create(name)), value)
         end
       end
     end
@@ -294,7 +294,7 @@ module ROXML
         elsif value.is_a?(ROXML)
           xml.add_child(value.to_xml(params))
         else
-          node = XML::Node.create(xpath_name)
+          node = XML::Node.create(name)
           node.content = value.to_xml
           xml.add_child(node)
         end

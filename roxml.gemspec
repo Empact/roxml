@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{roxml}
-  s.version = "3.1.2"
+  s.version = "3.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Woosley", "Zak Mandhro", "Anders Engstrom", "Russ Olsen"]
-  s.date = %q{2009-10-18}
+  s.date = %q{2009-10-30}
   s.description = %q{ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML.
 Using simple annotations, it enables Ruby classes to be mapped to XML. ROXML takes care
 of the marshalling and unmarshalling of mapped attributes so that developers can focus on
@@ -68,7 +68,9 @@ RESTful applications, Web Services, and XML-RPC.
      "spec/xml/attributes_spec.rb",
      "spec/xml/namespace_spec.rb",
      "spec/xml/namespaces_spec.rb",
+     "spec/xml/object_spec.rb",
      "spec/xml/parser_spec.rb",
+     "spec/xml/text_spec.rb",
      "tasks/rdoc.rake",
      "tasks/rspec.rake",
      "tasks/test.rake",
@@ -146,7 +148,9 @@ RESTful applications, Web Services, and XML-RPC.
      "spec/xml/attributes_spec.rb",
      "spec/xml/namespace_spec.rb",
      "spec/xml/namespaces_spec.rb",
+     "spec/xml/object_spec.rb",
      "spec/xml/parser_spec.rb",
+     "spec/xml/text_spec.rb",
      "test/load_test.rb",
      "test/mocks/dictionaries.rb",
      "test/mocks/mocks.rb",

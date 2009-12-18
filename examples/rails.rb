@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'spec/spec_helper'
 require 'sqlite3'
-require 'activerecord'
+require 'active_record'
 
 DB_PATH = 'spec/examples/rails.sqlite3'
 ActiveRecord::Base.establish_connection(

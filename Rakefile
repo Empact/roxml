@@ -40,3 +40,78 @@ task :default => [:test, :spec, 'test:load']
 task :all => [:libxml, :nokogiri, 'test:load']
 task :libxml => ['test:libxml', 'spec:libxml']
 task :nokogiri => ['test:nokogiri', 'spec:nokogiri']
+
+
+require 'rake/rdoctask'
+Rake::RDocTask.new do |rdoc|
+  if File.exist?('VERSION')
+    version = File.read('VERSION')
+  else
+    version = ""
+  end
+
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title = "roxml #{version}"
+  rdoc.rdoc_files.include('README*')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+end
+
+require 'spec/rake/spectask'
+desc "Run specs"
+Spec::Rake::SpecTask.new(:spec) do |spec|
+  spec.libs << 'lib' << 'spec' << 'examples'
+  spec.spec_opts = ['--options', "spec/spec.opts"]
+  spec.spec_files = FileList['spec/**/*_spec.rb']
+end
+
+namespace :spec do
+  [:libxml, :nokogiri].each do |parser|
+    desc "Spec ROXML under the #{parser} parser"
+    Spec::Rake::SpecTask.new(parser) do |spec|
+      spec.libs << 'lib' << 'spec' << 'examples'
+      spec.spec_opts = ['--options=spec/spec.opts']
+      spec.spec_files = ["spec/support/#{parser}.rb"] + FileList['spec/**/*_spec.rb']
+    end
+  end
+end
+
+desc "Run specs with rcov"
+Spec::Rake::SpecTask.new(:rcov) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rcov = true
+end
+
+require 'rake/testtask'
+desc "Test ROXML using the default parser selection behavior"
+task :test do
+  require 'rake/runtest'
+  $LOAD_PATH << 'lib'
+  Rake.run_tests 'test/unit/*_test.rb'
+end
+
+namespace :test do
+  desc "Test ROXML under the Nokogiri parser"
+  task :nokogiri do
+    $LOAD_PATH << 'spec'
+    require 'spec/support/nokogiri'
+    Rake::Task["test"].invoke
+  end
+
+   desc "Test ROXML under the LibXML parser"
+  task :libxml do
+    $LOAD_PATH << 'spec'
+    require 'spec/support/libxml'
+    Rake::Task["test"].invoke
+  end
+
+  task :load do
+    `ruby test/load_test.rb`
+    puts "Load Success!" if $?.success?
+  end
+
+  desc "Runs tests under RCOV"
+  task :rcov do
+    system "rcov -T --no-html -x '^/'  #{FileList['test/unit/*_test.rb']}"
+  end
+end

@@ -1,3 +1,9 @@
+== 3.1.5 (December 18, 2009)
+
+* bug fix
+
+  * don't use tasks/ because those rake files are picked up by those vendoring roxml
+
 == 3.1.4 (December 18, 2009)
 
 * bug fix

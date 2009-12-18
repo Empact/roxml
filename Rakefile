@@ -22,7 +22,7 @@ EOF
 
   gem.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.rdoc"]
 
-  gem.add_dependency 'activesupport', '>= 2.1.0'
+  gem.add_dependency 'activesupport', '>= 2.3.0'
   gem.add_dependency 'nokogiri', '>= 1.3.3'
 
   gem.add_development_dependency "rspec"

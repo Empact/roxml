@@ -212,7 +212,7 @@ module ROXML
         as = (block ? :bool_combined : :bool_standalone)
       end
       as = self.class.block_shorthands.fetch(as) do
-        unless as.respond_to?(:from_xml) || (as.respond_to?(:first) && as.first.respond_to?(:from_xml)) || (as.is_a?(Hash) && !(as.keys & [:key, :value]).empty?)
+        unless (as == :text) || as.respond_to?(:from_xml) || (as.respond_to?(:first) && as.first.respond_to?(:from_xml)) || (as.is_a?(Hash) && !(as.keys & [:key, :value]).empty?)
           raise ArgumentError, "Invalid :as argument #{as}" unless as.nil?
         end
         nil

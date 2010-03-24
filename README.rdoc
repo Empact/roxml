@@ -2,7 +2,7 @@ ROXML Ruby Object to XML mapping library.
 
 For more information visit:
 
-    http://roxml.rubyforge.org/rdoc/
+    http://rdoc.info/projects/Empact/roxml
     http://empact.github.com/roxml/
     http://rubyforge.org/projects/roxml/
 

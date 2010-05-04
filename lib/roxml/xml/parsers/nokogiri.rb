@@ -43,7 +43,7 @@ module ROXML
         (roxml_namespaces.present? ? super(xpath, roxml_namespaces) : super(xpath)).map {|i| i }
       end
 
-      def attributes
+      def roxml_attributes
         self
       end
 

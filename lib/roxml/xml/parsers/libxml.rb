@@ -54,6 +54,8 @@ module ROXML
         alias_method_chain :new, :entity_escaping
 
         alias :create :new
+
+        alias :roxml_attributes :attributes
       end
 
       def default_namespace

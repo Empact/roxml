@@ -6,7 +6,12 @@ module ROXML
 
     class << self
       def add_cdata(parent, content)
-        parent.add_child(XML::Node.new_cdata(content))
+        add_child(parent, XML::Node.new_cdata(content))
+      end
+
+      def add_child(parent, child)
+        parent << child
+        child
       end
     end
 
@@ -67,12 +72,6 @@ module ROXML
 
       def default_namespace
         doc.default_namespace
-      end
-
-      def add_child(child)
-        # libxml 1.1.3 changed child_add from returning child to returning self
-        self << child
-        child
       end
 
       alias_method :set_libxml_content, :content=

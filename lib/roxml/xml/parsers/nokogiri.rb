@@ -7,6 +7,10 @@ module ROXML
       def add_cdata(parent, content)
         parent.add_child(Nokogiri::XML::CDATA.new(parent.document, content))
       end
+
+      def add_child(parent, child)
+        parent.add_child(child)
+      end
     end
 
     Document = Nokogiri::XML::Document

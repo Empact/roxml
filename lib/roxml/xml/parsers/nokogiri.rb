@@ -81,7 +81,6 @@ module ROXML
 
     class Node
       include NodeExtensions
-      alias :remove! :remove
     end
   end
 end

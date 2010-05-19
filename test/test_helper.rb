@@ -25,7 +25,7 @@ def remove_children(xml)
   return unless xml.respond_to? :children
   xml.children.each do |child|
     if child.to_s.blank?
-      child.remove!
+      defined?(Nokogiri) ? child.remove : child.remove!
     else
       remove_children(child)
     end

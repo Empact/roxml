@@ -8,6 +8,10 @@ module ROXML
         node[name] = value
       end
 
+      def set_content(node, content)
+        node.content = content
+      end
+
       def new_node(name)
         Nokogiri::XML::Node.new(name, Document.new)
       end

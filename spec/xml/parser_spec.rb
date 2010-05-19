@@ -14,7 +14,7 @@ describe ROXML::XML::Parser do
 
   it "should escape invalid characters on output to text node" do
     node = ROXML::XML.new_node("entities")
-    node.content = " < > ' \" & "
+    ROXML::XML.set_content(node, " < > ' \" & ")
     node.to_s.should == "<entities> &lt; &gt; ' \" &amp; </entities>"
   end
 

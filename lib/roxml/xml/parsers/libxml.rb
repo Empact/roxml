@@ -9,6 +9,10 @@ module ROXML
         node.attributes[name] = value
       end
 
+      def set_content(node, content)
+        node.content = content.gsub('&', '&amp;')
+      end
+
       def new_node(name)
         LibXML::XML::Node.new(name)
       end
@@ -69,11 +73,6 @@ module ROXML
 
       def default_namespace
         doc.default_namespace
-      end
-
-      alias_method :set_libxml_content, :content=
-      def content=(string)
-        set_libxml_content(string.gsub('&', '&amp;'))
       end
     end
 

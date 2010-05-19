@@ -212,7 +212,7 @@ module ROXML
       if cdata?
         XML.add_cdata(dest, value.to_s)
       else
-        dest.content = value.to_s
+        XML.set_content(dest, value.to_s)
       end
     end
   end
@@ -295,7 +295,7 @@ module ROXML
           XML.add_child(xml, value.to_xml(params))
         else
           XML.add_node(xml, name).tap do |node|
-            node.content = value.to_xml
+            XML.set_content(node, value.to_xml)
           end
         end
       end

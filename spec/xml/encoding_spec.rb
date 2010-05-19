@@ -43,6 +43,7 @@ describe ROXML, "encoding" do
         doc = LibXML::XML::Document.new
         doc.encoding = LibXML::XML::Encoding::ASCII
         doc.root = res.to_xml
+        pending "Libxml bug"
         doc.to_s.should include('ISO-8859-1')
         doc.find_first('message').inner_xml
       end.should == "sadfk одловыа jjklsd "

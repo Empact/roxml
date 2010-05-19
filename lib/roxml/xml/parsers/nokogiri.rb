@@ -59,7 +59,7 @@ module ROXML
     module NodeExtensions
       def search(xpath, roxml_namespaces = {})
         xpath = "./#{xpath}"
-        (roxml_namespaces.present? ? super(xpath, roxml_namespaces) : super(xpath)).map {|i| i }
+        (roxml_namespaces.present? ? super(xpath, roxml_namespaces) : super(xpath))
       end
 
       def roxml_attributes

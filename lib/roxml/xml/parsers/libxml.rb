@@ -5,6 +5,10 @@ module ROXML
   module XML # :nodoc:all
 
     class << self
+      def set_attribute(node, name, value)
+        node.attributes[name] = value
+      end
+
       def new_node(name)
         LibXML::XML::Node.new(name)
       end
@@ -62,8 +66,6 @@ module ROXML
         end
         alias_method_chain :new, :entity_escaping
       end
-
-      alias :roxml_attributes :attributes
 
       def default_namespace
         doc.default_namespace

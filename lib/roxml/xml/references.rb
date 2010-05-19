@@ -136,12 +136,12 @@ module ROXML
       if array?
         values.each do |value|
           wrap(xml, :always_create => true).tap do |node|
-            node.roxml_attributes[name] = value.to_s
+            XML.set_attribute(node, name, value.to_s)
           end
         end
       else
         wrap(xml).tap do |xml|
-          xml.roxml_attributes[name] = values.to_s
+          XML.set_attribute(xml, name, values.to_s)
         end
       end
     end

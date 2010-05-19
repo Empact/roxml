@@ -4,6 +4,10 @@ module ROXML
   module XML # :nodoc:all
 
     class << self
+      def set_attribute(node, name, value)
+        node[name] = value
+      end
+
       def new_node(name)
         Nokogiri::XML::Node.new(name, Document.new)
       end
@@ -60,10 +64,6 @@ module ROXML
       def search(xpath, roxml_namespaces = {})
         xpath = "./#{xpath}"
         (roxml_namespaces.present? ? super(xpath, roxml_namespaces) : super(xpath))
-      end
-
-      def roxml_attributes
-        self
       end
 
       def default_namespace

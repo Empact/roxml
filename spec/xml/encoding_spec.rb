@@ -10,12 +10,24 @@ describe ROXML, "encoding" do
     it "should output those characters as input via methods" do
       res = TestResult.new
       res.message = "sadfk одловыа jjklsd " #random russian  and english charecters
-      res.to_xml.at('message').inner_text.should == "sadfk одловыа jjklsd "
+      doc = ROXML::XML::Document.new
+      doc.root = res.to_xml
+      if defined?(Nokogiri)
+        doc.at('message').inner_text
+      else
+        doc.find_first('message').inner_xml
+      end.should == "sadfk одловыа jjklsd "
     end
 
     it "should output those characters as input via xml" do
       res = TestResult.from_xml("<test_result><message>sadfk одловыа jjklsd </message></test_result>")
-      res.to_xml.at('message').inner_text.should == "sadfk одловыа jjklsd "
+      doc = ROXML::XML::Document.new
+      doc.root = res.to_xml
+      if defined?(Nokogiri)
+        doc.at('message').inner_text
+      else
+        doc.find_first('message').inner_xml
+      end.should == "sadfk одловыа jjklsd "
     end
   end
 end

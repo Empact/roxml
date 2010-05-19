@@ -20,7 +20,7 @@ describe ROXML::XML::Parser do
 
   it "should esape invalid characters for attribute name" do
     node = ROXML::XML::Node.create("attr_holder")
-    node.attributes["entities"] = "\"'<>&"
+    node.roxml_attributes["entities"] = "\"'<>&"
     node.to_s.should == %{<attr_holder entities="&quot;'&lt;&gt;&amp;"/>}
   end
 end

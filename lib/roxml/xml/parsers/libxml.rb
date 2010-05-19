@@ -1,5 +1,4 @@
 require 'libxml'
-require 'cgi'
 
 module ROXML
   module XML # :nodoc:all
@@ -63,13 +62,6 @@ module ROXML
 
     class Node
       include NamespacedSearch
-
-      class << self
-        def new_with_entity_escaping(name, content = nil, namespace = nil)
-          new_without_entity_escaping(name, content && CGI.escapeHTML(content), namespace)
-        end
-        alias_method_chain :new, :entity_escaping
-      end
 
       def default_namespace
         doc.default_namespace

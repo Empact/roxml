@@ -4,6 +4,10 @@ module ROXML
   module XML # :nodoc:all
 
     class << self
+      def new_node(name)
+        Nokogiri::XML::Node.new(name, Document.new)
+      end
+
       def add_node(parent, name)
         add_child(parent, Nokogiri::XML::Node.new(name, parent.document))
       end
@@ -76,11 +80,6 @@ module ROXML
     end
 
     class Node
-      class << self
-        def create(name)
-          new(name, Document.new)
-        end
-      end
       include NodeExtensions
       alias :remove! :remove
     end

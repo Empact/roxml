@@ -13,13 +13,13 @@ describe ROXML::XML::Parser do
   end
 
   it "should escape invalid characters on output to text node" do
-    node = ROXML::XML::Node.create("entities")
+    node = ROXML::XML.new_node("entities")
     node.content = " < > ' \" & "
     node.to_s.should == "<entities> &lt; &gt; ' \" &amp; </entities>"
   end
 
   it "should esape invalid characters for attribute name" do
-    node = ROXML::XML::Node.create("attr_holder")
+    node = ROXML::XML.new_node("attr_holder")
     node.roxml_attributes["entities"] = "\"'<>&"
     node.to_s.should == %{<attr_holder entities="&quot;'&lt;&gt;&amp;"/>}
   end

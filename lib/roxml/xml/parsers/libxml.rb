@@ -5,8 +5,12 @@ module ROXML
   module XML # :nodoc:all
 
     class << self
+      def new_node(name)
+        LibXML::XML::Node.new(name)
+      end
+
       def add_node(parent, name)
-        add_child(parent, LibXML::XML::Node.create(name))
+        add_child(parent, new_node(name))
       end
 
       def add_cdata(parent, content)
@@ -68,8 +72,6 @@ module ROXML
           new_without_entity_escaping(name, content && CGI.escapeHTML(content), namespace)
         end
         alias_method_chain :new, :entity_escaping
-
-        alias :create :new
       end
 
       alias :roxml_attributes :attributes

@@ -31,7 +31,7 @@ describe ROXML::XMLAttributeRef do
     end
 
     it "should output all instances" do
-      xml = ROXML::XML::Node.create('myxml')
+      xml = ROXML::XML.new_node('myxml')
       @ref.update_xml(xml, ["first", "second", "third"])
       xml.to_s.squeeze(' ').should == @xml.root.to_s.squeeze(' ')
     end
@@ -62,7 +62,7 @@ describe ROXML::XMLAttributeRef do
 
       it "should output all instances with namespaces" do
         pending "Full namespace write support"
-        xml = ROXML::XML::Node.create('result')
+        xml = ROXML::XML.new_node('result')
         @ref.update_xml(xml, ["first", "second", "third"])
         xml.should == @xml.root
       end

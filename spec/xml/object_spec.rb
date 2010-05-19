@@ -43,7 +43,7 @@ describe ROXML::XMLObjectRef do
     end
 
     it "should output all instances" do
-      xml = ROXML::XML::Node.create('myxml')
+      xml = ROXML::XML.new_node('myxml')
       @ref.update_xml(xml, ["first", "second", "third"].map {|value| SubObject.new(value) })
       xml.to_s.squeeze(' ').should == @xml.root.to_s.squeeze(' ')
     end
@@ -73,7 +73,7 @@ describe ROXML::XMLObjectRef do
 
       it "should output all instances with namespaces" do
         pending "Full namespace write support"
-        xml = ROXML::XML::Node.create('myxml')
+        xml = ROXML::XML.new_node('myxml')
         @ref.update_xml(xml, ["first", "second", "third"].map {|value| SubObject.new(value) })
         xml.should == @xml.root
       end

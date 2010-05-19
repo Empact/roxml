@@ -5,8 +5,12 @@ module ROXML
   module XML # :nodoc:all
 
     class << self
+      def add_node(parent, name)
+        add_child(parent, LibXML::XML::Node.create(name))
+      end
+
       def add_cdata(parent, content)
-        add_child(parent, XML::Node.new_cdata(content))
+        add_child(parent, LibXML::XML::Node.new_cdata(content))
       end
 
       def add_child(parent, child)

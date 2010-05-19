@@ -4,6 +4,10 @@ module ROXML
   module XML # :nodoc:all
 
     class << self
+      def add_node(parent, name)
+        add_child(parent, Nokogiri::XML::Node.new(name, parent.document))
+      end
+
       def add_cdata(parent, content)
         parent.add_child(Nokogiri::XML::CDATA.new(parent.document, content))
       end

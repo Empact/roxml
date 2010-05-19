@@ -3,6 +3,13 @@ require 'cgi'
 
 module ROXML
   module XML # :nodoc:all
+
+    class << self
+      def add_cdata(parent, content)
+        parent.add_child(XML::Node.new_cdata(content))
+      end
+    end
+
     Document = LibXML::XML::Document
     Node = LibXML::XML::Node
     Parser = LibXML::XML::Parser

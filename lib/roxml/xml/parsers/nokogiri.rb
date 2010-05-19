@@ -2,6 +2,13 @@ require 'nokogiri'
 
 module ROXML
   module XML # :nodoc:all
+
+    class << self
+      def add_cdata(parent, content)
+        parent.add_child(Nokogiri::XML::CDATA.new(parent.document, content))
+      end
+    end
+
     Document = Nokogiri::XML::Document
     Element = Nokogiri::XML::Element
     Node = Nokogiri::XML::Node
@@ -62,10 +69,6 @@ module ROXML
 
     class Node
       class << self
-        def new_cdata(content)
-          Nokogiri::XML::CDATA.new(Document.new, content)
-        end
-
         def create(name)
           new(name, Document.new)
         end

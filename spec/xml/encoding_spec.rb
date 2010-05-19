@@ -18,5 +18,4 @@ describe ROXML, "encoding" do
       res.to_xml.at('message').inner_text.should == "sadfk одловыа jjklsd "
     end
   end
-
 end

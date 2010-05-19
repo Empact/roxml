@@ -210,7 +210,7 @@ module ROXML
 
     def add(dest, value)
       if cdata?
-        dest.add_child(XML::Node.new_cdata(value.to_s))
+        XML.add_cdata(dest, value.to_s)
       else
         dest.content = value.to_s
       end

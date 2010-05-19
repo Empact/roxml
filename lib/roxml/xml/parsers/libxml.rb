@@ -39,17 +39,6 @@ module ROXML
           find(xpath)
         end
       end
-
-    private
-      def namespaced(xpath)
-        xpath.split('/').map do |component|
-          if component =~ /\w+/ && !component.include?(':') && !component.starts_with?('@')
-            "xmlns:#{component}"
-          else
-            component
-          end
-        end.join('/')
-      end
     end
 
     class Document

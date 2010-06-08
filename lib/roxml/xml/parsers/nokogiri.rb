@@ -71,10 +71,6 @@ module ROXML
 
     class Element
       include NodeExtensions
-
-      def empty?
-        children.empty?
-      end
     end
 
     class Node

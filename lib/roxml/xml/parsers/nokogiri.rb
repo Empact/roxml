@@ -46,8 +46,6 @@ module ROXML
     Element = Nokogiri::XML::Element
     Node = Nokogiri::XML::Node
 
-    module Error; end
-
     class Document
       def save(path)
         open(path, 'w') do |file|

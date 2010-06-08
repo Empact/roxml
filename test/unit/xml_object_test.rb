@@ -136,8 +136,6 @@ class TestXMLObject < ActiveSupport::TestCase
   end
 
   def test_more_recursion
-    # quiet the error handler
-    ROXML::XML::Error.reset_handler if ROXML::XML::Error.respond_to?(:reset_handler)
     taxonomies = Taxonomies.from_xml(<<HERE)
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE taxonomies SYSTEM "taxonomy.dtd">

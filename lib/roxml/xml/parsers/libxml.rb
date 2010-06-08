@@ -44,7 +44,6 @@ module ROXML
 
     Document = LibXML::XML::Document
     Node = LibXML::XML::Node
-    Error = LibXML::XML::Error
 
     module NamespacedSearch
       def search(xpath, roxml_namespaces = {})

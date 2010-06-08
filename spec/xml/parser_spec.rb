@@ -1,14 +1,9 @@
 require 'spec/spec_helper.rb'
 
 describe ROXML::XML do
-  before do
-    # quiet the error handler
-    ROXML::XML::Error.reset_handler if ROXML::XML::Error.respond_to?(:reset_handler)
-  end
-  
   it "should raise on malformed xml" do
-    unless ROXML::XML_PARSER == 'nokogiri' # nokogiri is less strict and auto-closes for some reason
-      proc { Book.from_xml(fixture(:book_malformed)) }.should raise_error(ROXML::XML::Error)
+    if ROXML::XML_PARSER == 'libxml' # nokogiri is less strict and auto-closes for some reason
+      proc { Book.from_xml(fixture(:book_malformed)) }.should raise_error(LibXML::XML::Error)
     end
   end
 

@@ -21,7 +21,7 @@ def to_xml_test(*names)
 end
 
 def remove_children(xml)
-  xml = ROXML::XML::Parser.parse(xml).root if xml.is_a?(String)
+  xml = ROXML::XML.parse_string(xml).root if xml.is_a?(String)
   return unless xml.respond_to? :children
   xml.children.each do |child|
     if child.to_s.blank?

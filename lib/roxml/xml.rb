@@ -23,13 +23,13 @@ module ROXML
         when XML::Document
           data.root
         when File, IO
-          Parser.parse_io(data).root
+          XML.parse_io(data).root
         else
           if (defined?(URI) && data.is_a?(URI::Generic)) ||
              (defined?(Pathname) && data.is_a?(Pathname))
-            Parser.parse_file(data.to_s).root
+            XML.parse_file(data.to_s).root
           else
-            Parser.parse(data).root
+            XML.parse_string(data).root
           end
         end
       end

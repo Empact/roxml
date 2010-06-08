@@ -117,7 +117,7 @@ class TestXMLName < ActiveSupport::TestCase
 
   def test_xml_name_not_screwed_up_by_xml_convention
     reference = ROXML::XMLTextRef.new(ROXML::Definition.new(:name, :in => './'), WrapModule::InstanceStandin.new)
-    assert_equal "name value", reference.value_in(ROXML::XML::Parser.parse(%(
+    assert_equal "name value", reference.value_in(ROXML::XML.parse_string(%(
       <Wrapper>
          <MoreStuff>
             <DeepWrapper>

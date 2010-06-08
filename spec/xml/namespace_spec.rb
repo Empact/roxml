@@ -52,7 +52,7 @@ EOS
         output = ROXML::XML::Document.new
         output.root = VApp.from_xml(@xml).to_xml
         pending "Full namespace write support"
-        output.should == ROXML::XML::Parser.parse(@xml)
+        output.should == ROXML::XML.parse_string(@xml)
       end
     end
   end

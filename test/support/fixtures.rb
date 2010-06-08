@@ -3,7 +3,7 @@ def fixture(name)
 end
 
 def xml_fixture(name)
-  ROXML::XML::Parser.parse_file(fixture_path(name)).root
+  ROXML::XML.parse_file(fixture_path(name)).root
 end
 
 def fixture_path(name)

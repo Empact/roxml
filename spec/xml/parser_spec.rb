@@ -1,6 +1,6 @@
 require 'spec/spec_helper.rb'
 
-describe ROXML::XML::Parser do
+describe ROXML::XML do
   before do
     # quiet the error handler
     ROXML::XML::Error.reset_handler if ROXML::XML::Error.respond_to?(:reset_handler)

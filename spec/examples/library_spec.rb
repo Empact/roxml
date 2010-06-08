@@ -17,7 +17,7 @@ describe Library do
 
   describe "#to_xml" do
     it "should contain the expected information" do
-      @lib.to_xml.to_s.should == ROXML::XML::Parser.parse(%{<library><NAME><![CDATA[Favorite Books]]></NAME><novel ISBN='0201710897'><title>The PickAxe</title><description><![CDATA[Best Ruby book out there!]]></description><author>David Thomas, Andrew Hunt, Dave Thomas</author><publisher><name>Addison Wesley Longman, Inc.</name></publisher></novel></library>}).root.to_s
+      @lib.to_xml.to_s.should == ROXML::XML.parse_string(%{<library><NAME><![CDATA[Favorite Books]]></NAME><novel ISBN='0201710897'><title>The PickAxe</title><description><![CDATA[Best Ruby book out there!]]></description><author>David Thomas, Andrew Hunt, Dave Thomas</author><publisher><name>Addison Wesley Longman, Inc.</name></publisher></novel></library>}).root.to_s
     end
 
     context "when written to a file" do
@@ -33,7 +33,7 @@ describe Library do
      end
 
      it "should be contain the expected xml" do
-        ROXML::XML::Parser.parse(File.read(@path)).to_s.should == ROXML::XML::Parser.parse(%{<?xml version="1.0"?><library><NAME><![CDATA[Favorite Books]]></NAME><novel ISBN='0201710897'><title>The PickAxe</title><description><![CDATA[Best Ruby book out there!]]></description><author>David Thomas, Andrew Hunt, Dave Thomas</author><publisher><name>Addison Wesley Longman, Inc.</name></publisher></novel></library>}).to_s
+        ROXML::XML.parse_string(File.read(@path)).to_s.should == ROXML::XML.parse_string(%{<?xml version="1.0"?><library><NAME><![CDATA[Favorite Books]]></NAME><novel ISBN='0201710897'><title>The PickAxe</title><description><![CDATA[Best Ruby book out there!]]></description><author>David Thomas, Andrew Hunt, Dave Thomas</author><publisher><name>Addison Wesley Longman, Inc.</name></publisher></novel></library>}).to_s
       end
 
       it "should be re-parsable via .from_xml" do

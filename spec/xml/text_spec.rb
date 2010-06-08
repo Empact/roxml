@@ -2,7 +2,7 @@ require 'spec/spec_helper'
 
 describe ROXML::XMLTextRef do
   before do
-    @xml = ROXML::XML::Parser.parse %(
+    @xml = ROXML::XML.parse_string %(
 <myxml>
   <node>
     <name>first</name>
@@ -41,7 +41,7 @@ describe ROXML::XMLTextRef do
   
   context "when the namespaces are different" do
     before do
-      @xml = ROXML::XML::Parser.parse %(
+      @xml = ROXML::XML.parse_string %(
       <myxml xmlns="http://example.com/three" xmlns:one="http://example.com/one" xmlns:two="http://example.com/two">
         <node>
           <one:name>first</one:name>

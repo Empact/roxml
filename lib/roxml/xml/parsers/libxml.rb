@@ -28,11 +28,22 @@ module ROXML
         parent << child
         child
       end
+
+      def parse_string(str_data)
+        LibXML::XML::Parser.string(str_data).parse
+      end
+
+      def parse_file(path)
+        LibXML::XML::Parser.file(path).parse
+      end
+
+      def parse_io(stream)
+        LibXML::XML::Parser.io(stream).parse
+      end
     end
 
     Document = LibXML::XML::Document
     Node = LibXML::XML::Node
-    Parser = LibXML::XML::Parser
     Error = LibXML::XML::Error
 
     module NamespacedSearch
@@ -65,22 +76,6 @@ module ROXML
 
       def default_namespace
         doc.default_namespace
-      end
-    end
-
-    class Parser
-      class << self
-        def parse(str_data)
-          string(str_data).parse
-        end
-
-        def parse_file(path)
-          file(path).parse
-        end
-
-        def parse_io(stream)
-          io(stream).parse
-        end
       end
     end
   end

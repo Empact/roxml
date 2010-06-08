@@ -33,7 +33,7 @@ class TestToXmlWithDefaults < ActiveSupport::TestCase
     dict = Person.from_xml(fixture(:nameless_ageless_youth))
 
     xml = '<person age="21">Unknown</person>'
-    assert_equal ROXML::XML::Parser.parse(xml).root.to_s, dict.to_xml.to_s
+    assert_equal ROXML::XML.parse_string(xml).root.to_s, dict.to_xml.to_s
   end
 end
 

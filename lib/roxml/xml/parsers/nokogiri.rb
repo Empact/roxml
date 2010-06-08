@@ -27,6 +27,19 @@ module ROXML
       def add_child(parent, child)
         parent.add_child(child)
       end
+
+      def parse_string(string)
+        Nokogiri::XML(string)
+      end
+
+      def parse_file(path)
+        path = path.sub('file:', '') if path.starts_with?('file:')
+        parse_io(open(path))
+      end
+
+      def parse_io(stream)
+        Nokogiri::XML(stream)
+      end
     end
 
     Document = Nokogiri::XML::Document
@@ -34,23 +47,6 @@ module ROXML
     Node = Nokogiri::XML::Node
 
     module Error; end
-
-    class Parser
-      class << self
-        def parse(string)
-          Nokogiri::XML(string)
-        end
-
-        def parse_file(path) #:nodoc:
-          path = path.sub('file:', '') if path.starts_with?('file:')
-          parse(open(path))
-        end
-
-        def parse_io(stream) #:nodoc:
-          parse(stream)
-        end
-      end
-    end
 
     class Document
       def save(path)

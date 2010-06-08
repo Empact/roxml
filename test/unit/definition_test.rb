@@ -173,17 +173,17 @@ class TestDefinition < ActiveSupport::TestCase
 
   def test_default_works
     opts = ROXML::Definition.new(:missing, :else => true)
-    assert_equal true, opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
+    assert_equal true, opts.to_ref(RoxmlObject.new).value_in(ROXML::XML.parse_string('<xml></xml>'))
   end
 
   def test_default_works_for_arrays
     opts = ROXML::Definition.new(:missing, :as => [])
-    assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
+    assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML.parse_string('<xml></xml>'))
   end
 
   def test_default_works_for_recursive_objects
     opts = ROXML::Definition.new(:missing, :as => RecursiveObject, :else => false)
-    assert_equal false, opts.to_ref(RoxmlObject.new).value_in(ROXML::XML::Parser.parse('<xml></xml>'))
+    assert_equal false, opts.to_ref(RoxmlObject.new).value_in(ROXML::XML.parse_string('<xml></xml>'))
   end
 
   def test_content_is_accepted_as_from

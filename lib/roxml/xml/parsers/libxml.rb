@@ -40,6 +40,10 @@ module ROXML
       def parse_io(stream)
         LibXML::XML::Parser.io(stream).parse
       end
+
+      def save_doc(doc, path)
+        doc.save(path)
+      end
     end
 
     Document = LibXML::XML::Document

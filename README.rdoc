@@ -59,7 +59,15 @@ To create a library and put a number of books in it we could run the following c
 
 To save this information to an XML file:
 
-  doc = ROXML::XML::Document.new
+  doc = Nokogiri::XML::Document.new
+  doc.root = lib.to_xml
+  open("library.xml", 'w') do |file|
+    file << doc.serialize
+  end
+
+or
+
+  doc = LibXML::XML::Document.new
   doc.root = lib.to_xml
   doc.save("library.xml")
 

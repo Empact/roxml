@@ -25,7 +25,7 @@ describe Library do
         @path = "spec/examples/library.xml"
         @doc = ROXML::XML::Document.new
         @doc.root = @lib.to_xml
-        @doc.save(@path)
+        ROXML::XML.save_doc(@doc, @path)
       end
 
      after :all do

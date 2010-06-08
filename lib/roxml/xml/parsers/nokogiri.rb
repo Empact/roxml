@@ -40,6 +40,12 @@ module ROXML
       def parse_io(stream)
         Nokogiri::XML(stream)
       end
+
+      def save_doc(doc, path)
+        open(path, 'w') do |file|
+          file << doc.serialize
+        end
+      end
     end
 
     Document = Nokogiri::XML::Document
@@ -47,12 +53,6 @@ module ROXML
     Node = Nokogiri::XML::Node
 
     class Document
-      def save(path)
-        open(path, 'w') do |file|
-          file << serialize
-        end
-      end
-
       def default_namespace
         'xmlns' if root.namespaces['xmlns']
       end

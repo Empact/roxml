@@ -1,5 +1,9 @@
 require 'uri'
+
 require 'active_support'
+require 'active_support/core_ext/module/delegation'
+require 'active_support/core_ext/array/extract_options'
+require 'active_support/core_ext/hash'
 require 'active_support/core_ext/string/starts_ends_with'
 
 require 'roxml/definition'

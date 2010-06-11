@@ -217,6 +217,13 @@ module ROXML
     end
   end
 
+  class XMLNameSpaceRef < XMLRef # :nodoc:
+    private
+      def fetch_value(xml)
+        xml.namespace.prefix
+      end
+  end
+
   class XMLHashRef < XMLTextRef # :nodoc:
     delegate :hash, :to => :opts
 

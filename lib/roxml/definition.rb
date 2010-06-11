@@ -55,8 +55,9 @@ module ROXML
       elsif opts[:from] == :attr
         @sought_type = :attr
         opts[:from] = nil
-      elsif opts[:from] == :name
+      elsif opts[:from] == :namespace
         opts[:from] = '*'
+        @sought_type = :namespace
       elsif opts[:from].to_s.starts_with?('@')
         @sought_type = :attr
         opts[:from].sub!('@', '')
@@ -113,6 +114,7 @@ module ROXML
       case sought_type
       when :attr          then XMLAttributeRef
       when :text          then XMLTextRef
+      when :namespace     then XMLNameSpaceRef
       when HashDefinition then XMLHashRef
       when Symbol         then raise ArgumentError, "Invalid type argument #{sought_type}"
       else                     XMLObjectRef

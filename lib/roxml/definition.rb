@@ -63,8 +63,9 @@ module ROXML
       end
 
       @attr_name = accessor.to_s.chomp('?')
-      @name = (opts[:from] || @attr_name).to_s
+      @name = @attr_name.to_s
       @name = @name.singularize if hash? || array?
+      @name = opts[:from] || @name
       if hash? && (hash.key.name? || hash.value.name?)
         @name = '*'
       end

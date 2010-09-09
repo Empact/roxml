@@ -50,7 +50,7 @@ module ROXML
     Node = LibXML::XML::Node
 
     module NamespacedSearch
-      def search(xpath, roxml_namespaces = {})
+      def roxml_search(xpath, roxml_namespaces = {})
         if namespaces.default
           roxml_namespaces = {:xmlns => namespaces.default.href}.merge(roxml_namespaces)
         end

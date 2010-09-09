@@ -53,15 +53,17 @@ module ROXML
     Node = Nokogiri::XML::Node
 
     class Document
+      alias :roxml_search :search
+
       def default_namespace
         'xmlns' if root.namespaces['xmlns']
       end
     end
 
     module NodeExtensions
-      def search(xpath, roxml_namespaces = {})
+      def roxml_search(xpath, roxml_namespaces = {})
         xpath = "./#{xpath}"
-        (roxml_namespaces.present? ? super(xpath, roxml_namespaces) : super(xpath))
+        (roxml_namespaces.present? ? search(xpath, roxml_namespaces) : search(xpath))
       end
 
       def default_namespace

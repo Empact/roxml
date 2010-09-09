@@ -1,7 +1,7 @@
 module ROXML
   class RequiredElementMissing < Exception # :nodoc:
   end
-  
+
   #
   # Internal base class that represents an XML - Class binding.
   #
@@ -103,10 +103,10 @@ module ROXML
 
     def nodes_in(xml)
       @default_namespace = xml.default_namespace
-      vals = xml.search(xpath, @instance.class.roxml_namespaces)
+      vals = xml.roxml_search(xpath, @instance.class.roxml_namespaces)
 
       if several? && vals.empty? && !wrapper && auto_xpath
-        vals = xml.search(auto_xpath, @instance.class.roxml_namespaces)
+        vals = xml.roxml_search(auto_xpath, @instance.class.roxml_namespaces)
         @auto_vals = !vals.empty?
       end
 

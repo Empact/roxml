@@ -41,13 +41,13 @@ class TestToXmlWithBlocks < ActiveSupport::TestCase
   def test_pagecount_serialized_properly_after_modification
     b = Book.from_xml(fixture(:book_valid))
     xml = xml_fixture(:book_valid)
-    assert_equal '357', xml.search('pagecount').first.content
+    assert_equal '357', xml.roxml_search('pagecount').first.content
     assert_equal 357, b.pages
 
     b.pages = 500
     doc = ROXML::XML::Document.new()
     doc.root = b.to_xml
-    assert_equal '500', doc.search('pagecount').first.content
+    assert_equal '500', doc.roxml_search('pagecount').first.content
   end
 end
 

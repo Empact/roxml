@@ -1,3 +1,4 @@
+# encoding: utf-8
 require_relative './spec_helper'
 
 describe ROXML::Definition do
@@ -55,11 +56,11 @@ describe ROXML::Definition do
   end
 
   it "should unescape utf characters in xml" do
-    # ROXML::Definition.new(:questions, :as => []).to_ref(RoxmlObject.new).value_in(%{
-    #   <xml>
-    #     <question>ROXML\342\204\242</question>
-    #   </xml>
-    # }).should == ["ROXML™"]
+    ROXML::Definition.new(:questions, :as => []).to_ref(RoxmlObject.new).value_in(%{
+      <xml>
+        <question>ROXML\342\204\242</question>
+      </xml>
+    }).should == ["ROXML™"]
   end
 
   describe "attr name" do

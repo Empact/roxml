@@ -1,4 +1,5 @@
-require 'test/test_helper'
+# encoding: utf-8
+require_relative './../test_helper'
 
 class EmptyCart
   include ROXML
@@ -171,7 +172,7 @@ HERE
     node = taxonomies.taxonomies.first.nodes.first
     assert_equal 'Africa', node.name
     assert_equal 'Algeria', node.nodes.first.name
-    assert_equal ['Algiers', "Gharda\303\257a", 'El Oued', 'Timimoun', 'Annaba'],
+    assert_equal ['Algiers', "Ghardaïa", 'El Oued', 'Timimoun', 'Annaba'],
       node.nodes.first.nodes.map(&:name)
   end
 

@@ -1,4 +1,4 @@
-require 'test/test_helper'
+require_relative './../test_helper'
 
 class TestDefaultXMLNamespaces < ActiveSupport::TestCase
   def setup

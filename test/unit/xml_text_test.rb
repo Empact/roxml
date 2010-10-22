@@ -1,4 +1,4 @@
-require 'test/test_helper'
+require_relative './../test_helper'
 
 class TestXMLText < ActiveSupport::TestCase
   # Test a simple mapping with no composition

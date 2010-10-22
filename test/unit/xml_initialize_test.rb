@@ -1,4 +1,4 @@
-require 'test/test_helper'
+require_relative './../test_helper'
 
 class InheritedBookWithDepth < Book
   xml_reader :depth, :as => Measurement

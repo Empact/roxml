@@ -1,4 +1,4 @@
-require 'test/test_helper'
+require_relative './../test_helper'
 
 class TestHashToXml < ActiveSupport::TestCase
   to_xml_test :dictionary_of_attrs,

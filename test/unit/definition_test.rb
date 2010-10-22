@@ -1,4 +1,4 @@
-require 'test/test_helper'
+require_relative './../test_helper'
 
 class TestDefinition < ActiveSupport::TestCase
   def assert_hash(opts, kvp)
@@ -24,7 +24,7 @@ class TestDefinition < ActiveSupport::TestCase
     opts = ROXML::Definition.new(:intarray, :as => [Integer])
     assert opts.array?
     assert_equal :text, opts.sought_type
-    assert 1, opts.blocks.size
+    assert_equal 1, opts.blocks.size
   end
 
   def test_required

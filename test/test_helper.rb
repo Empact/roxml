@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'active_support/test_case'
-require 'test/mocks/mocks'
-require 'test/mocks/dictionaries'
-require 'test/support/fixtures'
+require_relative './mocks/mocks'
+require_relative './mocks/dictionaries'
+require_relative './support/fixtures'
 
 def to_xml_test(*names)
   names = names.first if names.size == 1 && names.first.is_a?(Hash)

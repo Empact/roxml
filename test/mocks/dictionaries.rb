@@ -1,4 +1,4 @@
-require 'lib/roxml'
+require_relative "./../../lib/roxml"
 
 class DictionaryOfAttrs
   include ROXML

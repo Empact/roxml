@@ -1,5 +1,6 @@
-require 'spec/spec_helper'
-require 'examples/rails'
+require 'fileutils'
+require_relative './../spec_helper'
+require_relative './../../examples/rails'
 
 describe ROXML, "under ActiveRecord" do
   before do

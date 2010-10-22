@@ -1,9 +1,8 @@
 require 'rubygems'
 require 'pathname'
-require 'test/support/fixtures'
-require 'lib/roxml'
-
-require 'spec/shared_specs' if defined?(Spec)
+require_relative './../test/support/fixtures'
+require_relative './../lib/roxml'
+require_relative './shared_specs'
 
 def xml_for(name)
   Pathname.new(File.dirname(__FILE__)).expand_path.dirname.join("examples/xml/#{name}.xml")

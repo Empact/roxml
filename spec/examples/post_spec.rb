@@ -1,5 +1,5 @@
-require 'spec/spec_helper'
-require 'examples/posts'
+require_relative './../spec_helper'
+require_relative './../../examples/posts'
 
 describe Post do
   before do

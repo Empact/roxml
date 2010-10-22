@@ -1,5 +1,5 @@
-require 'spec/spec_helper'
-require 'examples/twitter'
+require_relative './../spec_helper'
+require_relative './../../examples/twitter'
 
 describe Statuses do
   describe Status do

@@ -1,5 +1,5 @@
-require 'spec/spec_helper'
-require 'examples/current_weather'
+require_relative './../spec_helper'
+require_relative './../../examples/current_weather'
 
 describe Weather do
   before do

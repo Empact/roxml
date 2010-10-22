@@ -1,5 +1,5 @@
-require 'spec/spec_helper'
-require 'examples/dashed_elements'
+require_relative './../spec_helper'
+require_relative './../../examples/dashed_elements'
 
 describe GitHub::Commit do
   before do

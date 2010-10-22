@@ -1,4 +1,4 @@
-require 'spec/spec_helper'
+require_relative './spec_helper'
 
 describe "freezable xml reference", :shared => true do
   describe "with :frozen option" do

@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require 'spec/spec_helper'
+require_relative './../spec/spec_helper'
 
 # The document `pita.xml` contains both a default namespace and the 'georss'
 # namespace (for the 'point' xml_reader).

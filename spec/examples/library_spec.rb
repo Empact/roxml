@@ -1,5 +1,5 @@
-require 'spec/spec_helper'
-require 'examples/library'
+require_relative './../spec_helper'
+require_relative './../../examples/library'
 
 describe Library do
   before :all do

@@ -1,4 +1,4 @@
-require 'spec/spec_helper.rb'
+require_relative './../spec_helper.rb'
 
 describe ROXML, "#xml_namespaces" do
   describe "for reading" do

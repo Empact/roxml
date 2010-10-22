@@ -1,4 +1,4 @@
-require 'spec/spec_helper.rb'
+require_relative './../spec_helper.rb'
 
 describe ROXML::XML do
   it "should raise on malformed xml" do

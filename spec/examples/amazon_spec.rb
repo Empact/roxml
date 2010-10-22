@@ -1,5 +1,5 @@
-require 'spec/spec_helper'
-require 'examples/amazon'
+require_relative './../spec_helper'
+require_relative './../../examples/amazon'
 
 describe PITA::ItemSearchResponse do
   before do

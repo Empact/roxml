@@ -57,7 +57,7 @@ EOS
     end
   end
 
-  describe "roxml namespacey declaration", :shared => true do
+  shared_examples_for "roxml namespacey declaration" do
     context "with a namespacey :from" do
       context "and an explicit :namespace" do
         it "should raise" do
@@ -83,7 +83,7 @@ EOS
     end
   end
 
-  describe "roxml namespacey declaration with default", :shared => true do
+  shared_examples_for "roxml namespacey declaration with default" do
     it_should_behave_like "roxml namespacey declaration"
     
     it "should use the default namespace" do

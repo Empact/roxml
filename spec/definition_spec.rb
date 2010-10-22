@@ -13,7 +13,7 @@ describe ROXML::Definition do
     end
   end
 
-  describe "DateTime reference", :shared => true do
+  shared_examples_for "DateTime reference" do
     it "should return nil on empty string" do
       @subject.blocks.first.call("  ").should be_nil
     end
@@ -29,7 +29,7 @@ describe ROXML::Definition do
     end
   end
 
-  describe "Date reference", :shared => true do
+  shared_examples_for "Date reference" do
     it "should return nil on empty string" do
       @subject.blocks.first.call("  ").should be_nil
     end
@@ -128,7 +128,7 @@ describe ROXML::Definition do
     end
 
     describe "=> {}" do
-      describe "hash options declaration", :shared => true do
+      shared_examples_for "hash options declaration" do
         it "should represent a hash" do
           @opts.hash?.should be_true
         end
@@ -210,7 +210,7 @@ describe ROXML::Definition do
         proc { ROXML::Definition.new(:count, :as => :foat) }.should raise_error(ArgumentError)
       end
 
-      describe "block shorthand type declaration", :shared => true do
+      shared_examples_for "block shorthand type declaration" do
         it "should translate nil to nil" do
           @definition.blocks.first.call(nil).should be_nil
         end
@@ -390,7 +390,7 @@ describe ROXML::Definition do
   end
 
   describe ":from" do
-    describe "attribute reference", :shared => true do
+    shared_examples_for "attribute reference" do
       it "should be interpreted as :attr" do
         @opts.sought_type.should == :attr
       end
@@ -450,7 +450,7 @@ describe ROXML::Definition do
 
   describe "options" do
 
-    describe "boolean option", :shared => true do
+    shared_examples_for "boolean option" do
       it "should be recognized" do
         ROXML::Definition.new(:author, :from => :content, @option => true).respond_to?(:"#{@option}?")
         ROXML::Definition.new(:author, :from => :content, @option => true).send(:"#{@option}?").should be_true

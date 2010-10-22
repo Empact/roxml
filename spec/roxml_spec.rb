@@ -1,7 +1,7 @@
 require_relative './spec_helper'
 
 describe ROXML, "#from_xml" do
-  describe "from_xml call", :shared => true do
+  shared_examples_for "from_xml call" do
     it "should fetch values" do
       book = BookWithContributors.from_xml(@path)
       book.title.should == "Programming Ruby - 2nd Edition"

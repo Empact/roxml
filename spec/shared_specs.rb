@@ -1,6 +1,6 @@
 require_relative './spec_helper'
 
-describe "freezable xml reference", :shared => true do
+shared_examples_for "freezable xml reference" do
   describe "with :frozen option" do
     it "should be frozen" do
       @frozen.frozen?.should be_true

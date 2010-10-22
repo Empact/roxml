@@ -25,7 +25,7 @@ EOF
   gem.add_dependency 'activesupport', '>= 3.0.0'
   gem.add_dependency 'nokogiri', '>= 1.3.3'
 
-  gem.add_development_dependency "rspec"
+  gem.add_development_dependency "rspec", '>= 2.0.0'
   gem.add_development_dependency "sqlite3-ruby", '>= 1.2.4'
   gem.add_development_dependency "activerecord", '>= 3.0.0'
 end
@@ -56,30 +56,28 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-require 'spec/rake/spectask'
+require 'rspec/core/rake_task'
 desc "Run specs"
-Spec::Rake::SpecTask.new(:spec) do |spec|
-  spec.libs << 'lib' << 'spec' << 'examples'
-  spec.spec_opts = ['--options', "spec/spec.opts"]
-  spec.spec_files = FileList['spec/**/*_spec.rb']
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.ruby_opts = '-Ilib -Ispec -Iexamples'
+  # spec.spec_files = FileList['spec/**/*_spec.rb']
 end
 
 namespace :spec do
   [:libxml, :nokogiri].each do |parser|
     desc "Spec ROXML under the #{parser} parser"
-    Spec::Rake::SpecTask.new(parser) do |spec|
-      spec.libs << 'lib' << 'spec' << 'examples'
-      spec.spec_opts = ['--options=spec/spec.opts']
-      spec.spec_files = ["spec/support/#{parser}.rb"] + FileList['spec/**/*_spec.rb']
+    RSpec::Core::RakeTask.new(parser) do |spec|
+      spec.ruby_opts = '-Ilib -Ispec -Iexamples'
+      # spec.spec_files = ["spec/support/#{parser}.rb"] + FileList['spec/**/*_spec.rb']
     end
   end
 end
 
 desc "Run specs with rcov"
-Spec::Rake::SpecTask.new(:rcov) do |spec|
-  spec.libs << 'lib' << 'spec'
-  spec.pattern = 'spec/**/*_spec.rb'
+RSpec::Core::RakeTask.new(:rcov) do |spec|
   spec.rcov = true
+  spec.ruby_opts = '-Ilib -Ispec -Iexamples'
+  # spec.spec_files = FileList['spec/**/*_spec.rb']
 end
 
 require 'rake/testtask'

@@ -10,15 +10,6 @@ Please submit bugs here:
 
     http://github.com/Empact/roxml/issues
 
-
-=ROXML is of, by, and for all of us
-
-I've taken a lead role on ROXML these past months, but unfortunately I, Ben Woosley (Empact), am unable to continue to maintain ROXML at this time, as it no longer aligns with my other interests & efforts.  While I would very much like to fix the bugs listed on the github issues page, I'm simply not the person to do it, given my other concerns.
-
-But don't be mistaken, the library covers most cases very well, and is on the better-tested side of the spectrum (some 353 examples, all green as of this writing).
-
-If you run into a problem with ROXML, *please* take advantage of those tests, and github, by rolling up your sleeves and making a fix!  Your fellow programmers, myself included, will appreciate you for it.
-
 =Quick Start Guide
 
 This is a short usage example. See ROXML::ClassMethods::Declarations and packaged test cases for more information.

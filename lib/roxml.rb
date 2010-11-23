@@ -1,12 +1,14 @@
 require 'uri'
 
 require 'active_support'
-require 'active_support/inflector/inflections'
-require 'active_support/core_ext/object/duplicable'
-require 'active_support/core_ext/module/delegation'
-require 'active_support/core_ext/array/extract_options'
-require 'active_support/core_ext/hash'
-require 'active_support/core_ext/string/starts_ends_with'
+unless Gem.loaded_specs['activesupport'] or Gem::Version.create(Gem.loaded_specs['activesupport'].version) < Gem::Version.create('3.0.0')
+  require 'active_support/inflector/inflections'
+  require 'active_support/core_ext/object/duplicable'
+  require 'active_support/core_ext/module/delegation'
+  require 'active_support/core_ext/array/extract_options'
+  require 'active_support/core_ext/hash'
+  require 'active_support/core_ext/string/starts_ends_with'
+end
 
 require 'roxml/definition'
 require 'roxml/xml'

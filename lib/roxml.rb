@@ -1,7 +1,7 @@
 require 'uri'
 
 require 'active_support'
-unless Gem.loaded_specs['activesupport'] or Gem::Version.create(Gem.loaded_specs['activesupport'].version) < Gem::Version.create('3.0.0')
+if Gem.loaded_specs['activesupport'].version >= Gem::Version.new('3')
   require 'active_support/inflector/inflections'
   require 'active_support/core_ext/object/duplicable'
   require 'active_support/core_ext/module/delegation'

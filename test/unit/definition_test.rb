@@ -176,6 +176,16 @@ class TestDefinition < ActiveSupport::TestCase
     assert_equal true, opts.to_ref(RoxmlObject.new).value_in(ROXML::XML.parse_string('<xml></xml>'))
   end
 
+  def test_empty_works
+    opts = ROXML::Definition.new(:age, :empty => 50)
+    assert_equal 50, opts.to_ref(RoxmlObject.new).value_in(ROXML::XML.parse_string('<xml><age /></xml>'))
+  end
+
+  def test_else_comes_before_empty_works
+    opts = ROXML::Definition.new(:missing, :else => 25, :empty => 50)
+    assert_equal 25, opts.to_ref(RoxmlObject.new).value_in(ROXML::XML.parse_string('<xml></xml>'))
+  end
+
   def test_default_works_for_arrays
     opts = ROXML::Definition.new(:missing, :as => [])
     assert_equal [], opts.to_ref(RoxmlObject.new).value_in(ROXML::XML.parse_string('<xml></xml>'))

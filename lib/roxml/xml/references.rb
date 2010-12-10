@@ -7,7 +7,7 @@ module ROXML
   #
   class XMLRef # :nodoc:
     attr_reader :opts
-    delegate :accessor, :array?, :default, :empty, :required?, :wrapper, :to => :opts
+    delegate :required?, :array?, :accessor, :default, :wrapper, :to => :opts
 
     def initialize(opts, instance)
       @opts = opts
@@ -34,13 +34,8 @@ module ROXML
     def value_in(xml)
       xml = XML::Node.from(xml)
       value = fetch_value(xml)
+      value = default if value.nil? || value.to_s.empty?
 
-      if value.nil?
-        value = default
-      elsif empty && value.to_s.empty?
-        value = empty
-      end
-      
       freeze(apply_blocks(value))
     end
 

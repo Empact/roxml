@@ -432,8 +432,7 @@ module ROXML # :nodoc:
       # === Other Options
       # [:in] An optional name of a wrapping tag for this XML accessor.
       #       This can include other xpath values, which will be joined with :from with a '/'
-      # [:else] Default value for attribute, if missing from the xml on .from_xml
-      # [:empty] Default value for attribute, if attribute is present but contains no content. e.g. <name />
+      # [:else] Default value for attribute, if missing from the xml (or it's there but its contents are blank) on .from_xml
       # [:required] If true, throws RequiredElementMissing when the element isn't present
       # [:frozen] If true, all results are frozen (using #freeze) at parse-time.
       # [:cdata] true for values which should be input from or output as cdata elements

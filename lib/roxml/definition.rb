@@ -15,14 +15,13 @@ module ROXML
   end
 
   class Definition # :nodoc:
-    attr_reader :accessor, :attr_name, :blocks, :empty, :hash, :name, :namespace, :sought_type, :to_xml, :wrapper
-    bool_attr_reader :array, :cdata, :frozen, :name_explicit, :required
+    attr_reader :name, :sought_type, :wrapper, :hash, :blocks, :accessor, :to_xml, :attr_name, :namespace
+    bool_attr_reader :name_explicit, :array, :cdata, :required, :frozen
 
     def initialize(sym, opts = {}, &block)
       opts.assert_valid_keys(:from, :in, :as, :namespace,
-                             :else, :empty, :required, :frozen, :cdata, :to_xml)
+                             :else, :required, :frozen, :cdata, :to_xml)
       @default = opts.delete(:else)
-      @empty = opts.delete(:empty)
       @to_xml = opts.delete(:to_xml)
       @name_explicit = opts.has_key?(:from) && opts[:from].is_a?(String)
       @cdata = opts.delete(:cdata)
@@ -109,7 +108,7 @@ module ROXML
       end
       @default.duplicable? ? @default.dup : @default
     end
-    
+
     def to_ref(inst)
       case sought_type
       when :attr          then XMLAttributeRef

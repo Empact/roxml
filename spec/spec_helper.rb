@@ -13,3 +13,12 @@ end
 class RoxmlObject
   include ROXML
 end
+
+# returns an array representing the path  through first child of each element in the doc
+def xml_path(xml, path = [])
+  path << xml.name if xml.is_a?(Nokogiri::XML::Element)
+  unless xml.children.empty?
+    xml_path(xml.children.first, path)
+  end
+  return path
+end

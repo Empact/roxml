@@ -1,0 +1,19 @@
+<library>
+  <name>Ruby library</name>
+  <policy>
+    <fines>
+      <fine>
+        <name>late-book</name>
+        <desc>The book was returned late.</desc>
+      </fine>
+      <fine>
+        <name>damaged-book</name>
+        <desc>The book was returned damaged.</desc>
+      </fine>
+      <fine>
+        <name>talking</name>
+        <desc>The librarian won't go out with you. Stop asking.</desc>
+      </fine>
+    </fines>
+  </policy>
+</library>

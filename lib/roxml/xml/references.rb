@@ -98,8 +98,11 @@ module ROXML
       if !opts[:always_create] && (child = xml.children.find {|c| c.name == wrap_with })
        return child
       end
-      XML.add_node(xml, wrap_with.to_s)
+
+      wraps = wrap_with.to_s.split('/')
+      wraps.inject(xml){|node,wrap| XML.add_node(node, wrap)}
     end
+
 
     def nodes_in(xml)
       @default_namespace = xml.default_namespace

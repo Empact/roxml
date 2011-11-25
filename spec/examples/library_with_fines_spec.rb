@@ -31,7 +31,6 @@ describe LibraryWithFines do
   it "should be re-parsable via .from_xml" do
     lib_reparsed = LibraryWithFines.from_xml(library.to_xml.to_s)
     lib_reparsed.name.should == library.name
-    puts lib_reparsed.to_xml.xpath('name')
     lib_reparsed.fines.should == library.fines
   end
 

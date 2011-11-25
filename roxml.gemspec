@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{roxml}
-  s.version = "3.1.6"
+  s.version = "3.2.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Ben Woosley}, %q{Zak Mandhro}, %q{Anders Engstrom}, %q{Russ Olsen}]
@@ -34,6 +34,7 @@ RESTful applications, Web Services, and XML-RPC.
     "examples/current_weather.rb",
     "examples/dashed_elements.rb",
     "examples/library.rb",
+    "examples/library_with_fines.rb",
     "examples/posts.rb",
     "examples/rails.rb",
     "examples/twitter.rb",
@@ -41,6 +42,7 @@ RESTful applications, Web Services, and XML-RPC.
     "examples/xml/amazon.xml",
     "examples/xml/current_weather.xml",
     "examples/xml/dashed_elements.xml",
+    "examples/xml/library_with_fines.xml",
     "examples/xml/posts.xml",
     "examples/xml/twitter.xml",
     "lib/roxml.rb",
@@ -57,8 +59,10 @@ RESTful applications, Web Services, and XML-RPC.
     "spec/examples/current_weather_spec.rb",
     "spec/examples/dashed_elements_spec.rb",
     "spec/examples/library_spec.rb",
+    "spec/examples/library_with_fines_spec.rb",
     "spec/examples/post_spec.rb",
     "spec/examples/twitter_spec.rb",
+    "spec/reference_spec.rb",
     "spec/roxml_spec.rb",
     "spec/shared_specs.rb",
     "spec/spec_helper.rb",

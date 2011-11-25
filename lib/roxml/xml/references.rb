@@ -34,7 +34,7 @@ module ROXML
     def value_in(xml)
       xml = XML::Node.from(xml)
       value = fetch_value(xml)
-      value = default if value.nil?
+      value = default if value.nil? || value.to_s.empty?
 
       freeze(apply_blocks(value))
     end

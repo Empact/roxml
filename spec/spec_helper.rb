@@ -1,3 +1,4 @@
+require 'ostruct'
 require 'rubygems'
 require 'pathname'
 require_relative './../test/support/fixtures'

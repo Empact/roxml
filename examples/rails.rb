@@ -3,10 +3,9 @@ require_relative './../spec/spec_helper'
 require 'sqlite3'
 require 'active_record'
 
-DB_PATH = 'spec/examples/rails.sqlite3'
 ActiveRecord::Base.establish_connection(
   :adapter  => 'sqlite3',
-  :database => DB_PATH
+  :database => ':memory:'
 )
 
 class Waypoint < ActiveRecord::Base

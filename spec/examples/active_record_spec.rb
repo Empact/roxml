@@ -1,14 +1,10 @@
 require 'fileutils'
-require_relative './../spec_helper'
-require_relative './../../examples/rails'
+require 'spec_helper'
+require_relative '../../examples/rails'
 
 describe ROXML, "under ActiveRecord" do
   before do
     @route = Route.from_xml(xml_for('active_record'))
-  end
-
-  before(:all) do
-    FileUtils.rm(DB_PATH) if File.exists?(DB_PATH)
   end
 
   it "should be parsed" do

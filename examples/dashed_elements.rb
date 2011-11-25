@@ -14,7 +14,7 @@ module GitHub
   end
 end
 
-unless defined?(Spec)
+unless defined?(RSpec)
   commit = GitHub::Commit.from_xml(xml_for('dashed_elements'))
   puts commit.committed_date, commit.url, commit.id, ''
 end

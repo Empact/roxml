@@ -25,7 +25,7 @@ module PITA
   end
 end
 
-unless defined?(Spec)
+unless defined?(RSpec)
   response = PITA::ItemSearchResponse.from_xml(xml_for('amazon'))
   p response.total_results
   p response.total_pages 

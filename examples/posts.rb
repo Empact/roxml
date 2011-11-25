@@ -19,7 +19,7 @@ class Posts
   xml_reader :posts, :as => [Post]
 end
 
-unless defined?(Spec)
+unless defined?(RSpec)
   posts = Posts.from_xml(xml_for('posts'))
   posts.posts.each do |post|
     puts post.description, post.href, post.extended, ''

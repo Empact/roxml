@@ -18,7 +18,7 @@ class Weather < Base
   xml_reader :observation, :as => WeatherObservation, :required => true
 end
 
-unless defined?(Spec)
+unless defined?(RSpec)
   current_weather = Weather.from_xml(xml_for('current_weather')).observation
   puts "temperature: #{current_weather.temperature}"
   puts "feels_like: #{current_weather.feels_like}"

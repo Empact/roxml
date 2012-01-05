@@ -32,11 +32,12 @@ module ROXML
     end
 
     def value_in(xml)
-      xml = XML::Node.from(xml)
-      value = fetch_value(xml)
+      value = fetch_value(XML::Node.from(xml))
       value = default if value.nil?
 
-      freeze(apply_blocks(value))
+      value = apply_blocks(value)
+      value = freeze(value) if value && opts.frozen?
+      value
     end
 
   private
@@ -67,12 +68,8 @@ module ROXML
     end
 
     def freeze(val)
-      if opts.frozen?
-        val.each(&:freeze) if val.is_a?(Enumerable)
-        val.freeze
-      else
-        val
-      end
+      val.each(&:freeze) if val.is_a?(Enumerable)
+      val.freeze
     end
 
     def xpath
@@ -269,12 +266,8 @@ module ROXML
     end
 
     def freeze(vals)
-      if opts.frozen?
-        vals.each_pair{|k, v| k.freeze; v.freeze }
-        vals.freeze
-      else
-        vals
-      end
+      vals.each_pair{|k, v| k.freeze; v.freeze }
+      vals.freeze
     end
 
     def to_hash(array)

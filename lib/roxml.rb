@@ -171,9 +171,9 @@ module ROXML # :nodoc:
       end
 
       def roxml_naming_convention # :nodoc:
-        (@roxml_naming_convention || begin
+        @roxml_naming_convention || begin
           superclass.roxml_naming_convention if superclass.respond_to?(:roxml_naming_convention)
-        end).freeze
+        end
       end
 
       # Declares a reference to a certain xml element, whether an attribute, a node,

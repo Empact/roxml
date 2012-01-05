@@ -6,8 +6,6 @@
     (fixes gh issue #27)
   * change the way we monkey patch Nokogiri to leave the original
     behaviour of the search() method unchanged (fixes gh issue #16)
-  * Unofficial release by James Healy, empact has stepped back from maintaining
-    roxml
 
 == 3.1.5 (December 18, 2009)
 

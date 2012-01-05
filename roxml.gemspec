@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{roxml}
-  s.version = "3.2.0"
+  s.version = "3.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Ben Woosley}, %q{Zak Mandhro}, %q{Anders Engstrom}, %q{Russ Olsen}]
@@ -24,6 +24,8 @@ RESTful applications, Web Services, and XML-RPC.
   s.files = [
     ".gitmodules",
     ".rspec",
+    "Gemfile",
+    "Gemfile.lock",
     "History.txt",
     "LICENSE",
     "README.rdoc",
@@ -63,6 +65,7 @@ RESTful applications, Web Services, and XML-RPC.
     "spec/examples/post_spec.rb",
     "spec/examples/twitter_spec.rb",
     "spec/reference_spec.rb",
+    "spec/regression_spec.rb",
     "spec/roxml_spec.rb",
     "spec/shared_specs.rb",
     "spec/spec_helper.rb",

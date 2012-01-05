@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = [%q{Ben Woosley}, %q{Zak Mandhro}, %q{Anders Engstrom}, %q{Russ Olsen}]
-  s.date = %q{2011-11-25}
+  s.date = %q{2012-01-05}
   s.description = %q{ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML.
 Using simple annotations, it enables Ruby classes to be mapped to XML. ROXML takes care
 of the marshalling and unmarshalling of mapped attributes so that developers can focus on
@@ -139,12 +139,16 @@ RESTful applications, Web Services, and XML-RPC.
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<activesupport>, [">= 2.3.0"])
       s.add_runtime_dependency(%q<nokogiri>, [">= 1.3.3"])
+      s.add_development_dependency(%q<rake>, [">= 0"])
+      s.add_development_dependency(%q<jeweler>, [">= 0"])
       s.add_development_dependency(%q<rspec>, [">= 2.0.0"])
       s.add_development_dependency(%q<sqlite3-ruby>, [">= 1.2.4"])
       s.add_development_dependency(%q<activerecord>, [">= 2.2.2"])
     else
       s.add_dependency(%q<activesupport>, [">= 2.3.0"])
       s.add_dependency(%q<nokogiri>, [">= 1.3.3"])
+      s.add_dependency(%q<rake>, [">= 0"])
+      s.add_dependency(%q<jeweler>, [">= 0"])
       s.add_dependency(%q<rspec>, [">= 2.0.0"])
       s.add_dependency(%q<sqlite3-ruby>, [">= 1.2.4"])
       s.add_dependency(%q<activerecord>, [">= 2.2.2"])
@@ -152,6 +156,8 @@ RESTful applications, Web Services, and XML-RPC.
   else
     s.add_dependency(%q<activesupport>, [">= 2.3.0"])
     s.add_dependency(%q<nokogiri>, [">= 1.3.3"])
+    s.add_dependency(%q<rake>, [">= 0"])
+    s.add_dependency(%q<jeweler>, [">= 0"])
     s.add_dependency(%q<rspec>, [">= 2.0.0"])
     s.add_dependency(%q<sqlite3-ruby>, [">= 1.2.4"])
     s.add_dependency(%q<activerecord>, [">= 2.2.2"])

@@ -21,13 +21,6 @@ EOF
   gem.authors = ["Ben Woosley", "Zak Mandhro", "Anders Engstrom", "Russ Olsen"]
 
   gem.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.rdoc"]
-
-  gem.add_dependency 'activesupport', '>= 2.3.0'
-  gem.add_dependency 'nokogiri', '>= 1.3.3'
-
-  gem.add_development_dependency "rspec", '>= 2.0.0'
-  gem.add_development_dependency "sqlite3-ruby", '>= 1.2.4'
-  gem.add_development_dependency "activerecord", '>= 2.2.2'
 end
 Jeweler::GemcutterTasks.new
 

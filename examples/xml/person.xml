@@ -1,0 +1,14 @@
+<person>
+  <name>John Doe</name>
+  <location>
+    <coordinates>
+      <latitude>40.715224</latitude>
+      <longitude>-74.005966</longitude>
+    </coordinates>
+    <address>
+      <street>Evergreen Terrace</street>
+      <city>Springfield</city>
+      <zip>2342</zip>
+    </address>
+  </location>
+</person>

@@ -90,16 +90,19 @@ module ROXML
 
     def wrap(xml, opts = {:always_create => false})
       wrap_with = @auto_vals ? auto_wrapper : wrapper
-
+      
       return xml if !wrap_with || xml.name == wrap_with
-      if !opts[:always_create] && (child = xml.children.find {|c| c.name == wrap_with })
-       return child
-      end
 
       wraps = wrap_with.to_s.split('/')
-      wraps.inject(xml){|node,wrap| XML.add_node(node, wrap)}
+      wraps.inject(xml) do |node,wrap| 
+        if !opts[:always_create] && (child = node.children.find {|c| c.name == wrap }) 
+          child
+        else
+          XML.add_node(node, wrap)    
+        end
+      end    
+    
     end
-
 
     def nodes_in(xml)
       @default_namespace = xml.default_namespace

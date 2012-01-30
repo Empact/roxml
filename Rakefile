@@ -32,8 +32,8 @@ task :libxml => ['test:libxml', 'spec:libxml']
 task :nokogiri => ['test:nokogiri', 'spec:nokogiri']
 
 
-require 'rake/rdoctask'
-Rake::RDocTask.new do |rdoc|
+require 'rdoc/task'
+RDoc::Task.new do |rdoc|
   if File.exist?('VERSION')
     version = File.read('VERSION')
   else

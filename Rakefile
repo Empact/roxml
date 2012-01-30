@@ -34,11 +34,7 @@ task :nokogiri => ['test:nokogiri', 'spec:nokogiri']
 
 require 'rdoc/task'
 RDoc::Task.new do |rdoc|
-  if File.exist?('VERSION')
-    version = File.read('VERSION')
-  else
-    version = ""
-  end
+  version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
   rdoc.rdoc_dir = 'rdoc'
   rdoc.title = "roxml #{version}"

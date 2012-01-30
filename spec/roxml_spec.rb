@@ -1,34 +1,42 @@
 require_relative './spec_helper'
 
-describe ROXML, "#from_xml" do
-  shared_examples_for "from_xml call" do
-    it "should fetch values" do
-      book = BookWithContributors.from_xml(@path)
-      book.title.should == "Programming Ruby - 2nd Edition"
-      book.contributors.map(&:name).should == ["David Thomas","Andrew Hunt","Chad Fowler"]
+describe ROXML do
+  describe "::VERSION" do
+    it "should be equal to the VERSION file contents" do
+      ROXML::VERSION.should == File.read('VERSION')
     end
   end
 
-  context "called with PathName" do
-    before do
-      @path = Pathname.new(fixture_path(:book_with_contributors))
+  describe "#from_xml" do
+    shared_examples_for "from_xml call" do
+      it "should fetch values" do
+        book = BookWithContributors.from_xml(@path)
+        book.title.should == "Programming Ruby - 2nd Edition"
+        book.contributors.map(&:name).should == ["David Thomas","Andrew Hunt","Chad Fowler"]
+      end
     end
-    it_should_behave_like "from_xml call"
-  end
 
-  context "called with File" do
-    before do
-      @path = File.new(fixture_path(:book_with_contributors))
+    context "called with PathName" do
+      before do
+        @path = Pathname.new(fixture_path(:book_with_contributors))
+      end
+      it_should_behave_like "from_xml call"
     end
-    it_should_behave_like "from_xml call"
-  end
 
-  context "called with URI" do
-    before do
-      require 'uri'
-      @path = URI.parse("file://#{File.expand_path(File.expand_path(fixture_path(:book_with_contributors)))}")
+    context "called with File" do
+      before do
+        @path = File.new(fixture_path(:book_with_contributors))
+      end
+      it_should_behave_like "from_xml call"
     end
-    it_should_behave_like "from_xml call"
+
+    context "called with URI" do
+      before do
+        require 'uri'
+        @path = URI.parse("file://#{File.expand_path(File.expand_path(fixture_path(:book_with_contributors)))}")
+      end
+      it_should_behave_like "from_xml call"
+    end
   end
 end
 

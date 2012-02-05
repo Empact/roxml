@@ -44,6 +44,12 @@ module ROXML
       def save_doc(doc, path)
         doc.save(path)
       end
+
+      def default_namespace(doc)
+        doc = doc.doc if doc.respond_to?(:doc)
+        default = doc.root.namespaces.default
+        default.prefix || 'xmlns' if default
+      end
     end
 
     Document = LibXML::XML::Document
@@ -64,22 +70,10 @@ module ROXML
 
     class Document
       include NamespacedSearch
-      
-      def default_namespace
-        default = namespaces.default
-        default.prefix || 'xmlns' if default
-      end
-
-    private
-      delegate :namespaces, :to => :root
     end
 
     class Node
       include NamespacedSearch
-
-      def default_namespace
-        doc.default_namespace
-      end
     end
   end
 end

@@ -46,6 +46,11 @@ module ROXML
           file << doc.serialize
         end
       end
+
+      def default_namespace(doc)
+        doc = doc.document if doc.respond_to?(:document)
+        'xmlns' if doc.root.namespaces['xmlns']
+      end
     end
 
     Document = Nokogiri::XML::Document
@@ -54,20 +59,12 @@ module ROXML
 
     class Document
       alias :roxml_search :search
-
-      def default_namespace
-        'xmlns' if root.namespaces['xmlns']
-      end
     end
 
     module NodeExtensions
       def roxml_search(xpath, roxml_namespaces = {})
         xpath = "./#{xpath}"
         (roxml_namespaces.present? ? search(xpath, roxml_namespaces) : search(xpath))
-      end
-
-      def default_namespace
-        document.default_namespace
       end
     end
 

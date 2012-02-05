@@ -105,7 +105,7 @@ module ROXML
     end
 
     def nodes_in(xml)
-      @default_namespace = xml.default_namespace
+      @default_namespace = XML.default_namespace(xml)
       vals = xml.roxml_search(xpath, @instance.class.roxml_namespaces)
 
       if several? && vals.empty? && !wrapper && auto_xpath

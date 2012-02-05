@@ -51,7 +51,7 @@ module ROXML
         default.prefix || 'xmlns' if default
       end
 
-      def roxml_search(xml, xpath, roxml_namespaces = {})
+      def search(xml, xpath, roxml_namespaces = {})
         if xml.namespaces.default
           roxml_namespaces = {:xmlns => namespaces.default.href}.merge(roxml_namespaces)
         end

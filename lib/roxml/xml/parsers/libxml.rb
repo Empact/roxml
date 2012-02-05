@@ -50,30 +50,20 @@ module ROXML
         default = doc.root.namespaces.default
         default.prefix || 'xmlns' if default
       end
-    end
 
-    Document = LibXML::XML::Document
-    Node = LibXML::XML::Node
-
-    module NamespacedSearch
-      def roxml_search(xpath, roxml_namespaces = {})
-        if namespaces.default
+      def roxml_search(xml, xpath, roxml_namespaces = {})
+        if xml.namespaces.default
           roxml_namespaces = {:xmlns => namespaces.default.href}.merge(roxml_namespaces)
         end
         if roxml_namespaces.present?
-          find(xpath, roxml_namespaces.map {|prefix, href| [prefix, href].join(':') })
+          xml.find(xpath, roxml_namespaces.map {|prefix, href| [prefix, href].join(':') })
         else
-          find(xpath)
+          xml.find(xpath)
         end
       end
     end
 
-    class Document
-      include NamespacedSearch
-    end
-
-    class Node
-      include NamespacedSearch
-    end
+    Document = LibXML::XML::Document
+    Node = LibXML::XML::Node
   end
 end

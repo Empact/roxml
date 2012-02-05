@@ -14,7 +14,7 @@ describe Person do
   end
 
   it 'should only contain one location element' do
-    @person.to_xml.roxml_search('location').count.should == 1
+    ROXML::XML.search(@person.to_xml, 'location').count.should == 1
   end
 
   describe '#to_xml' do

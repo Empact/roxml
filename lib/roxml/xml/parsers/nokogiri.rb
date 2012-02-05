@@ -51,29 +51,19 @@ module ROXML
         doc = doc.document if doc.respond_to?(:document)
         'xmlns' if doc.root.namespaces['xmlns']
       end
-    end
 
-    Document = Nokogiri::XML::Document
-    Element = Nokogiri::XML::Element
-    Node = Nokogiri::XML::Node
-
-    class Document
-      alias :roxml_search :search
-    end
-
-    module NodeExtensions
-      def roxml_search(xpath, roxml_namespaces = {})
-        xpath = "./#{xpath}"
-        (roxml_namespaces.present? ? search(xpath, roxml_namespaces) : search(xpath))
+      def search(xml, xpath, roxml_namespaces = {})
+        case xml
+        when Nokogiri::XML::Document
+          xml.search(xpath, roxml_namespaces)
+        else
+          xpath = "./#{xpath}"
+          (roxml_namespaces.present? ? xml.search(xpath, roxml_namespaces) : xml.search(xpath))
+        end
       end
     end
 
-    class Element
-      include NodeExtensions
-    end
-
-    class Node
-      include NodeExtensions
-    end
+    Document = Nokogiri::XML::Document
+    Node = Nokogiri::XML::Node
   end
 end

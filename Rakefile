@@ -26,8 +26,8 @@ Jeweler::GemcutterTasks.new
 
 Dir['tasks/**/*.rake'].each { |t| load t }
 
-task :default => [:test, :spec, 'test:load']
-task :all => [:libxml, :nokogiri, 'test:load']
+task :default => [:test, :spec]
+task :all => [:libxml, :nokogiri]
 task :libxml => ['test:libxml', 'spec:libxml']
 task :nokogiri => ['test:nokogiri', 'spec:nokogiri']
 
@@ -87,11 +87,6 @@ namespace :test do
     $LOAD_PATH << '.'
     require 'spec/support/libxml'
     Rake::Task["test"].invoke
-  end
-
-  task :load do
-    `ruby test/load_test.rb`
-    puts "Load Success!" if $?.success?
   end
 
   desc "Runs tests under RCOV"

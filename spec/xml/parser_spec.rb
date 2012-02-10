@@ -1,12 +1,6 @@
 require_relative './../spec_helper.rb'
 
 describe ROXML::XML do
-  it "should raise on malformed xml" do
-    if ROXML::XML_PARSER == 'libxml' # nokogiri is less strict and auto-closes for some reason
-      proc { Book.from_xml(fixture(:book_malformed)) }.should raise_error(LibXML::XML::Error)
-    end
-  end
-
   it "should escape invalid characters on output to text node" do
     node = ROXML::XML.new_node("entities")
     ROXML::XML.set_content(node, " < > ' \" & ")

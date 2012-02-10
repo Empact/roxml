@@ -14,7 +14,7 @@ require 'roxml/definition'
 require 'roxml/xml'
 
 module ROXML # :nodoc:
-  VERSION = File.read('VERSION')
+  VERSION = File.read(File.expand_path("../../VERSION", __FILE__))
 
   def self.included(base) # :nodoc:
     base.class_eval do

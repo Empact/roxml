@@ -1,3 +1,9 @@
+== 3.3.0 (February 9, 2012)
+
+* major enhancement
+
+  * Don't extend/modify the XML parser
+
 == 3.1.6 (September 9, 2010)
 
 * bug fix

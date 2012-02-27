@@ -479,7 +479,11 @@ module ROXML # :nodoc:
     private
       def add_reader(attr)
         define_method(attr.accessor) do
-          instance_variable_get(attr.instance_variable_name)
+          if instance_variable_get(attr.instance_variable_name).nil?
+            attr.default
+          else
+            instance_variable_get(attr.instance_variable_name)
+          end
         end
       end
     end

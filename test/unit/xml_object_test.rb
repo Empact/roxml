@@ -66,7 +66,7 @@ class TestXMLObject < ActiveSupport::TestCase
     assert_equal(nil, book_two.isbn)
     assert_equal(nil, book_two.title)
     assert_equal(nil, book_two.description)
-    assert_equal(nil, book_two.contributors)
+    assert_equal([],  book_two.contributors)
   end
 
   # Test XML object containing one other XML object (one-to-one)

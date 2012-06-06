@@ -15,6 +15,10 @@ describe SearchQuery do
 		@search.max_results == 20
 	end
 
+	it 'should return the same object for the default value' do
+		@search.language.object_id.should == @search.language.object_id
+	end
+
 	it 'should respect the defaults when loading from xml' do
 		@saved_search.language.should == 'EN'
 		@saved_search.max_results == 20

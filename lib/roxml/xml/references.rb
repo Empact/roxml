@@ -1,3 +1,5 @@
+require "rexml/xpath_parser"
+
 module ROXML
   class RequiredElementMissing < Exception # :nodoc:
   end
@@ -50,12 +52,24 @@ module ROXML
     end
 
     def namespacify(what)
-      if what.to_s.present? && !what.to_s.include?(':') && opts.namespace != false
-        [opts.namespace, @instance.class.roxml_namespace, @default_namespace].each do |namespace|
-          return opts.namespace == '*' ? (what == '*' ? "*" : "*[local-name()='#{what}']") : "#{namespace}:#{what}" if namespace
+      if what.to_s.present? && opts.namespace != false && ns = [opts.namespace, @instance.class.roxml_namespace, @default_namespace].compact.map(&:to_s).first
+        parser = REXML::Parsers::XPathParser.new
+        parsed = parser.parse what
+
+        parsed.each_cons(4).with_index.each do |a,i|
+          if a[0..2] == [:child, :qname, ""]
+            if ns == "*"
+              parsed[i+1,3] = [:any, :predicate, [:eq, [:function, "local-name", []], [:literal, a[3]]]] if a[3] != "*"
+            else
+              a[2].replace ns
+            end
+          end
         end
+
+        parser.abbreviate parsed
+      else
+        what
       end
-      what
     end
 
     def apply_blocks(val)

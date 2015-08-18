@@ -9,4 +9,5 @@ group :development, :test do
   gem "rspec", '>= 2.0.0'
   gem "sqlite3-ruby", '>= 1.2.4'
   gem "activerecord", '>= 2.2.2'
+  gem 'equivalent-xml', '>= 0.6.0'
 end

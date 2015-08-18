@@ -144,6 +144,7 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<rspec>, [">= 2.0.0"])
       s.add_development_dependency(%q<sqlite3-ruby>, [">= 1.2.4"])
       s.add_development_dependency(%q<activerecord>, [">= 2.2.2"])
+      s.add_development_dependency(%q<equivalent-xml>, [">= 0.6.0"])
     else
       s.add_dependency(%q<activesupport>, [">= 2.3.0"])
       s.add_dependency(%q<nokogiri>, [">= 1.3.3"])

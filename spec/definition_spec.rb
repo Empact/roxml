@@ -285,8 +285,11 @@ describe ROXML::Definition do
           @definition.blocks.first['0.3'].should == BigDecimal.new("0.3")
         end
 
-        it "should extract what it can, and fall back to 0" do
-          @definition.blocks.first['junk 11'].should eql(BigDecimal.new("0"))
+        it "should raise on non-decimal values" do
+          proc { @definition.blocks.first['junk 11'] }.should raise_error(ArgumentError)
+        end
+
+        it "should extract what it can" do
           @definition.blocks.first['11sttf'].should eql(BigDecimal.new("11.0"))
         end
 

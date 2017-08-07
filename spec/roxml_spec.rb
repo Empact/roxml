@@ -139,19 +139,6 @@ describe ROXML, "#xml" do
       @expected_pages = 239
     end
 
-    describe "with :as block shorthand" do
-      class BookWithOctalPagesBlockShorthand
-        include ROXML
-
-        xml_accessor :pages, :as => Integer, :required => true
-      end
-
-      it "should apply filtering on input" do
-        book = BookWithOctalPagesBlockShorthand.from_xml(@book_with_octal_pages_xml)
-        book.pages.should == @expected_pages
-      end
-    end
-
     describe "with #from_xml defined on the object" do
       class BookWithOctalPagesType
         include ROXML

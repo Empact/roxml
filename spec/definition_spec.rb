@@ -232,13 +232,14 @@ describe ROXML::Definition do
         it "should translate text to integers" do
           @definition.blocks.first['3'].should == 3
           @definition.blocks.first['792'].should == 792
+          @definition.blocks.first['08'].should == 8
+          @definition.blocks.first['279.23'].should == 279
         end
 
-        it "should raise on non-integer values" do
-          proc { @definition.blocks.first['08'] }.should raise_error(ArgumentError)
-          proc { @definition.blocks.first['793.12'] }.should raise_error(ArgumentError)
-          proc { @definition.blocks.first['junk 11'] }.should raise_error(ArgumentError)
-          proc { @definition.blocks.first['11sttf'] }.should raise_error(ArgumentError)
+        it "should extract whatever is possible and fall back to 0" do
+          @definition.blocks.first['junk 11'].should eql(0)
+          @definition.blocks.first['.?sttf'].should eql(0)
+          @definition.blocks.first['11sttf'].should eql(11)
         end
 
         context "when passed an array" do
@@ -292,33 +293,6 @@ describe ROXML::Definition do
         context "when passed an array" do
           it "should translate the array elements to integer" do
             @definition.blocks.first.call(["12.1", "328.2"]).should == [BigDecimal.new("12.1"), BigDecimal.new("328.2")]
-          end
-        end
-      end
-
-      describe "Fixnum" do
-        before do
-          @definition = ROXML::Definition.new(:fixnumvalue, :as => Fixnum)
-        end
-
-        it_should_behave_like "block shorthand type declaration"
-
-        it "should translate text to integers" do
-          @definition.blocks.first['3'].should == 3
-          @definition.blocks.first['792'].should == 792
-          @definition.blocks.first['08'].should == 8
-          @definition.blocks.first['279.23'].should == 279
-        end
-
-        it "should extract whatever is possible and fall back to 0" do
-          @definition.blocks.first['junk 11'].should eql(0)
-          @definition.blocks.first['.?sttf'].should eql(0)
-          @definition.blocks.first['11sttf'].should eql(11)
-        end
-
-        context "when passed an array" do
-          it "should translate the array elements to integer" do
-            @definition.blocks.first.call(["792", "12", "328"]).should == [792, 12, 328]
           end
         end
       end

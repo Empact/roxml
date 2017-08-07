@@ -117,9 +117,7 @@ class TestDefinition < ActiveSupport::TestCase
   def test_block_shorthand_supports_integer
     assert_equal nil, ROXML::Definition.new(:floatvalue, :as => Integer).blocks.first.call(" ")
     assert_equal 792, ROXML::Definition.new(:floatvalue, :as => Integer).blocks.first.call("792")
-    assert_raise ArgumentError do
-      ROXML::Definition.new(:floatvalue, :as => Integer).blocks.first.call("792.13")
-    end
+    assert_equal 792, ROXML::Definition.new(:floatvalue, :as => Integer).blocks.first.call("792.13")
     assert_equal [792, 12, 328], ROXML::Definition.new(:floatvalue, :as => Integer).blocks.first.call(["792", "12", "328"])
   end
 

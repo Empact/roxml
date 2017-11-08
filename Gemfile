@@ -1,12 +1,13 @@
 source "http://rubygems.org"
 
-gem 'activesupport', '>= 2.3.0'
+gem 'activesupport', '~> 3.1'
 gem 'nokogiri', '>= 1.3.3'
 
 group :development, :test do
-  gem 'rake'
+  gem 'rake', '~> 0.9'
   gem 'jeweler'
-  gem "rspec", '>= 2.0.0'
-  gem "sqlite3-ruby", '>= 1.2.4'
-  gem "activerecord", '>= 2.2.2'
+  gem 'test-unit'
+  gem 'rspec', '~> 2.8.0'
+  gem 'sqlite3', '>= 1.2.4'
+  gem 'activerecord', '~> 3.1'
 end

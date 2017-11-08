@@ -260,7 +260,7 @@ module ROXML # :nodoc:
       #
       #  xml_reader(:count) {|val| Integer(val) unless val.empty? }
       #
-      # Such block shorthands for Integer, Float, Fixnum, BigDecimal, Date, Time, and DateTime
+      # Such block shorthands for Integer, Float, BigDecimal, Date, Time, and DateTime
       # are currently available, but only for non-Hash declarations.
       #
       # To reference many elements, put the desired type in a literal array. e.g.:

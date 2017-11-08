@@ -140,22 +140,17 @@ module ROXML
         default
       end
     end
-    
+
     CORE_BLOCK_SHORTHANDS = {
       # Core Shorthands
       Integer  => lambda do |val|
         all(val) do |v|
-          Integer(v) unless v.blank?
+          v.to_i unless v.blank?
         end
       end,
       Float    => lambda do |val|
         all(val) do |v|
           Float(v) unless v.blank?
-        end
-      end,
-      Fixnum   => lambda do |val|
-        all(val) do |v|
-          v.to_i unless v.blank?
         end
       end,
       Time     => lambda do |val|

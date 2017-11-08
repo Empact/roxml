@@ -44,7 +44,7 @@ class TestDefinition < ActiveSupport::TestCase
 
   def test_hash_of_attrs
     opts = ROXML::Definition.new(:attributes, :as => {:key => '@name', :value => '@value'})
-    assert_hash(opts, :attr => 'name', :attr => 'value')
+    assert_hash(opts, :attr => 'value')
   end
 
   def test_hash_with_attr_key_and_text_val
@@ -56,7 +56,7 @@ class TestDefinition < ActiveSupport::TestCase
   def test_hash_with_string_class_for_type
     opts = ROXML::Definition.new(:attributes, :as => {:key => 'name',
                                          :value => 'value'})
-    assert_hash(opts, :text => 'name', :text => 'value')
+    assert_hash(opts, :text => 'value')
   end
 
   def test_hash_with_attr_key_and_content_val
@@ -68,7 +68,7 @@ class TestDefinition < ActiveSupport::TestCase
   def test_hash_with_options
     opts = ROXML::Definition.new(:definitions, :as => {:key => '@dt', :value => '@dd'},
                            :in => :definitions, :from => 'definition')
-    assert_hash(opts, :attr => 'dt', :attr => 'dd')
+    assert_hash(opts, :attr => 'dd')
     assert_equal 'definition', opts.hash.wrapper
   end
 
@@ -117,9 +117,7 @@ class TestDefinition < ActiveSupport::TestCase
   def test_block_shorthand_supports_integer
     assert_equal nil, ROXML::Definition.new(:floatvalue, :as => Integer).blocks.first.call(" ")
     assert_equal 792, ROXML::Definition.new(:floatvalue, :as => Integer).blocks.first.call("792")
-    assert_raise ArgumentError do
-      ROXML::Definition.new(:floatvalue, :as => Integer).blocks.first.call("792.13")
-    end
+    assert_equal 792, ROXML::Definition.new(:floatvalue, :as => Integer).blocks.first.call("792.13")
     assert_equal [792, 12, 328], ROXML::Definition.new(:floatvalue, :as => Integer).blocks.first.call(["792", "12", "328"])
   end
 

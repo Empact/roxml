@@ -4,16 +4,21 @@ describe ROXML do
   describe 'frozen nils' do
     subject { nil }
 
-    context 'before unmarshalling an XML document' do
-      it { should_not be_frozen }
-    end
-
-    context 'after unmarshalling an XML document' do
-      before do
-        lib = Library.from_xml(fixture(:library))
+    # Prior to ruby-2.2, nil was not frozen. This test watches for
+    # a regression in previous versions of roxml that caused nil to
+    # become frozen.  FIXME: remove after ruby-2.1 support is removed.
+    if RUBY_VERSION < "2.2"
+      context 'before unmarshalling an XML document' do
+        it { should_not be_frozen }
       end
 
-      it { should_not be_frozen }
+      context 'after unmarshalling an XML document' do
+        before do
+          lib = Library.from_xml(fixture(:library))
+        end
+
+        it { should_not be_frozen }
+      end
     end
   end
 end

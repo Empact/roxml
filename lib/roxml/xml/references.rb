@@ -1,5 +1,5 @@
 module ROXML
-  class RequiredElementMissing < Exception # :nodoc:
+  class RequiredElementMissing < ArgumentError # :nodoc:
   end
 
   #

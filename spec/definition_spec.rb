@@ -285,8 +285,11 @@ describe ROXML::Definition do
           @definition.blocks.first['0.3'].should == BigDecimal.new("0.3")
         end
 
-        it "should raise on non-decimal values" do
-          proc { @definition.blocks.first['junk 11'] }.should raise_error(ArgumentError)
+        # Ruby behavior of BigDecimal changed in 2.4, this test is not valid on older rubies
+        if RUBY_VERSION >= "2.4"
+          it "should raise on non-decimal values" do
+            proc { @definition.blocks.first['junk 11'] }.should raise_error(ArgumentError)
+          end
         end
 
         it "should extract what it can" do

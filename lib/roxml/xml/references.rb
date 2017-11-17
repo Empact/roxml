@@ -32,7 +32,9 @@ module ROXML
     end
 
     def value_in(xml)
-      value = fetch_value(XML::Node.from(xml))
+      xml = XML::Node.from(xml)
+      value = fetch_value(xml)
+      value = default if value.nil? || value.to_s.empty?
 
       value = apply_blocks(value)
       value = freeze(value) if value && opts.frozen?

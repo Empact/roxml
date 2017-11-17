@@ -11,4 +11,5 @@ group :development, :test do
   gem 'sqlite3', '>= 1.2.4'
   gem 'activerecord', '~> 3.1'
   gem 'rack', '< 2.0.0'
+  gem 'equivalent-xml', '>= 0.6.0'
 end

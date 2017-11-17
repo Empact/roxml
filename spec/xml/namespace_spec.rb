@@ -28,7 +28,7 @@ EOS
 
       xml_name 'NetworkConfig'
       xml_reader    :name, :from => '@name'
-      xml_reader    :errors, :as => []
+      xml_reader    :errors, :as => [], :from => 'gronk:error'
       xml_accessor  :fence_mode, :from => 'vmw:FenceMode'
       xml_accessor  :dhcp?, :from => 'vmw:Dhcp'
     end
@@ -50,9 +50,9 @@ EOS
     describe "#to_xml" do
       it "should reproduce the input xml" do
         output = ROXML::XML::Document.new
-        output.root = VApp.from_xml(@xml).to_xml
-        pending "Full namespace write support"
-        output.should == ROXML::XML.parse_string(@xml)
+        namespaces = {'vmw' => "http://foo.example.com", 'gronk' => "http://gronk.example.com"}
+        output.root = VApp.from_xml(@xml).to_xml(:namespaces => {'vmw' => "http://foo.example.com", 'gronk' => "http://gronk.example.com"})
+        expect(ROXML::XML.parse_string(output.to_s)).to be_equivalent_to(ROXML::XML.parse_string(@xml))
       end
     end
   end

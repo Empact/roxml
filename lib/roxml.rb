@@ -42,7 +42,9 @@ module ROXML # :nodoc:
             ref.update_xml(root, value)
           end
         end
-        params[:namespaces].each { |prefix, url| root.add_namespace_definition(prefix, url) } if params[:namespaces]
+        if params[:namespaces]
+          params[:namespaces].each { |prefix, url| root.add_namespace_definition(prefix, url) }
+        end
       end
     end
   end

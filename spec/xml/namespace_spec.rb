@@ -50,7 +50,6 @@ EOS
     describe "#to_xml" do
       it "should reproduce the input xml" do
         output = ROXML::XML::Document.new
-        namespaces = {'vmw' => "http://foo.example.com", 'gronk' => "http://gronk.example.com"}
         output.root = VApp.from_xml(@xml).to_xml(:namespaces => {'vmw' => "http://foo.example.com", 'gronk' => "http://gronk.example.com"})
         expect(ROXML::XML.parse_string(output.to_s)).to be_equivalent_to(ROXML::XML.parse_string(@xml))
       end

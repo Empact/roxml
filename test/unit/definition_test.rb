@@ -1,6 +1,7 @@
 require_relative './../test_helper'
+require 'minitest/autorun'
 
-class TestDefinition < ActiveSupport::TestCase
+class TestDefinition < Minitest::Test
   def assert_hash(opts, kvp)
     assert opts.hash?
     assert !opts.array?
@@ -34,12 +35,10 @@ class TestDefinition < ActiveSupport::TestCase
   end
 
   def test_required_conflicts_with_else
-    assert_raise ArgumentError do
+    assert_raises ArgumentError do
       ROXML::Definition.new(:author, :required => true, :else => 'Johnny')
     end
-    assert_nothing_raised do
-      ROXML::Definition.new(:author, :required => false, :else => 'Johnny')
-    end
+    ROXML::Definition.new(:author, :required => false, :else => 'Johnny')
   end
 
   def test_hash_of_attrs
@@ -94,14 +93,6 @@ class TestDefinition < ActiveSupport::TestCase
     opts = ROXML::Definition.new(:count, :from => "@COUNT")
     assert_equal "COUNT", opts.name
     assert_equal :attr, opts.sought_type
-  end
-
-  def test_multiple_shorthands_raises
-    assert_raise ArgumentError do
-      assert_deprecated do
-        ROXML::Definition.new(:count, :as => [Float, Integer])
-      end
-    end
   end
 
   def test_stacked_blocks
@@ -234,7 +225,7 @@ class RoxmlObject
   include ROXML
 end
 
-class HashDefinitionTest < ActiveSupport::TestCase
+class HashDefinitionTest < Minitest::Test
   def test_content_detected_as_from
     opts = ROXML::Definition.new(:hash, :as => {:key => :content, :value => :name})
     assert_equal '.', opts.hash.key.name

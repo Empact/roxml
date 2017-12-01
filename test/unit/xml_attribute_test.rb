@@ -1,6 +1,7 @@
 require_relative './../test_helper'
+require 'minitest/autorun'
 
-class TestXMLAttribute < ActiveSupport::TestCase
+class TestXMLAttribute < Minitest::Test
   def test_attr_from
     # :attr => *
     book = Book.from_xml(fixture(:book_text_with_attribute))

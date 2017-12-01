@@ -1,4 +1,5 @@
 require_relative './../test_helper'
+require 'minitest/autorun'
 
 XML_CAMELLOWER = %{
   <bookCase name="Jonas' Books">
@@ -94,7 +95,7 @@ end
 class InheritedBookCaseDefault < ParentBookCaseDefault
 end
 
-class TestXMLConvention < ActiveSupport::TestCase
+class TestXMLConvention < Minitest::Test
   # TODO: Test convention applies to xml_name as well...
 
   def test_default_convention_is_underscore
@@ -132,7 +133,7 @@ class TestXMLConvention < ActiveSupport::TestCase
 
     bc = InheritedBookCaseDefault.from_xml(XML_DASHES)
     assert_has_book_case_info(bc)
-    assert_raise ROXML::RequiredElementMissing do
+    assert_raises ROXML::RequiredElementMissing do
       InheritedBookCaseDefault.from_xml(XML_UNDERSCORE)
     end
   end

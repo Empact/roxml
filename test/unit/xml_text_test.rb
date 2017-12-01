@@ -1,6 +1,7 @@
 require_relative './../test_helper'
+require 'minitest/autorun'
 
-class TestXMLText < ActiveSupport::TestCase
+class TestXMLText < Minitest::Test
   # Test a simple mapping with no composition
   def test_valid_simple
     book = Book.from_xml(fixture(:book_valid))

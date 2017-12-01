@@ -1,4 +1,5 @@
 require_relative './../test_helper'
+require 'minitest/autorun'
 
 class ArrayWithBlockShorthand
   include ROXML
@@ -14,7 +15,7 @@ class ArrayWithBlock
   end
 end
 
-class TestXMLBlocks < ActiveSupport::TestCase
+class TestXMLBlocks < Minitest::Test
   def test_block_is_applied
     muffins = Muffins.from_xml(fixture(:muffins))
 

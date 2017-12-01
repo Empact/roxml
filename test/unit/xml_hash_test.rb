@@ -1,4 +1,5 @@
 require_relative './../test_helper'
+require 'minitest/autorun'
 
 class BookWithContributorHash
   include ROXML
@@ -7,7 +8,7 @@ class BookWithContributorHash
                              :value => 'name'}
 end
 
-class TestXMLHash < ActiveSupport::TestCase
+class TestXMLHash < Minitest::Test
   def setup
     @contents = {'quaquaversally' => 'adjective: (of a geological formation) sloping downward from the center in all directions.',
                  'tergiversate' => 'To use evasions or ambiguities; equivocate.'}
@@ -26,7 +27,7 @@ class TestXMLHash < ActiveSupport::TestCase
   end
 
   def test_hash_with_object_key_fails
-    assert_raise ArgumentError do
+    assert_raises ArgumentError do
       Class.new do
         include ROXML
 
@@ -37,7 +38,7 @@ class TestXMLHash < ActiveSupport::TestCase
   end
 
   def test_hash_with_object_value_fails
-    assert_raise ArgumentError do
+    assert_raises ArgumentError do
       Class.new do
         include ROXML
 
@@ -102,14 +103,5 @@ class TestXMLHash < ActiveSupport::TestCase
         </EmptyDictionary>
       </dict>
     }).missing_hash)
-  end
-
-  def test_as_hash_of_as_type_not_deprecated
-    assert_not_deprecated do
-      opts = ROXML::Definition.new(:name, :as => {:key => :name, :value => {:from => 'value', :as => OctalInteger}})
-      assert opts.hash?
-      assert_equal OctalInteger, opts.hash.value.sought_type
-      assert_equal 'value', opts.hash.value.name
-    end
   end
 end

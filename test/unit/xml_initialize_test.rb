@@ -1,4 +1,5 @@
 require_relative './../test_helper'
+require 'minitest/autorun'
 
 class InheritedBookWithDepth < Book
   xml_reader :depth, :as => Measurement
@@ -13,7 +14,7 @@ class BookWithXmlInitialize < BookWithDepth
   end
 end
 
-class TestXMLInitialize < ActiveSupport::TestCase
+class TestXMLInitialize < Minitest::Test
   def test_initialize_is_run
     m = Measurement.from_xml('<measurement units="hundredths-meters">1130</measurement>')
     assert_equal 11.3, m.value
@@ -31,7 +32,7 @@ class TestXMLInitialize < ActiveSupport::TestCase
   end
 
   def test_initialize_fails_on_missing_required_arg
-    assert_raise ArgumentError do
+    assert_raises ArgumentError do
       BookWithXmlInitialize.from_xml(fixture(:book_with_depth))
     end
   end

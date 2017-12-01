@@ -1,5 +1,6 @@
 # encoding: utf-8
 require_relative './../test_helper'
+require 'minitest/autorun'
 
 class EmptyCart
   include ROXML
@@ -17,7 +18,7 @@ class CartHolder
   xml_reader :cart, :as => EmptyCart, :required => true
 end
 
-class TestXMLObject < ActiveSupport::TestCase
+class TestXMLObject < Minitest::Test
   # Test book with text and attribute
   def test_book_author_text_attribute
     book = BookWithAuthorTextAttribute.from_xml(fixture(:book_text_with_attribute))

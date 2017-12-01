@@ -1,5 +1,4 @@
 require 'rubygems'
-require 'active_support/test_case'
 require_relative './mocks/mocks'
 require_relative './mocks/dictionaries'
 require_relative './support/fixtures'

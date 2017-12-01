@@ -1,6 +1,7 @@
 require_relative './../test_helper'
+require 'minitest/autorun'
 
-class TestXMLRequired < ActiveSupport::TestCase
+class TestXMLRequired < Minitest::Test
   def setup
     @full_book = <<BOOK
   <book ISBN="1234">
@@ -69,25 +70,25 @@ BOOK
   end
 
   def test_required_throws_on_attr_absence
-    assert_raise ROXML::RequiredElementMissing do
+    assert_raises ROXML::RequiredElementMissing do
       BookWithRequired.from_xml(@book_missing_attr)
     end
   end
 
   def test_required_throws_on_text_absence
-    assert_raise ROXML::RequiredElementMissing do
+    assert_raises ROXML::RequiredElementMissing do
       BookWithRequired.from_xml(@book_missing_text)
     end
   end
 
   def test_required_throws_on_array_absence
-    assert_raise ROXML::RequiredElementMissing do
+    assert_raises ROXML::RequiredElementMissing do
       BookWithRequired.from_xml(@book_missing_array)
     end
   end
 
   def test_required_throws_on_hash_absence
-    assert_raise ROXML::RequiredElementMissing do
+    assert_raises ROXML::RequiredElementMissing do
       BookWithRequired.from_xml(@book_missing_hash)
     end
   end

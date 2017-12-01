@@ -1,4 +1,5 @@
 require_relative './../test_helper'
+require 'minitest/autorun'
 
 #      Parent        |    Child
 #  :from  | no :from |
@@ -48,7 +49,7 @@ class ParentOfUnnamedChildWithFrom
   xml_accessor :child_accessor_name,:as => Child, :from => 'child_from_name'
 end
 
-class TestXMLName < ActiveSupport::TestCase
+class TestXMLName < Minitest::Test
   def test_from_always_dominates_attribute_name_xml_name_or_not
     parent = ParentOfNamedChildWithFrom.new
     parent.child_accessor_name = Child.new

@@ -1,4 +1,5 @@
 require_relative './../test_helper'
+require 'minitest/autorun'
 
 PROC_TRUE = proc {|val| val ? 'TRUE' : 'FALSE'}
 PROC_True = proc {|val| val ? 'True' : 'False'}
@@ -68,7 +69,7 @@ UNEXPECTED_VALUE_XML = %{
 }
 
 
-class TestXMLBool < ActiveSupport::TestCase
+class TestXMLBool < Minitest::Test
   def test_bool_results_for_various_inputs
     x = XmlBool.from_xml(BOOL_XML)
     assert_equal true, x.true_from_TRUE?
@@ -97,11 +98,9 @@ class TestXMLBool < ActiveSupport::TestCase
   end
 
   def test_required_raises_on_missing
-    assert_nothing_raised do
-      XmlBoolRequired.from_xml(PRESENT)
-    end
+    XmlBoolRequired.from_xml(PRESENT)
 
-    assert_raise ROXML::RequiredElementMissing do
+    assert_raises ROXML::RequiredElementMissing do
       XmlBoolRequired.from_xml(ABSENT)
     end
   end

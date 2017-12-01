@@ -68,10 +68,8 @@ end
 
 require 'rake/testtask'
 desc "Test ROXML using the default parser selection behavior"
-task :test do
-  require 'rake/runtest'
-  $LOAD_PATH << '.'
-  Rake.run_tests 'test/unit/*_test.rb'
+Rake::TestTask.new do |t|
+  t.test_files = FileList['test/**/*_test.rb']
 end
 
 namespace :test do

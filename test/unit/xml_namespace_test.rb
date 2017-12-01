@@ -1,6 +1,7 @@
 require_relative './../test_helper'
+require 'minitest/autorun'
 
-class TestDefaultXMLNamespaces < ActiveSupport::TestCase
+class TestDefaultXMLNamespaces < Minitest::Test
   def setup
     @book = BookWithContributions.from_xml(fixture(:book_with_default_namespace))
   end

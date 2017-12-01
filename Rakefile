@@ -7,7 +7,6 @@ ENV['RUBY_FLAGS'] = '-W1'
 require 'juwelier'
 Juwelier::Tasks.new do |gem|
   gem.name = 'roxml'
-  gem.rubyforge_project = "roxml"
   gem.summary = "Ruby Object to XML mapping library"
   gem.description = <<EOF
 ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML.
@@ -17,7 +16,7 @@ building first-class Ruby classes. As a result, ROXML simplifies the development
 RESTful applications, Web Services, and XML-RPC.
 EOF
   gem.email = "ben.woosley@gmail.com"
-  gem.homepage = "http://roxml.rubyforge.org"
+  gem.homepage = "https://github.com/Empact/roxml"
   gem.authors = ["Ben Woosley", "Zak Mandhro", "Anders Engstrom", "Russ Olsen"]
 
   gem.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.rdoc"]

@@ -132,8 +132,7 @@ Gem::Specification.new do |s|
     "test/unit/xml_text_test.rb",
     "website/index.html"
   ]
-  s.homepage = "http://roxml.rubyforge.org".freeze
-  s.rubyforge_project = "roxml".freeze
+  s.homepage = "https://github.com/Empact/roxml".freeze
   s.rubygems_version = "2.6.11".freeze
   s.summary = "Ruby Object to XML mapping library".freeze
 

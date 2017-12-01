@@ -6,7 +6,6 @@ For more information visit:
 
     http://rdoc.info/projects/Empact/roxml
     http://empact.github.com/roxml/
-    http://rubyforge.org/projects/roxml/
 
 Please submit bugs here:
 
@@ -173,7 +172,7 @@ explicitly require one or the other, you may do the following:
 For more information on available annotations, see ROXML::ClassMethods::Declarations
 
 == Note on Patches/Pull Requests
- 
+
 * Fork the project.
 * Make your feature addition or bug fix.
 * Add specs for it. This is important so I don't break it in a

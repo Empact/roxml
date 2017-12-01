@@ -5,7 +5,7 @@ gem 'nokogiri', '>= 1.3.3'
 
 group :development, :test do
   gem 'rake', '~> 0.9'
-  gem 'jeweler', '< 2.2.0'
+  gem 'jeweler'
   gem 'test-unit'
   gem 'rspec', '~> 2.11.0'
   gem 'sqlite3', '>= 1.2.4'

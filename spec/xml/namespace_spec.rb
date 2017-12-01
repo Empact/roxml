@@ -124,6 +124,18 @@ EOS
         @instance.default_namespace_with_namespacey_from.should == 'namespacey node'
       end
     end
+
+    context "with an namespacey XPath :from" do
+      it "should use the given namespace" do
+        @instance.default_namespace_with_namespacey_xpath_from.should == 'namespacey xpath node'
+      end
+    end
+
+    context "with an XPath :from" do
+      it "should use the default namespace" do
+        @instance.default_namespace_with_xpath_from.should == 'default namespace with xpath node'
+      end
+    end
   end
 
   context "with a default namespace declared" do
@@ -138,6 +150,8 @@ EOS
       xml_reader :default_namespace_with_namespaceless_from_and_explicit_namespace, :from => 'with_namespaceless_from', :namespace => 'explicit'
       xml_reader :default_namespace_with_namespaceless_from_and_namespace_false, :from => 'with_namespaceless_from', :namespace => false
       xml_reader :default_namespace_with_namespacey_from, :from => 'namespacey:with_namespacey_from'
+      xml_reader :default_namespace_with_namespacey_xpath_from, :from => 'xpath/namespacey:default_namespace'
+      xml_reader :default_namespace_with_xpath_from, :from => 'xpath/default_namespace'
 
       # These are handled in the "roxml namespacey declaration" shared spec
       # xml_reader :default_namespace_with_namespacey_from_and_namespace_false, :from => 'namespacey:with_namespaceless_from', :namespace => false
@@ -154,6 +168,8 @@ EOS
           <default_declared:with_namespaceless_from>default namespace node</default_declared:with_namespaceless_from>
           <explicit:default_and_explicit_namespace>explicit namespace node</explicit:default_and_explicit_namespace>
           <default_namespace_with_namespace_false>namespaceless node</default_namespace_with_namespace_false>
+          <default_declared:xpath><namespacey:default_namespace>namespacey xpath node</namespacey:default_namespace></default_declared:xpath>
+          <default_declared:xpath><default_declared:default_namespace>default namespace with xpath node</default_declared:default_namespace></default_declared:xpath>
         </book>
       })
     end
@@ -171,6 +187,8 @@ EOS
       xml_reader :default_namespace_with_namespaceless_from_and_explicit_namespace, :from => 'with_namespaceless_from', :namespace => 'explicit'
       xml_reader :default_namespace_with_namespaceless_from_and_namespace_false, :from => 'with_namespaceless_from', :namespace => false
       xml_reader :default_namespace_with_namespacey_from, :from => 'namespacey:with_namespacey_from'
+      xml_reader :default_namespace_with_namespacey_xpath_from, :from => 'xpath/namespacey:default_namespace'
+      xml_reader :default_namespace_with_xpath_from, :from => 'xpath/default_namespace'
 
       # These are handled in the "roxml namespacey declaration" shared spec
       # xml_reader :default_namespace_with_namespacey_from_and_namespace_false, :from => 'namespacey:with_namespaceless_from', :namespace => false
@@ -187,6 +205,8 @@ EOS
           <with_namespaceless_from>default namespace node</with_namespaceless_from>
           <explicit:default_and_explicit_namespace>explicit namespace node</explicit:default_and_explicit_namespace>
           <default_namespace_with_namespace_false xmlns="">namespaceless node</default_namespace_with_namespace_false>
+          <xpath><namespacey:default_namespace>namespacey xpath node</namespacey:default_namespace></xpath>
+          <xpath><default_namespace>default namespace with xpath node</default_namespace></xpath>
         </book>
       })
     end

@@ -8,26 +8,26 @@ describe PITA::ItemSearchResponse do
 
   describe "#total_results" do
     it "should be parsed as a number" do
-      @response.total_results.should > 0
+      expect(@response.total_results).to be > 0
     end
   end
 
   describe "#total_pages" do
     it "should be parsed as a number" do
-      @response.total_pages.should > 0
+      expect(@response.total_pages).to be > 0
     end
   end
 
   describe "#items" do
     it "should return a collection of items" do
-      @response.items.should be_an_instance_of(Array)
-      @response.items.size.should > 0
-      @response.items.each {|item| item.should be_an_instance_of(PITA::Item) }
+      expect(@response.items).to be_an_instance_of(Array)
+      expect(@response.items.size).to be > 0
+      @response.items.each {|item| expect(item).to be_an_instance_of(PITA::Item) }
     end
 
     it "should have the some number less than or equal to #total_results" do
-      @response.items.size.should > 0
-      @response.items.size.should <= @response.total_results
+      expect(@response.items.size).to be > 0
+      expect(@response.items.size).to be <= @response.total_results
     end
   end
 end
@@ -38,17 +38,17 @@ describe PITA::Item do
   end
 
   it "should extract asin" do
-    @items.each {|item| item.asin.should be_an_instance_of(String) }
-    @items.each {|item| item.asin.should_not be_empty }
+    @items.each {|item| expect(item.asin).to be_an_instance_of(String) }
+    @items.each {|item| expect(item.asin).to_not be_empty }
   end
 
   it "should extract detail_page_url" do
-    @items.each {|item| item.detail_page_url.should be_an_instance_of(String) }
-    @items.each {|item| item.detail_page_url.should_not be_empty }
+    @items.each {|item| expect(item.detail_page_url).to be_an_instance_of(String) }
+    @items.each {|item| expect(item.detail_page_url).to_not be_empty }
   end
 
   it "should extract manufacturer" do
-    @items.each {|item| item.manufacturer.should be_an_instance_of(String) }
-    @items.each {|item| item.manufacturer.should_not be_empty }
+    @items.each {|item| expect(item.manufacturer).to be_an_instance_of(String) }
+    @items.each {|item| expect(item.manufacturer).to_not be_empty }
   end
 end

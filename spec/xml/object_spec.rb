@@ -28,7 +28,7 @@ describe ROXML::XMLObjectRef do
     end
 
     it "should return one instance" do
-      @ref.value_in(@xml).value.should == "first"
+      expect(@ref.value_in(@xml).value).to eq("first")
     end
     it "should output one instance"
   end
@@ -39,13 +39,13 @@ describe ROXML::XMLObjectRef do
     end
 
     it "should collect all instances" do
-      @ref.value_in(@xml).map(&:value).should == ["first", "second", "third"]
+      expect(@ref.value_in(@xml).map(&:value)).to eq(["first", "second", "third"])
     end
 
     it "should output all instances" do
       xml = ROXML::XML.new_node('myxml')
       @ref.update_xml(xml, ["first", "second", "third"].map {|value| SubObject.new(value) })
-      xml.to_s.squeeze(' ').should == @xml.root.to_s.squeeze(' ')
+      expect(xml.to_s.squeeze(' ')).to eq(@xml.root.to_s.squeeze(' '))
     end
   end
   
@@ -67,15 +67,15 @@ describe ROXML::XMLObjectRef do
       end
 
       it "should collect all instances" do
-        pending "Test bug?"
-        @ref.value_in(@xml).map(&:value).should == ["first", "second", "third"]
+        skip "Test bug?"
+        expect(@ref.value_in(@xml).map(&:value)).to eq(["first", "second", "third"])
       end
 
       it "should output all instances with namespaces" do
-        pending "Full namespace write support"
+        skip "Full namespace write support"
         xml = ROXML::XML.new_node('myxml')
         @ref.update_xml(xml, ["first", "second", "third"].map {|value| SubObject.new(value) })
-        xml.should == @xml.root
+        expect(xml).to eq(@xml.root)
       end
     end
   end

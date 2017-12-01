@@ -7,7 +7,7 @@ describe Weather do
   end
 
   it "should extract observations" do
-    @weather.observation.should be_an_instance_of(WeatherObservation)
+    expect(@weather.observation).to be_an_instance_of(WeatherObservation)
   end
 end
 
@@ -17,21 +17,21 @@ describe WeatherObservation do
   end
 
   it "should extract temperature" do
-    @observation.temperature.should > 0
+    expect(@observation.temperature).to be > 0
   end
 
   it "should extract feels_like" do
-    @observation.feels_like.should > 0
+    expect(@observation.feels_like).to be > 0
   end
 
   describe "#current_condition" do
     it "should extract current_condition" do
-      @observation.current_condition.should_not be_empty
+      expect(@observation.current_condition).to_not be_empty
     end
 
     it "should extract icon attribute" do
-      pending "need to think options through for HappyMapper-style :attributes extensions"
-      @observation.current_condition.icon.should_not be_empty
+      skip "need to think options through for HappyMapper-style :attributes extensions"
+      expect(@observation.current_condition.icon).to_not be_empty
     end
   end
 end

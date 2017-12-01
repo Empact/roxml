@@ -7,18 +7,18 @@ describe Post do
   end
 
   it "should extract description" do
-    @posts.each {|post| post.description.should_not be_empty }
+    @posts.each {|post| expect(post.description).to_not be_empty }
   end
 
   it "should extract href" do
-    @posts.each {|post| post.href.should_not be_empty }
+    @posts.each {|post| expect(post.href).to_not be_empty }
   end
 
   it "should extract extended" do
-    @posts.each {|post| post.extended.should_not be_empty }
+    @posts.each {|post| expect(post.extended).to_not be_empty }
   end
 
   it "should extract time" do
-    @posts.each {|post| post.created_at.should be_an_instance_of(DateTime) }
+    @posts.each {|post| expect(post.created_at).to be_an_instance_of(DateTime) }
   end
 end

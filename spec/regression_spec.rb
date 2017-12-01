@@ -9,7 +9,7 @@ describe ROXML do
     # become frozen.  FIXME: remove after ruby-2.1 support is removed.
     if RUBY_VERSION < "2.2"
       context 'before unmarshalling an XML document' do
-        it { should_not be_frozen }
+        it { is_expected.to_not be_frozen }
       end
 
       context 'after unmarshalling an XML document' do
@@ -17,7 +17,7 @@ describe ROXML do
           lib = Library.from_xml(fixture(:library))
         end
 
-        it { should_not be_frozen }
+        it { is_expected.to_not be_frozen }
       end
     end
   end

@@ -14,7 +14,7 @@ describe Person do
   end
 
   it 'should only contain one location element' do
-    ROXML::XML.search(@person.to_xml, 'location').count.should == 1
+    expect(ROXML::XML.search(@person.to_xml, 'location').count).to eq(1)
   end
 
   describe '#to_xml' do
@@ -24,13 +24,13 @@ describe Person do
 
     it 'should generate the expected xml' do
       xml_file = File.read(xml_for('person')).gsub("\n",'').squeeze(' ')
-      xml_file.should == @xml_generated
+      expect(xml_file).to eq(@xml_generated)
     end
 
     it 'should generate identical xml after a full roundtrip' do
       p = Person.from_xml(@xml_generated)
       xml_roundtrip = p.to_xml.to_s.gsub("\n",'').squeeze(' ')
-      xml_roundtrip.should == @xml_generated
+      expect(xml_roundtrip).to eq(@xml_generated)
     end
   end
 

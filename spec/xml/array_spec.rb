@@ -22,7 +22,7 @@ end
 describe ":as => []" do
   context "with plural from" do
     it "should accept the plural name as the name for each item" do
-      ArraySpec::MyXml.from_xml(%(
+      expect(ArraySpec::MyXml.from_xml(%(
       <myxml>
         <store>
           <books><id>1</id><title>first book</title></books>
@@ -30,7 +30,7 @@ describe ":as => []" do
           <books><id>3</id><title>third book</title></books>
         </store>
       </myxml>
-      )).store.books.size.should == 3
+      )).store.books.size).to eq(3)
     end
   end
 end

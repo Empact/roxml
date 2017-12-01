@@ -8,11 +8,11 @@ describe Statuses do
     end
 
     it "should extract text" do
-      @statuses.each {|status| status.text.should_not be_empty }
+      @statuses.each {|status| expect(status.text).to_not be_empty }
     end
 
     it "should extract source" do
-      @statuses.each {|status| status.source.should_not be_empty }
+      @statuses.each {|status| expect(status.source).to_not be_empty }
     end
 
     describe User do
@@ -21,11 +21,11 @@ describe Statuses do
       end
 
       it "should extract name" do
-        @users.each {|user| user.name.should == "John Nunemaker" }
+        @users.each {|user| expect(user.name).to eq("John Nunemaker") }
       end
 
       it "should extract screen_name" do
-        @users.each {|user| user.screen_name.should == "jnunemaker" }
+        @users.each {|user| expect(user.screen_name).to eq("jnunemaker") }
       end
     end
   end

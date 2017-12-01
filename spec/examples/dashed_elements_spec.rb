@@ -7,14 +7,14 @@ describe GitHub::Commit do
   end
 
   it "should extract committed date" do
-    @commit.committed_date.should be_an_instance_of(Date)
+    expect(@commit.committed_date).to be_an_instance_of(Date)
   end
 
   it "should extract url" do
-    @commit.url.should_not be_empty
+    expect(@commit.url).to_not be_empty
   end
 
   it "should extract id" do
-    @commit.id.should_not be_empty
+    expect(@commit.id).to_not be_empty
   end
 end

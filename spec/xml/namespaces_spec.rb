@@ -25,16 +25,16 @@ describe ROXML, "#xml_namespaces" do
     end
 
     it "should remap default namespaces" do
-      Tires.from_xml(@xml).car_tires.should =~ ['super slick racing tire', 'all weather tire']
+      expect(Tires.from_xml(@xml).car_tires).to match_array(['super slick racing tire', 'all weather tire'])
     end
 
     it "should remap prefix namespaces" do
-      Tires.from_xml(@xml).bike_tires.should == ['skinny street']
+      expect(Tires.from_xml(@xml).bike_tires).to eq(['skinny street'])
     end
 
     context "with namespace-indifferent option" do
       it "should return all tires" do
-        Tires.from_xml(@xml).tires.should =~ ['super slick racing tire', 'all weather tire', 'skinny street']
+        expect(Tires.from_xml(@xml).tires).to match_array(['super slick racing tire', 'all weather tire', 'skinny street'])
       end
     end
   end

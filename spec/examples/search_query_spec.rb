@@ -11,16 +11,16 @@ describe SearchQuery do
 	end
 
 	it 'should return the default value for all attributes where no value is set' do
-		@search.language.should == 'EN'
+		expect(@search.language).to eq('EN')
 		@search.max_results == 20
 	end
 
 	it 'should return the same object for the default value' do
-		@search.language.object_id.should == @search.language.object_id
+		expect(@search.language.object_id).to eq(@search.language.object_id)
 	end
 
 	it 'should respect the defaults when loading from xml' do
-		@saved_search.language.should == 'EN'
+		expect(@saved_search.language).to eq('EN')
 		@saved_search.max_results == 20
 	end
 end

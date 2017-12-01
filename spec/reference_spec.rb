@@ -23,12 +23,12 @@ describe ROXML::XMLRef do
 
   it "should properly reconstruct wrappers with multiple elements" do
 
-    reference.should be_a(ROXML::XMLHashRef)
+    expect(reference).to be_a(ROXML::XMLHashRef)
 
     xml = ROXML::XML.new_node('org').tap do |root|
       reference.update_xml(root, org.fines)
     end
 
-    xml_path( xml ).should == %w{org policy fines fine name}
+    expect(xml_path( xml )).to eq(%w{org policy fines fine name})
   end
 end

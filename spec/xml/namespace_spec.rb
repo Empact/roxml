@@ -60,23 +60,23 @@ EOS
     context "with a namespacey :from" do
       context "and an explicit :namespace" do
         it "should raise" do
-          proc do
+          expect do
             Class.new do
               include ROXML
               xml_reader :default_namespace_with_namespacey_from_and_explicit_namespace, :from => 'namespacey:with_namespacey_from', :namespace => 'explicit'
             end
-          end.should raise_error(ROXML::ContradictoryNamespaces)
+          end.to raise_error(ROXML::ContradictoryNamespaces)
         end
       end
 
       context "and :namespace => false" do
         it "should raise" do
-          proc do
+          expect do
             Class.new do
               include ROXML
               xml_reader :default_namespace_with_namespacey_from_and_namespace_false, :from => 'namespacey:with_namespacey_from', :namespace => false
             end
-          end.should raise_error(ROXML::ContradictoryNamespaces)
+          end.to raise_error(ROXML::ContradictoryNamespaces)
         end
       end
     end
@@ -86,12 +86,12 @@ EOS
     it_should_behave_like "roxml namespacey declaration"
     
     it "should use the default namespace" do
-      @instance.default_namespace.should == 'default namespace node'
+      expect(@instance.default_namespace).to eq('default namespace node')
     end
     
     context "and :namespace => false" do
       it "should find the namespace-less node" do
-        @instance.default_namespace_with_namespace_false.should == 'namespaceless node'
+        expect(@instance.default_namespace_with_namespace_false).to eq('namespaceless node')
       end
     end
 
@@ -103,37 +103,37 @@ EOS
 
     context "with a namespace-less :from" do
       it "should use the default namespace" do
-        @instance.default_namespace_with_namespaceless_from.should == 'default namespace node'
+        expect(@instance.default_namespace_with_namespaceless_from).to eq('default namespace node')
       end
       
       context "and :namespace => false" do
         it "should find the namespace-less node" do
-          @instance.default_namespace_with_namespaceless_from_and_namespace_false.should == 'namespaceless node'
+          expect(@instance.default_namespace_with_namespaceless_from_and_namespace_false).to eq('namespaceless node')
         end
       end
 
       context "and an explicit :namespace" do
         it "should use the explicit namespace" do
-          @instance.default_namespace_with_namespaceless_from_and_explicit_namespace.should == 'explicit namespace node'
+          expect(@instance.default_namespace_with_namespaceless_from_and_explicit_namespace).to eq('explicit namespace node')
         end
       end
     end
 
     context "with a namespacey :from" do
       it "should use the :from namespace" do
-        @instance.default_namespace_with_namespacey_from.should == 'namespacey node'
+        expect(@instance.default_namespace_with_namespacey_from).to eq('namespacey node')
       end
     end
 
     context "with an namespacey XPath :from" do
       it "should use the given namespace" do
-        @instance.default_namespace_with_namespacey_xpath_from.should == 'namespacey xpath node'
+        expect(@instance.default_namespace_with_namespacey_xpath_from).to eq('namespacey xpath node')
       end
     end
 
     context "with an XPath :from" do
       it "should use the default namespace" do
-        @instance.default_namespace_with_xpath_from.should == 'default namespace with xpath node'
+        expect(@instance.default_namespace_with_xpath_from).to eq('default namespace with xpath node')
       end
     end
   end
@@ -247,42 +247,42 @@ EOS
     it_should_behave_like "roxml namespacey declaration"
 
     it "should find the namespace-less node" do
-      @instance.no_default_namespace.should == 'namespaceless node'
+      expect(@instance.no_default_namespace).to eq('namespaceless node')
     end
 
     context "with :namespace => false" do
       it "should find the namespace-less node" do
-        @instance.no_default_namespace_with_namespace_false.should == 'namespaceless node'
+        expect(@instance.no_default_namespace_with_namespace_false).to eq('namespaceless node')
       end
     end
 
     context "with an explicit :namespace" do
       it "should use the explicit namespace" do
-        @instance.no_default_but_an_explicit_namespace.should == 'explicit namespace node'
+        expect(@instance.no_default_but_an_explicit_namespace).to eq('explicit namespace node')
       end
     end
 
     context "with a namespace-less :from" do
       it "should find the namespace-less node" do
-        @instance.no_default_namespace_with_namespaceless_from.should == 'namespaceless node'
+        expect(@instance.no_default_namespace_with_namespaceless_from).to eq('namespaceless node')
       end
     
       context "and an explicit :namespace" do
         it "should use the explicit namespace" do
-          @instance.no_default_namespace_with_namespaceless_from_and_explicit_namespace.should == 'explicit namespace node'
+          expect(@instance.no_default_namespace_with_namespaceless_from_and_explicit_namespace).to eq('explicit namespace node')
         end
       end
 
       context "with :namespace => false" do
         it "should find the namespace-less node" do
-          @instance.no_default_namespace_with_namespaceless_from_and_namespace_false.should == 'namespaceless node'
+          expect(@instance.no_default_namespace_with_namespaceless_from_and_namespace_false).to eq('namespaceless node')
         end
       end
     end
 
     context "with a namespacey :from" do
       it "should use the :from namespace" do
-        @instance.no_default_namespace_with_namespacey_from.should == 'namespacey node'
+        expect(@instance.no_default_namespace_with_namespacey_from).to eq('namespacey node')
       end
     end
   end

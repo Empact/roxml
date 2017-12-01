@@ -7,10 +7,10 @@ describe LibraryWithFines do
   let(:library) { LibraryWithFines.from_xml(xml) }
 
   it "should read nested elements" do
-    library.fines.should be_a(Hash)
+    expect(library.fines).to be_a(Hash)
     library.fines.size == 3
-    library.fines.should have_key('talking')
-    library.fines['talking'].should match(/Stop asking/)
+    expect(library.fines).to have_key('talking')
+    expect(library.fines['talking']).to match(/Stop asking/)
   end
 
   class String
@@ -21,17 +21,17 @@ describe LibraryWithFines do
 
   it "should write deeply nested elements" do
     xml_out = library.to_xml.to_s
-    xml_out.remove_whitespace.should == xml.remove_whitespace
+    expect(xml_out.remove_whitespace).to eq(xml.remove_whitespace)
   end
 
   it "should write two children of library: name and policy" do
-    library.to_xml.children.map{|e| e.name }.should == ['name', 'policy']
+    expect(library.to_xml.children.map{|e| e.name }).to eq(['name', 'policy'])
   end
 
   it "should be re-parsable via .from_xml" do
     lib_reparsed = LibraryWithFines.from_xml(library.to_xml.to_s)
-    lib_reparsed.name.should == library.name
-    lib_reparsed.fines.should == library.fines
+    expect(lib_reparsed.name).to eq(library.name)
+    expect(lib_reparsed.fines).to eq(library.fines)
   end
 
 

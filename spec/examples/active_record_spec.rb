@@ -8,30 +8,30 @@ describe ROXML, "under ActiveRecord" do
   end
 
   it "should be parsed" do
-    @route.should_not == nil
-    @route.should be_an_instance_of(Route)
+    expect(@route).to_not eq(nil)
+    expect(@route).to be_an_instance_of(Route)
   end
 
   describe "xml attributes" do
     it "should extract xml attributes" do
-      @route.totalHg.should == "640"
-      @route.lonlatx.should == "357865"
-      @route.lonlaty.should == "271635"
-      @route.grcenter.should == "SH 71635 57865"
-      @route.totalMins.should == "235.75000000000003"
-      @route.totalDist.should == "11185.321521477119"
+      expect(@route.totalHg).to eq("640")
+      expect(@route.lonlatx).to eq("357865")
+      expect(@route.lonlaty).to eq("271635")
+      expect(@route.grcenter).to eq("SH 71635 57865")
+      expect(@route.totalMins).to eq("235.75000000000003")
+      expect(@route.totalDist).to eq("11185.321521477119")
     end
   end
 
   describe "xml sub-objects" do
     it "should extract xml sub-objects" do
-      @route.waypoints.size.should eq(6)
-      @route.waypoints.each {|waypoint| waypoint.should be_an_instance_of(Waypoint)}
+      expect(@route.waypoints.size).to eq(6)
+      @route.waypoints.each {|waypoint| expect(waypoint).to be_an_instance_of(Waypoint)}
     end
     it "should be usable as a ActiveRecord object" do
-      Waypoint.count.should == 0
+      expect(Waypoint.count).to eq(0)
       @route.save!
-      Waypoint.count.should == 6
+      expect(Waypoint.count).to eq(6)
     end
   end
 end

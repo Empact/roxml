@@ -3,7 +3,7 @@ require_relative './spec_helper'
 describe ROXML do
   describe "::VERSION" do
     it "should be equal to the VERSION file contents" do
-      ROXML::VERSION.should == File.read('VERSION')
+      expect(ROXML::VERSION).to eq(File.read('VERSION'))
     end
   end
 
@@ -11,8 +11,8 @@ describe ROXML do
     shared_examples_for "from_xml call" do
       it "should fetch values" do
         book = BookWithContributors.from_xml(@path)
-        book.title.should == "Programming Ruby - 2nd Edition"
-        book.contributors.map(&:name).should == ["David Thomas","Andrew Hunt","Chad Fowler"]
+        expect(book.title).to eq("Programming Ruby - 2nd Edition")
+        expect(book.contributors.map(&:name)).to eq(["David Thomas","Andrew Hunt","Chad Fowler"])
       end
     end
 
@@ -81,14 +81,14 @@ describe ROXML, "#xml" do
   end
 
   it "should raise on duplicate accessor name" do
-    proc do
+    expect do
       Class.new do
         include ROXML
 
         xml_reader :id
         xml_accessor :id
       end
-    end.should raise_error(RuntimeError)
+    end.to raise_error(RuntimeError)
   end
 
   class OctalInteger
@@ -148,7 +148,7 @@ describe ROXML, "#xml" do
 
       it "should apply filtering on input" do
         book = BookWithOctalPagesType.from_xml(@book_with_octal_pages_xml)
-        book.pages.should == @expected_pages
+        expect(book.pages).to eq(@expected_pages)
       end
     end
   end
@@ -181,11 +181,11 @@ describe ROXML, "#xml" do
 
     describe "indirect reference via an object" do
       it "does not inherit the frozen status from its parent" do
-        @frozen.writable.frozen?.should be_falsey
-        @frozen.readonly.frozen?.should be_truthy
+        expect(@frozen.writable.frozen?).to be_falsey
+        expect(@frozen.readonly.frozen?).to be_truthy
 
-        @unfrozen.writable.frozen?.should be_falsey
-        @unfrozen.readonly.frozen?.should be_truthy
+        expect(@unfrozen.writable.frozen?).to be_falsey
+        expect(@unfrozen.readonly.frozen?).to be_truthy
       end
     end
   end
@@ -199,8 +199,8 @@ describe ROXML, "#xml" do
     it_should_behave_like "freezable xml reference"
 
     it "should apply :frozen to the constituent elements" do
-      @frozen.all?(&:frozen?).should be_truthy
-      @unfrozen.any?(&:frozen?).should be_falsey
+      expect(@frozen.all?(&:frozen?)).to be_truthy
+      expect(@unfrozen.any?(&:frozen?)).to be_falsey
     end
 
     context "no elements are present in root, no :in is specified" do
@@ -224,7 +224,7 @@ describe ROXML, "#xml" do
             </contributors>
           </book>
         })
-        book.contributors.map(&:name).sort.should == ["David Thomas","Andrew Hunt","Chad Fowler"].sort
+        expect(book.contributors.map(&:name).sort).to eq(["David Thomas","Andrew Hunt","Chad Fowler"].sort)
       end
     end
   end
@@ -254,13 +254,13 @@ describe ROXML, "#xml" do
     it_should_behave_like "freezable xml reference"
 
     it "should have frozen keys, as with all hashes" do
-      @frozen.keys.all?(&:frozen?).should be_truthy
-      @unfrozen.keys.all?(&:frozen?).should be_truthy
+      expect(@frozen.keys.all?(&:frozen?)).to be_truthy
+      expect(@unfrozen.keys.all?(&:frozen?)).to be_truthy
     end
 
     it "should apply :frozen to the constituent values" do
-      @frozen.values.all?(&:frozen?).should be_truthy
-      @unfrozen.values.any?(&:frozen?).should be_falsey
+      expect(@frozen.values.all?(&:frozen?)).to be_truthy
+      expect(@unfrozen.values.any?(&:frozen?)).to be_falsey
     end
   end
 end
@@ -330,29 +330,29 @@ describe ROXML, "inheritance" do
 
   describe "parent" do
     it "should include its attributes" do
-      @child.isbn.should == "0201710897"
-      @child.title.should == "The PickAxe"
-      @child.description.should == "Probably the best Ruby book out there"
-      @child.author.should == 'David Thomas, Andrew Hunt, Dave Thomas'
-      @child.pages.should == nil
+      expect(@child.isbn).to eq("0201710897")
+      expect(@child.title).to eq("The PickAxe")
+      expect(@child.description).to eq("Probably the best Ruby book out there")
+      expect(@child.author).to eq('David Thomas, Andrew Hunt, Dave Thomas')
+      expect(@child.pages).to eq(nil)
     end
     
     it "should not include its child's attributes" do
-      @parent.should_not respond_to(:depth)
+      expect(@parent).to_not respond_to(:depth)
     end
   end
   
   describe "child" do
     it "should include its parent's attributes" do
-      @child.isbn.should == @parent.isbn
-      @child.title.should == @parent.title
-      @child.description.should == @parent.description
-      @child.author.should == @parent.author
-      @child.pages.should == @parent.pages
+      expect(@child.isbn).to eq(@parent.isbn)
+      expect(@child.title).to eq(@parent.title)
+      expect(@child.description).to eq(@parent.description)
+      expect(@child.author).to eq(@parent.author)
+      expect(@child.pages).to eq(@parent.pages)
     end
 
     it "should include its attributes" do
-      @child.depth.to_s.should == '11.3 meters'
+      expect(@child.depth.to_s).to eq('11.3 meters')
     end
 
     it "should include parent's attributes added after declaration" do
@@ -361,7 +361,7 @@ describe ROXML, "inheritance" do
       end
 
       book = InheritedBookWithDepth.from_xml(@book_xml)
-      book.publisher.should == "Pragmattic Programmers"
+      expect(book.publisher).to eq("Pragmattic Programmers")
     end
   end
 end

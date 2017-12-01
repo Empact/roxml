@@ -4,19 +4,19 @@ require_relative './spec_helper'
 describe ROXML::Definition do
   describe "#name_explicit?" do
     it "should indicate whether from option is present" do
-      ROXML::Definition.new(:element, :from => 'somewhere').name_explicit?.should be_truthy
-      ROXML::Definition.new(:element).name_explicit?.should be_falsey
+      expect(ROXML::Definition.new(:element, :from => 'somewhere').name_explicit?).to be_truthy
+      expect(ROXML::Definition.new(:element).name_explicit?).to be_falsey
     end
 
     it "should not consider name proxies as explicit" do
-      ROXML::Definition.new(:element, :from => :attr).name_explicit?.should be_falsey
-      ROXML::Definition.new(:element, :from => :content).name_explicit?.should be_falsey
+      expect(ROXML::Definition.new(:element, :from => :attr).name_explicit?).to be_falsey
+      expect(ROXML::Definition.new(:element, :from => :content).name_explicit?).to be_falsey
     end
   end
 
   shared_examples_for "DateTime reference" do
     it "should return nil on empty string" do
-      @subject.blocks.first.call("  ").should be_nil
+      expect(@subject.blocks.first.call("  ")).to be_nil
     end
 
     it "should return a time version of the string" do
@@ -25,14 +25,14 @@ describe ROXML::Definition do
 
     context "when passed an array of values" do
       it "should timify all of them" do
-        @subject.blocks.first.call(["12:05pm, September 3rd, 1970", "3:00pm, May 22, 1700"]).map(&:to_s).should == ["1970-09-03T12:05:00+00:00", "1700-05-22T15:00:00+00:00"]
+        expect(@subject.blocks.first.call(["12:05pm, September 3rd, 1970", "3:00pm, May 22, 1700"]).map(&:to_s)).to eq(["1970-09-03T12:05:00+00:00", "1700-05-22T15:00:00+00:00"])
       end
     end
   end
 
   shared_examples_for "Date reference" do
     it "should return nil on empty string" do
-      @subject.blocks.first.call("  ").should be_nil
+      expect(@subject.blocks.first.call("  ")).to be_nil
     end
 
     it "should return a time version of the string" do
@@ -41,26 +41,26 @@ describe ROXML::Definition do
 
     context "when passed an array of values" do
       it "should timify all of them" do
-        @subject.blocks.first.call(["September 3rd, 1970", "1776-07-04"]).map(&:to_s).should == ["1970-09-03", "1776-07-04"]
+        expect(@subject.blocks.first.call(["September 3rd, 1970", "1776-07-04"]).map(&:to_s)).to eq(["1970-09-03", "1776-07-04"])
       end
     end
   end
 
   it "should unescape xml entities" do
-    ROXML::Definition.new(:questions, :as => []).to_ref(RoxmlObject.new).value_in(%{
+    expect(ROXML::Definition.new(:questions, :as => []).to_ref(RoxmlObject.new).value_in(%{
       <xml>
         <question>&quot;Wickard &amp; Filburn&quot; &gt;</question>
         <question> &lt; McCulloch &amp; Maryland?</question>
       </xml>
-    }).should == ["\"Wickard & Filburn\" >", " < McCulloch & Maryland?"]
+    })).to eq(["\"Wickard & Filburn\" >", " < McCulloch & Maryland?"])
   end
 
   it "should unescape utf characters in xml" do
-    ROXML::Definition.new(:questions, :as => []).to_ref(RoxmlObject.new).value_in(%{
+    expect(ROXML::Definition.new(:questions, :as => []).to_ref(RoxmlObject.new).value_in(%{
       <xml>
         <question>ROXML\342\204\242</question>
       </xml>
-    }).should == ["ROXML™"]
+    })).to eq(["ROXML™"])
   end
 
   describe "attr name" do
@@ -87,8 +87,8 @@ describe ROXML::Definition do
     describe "=> []" do
       it "should means array of texts" do
         opts = ROXML::Definition.new(:authors, :as => [])
-        opts.array?.should be_truthy
-        opts.sought_type.should == :text
+        expect(opts.array?).to be_truthy
+        expect(opts.sought_type).to eq(:text)
       end
     end
 
@@ -99,7 +99,7 @@ describe ROXML::Definition do
 
       it "should store type" do
         opts = ROXML::Definition.new(:name, :as => RoxmlClass)
-        opts.sought_type.should == RoxmlClass
+        expect(opts.sought_type).to eq(RoxmlClass)
       end
     end
 
@@ -112,35 +112,35 @@ describe ROXML::Definition do
 
       it "should accept type" do
         opts = ROXML::Definition.new(:name, :as => OctalInteger)
-        opts.sought_type.should == OctalInteger
+        expect(opts.sought_type).to eq(OctalInteger)
       end
     end
 
     describe "=> NonRoxmlClass" do
       it "should fail with a warning" do
-        proc { ROXML::Definition.new(:authors, :as => Module) }.should raise_error(ArgumentError)
+        expect { ROXML::Definition.new(:authors, :as => Module) }.to raise_error(ArgumentError)
       end
     end
 
     describe "=> [NonRoxmlClass]" do
       it "should raise" do
-        proc { ROXML::Definition.new(:authors, :as => [Module]) }.should raise_error(ArgumentError)
+        expect { ROXML::Definition.new(:authors, :as => [Module]) }.to raise_error(ArgumentError)
       end
     end
 
     describe "=> {}" do
       shared_examples_for "hash options declaration" do
         it "should represent a hash" do
-          @opts.hash?.should be_truthy
+          expect(@opts.hash?).to be_truthy
         end
 
         it "should have hash definition" do
-          {@opts.hash.key.sought_type => @opts.hash.key.name}.should == @hash_args[:key]
-          {@opts.hash.value.sought_type => @opts.hash.value.name}.should == @hash_args[:value]
+          expect({@opts.hash.key.sought_type => @opts.hash.key.name}).to eq(@hash_args[:key])
+          expect({@opts.hash.value.sought_type => @opts.hash.value.name}).to eq(@hash_args[:value])
         end
 
         it "should not represent an array" do
-          @opts.array?.should be_falsey
+          expect(@opts.array?).to be_falsey
         end
       end
 
@@ -193,32 +193,32 @@ describe ROXML::Definition do
         end
 
         it "should be detected as array reference" do
-          @opts.array?.should be_truthy
+          expect(@opts.array?).to be_truthy
         end
 
         it "should be normal otherwise" do
-          @opts.sought_type.should == :text
-          @opts.blocks.size.should == 1
+          expect(@opts.sought_type).to eq(:text)
+          expect(@opts.blocks.size).to eq(1)
         end
       end
 
       it "should have no blocks without a shorthand" do
-        ROXML::Definition.new(:count).blocks.should be_empty
+        expect(ROXML::Definition.new(:count).blocks).to be_empty
       end
 
       it "should raise on unknown :as" do
-        proc { ROXML::Definition.new(:count, :as => :bogus) }.should raise_error(ArgumentError)
-        proc { ROXML::Definition.new(:count, :as => :foat) }.should raise_error(ArgumentError)
+        expect { ROXML::Definition.new(:count, :as => :bogus) }.to raise_error(ArgumentError)
+        expect { ROXML::Definition.new(:count, :as => :foat) }.to raise_error(ArgumentError)
       end
 
       shared_examples_for "block shorthand type declaration" do
         it "should translate nil to nil" do
-          @definition.blocks.first.call(nil).should be_nil
+          expect(@definition.blocks.first.call(nil)).to be_nil
         end
 
         it "should translate empty strings to nil" do
-          @definition.blocks.first.call("").should be_nil
-          @definition.blocks.first.call(" ").should be_nil
+          expect(@definition.blocks.first.call("")).to be_nil
+          expect(@definition.blocks.first.call(" ")).to be_nil
         end
       end
 
@@ -230,21 +230,21 @@ describe ROXML::Definition do
         it_should_behave_like "block shorthand type declaration"
 
         it "should translate text to integers" do
-          @definition.blocks.first['3'].should == 3
-          @definition.blocks.first['792'].should == 792
-          @definition.blocks.first['08'].should == 8
-          @definition.blocks.first['279.23'].should == 279
+          expect(@definition.blocks.first['3']).to eq(3)
+          expect(@definition.blocks.first['792']).to eq(792)
+          expect(@definition.blocks.first['08']).to eq(8)
+          expect(@definition.blocks.first['279.23']).to eq(279)
         end
 
         it "should extract whatever is possible and fall back to 0" do
-          @definition.blocks.first['junk 11'].should eql(0)
-          @definition.blocks.first['.?sttf'].should eql(0)
-          @definition.blocks.first['11sttf'].should eql(11)
+          expect(@definition.blocks.first['junk 11']).to eql(0)
+          expect(@definition.blocks.first['.?sttf']).to eql(0)
+          expect(@definition.blocks.first['11sttf']).to eql(11)
         end
 
         context "when passed an array" do
           it "should translate the array elements to integer" do
-            @definition.blocks.first.call(["792", "12", "328"]).should == [792, 12, 328]
+            expect(@definition.blocks.first.call(["792", "12", "328"])).to eq([792, 12, 328])
           end
         end
       end
@@ -257,18 +257,18 @@ describe ROXML::Definition do
         it_should_behave_like "block shorthand type declaration"
 
         it "should translate text to float" do
-          @definition.blocks.first['3'].should == 3.0
-          @definition.blocks.first['12.7'].should == 12.7
+          expect(@definition.blocks.first['3']).to eq(3.0)
+          expect(@definition.blocks.first['12.7']).to eq(12.7)
         end
 
         it "should raise on non-float values" do
-          proc { @definition.blocks.first['junk 11.3'] }.should raise_error(ArgumentError)
-          proc { @definition.blocks.first['11.1sttf'] }.should raise_error(ArgumentError)
+          expect { @definition.blocks.first['junk 11.3'] }.to raise_error(ArgumentError)
+          expect { @definition.blocks.first['11.1sttf'] }.to raise_error(ArgumentError)
         end
 
         context "when passed an array" do
           it "should translate the array elements to integer" do
-            @definition.blocks.first.call(["792.13", "240", "3.14"]).should == [792.13, 240.0, 3.14]
+            expect(@definition.blocks.first.call(["792.13", "240", "3.14"])).to eq([792.13, 240.0, 3.14])
           end
         end
       end
@@ -281,46 +281,46 @@ describe ROXML::Definition do
         it_should_behave_like "block shorthand type declaration"
 
         it "should translate text to decimal numbers" do
-          @definition.blocks.first['3'].should == BigDecimal.new("3.0")
-          @definition.blocks.first['0.3'].should == BigDecimal.new("0.3")
+          expect(@definition.blocks.first['3']).to eq(BigDecimal.new("3.0"))
+          expect(@definition.blocks.first['0.3']).to eq(BigDecimal.new("0.3"))
         end
 
         # Ruby behavior of BigDecimal changed in 2.4, this test is not valid on older rubies
         if RUBY_VERSION >= "2.4"
           it "should raise on non-decimal values" do
-            proc { @definition.blocks.first['junk 11'] }.should raise_error(ArgumentError)
+            expect { @definition.blocks.first['junk 11'] }.to raise_error(ArgumentError)
           end
         end
 
         it "should extract what it can" do
-          @definition.blocks.first['11sttf'].should eql(BigDecimal.new("11.0"))
+          expect(@definition.blocks.first['11sttf']).to eql(BigDecimal.new("11.0"))
         end
 
         context "when passed an array" do
           it "should translate the array elements to integer" do
-            @definition.blocks.first.call(["12.1", "328.2"]).should == [BigDecimal.new("12.1"), BigDecimal.new("328.2")]
+            expect(@definition.blocks.first.call(["12.1", "328.2"])).to eq([BigDecimal.new("12.1"), BigDecimal.new("328.2")])
           end
         end
       end
 
       describe ":bool" do
         it "should boolify individual values" do
-          ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("1").should be_truthy
-          ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("True").should be_truthy
-          ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("Yes").should be_truthy
+          expect(ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("1")).to be_truthy
+          expect(ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("True")).to be_truthy
+          expect(ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("Yes")).to be_truthy
         end
 
         context "when an array is passed in" do
           it "should boolify arrays of values" do
-            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("0").should be_falsey
-            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("false").should be_falsey
-            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("nO").should be_falsey
+            expect(ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("0")).to be_falsey
+            expect(ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("false")).to be_falsey
+            expect(ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("nO")).to be_falsey
           end
         end
 
         context "when no value is detected" do
           it "should return nil" do
-            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("junk").should be_nil
+            expect(ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("junk")).to be_nil
           end
 
           context "when a literal block is available" do
@@ -331,16 +331,16 @@ describe ROXML::Definition do
 
       describe "Time" do
         it "should return nil on empty string" do
-          ROXML::Definition.new(:floatvalue, :as => Time).blocks.first.call("  ").should be_nil
+          expect(ROXML::Definition.new(:floatvalue, :as => Time).blocks.first.call("  ")).to be_nil
         end
 
         it "should return a time version of the string" do
-          ROXML::Definition.new(:datevalue, :as => Time).blocks.first.call("12:31am").min.should == 31
+          expect(ROXML::Definition.new(:datevalue, :as => Time).blocks.first.call("12:31am").min).to eq(31)
         end
 
         context "when passed an array of values" do
           it "should timify all of them" do
-            ROXML::Definition.new(:datevalue, :as => Time).blocks.first.call(["12:31am", "3:00pm", "11:59pm"]).map(&:min).should == [31, 0, 59]
+            expect(ROXML::Definition.new(:datevalue, :as => Time).blocks.first.call(["12:31am", "3:00pm", "11:59pm"]).map(&:min)).to eq([31, 0, 59])
           end
         end
       end
@@ -360,12 +360,12 @@ describe ROXML::Definition do
       end
 
       it "should prohibit multiple shorthands" do
-        proc { ROXML::Definition.new(:count, :as => [Float, Integer]) }.should raise_error(ArgumentError)
+        expect { ROXML::Definition.new(:count, :as => [Float, Integer]) }.to raise_error(ArgumentError)
       end
 
       it "should stack block shorthands with explicit blocks" do
-        ROXML::Definition.new(:count, :as => Integer) {|val| val.to_i }.blocks.size.should == 2
-        ROXML::Definition.new(:count, :as => Float) {|val| val.object_id }.blocks.size.should == 2
+        expect(ROXML::Definition.new(:count, :as => Integer) {|val| val.to_i }.blocks.size).to eq(2)
+        expect(ROXML::Definition.new(:count, :as => Float) {|val| val.object_id }.blocks.size).to eq(2)
       end
     end
   end
@@ -373,17 +373,17 @@ describe ROXML::Definition do
   describe ":from" do
     shared_examples_for "attribute reference" do
       it "should be interpreted as :attr" do
-        @opts.sought_type.should == :attr
+        expect(@opts.sought_type).to eq(:attr)
       end
 
       it "should strip '@' from name" do
-        @opts.name.should == 'attr_name'
+        expect(@opts.name).to eq('attr_name')
       end
 
       it "should unescape xml entities" do
-        @opts.to_ref(RoxmlObject.new).value_in(%{
+        expect(@opts.to_ref(RoxmlObject.new).value_in(%{
           <question attr_name="&quot;Wickard &amp; Filburn&quot; &gt; / &lt; McCulloch &amp; Marryland?" />
-        }).should == "\"Wickard & Filburn\" > / < McCulloch & Marryland?"
+        })).to eq("\"Wickard & Filburn\" > / < McCulloch & Marryland?")
       end
     end
 
@@ -405,12 +405,12 @@ describe ROXML::Definition do
 
     describe ":content" do
       it "should be recognized" do
-        ROXML::Definition.new(:author).content?.should be_falsey
-        ROXML::Definition.new(:author, :from => :content).content?.should == true
+        expect(ROXML::Definition.new(:author).content?).to be_falsey
+        expect(ROXML::Definition.new(:author, :from => :content).content?).to eq(true)
       end
 
       it "should be equivalent to :from => '.'" do
-        ROXML::Definition.new(:author, :from => '.').content?.should == true
+        expect(ROXML::Definition.new(:author, :from => '.').content?).to eq(true)
       end
     end
   end
@@ -418,13 +418,13 @@ describe ROXML::Definition do
   describe ":in" do
     context "as xpath" do
       it "should pass through as wrapper" do
-        ROXML::Definition.new(:manufacturer, :in => './').wrapper.should == './'
+        expect(ROXML::Definition.new(:manufacturer, :in => './').wrapper).to eq('./')
       end
     end
 
     context "as xpath" do
       it "should pass through as wrapper" do
-        ROXML::Definition.new(:manufacturer, :in => 'wrapper').wrapper.should == 'wrapper'
+        expect(ROXML::Definition.new(:manufacturer, :in => 'wrapper').wrapper).to eq('wrapper')
       end
     end
   end
@@ -434,12 +434,12 @@ describe ROXML::Definition do
     shared_examples_for "boolean option" do
       it "should be recognized" do
         ROXML::Definition.new(:author, :from => :content, @option => true).respond_to?(:"#{@option}?")
-        ROXML::Definition.new(:author, :from => :content, @option => true).send(:"#{@option}?").should be_truthy
-        ROXML::Definition.new(:author, :from => :content, @option => false).send(:"#{@option}?").should be_falsey
+        expect(ROXML::Definition.new(:author, :from => :content, @option => true).send(:"#{@option}?")).to be_truthy
+        expect(ROXML::Definition.new(:author, :from => :content, @option => false).send(:"#{@option}?")).to be_falsey
       end
 
       it "should default to false" do
-        ROXML::Definition.new(:author, :from => :content).send(:"#{@option}?").should be_falsey
+        expect(ROXML::Definition.new(:author, :from => :content).send(:"#{@option}?")).to be_falsey
       end
     end
 
@@ -451,8 +451,8 @@ describe ROXML::Definition do
       it_should_behave_like "boolean option"
 
       it "should not be allowed together with :else" do
-        proc { ROXML::Definition.new(:author, :from => :content, :required => true, :else => 'Johnny') }.should raise_error(ArgumentError)
-        proc { ROXML::Definition.new(:author, :from => :content, :required => false, :else => 'Johnny') }.should_not raise_error
+        expect { ROXML::Definition.new(:author, :from => :content, :required => true, :else => 'Johnny') }.to raise_error(ArgumentError)
+        expect { ROXML::Definition.new(:author, :from => :content, :required => false, :else => 'Johnny') }.to_not raise_error
       end
     end
 

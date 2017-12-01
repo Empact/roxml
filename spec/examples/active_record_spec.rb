@@ -25,7 +25,7 @@ describe ROXML, "under ActiveRecord" do
 
   describe "xml sub-objects" do
     it "should extract xml sub-objects" do
-      @route.should have(6).waypoints
+      @route.waypoints.size.should eq(6)
       @route.waypoints.each {|waypoint| waypoint.should be_an_instance_of(Waypoint)}
     end
     it "should be usable as a ActiveRecord object" do

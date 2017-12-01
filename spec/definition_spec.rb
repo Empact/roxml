@@ -4,13 +4,13 @@ require_relative './spec_helper'
 describe ROXML::Definition do
   describe "#name_explicit?" do
     it "should indicate whether from option is present" do
-      ROXML::Definition.new(:element, :from => 'somewhere').name_explicit?.should be_true
-      ROXML::Definition.new(:element).name_explicit?.should be_false
+      ROXML::Definition.new(:element, :from => 'somewhere').name_explicit?.should be_truthy
+      ROXML::Definition.new(:element).name_explicit?.should be_falsey
     end
 
     it "should not consider name proxies as explicit" do
-      ROXML::Definition.new(:element, :from => :attr).name_explicit?.should be_false
-      ROXML::Definition.new(:element, :from => :content).name_explicit?.should be_false
+      ROXML::Definition.new(:element, :from => :attr).name_explicit?.should be_falsey
+      ROXML::Definition.new(:element, :from => :content).name_explicit?.should be_falsey
     end
   end
 
@@ -87,7 +87,7 @@ describe ROXML::Definition do
     describe "=> []" do
       it "should means array of texts" do
         opts = ROXML::Definition.new(:authors, :as => [])
-        opts.array?.should be_true
+        opts.array?.should be_truthy
         opts.sought_type.should == :text
       end
     end
@@ -131,7 +131,7 @@ describe ROXML::Definition do
     describe "=> {}" do
       shared_examples_for "hash options declaration" do
         it "should represent a hash" do
-          @opts.hash?.should be_true
+          @opts.hash?.should be_truthy
         end
 
         it "should have hash definition" do
@@ -140,7 +140,7 @@ describe ROXML::Definition do
         end
 
         it "should not represent an array" do
-          @opts.array?.should be_false
+          @opts.array?.should be_falsey
         end
       end
 
@@ -193,7 +193,7 @@ describe ROXML::Definition do
         end
 
         it "should be detected as array reference" do
-          @opts.array?.should be_true
+          @opts.array?.should be_truthy
         end
 
         it "should be normal otherwise" do
@@ -305,16 +305,16 @@ describe ROXML::Definition do
 
       describe ":bool" do
         it "should boolify individual values" do
-          ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("1").should be_true
-          ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("True").should be_true
-          ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("Yes").should be_true
+          ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("1").should be_truthy
+          ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("True").should be_truthy
+          ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("Yes").should be_truthy
         end
 
         context "when an array is passed in" do
           it "should boolify arrays of values" do
-            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("0").should be_false
-            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("false").should be_false
-            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("nO").should be_false
+            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("0").should be_falsey
+            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("false").should be_falsey
+            ROXML::Definition.new(:floatvalue, :as => :bool).blocks.first.call("nO").should be_falsey
           end
         end
 
@@ -405,7 +405,7 @@ describe ROXML::Definition do
 
     describe ":content" do
       it "should be recognized" do
-        ROXML::Definition.new(:author).content?.should be_false
+        ROXML::Definition.new(:author).content?.should be_falsey
         ROXML::Definition.new(:author, :from => :content).content?.should == true
       end
 
@@ -434,12 +434,12 @@ describe ROXML::Definition do
     shared_examples_for "boolean option" do
       it "should be recognized" do
         ROXML::Definition.new(:author, :from => :content, @option => true).respond_to?(:"#{@option}?")
-        ROXML::Definition.new(:author, :from => :content, @option => true).send(:"#{@option}?").should be_true
-        ROXML::Definition.new(:author, :from => :content, @option => false).send(:"#{@option}?").should be_false
+        ROXML::Definition.new(:author, :from => :content, @option => true).send(:"#{@option}?").should be_truthy
+        ROXML::Definition.new(:author, :from => :content, @option => false).send(:"#{@option}?").should be_falsey
       end
 
       it "should default to false" do
-        ROXML::Definition.new(:author, :from => :content).send(:"#{@option}?").should be_false
+        ROXML::Definition.new(:author, :from => :content).send(:"#{@option}?").should be_falsey
       end
     end
 

@@ -181,11 +181,11 @@ describe ROXML, "#xml" do
 
     describe "indirect reference via an object" do
       it "does not inherit the frozen status from its parent" do
-        @frozen.writable.frozen?.should be_false
-        @frozen.readonly.frozen?.should be_true
+        @frozen.writable.frozen?.should be_falsey
+        @frozen.readonly.frozen?.should be_truthy
 
-        @unfrozen.writable.frozen?.should be_false
-        @unfrozen.readonly.frozen?.should be_true
+        @unfrozen.writable.frozen?.should be_falsey
+        @unfrozen.readonly.frozen?.should be_truthy
       end
     end
   end
@@ -199,8 +199,8 @@ describe ROXML, "#xml" do
     it_should_behave_like "freezable xml reference"
 
     it "should apply :frozen to the constituent elements" do
-      @frozen.all?(&:frozen?).should be_true
-      @unfrozen.any?(&:frozen?).should be_false
+      @frozen.all?(&:frozen?).should be_truthy
+      @unfrozen.any?(&:frozen?).should be_falsey
     end
 
     context "no elements are present in root, no :in is specified" do
@@ -254,13 +254,13 @@ describe ROXML, "#xml" do
     it_should_behave_like "freezable xml reference"
 
     it "should have frozen keys, as with all hashes" do
-      @frozen.keys.all?(&:frozen?).should be_true
-      @unfrozen.keys.all?(&:frozen?).should be_true
+      @frozen.keys.all?(&:frozen?).should be_truthy
+      @unfrozen.keys.all?(&:frozen?).should be_truthy
     end
 
     it "should apply :frozen to the constituent values" do
-      @frozen.values.all?(&:frozen?).should be_true
-      @unfrozen.values.any?(&:frozen?).should be_false
+      @frozen.values.all?(&:frozen?).should be_truthy
+      @unfrozen.values.any?(&:frozen?).should be_falsey
     end
   end
 end

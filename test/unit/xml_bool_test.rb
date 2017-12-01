@@ -84,12 +84,12 @@ class TestXMLBool < Minitest::Test
 
   def test_missing_results_in_nil
     x = XmlBool.from_xml(BOOL_XML)
-    assert_equal nil, x.missing?
+    assert_nil x.missing?
   end
 
   def test_unexpected_value_results_in_nil
     x = XmlBoolUnexpected.from_xml(UNEXPECTED_VALUE_XML)
-    assert_equal nil, x.unexpected?
+    assert_nil x.unexpected?
   end
 
   def test_block_recieves_unexpected_value_rather_than_nil

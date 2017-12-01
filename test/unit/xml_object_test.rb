@@ -64,10 +64,10 @@ class TestXMLObject < Minitest::Test
     # this book should be completely empty
     book_two = WriteableBookWithContributors.new
 
-    assert_equal(nil, book_two.isbn)
-    assert_equal(nil, book_two.title)
-    assert_equal(nil, book_two.description)
-    assert_equal([],  book_two.contributors)
+    assert_nil book_two.isbn
+    assert_nil book_two.title
+    assert_nil book_two.description
+    assert_equal [],  book_two.contributors
   end
 
   # Test XML object containing one other XML object (one-to-one)
@@ -115,7 +115,7 @@ class TestXMLObject < Minitest::Test
     assert_equal 'Ben Franklin', p.name
     assert_equal 'Abiah Folger', p.mother.name
     assert_equal 'Madeup Mother', p.mother.mother.name
-    assert_equal nil, p.mother.mother.mother
+    assert_nil p.mother.mother.mother
   end
 
   class Node
@@ -182,7 +182,7 @@ HERE
     assert_equal 'Ben "Benji" Franklin', p.name
     assert_equal 'Abiah \'Abby\' Folger', p.mother.name
     assert_equal 'Madeup Mother < the third >', p.mother.mother.name
-    assert_equal nil, p.mother.mother.mother
+    assert_nil p.mother.mother.mother
   end
 
   def test_recursive_with_default_initialization

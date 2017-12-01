@@ -2,6 +2,8 @@ require 'ostruct'
 require 'rubygems'
 require 'pathname'
 require 'ostruct'
+require 'rspec/matchers' # req by equivalent-xml custom matcher `be_equivalent_to`
+require 'equivalent-xml'
 
 require_relative './../test/support/fixtures'
 require_relative './../lib/roxml'

@@ -4,8 +4,8 @@ ENV['RUBY_FLAGS'] = '-W1'
 
 # Generate all the Rake tasks
 # Run 'rake -T' to see list of generated tasks (from gem root directory)
-require 'jeweler'
-Jeweler::Tasks.new do |gem|
+require 'juwelier'
+Juwelier::Tasks.new do |gem|
   gem.name = 'roxml'
   gem.rubyforge_project = "roxml"
   gem.summary = "Ruby Object to XML mapping library"
@@ -22,7 +22,7 @@ EOF
 
   gem.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.rdoc"]
 end
-Jeweler::GemcutterTasks.new
+Juwelier::GemcutterTasks.new
 
 Dir['tasks/**/*.rake'].each { |t| load t }
 

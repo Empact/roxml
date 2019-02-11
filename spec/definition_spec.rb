@@ -281,8 +281,8 @@ describe ROXML::Definition do
         it_should_behave_like "block shorthand type declaration"
 
         it "should translate text to decimal numbers" do
-          expect(@definition.blocks.first['3']).to eq(BigDecimal.new("3.0"))
-          expect(@definition.blocks.first['0.3']).to eq(BigDecimal.new("0.3"))
+          expect(@definition.blocks.first['3']).to eq(BigDecimal("3.0"))
+          expect(@definition.blocks.first['0.3']).to eq(BigDecimal("0.3"))
         end
 
         # Ruby behavior of BigDecimal changed in 2.4, this test is not valid on older rubies
@@ -293,12 +293,12 @@ describe ROXML::Definition do
         end
 
         it "should extract what it can" do
-          expect(@definition.blocks.first['11sttf']).to eql(BigDecimal.new("11.0"))
+          expect(@definition.blocks.first['11sttf']).to eql(BigDecimal("11.0"))
         end
 
         context "when passed an array" do
           it "should translate the array elements to integer" do
-            expect(@definition.blocks.first.call(["12.1", "328.2"])).to eq([BigDecimal.new("12.1"), BigDecimal.new("328.2")])
+            expect(@definition.blocks.first.call(["12.1", "328.2"])).to eq([BigDecimal("12.1"), BigDecimal("328.2")])
           end
         end
       end

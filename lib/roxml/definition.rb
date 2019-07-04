@@ -178,23 +178,23 @@ module ROXML
       # dynamically load these shorthands at class definition time, but
       # only if they're already availbable
       CORE_BLOCK_SHORTHANDS.tap do |blocks|
-        blocks.reverse_merge!(BigDecimal => lambda do |val|
+        blocks[BigDecimal] = lambda do |val|
           all(val) do |v|
             BigDecimal(v) unless Utils.string_blank?(v.to_s)
           end
-        end) if defined?(BigDecimal)
+        end if defined?(BigDecimal)
 
-        blocks.reverse_merge!(DateTime => lambda do |val|
+        blocks[DateTime] = lambda do |val|
           if defined?(DateTime)
             all(val) {|v| DateTime.parse(v) unless Utils.string_blank?(v.to_s)}
           end
-        end) if defined?(DateTime)
+        end if defined?(DateTime)
 
-        blocks.reverse_merge!(Date => lambda do |val|
+        blocks[Date] = lambda do |val|
           if defined?(Date)
             all(val) {|v| Date.parse(v) unless Utils.string_blank?(v.to_s)}
           end
-        end) if defined?(Date)
+        end if defined?(Date)
       end
     end
 

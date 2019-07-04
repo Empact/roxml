@@ -106,7 +106,12 @@ module ROXML
         @default = [] if array?
         @default = {} if hash?
       end
-      @default.duplicable? ? @default.dup : @default
+
+      begin
+        @default.dup
+      rescue TypeError
+        @default
+      end
     end
 
     def to_ref(inst)

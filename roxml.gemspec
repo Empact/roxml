@@ -51,6 +51,7 @@ Gem::Specification.new do |s|
     "lib/roxml.rb",
     "lib/roxml/definition.rb",
     "lib/roxml/hash_definition.rb",
+    "lib/roxml/utils.rb",
     "lib/roxml/xml.rb",
     "lib/roxml/xml/parsers/libxml.rb",
     "lib/roxml/xml/parsers/nokogiri.rb",
@@ -142,6 +143,7 @@ Gem::Specification.new do |s|
 
   if s.respond_to? :add_runtime_dependency then
     s.add_runtime_dependency(%q<activesupport>.freeze, [">= 4.0"])
+    s.add_runtime_dependency(%q<concurrent-ruby>.freeze, ["~> 1.1"])
     s.add_runtime_dependency(%q<nokogiri>.freeze, [">= 1.3.3"])
     s.add_development_dependency(%q<rake>.freeze, ["~> 0.9"])
     s.add_development_dependency(%q<juwelier>.freeze, [">= 0"])
@@ -154,6 +156,7 @@ Gem::Specification.new do |s|
     s.add_development_dependency(%q<equivalent-xml>.freeze, [">= 0.6.0"])
   else
     s.add_dependency(%q<activesupport>.freeze, [">= 4.0"])
+    s.add_dependency(%q<concurrent-ruby>.freeze, ["~> 1.1"])
     s.add_dependency(%q<nokogiri>.freeze, [">= 1.3.3"])
     s.add_dependency(%q<rake>.freeze, ["~> 0.9"])
     s.add_dependency(%q<juwelier>.freeze, [">= 0"])

@@ -55,7 +55,7 @@ module ROXML
         if xml.namespaces.default
           roxml_namespaces = {:xmlns => namespaces.default.href}.merge(roxml_namespaces)
         end
-        if roxml_namespaces.present?
+        if roxml_namespaces.any?
           xml.find(xpath, roxml_namespaces.map {|prefix, href| [prefix, href].join(':') })
         else
           xml.find(xpath)

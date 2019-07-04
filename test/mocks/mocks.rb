@@ -93,7 +93,7 @@ private
   end
 
   def normalize_hundredths
-    if @units.starts_with? 'hundredths-'
+    if @units.start_with? 'hundredths-'
       @value /= 100
       @units = @units.split('hundredths-')[1]
     end

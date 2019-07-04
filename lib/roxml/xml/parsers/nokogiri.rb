@@ -33,7 +33,7 @@ module ROXML
       end
 
       def parse_file(path)
-        path = path.sub('file:', '') if path.starts_with?('file:')
+        path = path.sub('file:', '') if path.start_with?('file:')
         parse_io(open(path))
       end
 

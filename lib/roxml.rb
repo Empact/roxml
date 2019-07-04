@@ -3,7 +3,6 @@ require 'uri'
 require 'active_support'
 if Gem.loaded_specs['activesupport'] && Gem.loaded_specs['activesupport'].version >= Gem::Version.new('3')
   require 'active_support/inflector'
-  require 'active_support/core_ext/object/duplicable'
   require 'active_support/core_ext/module/delegation'
   require 'active_support/core_ext/array/extract_options'
   require 'active_support/core_ext/hash'

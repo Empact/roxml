@@ -19,8 +19,6 @@ module ROXML
     bool_attr_reader :name_explicit, :array, :cdata, :required, :frozen
 
     def initialize(sym, opts = {}, &block)
-      opts.assert_valid_keys(:from, :in, :as, :namespace,
-                             :else, :required, :frozen, :cdata, :to_xml)
       @default = opts.delete(:else)
       @to_xml = opts.delete(:to_xml)
       @name_explicit = opts.has_key?(:from) && opts[:from].is_a?(String)

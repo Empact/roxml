@@ -4,8 +4,6 @@ module ROXML
     attr_accessor :wrapper
 
     def initialize(opts)
-      opts.assert_valid_keys(:key, :value)
-
       @key = Definition.new(nil, to_definition_options(opts, :key))
       @value = Definition.new(nil, to_definition_options(opts, :value))
     end

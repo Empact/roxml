@@ -33,11 +33,11 @@ module ROXML
 
       @accessor = sym.to_s
       opts[:as] ||=
-        if @accessor.ends_with?('?')
+        if @accessor.end_with?('?')
           :bool
-        elsif @accessor.ends_with?('_on')
+        elsif @accessor.end_with?('_on')
           Date
-        elsif @accessor.ends_with?('_at')
+        elsif @accessor.end_with?('_at')
           DateTime
         end
 
@@ -59,7 +59,7 @@ module ROXML
       elsif opts[:from] == :namespace
         opts[:from] = '*'
         @sought_type = :namespace
-      elsif opts[:from].to_s.starts_with?('@')
+      elsif opts[:from].to_s.start_with?('@')
         @sought_type = :attr
         opts[:from] = opts[:from].sub('@', '')
       end

@@ -26,7 +26,7 @@ module ROXML # :nodoc:
   module InstanceMethods # :nodoc:
     # Returns an XML object representing this object
     def to_xml(params = {})
-      params.reverse_merge!(:name => self.class.tag_name, :namespace => self.class.roxml_namespace)
+      params = {:name => self.class.tag_name, :namespace => self.class.roxml_namespace}.merge(params)
       params[:namespace] = nil if ['*', 'xmlns'].include?(params[:namespace])
       XML.new_node([params[:namespace], params[:name]].compact.join(':')).tap do |root|
         refs = (self.roxml_references \

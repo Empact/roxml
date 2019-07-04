@@ -6,7 +6,7 @@ require_relative './../spec/spec_helper'
 module PITA
   class Base
     include ROXML
-    xml_convention :camelcase
+    xml_convention :camelize
   end
 
   class Item < Base

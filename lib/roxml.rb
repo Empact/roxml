@@ -4,6 +4,7 @@ require 'active_support'
 if Gem.loaded_specs['activesupport'] && Gem.loaded_specs['activesupport'].version >= Gem::Version.new('3')
   require 'active_support/inflector'
 end
+require 'dry/core/inflector'
 
 require 'roxml/definition'
 require 'roxml/xml'
@@ -166,7 +167,12 @@ module ROXML # :nodoc:
         @roxml_naming_convention =
           if to_proc_able
             raise ArgumentError, "only one conventions can be set" if block_given?
-            to_proc_able.to_proc
+
+            if to_proc_able.is_a?(Symbol) && roxml_inflector.respond_to?(to_proc_able)
+              roxml_inflector.method(to_proc_able)
+            else
+              to_proc_able.to_proc
+            end
           elsif block_given?
             block
           end
@@ -177,6 +183,20 @@ module ROXML # :nodoc:
           @roxml_naming_convention
         elsif superclass.respond_to?(:roxml_naming_convention)
           superclass.roxml_naming_convention
+        end
+      end
+
+      def xml_inflector(inflector)
+        @roxml_inflector = inflector
+      end
+
+      def roxml_inflector
+        @roxml_inflector ||= begin
+          if superclass.respond_to?(:roxml_inflector) && superclass.roxml_inflector
+            superclass.roxml_inflector
+          else
+            Dry::Core::Inflector.inflector
+          end
         end
       end
 
@@ -503,7 +523,7 @@ module ROXML # :nodoc:
         return roxml_tag_name if roxml_tag_name
 
         if tag_name = name.split('::').last
-          roxml_naming_convention ? roxml_naming_convention.call(tag_name.underscore) : tag_name.downcase
+          roxml_naming_convention ? roxml_naming_convention.call(roxml_inflector.underscore(tag_name)) : tag_name.downcase
         end
       end
 

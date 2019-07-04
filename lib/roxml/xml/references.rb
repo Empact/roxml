@@ -1,3 +1,4 @@
+require "forwardable"
 require "rexml/xpath_parser"
 
 module ROXML
@@ -8,8 +9,10 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef # :nodoc:
+    extend Forwardable
+
     attr_reader :opts
-    delegate :required?, :array?, :accessor, :default, :wrapper, :to => :opts
+    def_delegators :opts, :required?, :array?, :accessor, :default, :wrapper
 
     def initialize(opts, instance)
       @opts = opts
@@ -180,7 +183,7 @@ module ROXML
   #   XMLTextRef
   #  </element>
   class XMLTextRef < XMLRef # :nodoc:
-    delegate :cdata?, :content?, :name?, :to => :opts
+    def_delegators :opts, :cdata?, :content?, :name?
 
     # Updates the text in the given _xml_ block to
     # the _value_ provided.
@@ -240,7 +243,7 @@ module ROXML
   end
 
   class XMLHashRef < XMLTextRef # :nodoc:
-    delegate :hash, :to => :opts
+    def_delegators :opts, :hash
 
     def initialize(opts, inst)
       super(opts, inst)
@@ -298,7 +301,7 @@ module ROXML
   end
 
   class XMLObjectRef < XMLTextRef # :nodoc:
-    delegate :sought_type, :to => :opts
+    def_delegators :opts, :sought_type
 
     # Updates the composed XML object in the given XML block to
     # the value provided.

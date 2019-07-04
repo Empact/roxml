@@ -1,9 +1,4 @@
 require 'uri'
-
-require 'active_support'
-if Gem.loaded_specs['activesupport'] && Gem.loaded_specs['activesupport'].version >= Gem::Version.new('3')
-  require 'active_support/inflector'
-end
 require 'dry/core/inflector'
 
 require 'roxml/definition'

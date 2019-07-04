@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'roxml/utils'
 require_relative './mocks/mocks'
 require_relative './mocks/dictionaries'
 require_relative './support/fixtures'
@@ -23,7 +24,7 @@ def remove_children(xml)
   xml = ROXML::XML.parse_string(xml).root if xml.is_a?(String)
   return unless xml.respond_to? :children
   xml.children.each do |child|
-    if child.to_s.blank?
+    if ROXML::Utils.string_blank?(child.to_s)
       defined?(Nokogiri) ? child.remove : child.remove!
     else
       remove_children(child)

@@ -29,7 +29,7 @@ module ROXML # :nodoc:
       params.reverse_merge!(:name => self.class.tag_name, :namespace => self.class.roxml_namespace)
       params[:namespace] = nil if ['*', 'xmlns'].include?(params[:namespace])
       XML.new_node([params[:namespace], params[:name]].compact.join(':')).tap do |root|
-        refs = (self.roxml_references.present? \
+        refs = (self.roxml_references \
           ? self.roxml_references \
           : self.class.roxml_attrs.map {|attr| attr.to_ref(self) })
         refs.each do |ref|

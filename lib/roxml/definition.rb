@@ -1,4 +1,5 @@
 require 'roxml/hash_definition'
+require 'roxml/utils'
 require 'time'
 
 class Module
@@ -68,7 +69,7 @@ module ROXML
       if hash? && (hash.key.name? || hash.value.name?)
         @name = '*'
       end
-      raise ContradictoryNamespaces if @name.include?(':') && (@namespace.present? || @namespace == false)
+      raise ContradictoryNamespaces if @name.include?(':') && (@namespace || @namespace == false)
 
       raise ArgumentError, "Can't specify both :else default and :required" if required? && @default
     end
@@ -149,16 +150,16 @@ module ROXML
       # Core Shorthands
       Integer => lambda do |val|
         all(val) do |v|
-          v.to_i unless v.blank?
+          v.to_i unless Utils.string_blank?(v.to_s)
         end
       end,
       Float => lambda do |val|
         all(val) do |v|
-          Float(v) unless v.blank?
+          Float(v) unless Utils.string_blank?(v.to_s)
         end
       end,
       Time => lambda do |val|
-        all(val) {|v| Time.parse(v) unless v.blank? }
+        all(val) {|v| Time.parse(v) unless Utils.string_blank?(v.to_s)}
       end,
 
       :bool => nil,
@@ -180,19 +181,19 @@ module ROXML
       CORE_BLOCK_SHORTHANDS.tap do |blocks|
         blocks.reverse_merge!(BigDecimal => lambda do |val|
           all(val) do |v|
-            BigDecimal(v) unless v.blank?
+            BigDecimal(v) unless Utils.string_blank?(v.to_s)
           end
         end) if defined?(BigDecimal)
 
         blocks.reverse_merge!(DateTime => lambda do |val|
           if defined?(DateTime)
-            all(val) {|v| DateTime.parse(v) unless v.blank? }
+            all(val) {|v| DateTime.parse(v) unless Utils.string_blank?(v.to_s)}
           end
         end) if defined?(DateTime)
 
         blocks.reverse_merge!(Date => lambda do |val|
           if defined?(Date)
-            all(val) {|v| Date.parse(v) unless v.blank? }
+            all(val) {|v| Date.parse(v) unless Utils.string_blank?(v.to_s)}
           end
         end) if defined?(Date)
       end

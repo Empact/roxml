@@ -95,7 +95,6 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord (>= 4.0)
-  activesupport (>= 4.0)
   concurrent-ruby (~> 1.1)
   dry-core (~> 0.4)
   dry-inflector (~> 0.1)

@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'bigdecimal'
+require 'date'
 require_relative './spec_helper'
 
 describe ROXML::Definition do

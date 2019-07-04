@@ -3,7 +3,6 @@ require 'uri'
 require 'active_support'
 if Gem.loaded_specs['activesupport'] && Gem.loaded_specs['activesupport'].version >= Gem::Version.new('3')
   require 'active_support/inflector'
-  require 'active_support/core_ext/array/extract_options'
   require 'active_support/core_ext/hash'
   require 'active_support/core_ext/string/starts_ends_with'
 end
@@ -448,8 +447,7 @@ module ROXML # :nodoc:
       # [:to_xml] this proc is applied to the attributes value outputting the instance via #to_xml
       # [:namespace] (false) disables or (string) overrides the default namespace declared with xml_namespace
       #
-      def xml_attr(*syms, &block)
-        opts = syms.extract_options!
+      def xml_attr(*syms, **opts, &block)
         syms.map do |sym|
           Definition.new(sym, opts, &block).tap do |attr|
             if roxml_attrs.map(&:accessor).include? attr.accessor

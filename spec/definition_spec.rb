@@ -292,8 +292,10 @@ describe ROXML::Definition do
           end
         end
 
-        it "should extract what it can" do
-          expect(@definition.blocks.first['11sttf']).to eql(BigDecimal("11.0"))
+        if RUBY_VERSION < "2.6"
+          it "should extract what it can" do
+            expect(@definition.blocks.first['11sttf']).to eql(BigDecimal("11.0"))
+          end
         end
 
         context "when passed an array" do

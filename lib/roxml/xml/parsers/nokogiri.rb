@@ -58,7 +58,7 @@ module ROXML
           xml.search(xpath, roxml_namespaces)
         else
           xpath = "./#{xpath}"
-          (roxml_namespaces.present? ? xml.search(xpath, roxml_namespaces) : xml.search(xpath))
+          (roxml_namespaces.any? ? xml.search(xpath, roxml_namespaces) : xml.search(xpath))
         end
       end
     end

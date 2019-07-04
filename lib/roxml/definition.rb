@@ -1,3 +1,4 @@
+require 'dry/core/inflector'
 require 'roxml/hash_definition'
 require 'roxml/utils'
 
@@ -16,7 +17,7 @@ module ROXML
   end
 
   class Definition # :nodoc:
-    attr_reader :name, :sought_type, :wrapper, :hash, :blocks, :accessor, :to_xml, :attr_name, :namespace
+    attr_reader :name, :sought_type, :wrapper, :hash, :blocks, :accessor, :to_xml, :attr_name, :namespace, :inflector
     bool_attr_reader :name_explicit, :array, :cdata, :required, :frozen
 
     def initialize(sym, opts = {}, &block)
@@ -28,6 +29,7 @@ module ROXML
       @frozen = opts.delete(:frozen)
       @wrapper = opts.delete(:in)
       @namespace = opts.delete(:namespace)
+      @inflector = opts.fetch(:inflector) { Dry::Core::Inflector.inflector }
 
       @accessor = sym.to_s
       opts[:as] ||=
@@ -63,7 +65,7 @@ module ROXML
       end
 
       @name = @attr_name = accessor.to_s.chomp('?')
-      @name = @name.singularize if hash? || array?
+      @name = inflector.singularize(@name) if hash? || array?
       @name = (opts[:from] || @name).to_s
       if hash? && (hash.key.name? || hash.value.name?)
         @name = '*'

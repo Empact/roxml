@@ -133,7 +133,7 @@ end
 module WrapModule
   class BaseClass
     include ROXML
-    xml_convention :camelcase
+    xml_convention :camelize
   end
 
   class InstanceStandin < BaseClass

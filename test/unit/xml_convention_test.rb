@@ -59,7 +59,7 @@ class BookCase
 end
 
 class BookCaseCamelCase < BookCase
-  xml_convention :camelcase
+  xml_convention :camelize
 end
 
 class BookCaseUnderScore < BookCase
@@ -106,7 +106,7 @@ class TestXMLConvention < Minitest::Test
   [BookCaseUpCase, BookCaseCamelLower, BookCaseDashes, BookCaseUnderScore, BookCaseCamelCase].each do |klass|
     define_method(:"test_xml_convention_#{klass.to_s.underscore}") do
       data = :"XML_#{klass.to_s.sub('BookCase', '').upcase}"
-      assert_equal Proc, klass.roxml_naming_convention.class
+      assert Proc, klass.roxml_naming_convention.respond_to?(:call)
 
       bc = klass.from_xml(Object.const_get(data))
       assert_has_book_case_info(bc)
@@ -116,7 +116,7 @@ class TestXMLConvention < Minitest::Test
   def test_child_should_inherit_convention_if_it_doesnt_declare_one
     [InheritedBookCaseUpCase, InheritedBookCaseCamelCase].each do |klass|
       data = :"XML_#{klass.to_s.sub('InheritedBookCase', '').upcase}"
-      assert_equal Proc, klass.roxml_naming_convention.class
+      assert klass.roxml_naming_convention.respond_to?(:call)
 
       bc = klass.from_xml(Object.const_get(data))
       assert_has_book_case_info(bc)

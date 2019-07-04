@@ -94,7 +94,7 @@ module ROXML
     end
 
     def auto_wrapper
-      namespacify(conventionize(opts.name.pluralize))
+      namespacify(conventionize(@instance.class.roxml_inflector.pluralize(opts.name)))
     end
 
     def auto_xpath

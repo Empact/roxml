@@ -292,10 +292,6 @@ describe ROXML::Definition do
           end
         end
 
-        it "should extract what it can" do
-          expect(@definition.blocks.first['11sttf']).to eql(BigDecimal("11.0"))
-        end
-
         context "when passed an array" do
           it "should translate the array elements to integer" do
             expect(@definition.blocks.first.call(["12.1", "328.2"])).to eq([BigDecimal("12.1"), BigDecimal("328.2")])

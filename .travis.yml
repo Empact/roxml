@@ -1,5 +1,7 @@
 sudo: false
 language: ruby
+before_install:
+  - bundle update --bundler
 rvm:
   - 2.2.8
   - 2.3.5

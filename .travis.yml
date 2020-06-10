@@ -3,9 +3,6 @@ language: ruby
 before_install:
   - bundle update --bundler
 rvm:
-  - 2.2.8
-  - 2.3.5
-  - 2.4.5
   - 2.5.3
   - 2.6.1
   - 2.7.1

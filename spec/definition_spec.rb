@@ -426,7 +426,6 @@ describe ROXML::Definition do
   end
 
   describe "options" do
-
     shared_examples_for "boolean option" do
       it "should be recognized" do
         ROXML::Definition.new(:author, :from => :content, @option => true).respond_to?(:"#{@option}?")
@@ -466,6 +465,12 @@ describe ROXML::Definition do
       end
 
       it_should_behave_like "boolean option"
+    end
+  end
+
+  describe 'frozen_string_literal behavior' do
+    it 'should not raise error' do
+      expect { ROXML::Definition.new(:element, :from => '@somewhere'.freeze) }.not_to raise_error(FrozenError)
     end
   end
 end

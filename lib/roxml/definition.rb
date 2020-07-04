@@ -60,7 +60,7 @@ module ROXML
         @sought_type = :namespace
       elsif opts[:from].to_s.starts_with?('@')
         @sought_type = :attr
-        opts[:from].sub!('@', '')
+        opts[:from] = opts[:from].sub('@', '')
       end
 
       @name = @attr_name = accessor.to_s.chomp('?')

@@ -7,6 +7,7 @@ group :development, :test do
   gem 'rake', '~> 0.9'
   gem 'juwelier'
   gem 'minitest'
+  gem 'rexml'
   gem 'rspec', '~> 3.7.0'
   gem 'sqlite3', '>= 1.2.4'
   gem 'activerecord', '>= 4.0'

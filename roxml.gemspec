@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Ben Woosley".freeze, "Zak Mandhro".freeze, "Anders Engstrom".freeze, "Russ Olsen".freeze]
-  s.date = "2020-07-06"
+  s.date = "2021-03-05"
   s.description = "ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML.\nUsing simple annotations, it enables Ruby classes to be mapped to XML. ROXML takes care\nof the marshalling and unmarshalling of mapped attributes so that developers can focus on\nbuilding first-class Ruby classes. As a result, ROXML simplifies the development of\nRESTful applications, Web Services, and XML-RPC.\n".freeze
   s.email = "ben.woosley@gmail.com".freeze
   s.extra_rdoc_files = [
@@ -51,6 +51,7 @@ Gem::Specification.new do |s|
     "lib/roxml.rb",
     "lib/roxml/definition.rb",
     "lib/roxml/hash_definition.rb",
+    "lib/roxml/utils.rb",
     "lib/roxml/xml.rb",
     "lib/roxml/xml/parsers/libxml.rb",
     "lib/roxml/xml/parsers/nokogiri.rb",
@@ -141,7 +142,9 @@ Gem::Specification.new do |s|
   end
 
   if s.respond_to? :add_runtime_dependency then
-    s.add_runtime_dependency(%q<activesupport>.freeze, [">= 4.0"])
+    s.add_runtime_dependency(%q<concurrent-ruby>.freeze, ["~> 1.1"])
+    s.add_runtime_dependency(%q<dry-core>.freeze, ["~> 0.4"])
+    s.add_runtime_dependency(%q<dry-inflector>.freeze, ["~> 0.1"])
     s.add_runtime_dependency(%q<nokogiri>.freeze, [">= 1.3.3"])
     s.add_development_dependency(%q<rake>.freeze, ["~> 0.9"])
     s.add_development_dependency(%q<juwelier>.freeze, [">= 0"])
@@ -152,7 +155,9 @@ Gem::Specification.new do |s|
     s.add_development_dependency(%q<rack>.freeze, ["< 2.0.0"])
     s.add_development_dependency(%q<equivalent-xml>.freeze, [">= 0.6.0"])
   else
-    s.add_dependency(%q<activesupport>.freeze, [">= 4.0"])
+    s.add_dependency(%q<concurrent-ruby>.freeze, ["~> 1.1"])
+    s.add_dependency(%q<dry-core>.freeze, ["~> 0.4"])
+    s.add_dependency(%q<dry-inflector>.freeze, ["~> 0.1"])
     s.add_dependency(%q<nokogiri>.freeze, [">= 1.3.3"])
     s.add_dependency(%q<rake>.freeze, ["~> 0.9"])
     s.add_dependency(%q<juwelier>.freeze, [">= 0"])

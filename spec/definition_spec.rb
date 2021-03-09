@@ -1,4 +1,6 @@
 # encoding: utf-8
+require 'bigdecimal'
+require 'date'
 require_relative './spec_helper'
 
 describe ROXML::Definition do
@@ -289,6 +291,12 @@ describe ROXML::Definition do
         if RUBY_VERSION >= "2.4"
           it "should raise on non-decimal values" do
             expect { @definition.blocks.first['junk 11'] }.to raise_error(ArgumentError)
+          end
+        end
+
+        if RUBY_VERSION < "2.6"
+          it "should extract what it can" do
+            expect(@definition.blocks.first['11sttf']).to eql(BigDecimal("11.0"))
           end
         end
 

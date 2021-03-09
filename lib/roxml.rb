@@ -476,8 +476,8 @@ module ROXML # :nodoc:
       # Note that while xml_reader does not create a setter for this attribute,
       # its value can be modified indirectly via methods.  For more complete
       # protection, consider the :frozen option.
-      def xml_reader(*syms, &block)
-        xml_attr(*syms, &block).each do |attr|
+      def xml_reader(*syms, **opts, &block)
+        xml_attr(*syms, **opts, &block).each do |attr|
           add_reader(attr)
         end
       end
@@ -487,8 +487,8 @@ module ROXML # :nodoc:
       # Note that while xml_accessor does create a setter for this attribute,
       # you can use the :frozen option to prevent its value from being
       # modified indirectly via methods.
-      def xml_accessor(*syms, &block)
-        xml_attr(*syms, &block).each do |attr|
+      def xml_accessor(*syms, **opts, &block)
+        xml_attr(*syms, **opts, &block).each do |attr|
           add_reader(attr)
           attr_writer(attr.attr_name)
         end

@@ -68,7 +68,7 @@ GEM
     rack (1.6.13)
     rake (0.9.6)
     rchardet (1.8.0)
-    rdoc (6.2.1)
+    rdoc (6.3.2)
     rspec (3.7.0)
       rspec-core (~> 3.7.0)
       rspec-expectations (~> 3.7.0)

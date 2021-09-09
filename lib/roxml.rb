@@ -92,7 +92,7 @@ module ROXML # :nodoc:
       def xml_namespace(namespace)
         @roxml_namespace = namespace.to_s
       end
-      
+
       # Sets up a mapping of namespace prefixes to hrefs, to be used by this class.
       # These namespace prefixes are independent of what appears in the xml, only
       # the namespace hrefs themselves need to match
@@ -128,7 +128,11 @@ module ROXML # :nodoc:
       end
 
       def roxml_namespaces # :nodoc:
-        @roxml_namespaces || {}
+        if defined? @roxml_namespaces
+          @roxml_namespaces
+        else
+          {}
+        end
       end
 
       # Most xml documents have a consistent naming convention, for example, the node and
@@ -163,7 +167,7 @@ module ROXML # :nodoc:
       # Note that the xml_convention is also applied to the default root-level tag_name,
       # but in this case an underscored version of the name is applied, for convenience.
       def xml_convention(to_proc_able = nil, &block)
-        raise ArgumentError, "conventions are already set" if @roxml_naming_convention
+        raise ArgumentError, "conventions are already set" if defined?(@roxml_naming_convention)
         @roxml_naming_convention =
           if to_proc_able
             raise ArgumentError, "only one conventions can be set" if block_given?
@@ -174,8 +178,10 @@ module ROXML # :nodoc:
       end
 
       def roxml_naming_convention # :nodoc:
-        @roxml_naming_convention || begin
-          superclass.roxml_naming_convention if superclass.respond_to?(:roxml_naming_convention)
+        if defined? @roxml_naming_convention
+          @roxml_naming_convention
+        elsif superclass.respond_to?(:roxml_naming_convention)
+          superclass.roxml_naming_convention
         end
       end
 
@@ -482,7 +488,7 @@ module ROXML # :nodoc:
     private
       def add_reader(attr)
         define_method(attr.accessor) do
-          if instance_variable_get(attr.instance_variable_name).nil?
+          unless instance_variable_defined?(attr.instance_variable_name)
             instance_variable_set(attr.instance_variable_name, attr.default)
           end
           instance_variable_get(attr.instance_variable_name)
@@ -501,21 +507,25 @@ module ROXML # :nodoc:
       # do not work without one.
       def tag_name
         return roxml_tag_name if roxml_tag_name
-        
+
         if tag_name = name.split('::').last
           roxml_naming_convention ? roxml_naming_convention.call(tag_name.underscore) : tag_name.downcase
         end
       end
 
       def roxml_tag_name # :nodoc:
-        @roxml_tag_name || begin
-          superclass.roxml_tag_name if superclass.respond_to?(:roxml_tag_name)
+        if defined? @roxml_tag_name
+          @roxml_tag_name
+        elsif superclass.respond_to?(:roxml_tag_name)
+          superclass.roxml_tag_name
         end
       end
 
       def roxml_namespace # :nodoc:
-        @roxml_namespace || begin
-          superclass.roxml_namespace if superclass.respond_to?(:roxml_namespace)
+        if defined? @roxml_namespace
+          @roxml_namespace
+        elsif superclass.respond_to?(:roxml_namespace)
+          superclass.roxml_namespace
         end
       end
 
@@ -567,4 +577,3 @@ module ROXML # :nodoc:
     end
   end
 end
-

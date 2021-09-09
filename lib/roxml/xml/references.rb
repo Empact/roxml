@@ -102,7 +102,7 @@ module ROXML
     end
 
     def wrap(xml, opts = {:always_create => false})
-      wrap_with = @auto_vals ? auto_wrapper : wrapper
+      wrap_with = defined?(@auto_vals) && @auto_vals ? auto_wrapper : wrapper
 
       return xml if !wrap_with || xml.name == wrap_with
 

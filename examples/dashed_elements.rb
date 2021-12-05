@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+require 'date'
 require_relative './../spec/spec_helper'
 
 module GitHub

@@ -1,3 +1,6 @@
+require "forwardable"
+require "roxml/utils"
+
 module ROXML
   class RequiredElementMissing < ArgumentError # :nodoc:
   end
@@ -6,8 +9,10 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef # :nodoc:
+    extend Forwardable
+
     attr_reader :opts
-    delegate :required?, :array?, :accessor, :default, :wrapper, :to => :opts
+    def_delegators :opts, :required?, :array?, :accessor, :default, :wrapper
 
     def initialize(opts, instance)
       @opts = opts
@@ -34,7 +39,7 @@ module ROXML
     def value_in(xml)
       xml = XML::Node.from(xml)
       value = fetch_value(xml)
-      value = default if default && (value.nil? || value.to_s.empty?)
+      value = default if default && (value.nil? || Utils.string_blank?(value.to_s))
 
       value = apply_blocks(value)
       value = freeze(value) if value && opts.frozen?
@@ -44,7 +49,7 @@ module ROXML
   private
     def conventionize(what)
       convention ||= @instance.class.respond_to?(:roxml_naming_convention) && @instance.class.roxml_naming_convention
-      if !what.blank? && convention.respond_to?(:call)
+      if !Utils.string_blank?(what.to_s) && convention.respond_to?(:call)
         URI.decode_www_form_component(convention.call(URI.encode_www_form_component(what)))
       else
         what
@@ -52,7 +57,7 @@ module ROXML
     end
 
     def namespacify(what)
-      if what.to_s.present? && opts.namespace != false && ns = [opts.namespace, @instance.class.roxml_namespace, @default_namespace].compact.map(&:to_s).first
+      if !Utils.string_blank?(what.to_s) && opts.namespace != false && ns = [opts.namespace, @instance.class.roxml_namespace, @default_namespace].compact.map(&:to_s).first
         require "rexml/xpath_parser"
 
         parser = REXML::Parsers::XPathParser.new
@@ -90,7 +95,7 @@ module ROXML
     end
 
     def auto_wrapper
-      namespacify(conventionize(opts.name.pluralize))
+      namespacify(conventionize(@instance.class.roxml_inflector.pluralize(opts.name)))
     end
 
     def auto_xpath
@@ -180,7 +185,7 @@ module ROXML
   #   XMLTextRef
   #  </element>
   class XMLTextRef < XMLRef # :nodoc:
-    delegate :cdata?, :content?, :name?, :to => :opts
+    def_delegators :opts, :cdata?, :content?, :name?
 
     # Updates the text in the given _xml_ block to
     # the _value_ provided.
@@ -210,7 +215,7 @@ module ROXML
             xml.name
           end
 
-        if value.blank?
+        if Utils.string_blank?(value.to_s)
           raise RequiredElementMissing, "#{name} from #{xml} for #{accessor}" if required?
           default
         else
@@ -240,7 +245,7 @@ module ROXML
   end
 
   class XMLHashRef < XMLTextRef # :nodoc:
-    delegate :hash, :to => :opts
+    def_delegators :opts, :hash
 
     def initialize(opts, inst)
       super(opts, inst)
@@ -298,7 +303,7 @@ module ROXML
   end
 
   class XMLObjectRef < XMLTextRef # :nodoc:
-    delegate :sought_type, :to => :opts
+    def_delegators :opts, :sought_type
 
     # Updates the composed XML object in the given XML block to
     # the value provided.

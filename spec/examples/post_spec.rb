@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'date'
 require_relative './../../examples/posts'
 
 describe Post do

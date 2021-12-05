@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'fileutils'
 require_relative './../../examples/library'
 
 describe Library do

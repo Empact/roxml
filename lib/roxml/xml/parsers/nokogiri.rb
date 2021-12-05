@@ -33,7 +33,7 @@ module ROXML
       end
 
       def parse_file(path)
-        path = path.sub('file:', '') if path.starts_with?('file:')
+        path = path.sub('file:', '') if path.start_with?('file:')
         parse_io(open(path))
       end
 
@@ -58,7 +58,7 @@ module ROXML
           xml.search(xpath, roxml_namespaces)
         else
           xpath = "./#{xpath}"
-          (roxml_namespaces.present? ? xml.search(xpath, roxml_namespaces) : xml.search(xpath))
+          (roxml_namespaces.any? ? xml.search(xpath, roxml_namespaces) : xml.search(xpath))
         end
       end
     end

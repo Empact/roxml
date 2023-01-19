@@ -67,7 +67,7 @@ GEM
     psych (3.1.0)
     public_suffix (4.0.6)
     racc (1.5.2)
-    rack (1.6.13)
+    rack (2.1.4.2)
     rake (0.9.6)
     rchardet (1.8.0)
     rdoc (6.3.2)
@@ -102,7 +102,7 @@ DEPENDENCIES
   juwelier
   minitest
   nokogiri (>= 1.3.3)
-  rack (< 2.0.0)
+  rack (< 3.0.0)
   rake (~> 0.9)
   rexml
   rspec (~> 3.7.0)

@@ -21,6 +21,7 @@ GEM
     bigdecimal (3.1.8)
     concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
+    date (3.3.4)
     diff-lcs (1.5.1)
     drb (2.2.1)
     equivalent-xml (0.6.0)
@@ -53,6 +54,8 @@ GEM
     sqlite3 (1.7.3)
       mini_portile2 (~> 2.8.0)
     strscan (3.1.0)
+    time (0.3.0)
+      date
     timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
@@ -70,6 +73,7 @@ DEPENDENCIES
   rexml
   rspec (>= 3.7.0)
   sqlite3 (~> 1.4)
+  time
 
 BUNDLED WITH
    2.2.22

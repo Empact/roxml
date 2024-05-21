@@ -1,4 +1,5 @@
 require 'roxml/hash_definition'
+require 'time'
 
 class Module
   def bool_attr_reader(*attrs)
@@ -143,21 +144,21 @@ module ROXML
 
     CORE_BLOCK_SHORTHANDS = {
       # Core Shorthands
-      Integer  => lambda do |val|
+      Integer => lambda do |val|
         all(val) do |v|
           v.to_i unless v.blank?
         end
       end,
-      Float    => lambda do |val|
+      Float => lambda do |val|
         all(val) do |v|
           Float(v) unless v.blank?
         end
       end,
-      Time     => lambda do |val|
+      Time => lambda do |val|
         all(val) {|v| Time.parse(v) unless v.blank? }
       end,
 
-      :bool    => nil,
+      :bool => nil,
       :bool_standalone => lambda do |val|
         all(val) do |v|
           fetch_bool(v, nil)

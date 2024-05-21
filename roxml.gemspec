@@ -140,6 +140,7 @@ Gem::Specification.new do |s|
   if s.respond_to? :add_runtime_dependency then
     s.add_runtime_dependency(%q<activesupport>.freeze, [">= 4.0"])
     s.add_runtime_dependency(%q<nokogiri>.freeze, [">= 1.3.3"])
+    s.add_runtime_dependency(%q<time>.freeze, ["~> 0.3.0"])
     s.add_development_dependency(%q<rake>.freeze, ["~> 0.9"])
     s.add_development_dependency(%q<juwelier>.freeze, [">= 0"])
     s.add_development_dependency(%q<minitest>.freeze, [">= 0"])
@@ -153,6 +154,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<activesupport>.freeze, [">= 4.0"])
     s.add_dependency(%q<nokogiri>.freeze, [">= 1.3.3"])
     s.add_dependency(%q<rake>.freeze, ["~> 0.9"])
+    s.add_dependency(%q<time>.freeze, ["~> 0.3.0"])
     s.add_dependency(%q<juwelier>.freeze, [">= 0"])
     s.add_dependency(%q<minitest>.freeze, [">= 0"])
     s.add_dependency(%q<rexml>.freeze, [">= 0"])

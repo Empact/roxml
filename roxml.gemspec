@@ -16,9 +16,7 @@ Gem::Specification.new do |s|
     "README.rdoc"
   ]
   s.files = [
-    ".gitmodules",
     ".rspec",
-    ".travis.yml",
     "Gemfile",
     "Gemfile.lock",
     "History.txt",

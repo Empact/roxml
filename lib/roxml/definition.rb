@@ -3,23 +3,17 @@ require 'roxml/hash_definition'
 require 'roxml/utils'
 require 'time'
 
-class Module
-  def bool_attr_reader(*attrs)
-    attrs.each do |attr|
-      define_method :"#{attr}?" do
-        instance_variable_get(:"@#{attr}") || false
-      end
-    end
-  end
-end
-
 module ROXML
   class ContradictoryNamespaces < StandardError
   end
 
   class Definition # :nodoc:
     attr_reader :name, :sought_type, :wrapper, :hash, :blocks, :accessor, :to_xml, :attr_name, :namespace, :inflector
-    bool_attr_reader :name_explicit, :array, :cdata, :required, :frozen
+    [:name_explicit, :array, :cdata, :required, :frozen].each do |attr|
+      define_method :"#{attr}?" do
+        instance_variable_get(:"@#{attr}") || false
+      end
+    end
 
     def initialize(sym, opts = {}, &block)
       @default = opts.delete(:else)

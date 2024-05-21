@@ -133,12 +133,12 @@ describe ROXML::Definition do
     describe "=> {}" do
       shared_examples_for "hash options declaration" do
         it "should represent a hash" do
-          expect(@opts.hash?).to be_truthy
+          expect(@opts.hash_definition?).to be_truthy
         end
 
         it "should have hash definition" do
-          expect({@opts.hash.key.sought_type => @opts.hash.key.name}).to eq(@hash_args[:key])
-          expect({@opts.hash.value.sought_type => @opts.hash.value.name}).to eq(@hash_args[:value])
+          expect({@opts.hash_definition.key.sought_type => @opts.hash_definition.key.name}).to eq(@hash_args[:key])
+          expect({@opts.hash_definition.value.sought_type => @opts.hash_definition.value.name}).to eq(@hash_args[:value])
         end
 
         it "should not represent an array" do

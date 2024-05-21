@@ -107,8 +107,8 @@ class TestXMLName < Minitest::Test
 
   def test_roxml_attrs
     assert_equal 'definition', DictionaryOfTexts.roxml_attrs.first.name
-    assert_equal 'word', DictionaryOfTexts.roxml_attrs.first.hash.key.name
-    assert_equal 'meaning', DictionaryOfTexts.roxml_attrs.first.hash.value.name
+    assert_equal 'word', DictionaryOfTexts.roxml_attrs.first.hash_definition.key.name
+    assert_equal 'meaning', DictionaryOfTexts.roxml_attrs.first.hash_definition.value.name
   end
 
   def test_xml_name_should_not_be_conventionalized_if_explicitly_set

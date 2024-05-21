@@ -16,7 +16,7 @@ class TestDeprecation < Minitest::Test
   def test_as_hash_not_deprecated
     assert_not_deprecated ActiveSupport::Deprecation.new do
       opts = ROXML::Definition.new(:name, :as => {:key => '@dt', :value => '@dd'})
-      assert opts.hash?
+      assert opts.hash_definition?
     end
   end
 
@@ -29,9 +29,9 @@ class TestDeprecation < Minitest::Test
   def test_as_hash_of_as_type_not_deprecated
     assert_not_deprecated ActiveSupport::Deprecation.new do
       opts = ROXML::Definition.new(:name, :as => {:key => :name, :value => {:from => 'value', :as => OctalInteger}})
-      assert opts.hash?
-      assert_equal OctalInteger, opts.hash.value.sought_type
-      assert_equal 'value', opts.hash.value.name
+      assert opts.hash_definition?
+      assert_equal OctalInteger, opts.hash_definition.value.sought_type
+      assert_equal 'value', opts.hash_definition.value.name
     end
   end
 

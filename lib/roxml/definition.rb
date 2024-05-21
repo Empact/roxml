@@ -8,7 +8,7 @@ module ROXML
   end
 
   class Definition # :nodoc:
-    attr_reader :name, :sought_type, :wrapper, :hash, :blocks, :accessor, :to_xml, :attr_name, :namespace, :inflector
+    attr_reader :name, :sought_type, :wrapper, :blocks, :accessor, :to_xml, :attr_name, :namespace, :inflector
     [:name_explicit, :array, :cdata, :required, :frozen].each do |attr|
       define_method :"#{attr}?" do
         instance_variable_get(:"@#{attr}") || false
@@ -60,9 +60,9 @@ module ROXML
       end
 
       @name = @attr_name = accessor.to_s.chomp('?')
-      @name = inflector.singularize(@name) if hash? || array?
+      @name = inflector.singularize(@name) if hash_definition? || array?
       @name = (opts[:from] || @name).to_s
-      if hash? && (hash.key.name? || hash.value.name?)
+      if hash_definition? && (hash_definition.key.name? || hash_definition.value.name?)
         @name = '*'
       end
       raise ContradictoryNamespaces if @name.include?(':') && (@namespace || @namespace == false)
@@ -78,14 +78,14 @@ module ROXML
       :"#{attr_name}="
     end
 
-    def hash
-      if hash?
+    def hash_definition
+      if hash_definition?
         @sought_type.wrapper ||= name
         @sought_type
       end
     end
 
-    def hash?
+    def hash_definition?
       @sought_type.is_a?(HashDefinition)
     end
 
@@ -100,7 +100,7 @@ module ROXML
     def default
       if @default.nil?
         @default = [] if array?
-        @default = {} if hash?
+        @default = {} if hash_definition?
       end
 
       begin

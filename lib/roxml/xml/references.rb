@@ -245,12 +245,12 @@ module ROXML
   end
 
   class XMLHashRef < XMLTextRef # :nodoc:
-    def_delegators :opts, :hash
+    def_delegators :opts, :hash_definition
 
     def initialize(opts, inst)
       super(opts, inst)
-      @key = opts.hash.key.to_ref(inst)
-      @value = opts.hash.value.to_ref(inst)
+      @key = opts.hash_definition.key.to_ref(inst)
+      @value = opts.hash_definition.value.to_ref(inst)
     end
 
     def several?
@@ -262,7 +262,7 @@ module ROXML
     def update_xml(xml, value)
       wrap(xml).tap do |xml|
         value.each_pair do |k, v|
-          node = XML.add_node(xml, hash.wrapper)
+          node = XML.add_node(xml, opts.hash_definition.wrapper)
           @key.update_xml(node, k)
           @value.update_xml(node, v)
         end

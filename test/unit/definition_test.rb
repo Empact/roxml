@@ -5,10 +5,10 @@ require 'minitest/autorun'
 
 class TestDefinition < Minitest::Test
   def assert_hash(opts, kvp)
-    assert opts.hash?
+    assert opts.hash_definition?
     assert !opts.array?
-    assert_equal kvp, {opts.hash.key.sought_type => opts.hash.key.name,
-                       opts.hash.value.sought_type => opts.hash.value.name}
+    assert_equal kvp, {opts.hash_definition.key.sought_type => opts.hash_definition.key.name,
+                       opts.hash_definition.value.sought_type => opts.hash_definition.value.name}
   end
 
   def test_empty_array_means_as_array_for_text
@@ -70,7 +70,7 @@ class TestDefinition < Minitest::Test
     opts = ROXML::Definition.new(:definitions, :as => {:key => '@dt', :value => '@dd'},
                            :in => :definitions, :from => 'definition')
     assert_hash(opts, :attr => 'dd')
-    assert_equal 'definition', opts.hash.wrapper
+    assert_equal 'definition', opts.hash_definition.wrapper
   end
 
   def test_no_block_shorthand_means_no_block
@@ -230,7 +230,7 @@ end
 class HashDefinitionTest < Minitest::Test
   def test_content_detected_as_from
     opts = ROXML::Definition.new(:hash, :as => {:key => :content, :value => :name})
-    assert_equal '.', opts.hash.key.name
-    assert_equal :text, opts.hash.key.sought_type
+    assert_equal '.', opts.hash_definition.key.name
+    assert_equal :text, opts.hash_definition.key.sought_type
   end
 end

@@ -53,12 +53,16 @@ module ROXML
       end
 
       def search(xml, xpath, roxml_namespaces = {})
+        namespaces = roxml_namespaces
+        namespaces = namespaces.merge(xml.root.namespaces) if xml.respond_to?(:root)
+        namespaces.transform_keys! {|key| key.delete_prefix("xmlns:").delete_prefix("xmlns") }
         case xml
         when Nokogiri::XML::Document
-          xml.search(xpath, roxml_namespaces)
+          p xpath, namespaces
+          xml.search(xpath, namespaces)
         else
           xpath = "./#{xpath}"
-          (roxml_namespaces.any? ? xml.search(xpath, roxml_namespaces) : xml.search(xpath))
+          (namespaces.any? ? xml.search(xpath, namespaces) : xml.search(xpath))
         end
       end
     end

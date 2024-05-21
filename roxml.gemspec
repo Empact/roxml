@@ -140,8 +140,7 @@ Gem::Specification.new do |s|
 
   if s.respond_to? :add_runtime_dependency then
     s.add_runtime_dependency(%q<concurrent-ruby>.freeze, ["~> 1.1"])
-    s.add_runtime_dependency(%q<dry-core>.freeze, ["~> 0.4"])
-    s.add_runtime_dependency(%q<dry-inflector>.freeze, ["~> 0.1"])
+    s.add_runtime_dependency(%q<dry-core>.freeze, [">= 0.4"])
     s.add_runtime_dependency(%q<nokogiri>.freeze, [">= 1.3.3"])
     s.add_runtime_dependency(%q<rexml>.freeze, [">= 0"])
     s.add_runtime_dependency(%q<time>.freeze, ["~> 0.3.0"])
@@ -155,8 +154,7 @@ Gem::Specification.new do |s|
     s.add_development_dependency(%q<equivalent-xml>.freeze, [">= 0.6.0"])
   else
     s.add_dependency(%q<concurrent-ruby>.freeze, ["~> 1.1"])
-    s.add_dependency(%q<dry-core>.freeze, ["~> 0.4"])
-    s.add_dependency(%q<dry-inflector>.freeze, ["~> 0.1"])
+    s.add_dependency(%q<dry-core>.freeze, [">= 0.4"])
     s.add_dependency(%q<nokogiri>.freeze, [">= 1.3.3"])
     s.add_dependency(%q<rake>.freeze, ["~> 0.9"])
     s.add_dependency(%q<time>.freeze, ["~> 0.3.0"])

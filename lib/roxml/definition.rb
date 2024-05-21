@@ -220,12 +220,12 @@ module ROXML
 
     def extract_type(as)
       if as.is_a?(Hash)
-        return HashDefinition.new(as)
+        HashDefinition.new(as)
       elsif as.respond_to?(:from_xml)
-        return as
+        as
       elsif as.is_a?(Array) && as.first.respond_to?(:from_xml)
         @array = true
-        return as.first
+        as.first
       else
         :text
       end

@@ -1,4 +1,3 @@
-require "forwardable"
 require "roxml/utils"
 
 module ROXML
@@ -9,10 +8,7 @@ module ROXML
   # Internal base class that represents an XML - Class binding.
   #
   class XMLRef # :nodoc:
-    extend Forwardable
-
     attr_reader :opts
-    def_delegators :opts, :required?, :array?, :accessor, :default, :wrapper
 
     def initialize(opts, instance)
       @opts = opts
@@ -24,7 +20,7 @@ module ROXML
     end
 
     def to_xml(instance)
-      val = instance.__send__(accessor)
+      val = instance.__send__(opts.accessor)
       opts.to_xml.respond_to?(:call) ? opts.to_xml.call(val) : val
     end
 
@@ -39,7 +35,7 @@ module ROXML
     def value_in(xml)
       xml = XML::Node.from(xml)
       value = fetch_value(xml)
-      value = default if default && (value.nil? || Utils.string_blank?(value.to_s))
+      value = opts.default if opts.default && (value.nil? || Utils.string_blank?(value.to_s))
 
       value = apply_blocks(value)
       value = freeze(value) if value && opts.frozen?
@@ -82,7 +78,7 @@ module ROXML
     def apply_blocks(val)
       blocks.inject(val) {|val, block| block.call(val) }
     rescue Exception => ex
-      raise ex, "#{accessor}: #{ex.message}"
+      raise ex, "#{opts.accessor}: #{ex.message}"
     end
 
     def freeze(val)
@@ -99,15 +95,15 @@ module ROXML
     end
 
     def auto_xpath
-      "#{auto_wrapper}/#{xpath_name}" if array?
+      "#{auto_wrapper}/#{xpath_name}" if opts.array?
     end
 
     def several?
-      array?
+      opts.array?
     end
 
     def wrap(xml, opts = {:always_create => false})
-      wrap_with = defined?(@auto_vals) && @auto_vals ? auto_wrapper : wrapper
+      wrap_with = defined?(@auto_vals) && @auto_vals ? auto_wrapper : self.opts.wrapper
 
       return xml if !wrap_with || xml.name == wrap_with
 
@@ -125,14 +121,14 @@ module ROXML
       @default_namespace = XML.default_namespace(xml)
       vals = XML.search(xml, xpath, @instance.class.roxml_namespaces)
 
-      if several? && vals.empty? && !wrapper && auto_xpath
+      if several? && vals.empty? && !opts.wrapper && auto_xpath
         vals = XML.search(xml, auto_xpath, @instance.class.roxml_namespaces)
         @auto_vals = !vals.empty?
       end
 
       if vals.empty?
-        raise RequiredElementMissing, "#{name} from #{xml} for #{accessor}" if required?
-        default
+        raise RequiredElementMissing, "#{name} from #{xml} for #{opts.accessor}" if opts.required?
+        opts.default
       elsif several?
         vals.map do |val|
           yield val
@@ -153,7 +149,7 @@ module ROXML
     # Updates the attribute in the given XML block to
     # the value provided.
     def update_xml(xml, values)
-      if array?
+      if opts.array?
         values.each do |value|
           wrap(xml, :always_create => true).tap do |node|
             XML.set_attribute(node, name, value.to_s)
@@ -185,17 +181,15 @@ module ROXML
   #   XMLTextRef
   #  </element>
   class XMLTextRef < XMLRef # :nodoc:
-    def_delegators :opts, :cdata?, :content?, :name?
-
     # Updates the text in the given _xml_ block to
     # the _value_ provided.
     def update_xml(xml, value)
       wrap(xml).tap do |xml|
-        if content?
+        if opts.content?
           add(xml, value)
-        elsif name?
+        elsif opts.name?
           xml.name = value
-        elsif array?
+        elsif opts.array?
           value.each do |v|
             add(XML.add_node(xml, name), v)
           end
@@ -207,17 +201,17 @@ module ROXML
 
   private
     def fetch_value(xml)
-      if content? || name?
+      if opts.content? || opts.name?
         value =
-          if content?
+          if opts.content?
             xml.content.to_s
-          elsif name?
+          elsif opts.name?
             xml.name
           end
 
         if Utils.string_blank?(value.to_s)
-          raise RequiredElementMissing, "#{name} from #{xml} for #{accessor}" if required?
-          default
+          raise RequiredElementMissing, "#{name} from #{xml} for #{opts.accessor}" if opts.required?
+          opts.default
         else
           value
         end
@@ -229,7 +223,7 @@ module ROXML
     end
 
     def add(dest, value)
-      if cdata?
+      if opts.cdata?
         XML.add_cdata(dest, value.to_s)
       else
         XML.set_content(dest, value.to_s)
@@ -245,8 +239,6 @@ module ROXML
   end
 
   class XMLHashRef < XMLTextRef # :nodoc:
-    def_delegators :opts, :hash_definition
-
     def initialize(opts, inst)
       super(opts, inst)
       @key = opts.hash_definition.key.to_ref(inst)
@@ -303,14 +295,12 @@ module ROXML
   end
 
   class XMLObjectRef < XMLTextRef # :nodoc:
-    def_delegators :opts, :sought_type
-
     # Updates the composed XML object in the given XML block to
     # the value provided.
     def update_xml(xml, value)
       wrap(xml).tap do |xml|
         params = {:name => name, :namespace => opts.namespace}
-        if array?
+        if opts.array?
           value.each do |v|
             XML.add_child(xml, v.to_xml(params))
           end
@@ -327,10 +317,10 @@ module ROXML
   private
     def fetch_value(xml)
       nodes_in(xml) do |node|
-        if sought_type.respond_to? :from_xml
-          sought_type.from_xml(node)
+        if opts.sought_type.respond_to? :from_xml
+          opts.sought_type.from_xml(node)
         else
-          sought_type.new(node)
+          opts.sought_type.new(node)
         end
       end
     end

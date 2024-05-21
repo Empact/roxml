@@ -146,7 +146,7 @@ Gem::Specification.new do |s|
     s.add_development_dependency(%q<rake>.freeze, ["~> 0.9"])
     s.add_development_dependency(%q<juwelier>.freeze, [">= 0"])
     s.add_development_dependency(%q<minitest>.freeze, [">= 0"])
-    s.add_development_dependency(%q<rexml>.freeze, [">= 0"])
+    s.add_runtime_dependency(%q<rexml>.freeze, [">= 0"])
     s.add_development_dependency(%q<rspec>.freeze, ["~> 3.7.0"])
     s.add_development_dependency(%q<sqlite3>.freeze, [">= 1.2.4"])
     s.add_development_dependency(%q<activerecord>.freeze, [">= 4.0"])

@@ -1,14 +1,5 @@
 require 'uri'
-
-require 'active_support'
-if Gem.loaded_specs['activesupport'] && Gem.loaded_specs['activesupport'].version >= Gem::Version.new('3')
-  require 'active_support/inflector'
-  require 'active_support/core_ext/object/duplicable'
-  require 'active_support/core_ext/module/delegation'
-  require 'active_support/core_ext/array/extract_options'
-  require 'active_support/core_ext/hash'
-  require 'active_support/core_ext/string/starts_ends_with'
-end
+require 'dry/core/inflector'
 
 require 'roxml/definition'
 require 'roxml/xml'
@@ -30,10 +21,10 @@ module ROXML # :nodoc:
   module InstanceMethods # :nodoc:
     # Returns an XML object representing this object
     def to_xml(params = {})
-      params.reverse_merge!(:name => self.class.tag_name, :namespace => self.class.roxml_namespace)
+      params = {:name => self.class.tag_name, :namespace => self.class.roxml_namespace}.merge(params)
       params[:namespace] = nil if ['*', 'xmlns'].include?(params[:namespace])
       XML.new_node([params[:namespace], params[:name]].compact.join(':')).tap do |root|
-        refs = (self.roxml_references.present? \
+        refs = (self.roxml_references \
           ? self.roxml_references \
           : self.class.roxml_attrs.map {|attr| attr.to_ref(self) })
         refs.each do |ref|
@@ -171,7 +162,12 @@ module ROXML # :nodoc:
         @roxml_naming_convention =
           if to_proc_able
             raise ArgumentError, "only one conventions can be set" if block_given?
-            to_proc_able.to_proc
+
+            if to_proc_able.is_a?(Symbol) && roxml_inflector.respond_to?(to_proc_able)
+              roxml_inflector.method(to_proc_able)
+            else
+              to_proc_able.to_proc
+            end
           elsif block_given?
             block
           end
@@ -182,6 +178,20 @@ module ROXML # :nodoc:
           @roxml_naming_convention
         elsif superclass.respond_to?(:roxml_naming_convention)
           superclass.roxml_naming_convention
+        end
+      end
+
+      def xml_inflector(inflector)
+        @roxml_inflector = inflector
+      end
+
+      def roxml_inflector
+        @roxml_inflector ||= begin
+          if superclass.respond_to?(:roxml_inflector) && superclass.roxml_inflector
+            superclass.roxml_inflector
+          else
+            Dry::Core::Inflector.inflector
+          end
         end
       end
 
@@ -450,8 +460,7 @@ module ROXML # :nodoc:
       # [:to_xml] this proc is applied to the attributes value outputting the instance via #to_xml
       # [:namespace] (false) disables or (string) overrides the default namespace declared with xml_namespace
       #
-      def xml_attr(*syms, &block)
-        opts = syms.extract_options!
+      def xml_attr(*syms, **opts, &block)
         syms.map do |sym|
           Definition.new(sym, opts, &block).tap do |attr|
             if roxml_attrs.map(&:accessor).include? attr.accessor
@@ -467,8 +476,8 @@ module ROXML # :nodoc:
       # Note that while xml_reader does not create a setter for this attribute,
       # its value can be modified indirectly via methods.  For more complete
       # protection, consider the :frozen option.
-      def xml_reader(*syms, &block)
-        xml_attr(*syms, &block).each do |attr|
+      def xml_reader(*syms, **opts, &block)
+        xml_attr(*syms, **opts, &block).each do |attr|
           add_reader(attr)
         end
       end
@@ -478,8 +487,8 @@ module ROXML # :nodoc:
       # Note that while xml_accessor does create a setter for this attribute,
       # you can use the :frozen option to prevent its value from being
       # modified indirectly via methods.
-      def xml_accessor(*syms, &block)
-        xml_attr(*syms, &block).each do |attr|
+      def xml_accessor(*syms, **opts, &block)
+        xml_attr(*syms, **opts, &block).each do |attr|
           add_reader(attr)
           attr_writer(attr.attr_name)
         end
@@ -509,7 +518,7 @@ module ROXML # :nodoc:
         return roxml_tag_name if roxml_tag_name
 
         if tag_name = name.split('::').last
-          roxml_naming_convention ? roxml_naming_convention.call(tag_name.underscore) : tag_name.downcase
+          roxml_naming_convention ? roxml_naming_convention.call(roxml_inflector.underscore(tag_name)) : tag_name.downcase
         end
       end
 

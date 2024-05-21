@@ -1,4 +1,6 @@
+require 'dry/core/inflector'
 require 'roxml/hash_definition'
+require 'roxml/utils'
 require 'time'
 
 class Module
@@ -16,12 +18,10 @@ module ROXML
   end
 
   class Definition # :nodoc:
-    attr_reader :name, :sought_type, :wrapper, :hash, :blocks, :accessor, :to_xml, :attr_name, :namespace
+    attr_reader :name, :sought_type, :wrapper, :hash, :blocks, :accessor, :to_xml, :attr_name, :namespace, :inflector
     bool_attr_reader :name_explicit, :array, :cdata, :required, :frozen
 
     def initialize(sym, opts = {}, &block)
-      opts.assert_valid_keys(:from, :in, :as, :namespace,
-                             :else, :required, :frozen, :cdata, :to_xml)
       @default = opts.delete(:else)
       @to_xml = opts.delete(:to_xml)
       @name_explicit = opts.has_key?(:from) && opts[:from].is_a?(String)
@@ -30,14 +30,15 @@ module ROXML
       @frozen = opts.delete(:frozen)
       @wrapper = opts.delete(:in)
       @namespace = opts.delete(:namespace)
+      @inflector = opts.fetch(:inflector) { Dry::Core::Inflector.inflector }
 
       @accessor = sym.to_s
       opts[:as] ||=
-        if @accessor.ends_with?('?')
+        if @accessor.end_with?('?')
           :bool
-        elsif @accessor.ends_with?('_on')
+        elsif @accessor.end_with?('_on')
           Date
-        elsif @accessor.ends_with?('_at')
+        elsif @accessor.end_with?('_at')
           DateTime
         end
 
@@ -59,18 +60,18 @@ module ROXML
       elsif opts[:from] == :namespace
         opts[:from] = '*'
         @sought_type = :namespace
-      elsif opts[:from].to_s.starts_with?('@')
+      elsif opts[:from].to_s.start_with?('@')
         @sought_type = :attr
         opts[:from] = opts[:from].sub('@', '')
       end
 
       @name = @attr_name = accessor.to_s.chomp('?')
-      @name = @name.singularize if hash? || array?
+      @name = inflector.singularize(@name) if hash? || array?
       @name = (opts[:from] || @name).to_s
       if hash? && (hash.key.name? || hash.value.name?)
         @name = '*'
       end
-      raise ContradictoryNamespaces if @name.include?(':') && (@namespace.present? || @namespace == false)
+      raise ContradictoryNamespaces if @name.include?(':') && (@namespace || @namespace == false)
 
       raise ArgumentError, "Can't specify both :else default and :required" if required? && @default
     end
@@ -107,7 +108,12 @@ module ROXML
         @default = [] if array?
         @default = {} if hash?
       end
-      @default.duplicable? ? @default.dup : @default
+
+      begin
+        @default.dup
+      rescue TypeError
+        @default
+      end
     end
 
     def to_ref(inst)
@@ -146,16 +152,16 @@ module ROXML
       # Core Shorthands
       Integer => lambda do |val|
         all(val) do |v|
-          v.to_i unless v.blank?
+          v.to_i unless Utils.string_blank?(v.to_s)
         end
       end,
       Float => lambda do |val|
         all(val) do |v|
-          Float(v) unless v.blank?
+          Float(v) unless Utils.string_blank?(v.to_s)
         end
       end,
       Time => lambda do |val|
-        all(val) {|v| Time.parse(v) unless v.blank? }
+        all(val) {|v| Time.parse(v) unless Utils.string_blank?(v.to_s)}
       end,
 
       :bool => nil,
@@ -175,23 +181,23 @@ module ROXML
       # dynamically load these shorthands at class definition time, but
       # only if they're already availbable
       CORE_BLOCK_SHORTHANDS.tap do |blocks|
-        blocks.reverse_merge!(BigDecimal => lambda do |val|
+        blocks[BigDecimal] = lambda do |val|
           all(val) do |v|
-            BigDecimal(v) unless v.blank?
+            BigDecimal(v) unless Utils.string_blank?(v.to_s)
           end
-        end) if defined?(BigDecimal)
+        end if defined?(BigDecimal)
 
-        blocks.reverse_merge!(DateTime => lambda do |val|
+        blocks[DateTime] = lambda do |val|
           if defined?(DateTime)
-            all(val) {|v| DateTime.parse(v) unless v.blank? }
+            all(val) {|v| DateTime.parse(v) unless Utils.string_blank?(v.to_s)}
           end
-        end) if defined?(DateTime)
+        end if defined?(DateTime)
 
-        blocks.reverse_merge!(Date => lambda do |val|
+        blocks[Date] = lambda do |val|
           if defined?(Date)
-            all(val) {|v| Date.parse(v) unless v.blank? }
+            all(val) {|v| Date.parse(v) unless Utils.string_blank?(v.to_s)}
           end
-        end) if defined?(Date)
+        end if defined?(Date)
       end
     end
 

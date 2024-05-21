@@ -1,6 +1,8 @@
 source "http://rubygems.org"
 
-gem 'activesupport', '>= 4.0'
+gem "concurrent-ruby", "~> 1.1"
+gem "dry-core", "~> 0.4"
+gem "dry-inflector", "~> 0.1"
 gem 'nokogiri', '>= 1.3.3'
 gem 'time'
 gem 'rexml'

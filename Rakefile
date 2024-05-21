@@ -2,27 +2,6 @@ require 'rake'
 
 ENV['RUBY_FLAGS'] = '-W1'
 
-# Generate all the Rake tasks
-# Run 'rake -T' to see list of generated tasks (from gem root directory)
-require 'juwelier'
-Juwelier::Tasks.new do |gem|
-  gem.name = 'roxml'
-  gem.summary = "Ruby Object to XML mapping library"
-  gem.description = <<EOF
-ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML.
-Using simple annotations, it enables Ruby classes to be mapped to XML. ROXML takes care
-of the marshalling and unmarshalling of mapped attributes so that developers can focus on
-building first-class Ruby classes. As a result, ROXML simplifies the development of
-RESTful applications, Web Services, and XML-RPC.
-EOF
-  gem.email = "ben.woosley@gmail.com"
-  gem.homepage = "https://github.com/Empact/roxml"
-  gem.authors = ["Ben Woosley", "Zak Mandhro", "Anders Engstrom", "Russ Olsen"]
-
-  gem.extra_rdoc_files = ["History.txt", "Manifest.txt", "README.rdoc"]
-end
-Juwelier::GemcutterTasks.new
-
 Dir['tasks/**/*.rake'].each { |t| load t }
 
 task :default => [:test, :spec]

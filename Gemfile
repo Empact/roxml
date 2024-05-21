@@ -5,7 +5,6 @@ gem 'nokogiri', '>= 1.3.3'
 
 group :development, :test do
   gem 'rake', '>= 0.9'
-  gem 'juwelier'
   gem 'minitest'
   gem 'rexml'
   gem 'rspec', '>= 3.7.0'

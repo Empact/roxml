@@ -287,17 +287,8 @@ describe ROXML::Definition do
           expect(@definition.blocks.first['0.3']).to eq(BigDecimal("0.3"))
         end
 
-        # Ruby behavior of BigDecimal changed in 2.4, this test is not valid on older rubies
-        if RUBY_VERSION >= "2.4"
-          it "should raise on non-decimal values" do
-            expect { @definition.blocks.first['junk 11'] }.to raise_error(ArgumentError)
-          end
-        end
-
-        if RUBY_VERSION < "2.6"
-          it "should extract what it can" do
-            expect(@definition.blocks.first['11sttf']).to eql(BigDecimal("11.0"))
-          end
+        it "should raise on non-decimal values" do
+          expect { @definition.blocks.first['junk 11'] }.to raise_error(ArgumentError)
         end
 
         context "when passed an array" do

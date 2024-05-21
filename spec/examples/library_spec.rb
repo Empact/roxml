@@ -29,7 +29,7 @@ describe Library do
       end
 
      after :all do
-       FileUtils.rm @path
+       Bundler::FileUtils.rm @path
      end
 
      it "should be contain the expected xml" do

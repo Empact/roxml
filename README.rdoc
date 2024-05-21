@@ -182,4 +182,4 @@ For more information on available annotations, see ROXML::ClassMethods::Declarat
 
 == Copyright
 
-Copyright (c) 2004-2009 Ben Woosley, Zak Mandhro and Anders Engstrom. See LICENSE for details.
+Copyright (c) 2004-2024 Ben Woosley, Zak Mandhro and Anders Engstrom. See LICENSE for details.

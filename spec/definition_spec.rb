@@ -478,7 +478,7 @@ describe ROXML::Definition do
 
   describe 'frozen_string_literal behavior' do
     it 'should not raise error' do
-      expect { ROXML::Definition.new(:element, :from => '@somewhere'.freeze) }.not_to raise_error(FrozenError)
+      expect { ROXML::Definition.new(:element, :from => '@somewhere'.freeze) }.not_to raise_error
     end
   end
 end

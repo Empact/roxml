@@ -1,6 +1,6 @@
 ROXML Ruby Object to XML mapping library.
 
-{<img src="https://travis-ci.org/Empact/roxml.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/Empact/roxml]
+{https://travis-ci.org/Empact/roxml.svg?branch=master}[https://travis-ci.org/Empact/roxml]
 
 For more information visit:
 

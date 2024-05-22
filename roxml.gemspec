@@ -137,34 +137,17 @@ Gem::Specification.new do |s|
     s.specification_version = 4
   end
 
-  if s.respond_to? :add_runtime_dependency then
-    s.add_runtime_dependency(%q<concurrent-ruby>.freeze, ["~> 1.1"])
-    s.add_runtime_dependency(%q<dry-core>.freeze, [">= 0.4"])
-    s.add_runtime_dependency(%q<nokogiri>.freeze, [">= 1.3.3"])
-    s.add_runtime_dependency(%q<rexml>.freeze, [">= 0"])
-    s.add_runtime_dependency(%q<time>.freeze, ["~> 0.3.0"])
-    s.add_development_dependency(%q<rake>.freeze, ["~> 0.9"])
-    s.add_development_dependency(%q<juwelier>.freeze, [">= 0"])
-    s.add_development_dependency(%q<minitest>.freeze, [">= 0"])
-    s.add_development_dependency(%q<rspec>.freeze, ["~> 3.7.0"])
-    s.add_development_dependency(%q<sqlite3>.freeze, [">= 1.2.4"])
-    s.add_development_dependency(%q<activerecord>.freeze, [">= 4.0"])
-    s.add_development_dependency(%q<rack>.freeze, ["< 2.0.0"])
-    s.add_development_dependency(%q<equivalent-xml>.freeze, [">= 0.6.0"])
-  else
-    s.add_dependency(%q<concurrent-ruby>.freeze, ["~> 1.1"])
-    s.add_dependency(%q<dry-core>.freeze, [">= 0.4"])
-    s.add_dependency(%q<nokogiri>.freeze, [">= 1.3.3"])
-    s.add_dependency(%q<rake>.freeze, ["~> 0.9"])
-    s.add_dependency(%q<time>.freeze, ["~> 0.3.0"])
-    s.add_dependency(%q<juwelier>.freeze, [">= 0"])
-    s.add_dependency(%q<minitest>.freeze, [">= 0"])
-    s.add_dependency(%q<rexml>.freeze, [">= 0"])
-    s.add_dependency(%q<rspec>.freeze, ["~> 3.7.0"])
-    s.add_dependency(%q<sqlite3>.freeze, [">= 1.2.4"])
-    s.add_dependency(%q<activerecord>.freeze, [">= 4.0"])
-    s.add_dependency(%q<rack>.freeze, ["< 2.0.0"])
-    s.add_dependency(%q<equivalent-xml>.freeze, [">= 0.6.0"])
-  end
+  s.add_runtime_dependency("concurrent-ruby", "~> 1.1")
+  s.add_runtime_dependency("dry-core", ">= 0.4")
+  s.add_runtime_dependency("nokogiri", ">= 1.3.3")
+  s.add_runtime_dependency("rexml")
+  s.add_runtime_dependency("time", "~> 0.3.0")
+
+  s.add_development_dependency("rake", ">= 0.9")
+  s.add_development_dependency("minitest")
+  s.add_development_dependency("rspec", ">= 3.7.0")
+  s.add_development_dependency("sqlite3", "~> 1.4")
+  s.add_development_dependency("activerecord", ">= 4.0")
+  s.add_development_dependency("equivalent-xml", ">= 0.6.0")
 end
 

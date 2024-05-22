@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
   s.name = "roxml".freeze
   s.version = "4.2.0"
 
-  spec.required_ruby_version = ">= 3.0.0"
+  s.required_ruby_version = ">= 3.0.0"
   s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
   s.require_paths = ["lib".freeze]
   s.authors = ["Ben Woosley".freeze, "Zak Mandhro".freeze, "Anders Engstrom".freeze, "Russ Olsen".freeze]

@@ -2,16 +2,16 @@
 # stub: roxml 4.2.0 ruby lib
 
 Gem::Specification.new do |s|
-  s.name = "roxml".freeze
+  s.name = "roxml"
   s.version = "4.2.0"
 
   s.required_ruby_version = ">= 3.0.0"
-  s.required_rubygems_version = Gem::Requirement.new(">= 0".freeze) if s.respond_to? :required_rubygems_version=
-  s.require_paths = ["lib".freeze]
-  s.authors = ["Ben Woosley".freeze, "Zak Mandhro".freeze, "Anders Engstrom".freeze, "Russ Olsen".freeze]
+  s.required_rubygems_version = Gem::Requirement.new(">= 0")
+  s.require_paths = ["lib"]
+  s.authors = ["Ben Woosley", "Zak Mandhro", "Anders Engstrom", "Russ Olsen"]
   s.date = "2021-09-09"
-  s.description = "ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML.\nUsing simple annotations, it enables Ruby classes to be mapped to XML. ROXML takes care\nof the marshalling and unmarshalling of mapped attributes so that developers can focus on\nbuilding first-class Ruby classes. As a result, ROXML simplifies the development of\nRESTful applications, Web Services, and XML-RPC.\n".freeze
-  s.email = "ben.woosley@gmail.com".freeze
+  s.description = "ROXML is a Ruby library designed to make it easier for Ruby developers to work with XML.\nUsing simple annotations, it enables Ruby classes to be mapped to XML. ROXML takes care\nof the marshalling and unmarshalling of mapped attributes so that developers can focus on\nbuilding first-class Ruby classes. As a result, ROXML simplifies the development of\nRESTful applications, Web Services, and XML-RPC.\n"
+  s.email = "ben.woosley@gmail.com"
   s.extra_rdoc_files = [
     "History.txt",
     "README.rdoc"
@@ -129,13 +129,9 @@ Gem::Specification.new do |s|
     "test/unit/xml_text_test.rb",
     "website/index.html"
   ]
-  s.homepage = "https://github.com/Empact/roxml".freeze
-  s.rubygems_version = "3.2.15".freeze
-  s.summary = "Ruby Object to XML mapping library".freeze
-
-  if s.respond_to? :specification_version then
-    s.specification_version = 4
-  end
+  s.homepage = "https://github.com/Empact/roxml"
+  s.rubygems_version = "3.2.15"
+  s.summary = "Ruby Object to XML mapping library"
 
   s.add_runtime_dependency("concurrent-ruby", "~> 1.1")
   s.add_runtime_dependency("dry-core", ">= 0.4")

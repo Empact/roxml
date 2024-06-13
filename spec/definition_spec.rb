@@ -280,18 +280,18 @@ describe ROXML::Definition do
         it_should_behave_like "block shorthand type declaration"
 
         it "should translate text to decimal numbers" do
-          @definition.blocks.first['3'].should == BigDecimal.new("3.0")
-          @definition.blocks.first['0.3'].should == BigDecimal.new("0.3")
+          @definition.blocks.first['3'].should == BigDecimal("3.0")
+          @definition.blocks.first['0.3'].should == BigDecimal("0.3")
         end
 
         it "should extract what it can, and fall back to 0" do
-          @definition.blocks.first['junk 11'].should eql(BigDecimal.new("0"))
-          @definition.blocks.first['11sttf'].should eql(BigDecimal.new("11.0"))
+          @definition.blocks.first['junk 11'].should eql(BigDecimal("0"))
+          @definition.blocks.first['11sttf'].should eql(BigDecimal("11.0"))
         end
 
         context "when passed an array" do
           it "should translate the array elements to integer" do
-            @definition.blocks.first.call(["12.1", "328.2"]).should == [BigDecimal.new("12.1"), BigDecimal.new("328.2")]
+            @definition.blocks.first.call(["12.1", "328.2"]).should == [BigDecimal("12.1"), BigDecimal("328.2")]
           end
         end
       end

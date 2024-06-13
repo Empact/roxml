@@ -181,7 +181,7 @@ module ROXML
       CORE_BLOCK_SHORTHANDS.tap do |blocks|
         blocks.reverse_merge!(BigDecimal => lambda do |val|
           all(val) do |v|
-            BigDecimal.new(v) unless v.blank?
+            BigDecimal(v) unless v.blank?
           end
         end) if defined?(BigDecimal)
 

@@ -49,8 +49,7 @@ GEM
       racc (~> 1.4)
     racc (1.8.0)
     rake (13.2.1)
-    rexml (3.2.8)
-      strscan (>= 3.0.9)
+    rexml (3.3.9)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
       rspec-expectations (~> 3.13.0)
@@ -66,7 +65,6 @@ GEM
     rspec-support (3.13.1)
     sqlite3 (1.7.3)
       mini_portile2 (~> 2.8.0)
-    strscan (3.1.0)
     time (0.3.0)
       date
     timeout (0.4.1)
